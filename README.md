@@ -15,7 +15,7 @@ The UVI data files are JSON and use a simple name spacing strategy to support mu
 | CSAF2 | CSAF2 or csaf2 | https://github.com/oasis-tcs/csaf/blob/master/csaf_2.0/json_schema/csaf_json_schema.json |
 | CVE4 | CVE4 or cve4 | https://github.com/CVEProject/cve-schema/tree/master/schema/v4.0 |
 | CVE5 | CVE5 or cve5 | https://github.com/CVEProject/cve-schema/tree/master/schema/v5.0 |
-| OSV | OSV or osv | https://osv.dev/docs/#tag/vulnerability_schema |
+| OSV | OSV or osv | https://ossf.github.io/osv-schema/ |
 | UVI | UVI or uvi | NONE |
 
 # UVI Data format
