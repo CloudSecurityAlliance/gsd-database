@@ -135,13 +135,13 @@
         "url": "https://www.bsi.bund.de/SharedDocs/Cybersicherheitswarnungen/DE/2021/2021-549032-10F2.html"
       },
       {
-        "refsource": "WORKAROUND",
+        "refsource": "HOTPATCH",
         "name": "https://github.com/simonis/Log4jPatch",
         "url": "https://github.com/simonis/Log4jPatch",
         "content": "Further development of this tool will continue at corretto/hotpatch-for-apache-log4j2."
       },
       {
-        "refsource": "WORKAROUND:HOTPATCH",
+        "refsource": "HOTPATCH",
         "name": "Log4jHotPatch",
         "url": "https://github.com/corretto/hotpatch-for-apache-log4j2",
         "content": "This is a tool which injects a Java agent into a running JVM process. The agent will attempt to patch the lookup() method of all loaded org.apache.logging.log4j.core.lookup.JndiLookup instances to unconditionally return the string \"Patched JndiLookup::lookup()\". It is designed to address the CVE-2021-44228 remote code execution vulnerability in Log4j without restarting the Java process."
@@ -1381,6 +1381,12 @@
         "url": "https://twitter.com/TomAnthonySEO/status/1470374984749133825",
         "content": "Interesting Log4j payload I discovered, simply omit the closing brace }, and now you will potentially get a bunch of data exfiltrated to your server until the next } appears in that data. Had it work on a FANG target",
         "timestamp": "2021-12-13"
+      },
+      {
+        "refsource": "HOTPATCH",
+        "name": "log4j-jndi-be-gone",
+        "url": "https://github.com/nccgroup/log4j-jndi-be-gone",
+        "content": "A Byte Buddy Java agent-based fix for CVE-2021-44228, the log4j 2.x \"JNDI LDAP\" vulnerability.\n\nIt does three things:\n\n* Disables the internal method handler for jndi: format strings (\"lookups\").\n* Logs a message to System.err (i.e stderr) indicating that a log4j JNDI attempt has been made (including the format string attempted, with any ${} characters sanitized to prevent transitive injections).\n* Resolves the format string to \"(log4j jndi disabled)\" in the log message (to prevent transitive injections)."
       }
     ],
     "reporter": "kurtseifried",
