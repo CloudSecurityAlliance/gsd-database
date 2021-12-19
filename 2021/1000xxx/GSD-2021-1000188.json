@@ -1,0 +1,53 @@
+{
+  "GSD": {
+    "vendor_name": "Hashicorp",
+    "product_name": "Terraform",
+    "product_version": "0.15.3",
+    "vulnerability_type": "default search paths use Terraform Registry for custom providers",
+    "affected_component": "terraform plan",
+    "attack_vector": "code processed by the CI/CD pipeline using \"terraform plan\"",
+    "impact": "Remote code Execution, exfiltration of environmental variables, etc.",
+    "credit": "alxk serain",
+    "references": [
+      "https://alex.kaskaso.li/post/terraform-plan-rce",
+      "https://www.reddit.com/r/netsec/comments/nbj5m7/terraform_plan_rce/",
+      "https://www.terraform.io/docs/language/modules/sources.html"
+    ],
+    "reporter": "kurtseifried",
+    "reporter_id": 582211,
+    "notes": "It appears that there is no way to control access to various registries in terraform configuration files beyond external controls such as firewalling. You can use a local directly only via the \"-plugin-dir\" directive which will prevent remote pulls of plugins but can still be abused.",
+    "description": "In Hashicorp Terraform version 0.15.3 the default search paths use Terraform Registry for custom providers if they exist in the terraform plan which can be attacked via code processed by the CI/CD pipeline using \"terraform plan\" resulting in Remote code Execution, exfiltration of environmental variables, etc. "
+  },
+  "OSV": {
+    "id": "GSD-2021-1000188",
+    "summary": "default search paths use Terraform Registry for custom providers in Terraform version 0.15.3",
+    "details": "In Hashicorp Terraform version 0.15.3 the default search paths use Terraform Registry for custom providers if they exist in the terraform plan which can be attacked via code processed by the CI/CD pipeline using \"terraform plan\" resulting in Remote code Execution, exfiltration of environmental variables, etc. ",
+    "modified": "2021-06-24T22:55:39.129915Z",
+    "published": "2021-05-31T15:39:45.031586Z",
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://alex.kaskaso.li/post/terraform-plan-rce"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.reddit.com/r/netsec/comments/nbj5m7/terraform_plan_rce/"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.terraform.io/docs/language/modules/sources.html"
+      }
+    ],
+    "affected": [
+      {
+        "package": {
+          "name": "Terraform",
+          "ecosystem": "DWF"
+        },
+        "versions": [
+          "0.15.3"
+        ]
+      }
+    ]
+  }
+}
