@@ -20,4 +20,8 @@ The GSD data files are JSON and use a simple name spacing strategy to support mu
 
 # GSD Data format
 
-The GSD doesn't have a finished data format yet. The GSD is experimenting with various JSON-LD iterations within the git repo currently.
+The GSD doesn't have a finished data format yet. The GSD is experimenting primarily with an extended OSV format, various JSON-LD iterations and the CVE JSON 5.0 format. 
+
+# Identity and attribution for participation
+
+Currently the GSD requires identity/atttribution for participation in GitHub to a GitHub account, this is a technical limitation/feature of the platform. Participation in the public email lists/Twitter/etc. for example does NOT require a GitHub account (or any identity beyond a working email address/Twitter account/etc.). Truly anonymous participation is not explicitly supported, however pseudonymity is supported and welcome.
