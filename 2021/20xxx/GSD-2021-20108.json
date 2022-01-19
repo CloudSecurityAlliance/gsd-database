@@ -1,6 +1,72 @@
 {
-    "GSD": {},
+    "GSD": {
+        "alias": "CVE-2021-20108",
+        "description": "Manage Engine Asset Explorer Agent 1.0.34 listens on port 9000 for incoming commands over HTTPS from Manage Engine Server. The HTTPS certificates are not verified which allows any arbitrary user on the network to send commands over port 9000. While these commands may not be executed (due to authtoken validation), the Asset Explorer agent will reach out to the manage engine server for an HTTP request. During this process, AEAgent.cpp allocates 0x66 bytes using \"malloc\". This memory is never free-ed in the program, causing a memory leak. Additionally, the instruction sent to aeagent (ie: NEWSCAN, DELTASCAN, etc) is converted to a unicode string, but is never freed. These memory leaks allow a remote attacker to exploit a Denial of Service scenario through repetitively sending these commands to an agent and eventually crashing it the agent due to an out-of-memory condition.",
+        "id": "GSD-2021-20108"
+    },
     "namespaces": {
+        "cve.org": {
+            "CVE_data_meta": {
+                "ASSIGNER": "vulnreport@tenable.com",
+                "ID": "CVE-2021-20108",
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "Manage Engine Asset Explorer Agent",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_value": "1.0.34"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "n/a"
+                        }
+                    ]
+                }
+            },
+            "data_format": "MITRE",
+            "data_type": "CVE",
+            "data_version": "4.0",
+            "description": {
+                "description_data": [
+                    {
+                        "lang": "eng",
+                        "value": "Manage Engine Asset Explorer Agent 1.0.34 listens on port 9000 for incoming commands over HTTPS from Manage Engine Server. The HTTPS certificates are not verified which allows any arbitrary user on the network to send commands over port 9000. While these commands may not be executed (due to authtoken validation), the Asset Explorer agent will reach out to the manage engine server for an HTTP request. During this process, AEAgent.cpp allocates 0x66 bytes using \"malloc\". This memory is never free-ed in the program, causing a memory leak. Additionally, the instruction sent to aeagent (ie: NEWSCAN, DELTASCAN, etc) is converted to a unicode string, but is never freed. These memory leaks allow a remote attacker to exploit a Denial of Service scenario through repetitively sending these commands to an agent and eventually crashing it the agent due to an out-of-memory condition."
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "lang": "eng",
+                                "value": "Denial of service"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://www.tenable.com/security/research/tra-2021-29",
+                        "refsource": "MISC",
+                        "url": "https://www.tenable.com/security/research/tra-2021-29"
+                    }
+                ]
+            }
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
