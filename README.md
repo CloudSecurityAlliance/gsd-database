@@ -20,7 +20,9 @@ The GSD data files are JSON and use a simple name spacing strategy to support mu
 
 # GSD Data format
 
-The GSD doesn't have a finished data format yet. The GSD is experimenting primarily with an extended OSV format, various JSON-LD iterations and the CVE JSON 5.0 format. 
+The GSD doesn't have a finished data format yet. The GSD is experimenting primarily with an extended OSV format, various JSON-LD iterations and to a lesser degree the CVE JSON 5.0 format (by virtue of importing the existing data). 
+
+If you want to help improve the OSV format please file an issue in the https://github.com/ossf/osv-schema project.
 
 # Identity and attribution for participation
 
