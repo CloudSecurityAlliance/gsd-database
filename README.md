@@ -1,10 +1,17 @@
-# Global Security Database (GSD) 
+# Global Security Database (GSD)
 
 This is the Global Security Database (GSD) which contains all the GSD's and their data.
 
-# Sub directory and filename format
+# Accessing the Data
 
-A directory for the year and a sub directory for the GSD identifier number, broken into blocks of 1000, and then the filename is GSD-YEAR-IDENTIFIER e.g. 2021/1000xxx/GSD-2021-1000000.json
+There are two easy ways to access the data:
+
+1. To get all the data simply fork or copy the gsd-database repo
+2. To get a single GSD entry simply use the raw API at https://raw.globalsecuritydatabase.org/GSD-YEAR-NUMBER e.g.https://raw.globalsecuritydatabase.org/GSD-2022-1000000 this will redirect you to the JSON file for that entry if it exists. Please note it does not check if the entry exists or not, it simply redirects if the GSD ID is well formed.
+
+## GitHub Sub directory and filename format
+
+A directory for the year and a sub directory for the GSD identifier number, broken into blocks of 1000, and then the filename is GSD-YEAR-IDENTIFIER e.g. 2021/1000xxx/GSD-2021-1000000.json this is due to GitHub limitations around the number of files per directory.
 
 # Supported data formats
 
@@ -20,7 +27,7 @@ The GSD data files are JSON and use a simple name spacing strategy to support mu
 
 # GSD Data format
 
-The GSD doesn't have a finished data format yet. The GSD is experimenting primarily with an extended OSV format, various JSON-LD iterations and the CVE JSON 5.0 format. 
+The GSD doesn't have a finished data format yet. The GSD is experimenting primarily with an extended OSV format, various JSON-LD iterations and the CVE JSON 5.0 format.
 
 # Identity and attribution for participation
 
