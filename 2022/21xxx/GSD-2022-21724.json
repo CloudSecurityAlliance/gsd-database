@@ -10,7 +10,7 @@
                 "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2022-21724",
                 "STATE": "PUBLIC",
-                "TITLE": "Remote code execution vulnerability using plugin features "
+                "TITLE": "Unchecked Class Instantiation when providing Plugin Classes"
             },
             "affects": {
                 "vendor": {
@@ -42,7 +42,7 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "pgjdbc is the offical PostgreSQL JDBC Driver. A security hole was found in the jdbc driver for postgresql database while doing security research. The system using the postgresql library will be attacked when attacker control the jdbc url or properties. pgjdbc instantiates plugin instances based on class names provided via `authenticationPluginClassName`, `sslhostnameverifier`, `socketFactory`, `sslfactory`, `sslpasswordcallback` connection properties. However, the driver did not verify if the class implements the expected interface before instantiating the class. This can lead to remote code execution loaded via arbitrary classes. Users using plugins are advised to upgrade. There are no known workarounds for this issue."
+                        "value": "pgjdbc is the offical PostgreSQL JDBC Driver. A security hole was found in the jdbc driver for postgresql database while doing security research. The system using the postgresql library will be attacked when attacker control the jdbc url or properties. pgjdbc instantiates plugin instances based on class names provided via `authenticationPluginClassName`, `sslhostnameverifier`, `socketFactory`, `sslfactory`, `sslpasswordcallback` connection properties. However, the driver did not verify if the class implements the expected interface before instantiating the class. This can lead to code execution loaded via arbitrary classes. Users using plugins are advised to upgrade. There are no known workarounds for this issue."
                     }
                 ]
             },
@@ -58,7 +58,7 @@
                     "privilegesRequired": "LOW",
                     "scope": "CHANGED",
                     "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
+                    "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
                     "version": "3.1"
                 }
             },
@@ -96,7 +96,27 @@
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
-                "nodes": []
+                "nodes": [
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:postgresql:pgjdbc:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "42.2.25",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:postgresql:pgjdbc:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "42.3.2",
+                                "versionStartIncluding": "42.3.0",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    }
+                ]
             },
             "cve": {
                 "CVE_data_meta": {
@@ -110,14 +130,19 @@
                     "description_data": [
                         {
                             "lang": "en",
-                            "value": "pgjdbc is the offical PostgreSQL JDBC Driver. A security hole was found in the jdbc driver for postgresql database while doing security research. The system using the postgresql library will be attacked when attacker control the jdbc url or properties. pgjdbc instantiates plugin instances based on class names provided via `authenticationPluginClassName`, `sslhostnameverifier`, `socketFactory`, `sslfactory`, `sslpasswordcallback` connection properties. However, the driver did not verify if the class implements the expected interface before instantiating the class. This can lead to remote code execution loaded via arbitrary classes. Users using plugins are advised to upgrade. There are no known workarounds for this issue."
+                            "value": "pgjdbc is the offical PostgreSQL JDBC Driver. A security hole was found in the jdbc driver for postgresql database while doing security research. The system using the postgresql library will be attacked when attacker control the jdbc url or properties. pgjdbc instantiates plugin instances based on class names provided via `authenticationPluginClassName`, `sslhostnameverifier`, `socketFactory`, `sslfactory`, `sslpasswordcallback` connection properties. However, the driver did not verify if the class implements the expected interface before instantiating the class. This can lead to code execution loaded via arbitrary classes. Users using plugins are advised to upgrade. There are no known workarounds for this issue."
                         }
                     ]
                 },
                 "problemtype": {
                     "problemtype_data": [
                         {
-                            "description": []
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-668"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -126,20 +151,66 @@
                         {
                             "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-v7wg-cpwc-24m4",
                             "refsource": "CONFIRM",
-                            "tags": [],
+                            "tags": [
+                                "Exploit",
+                                "Third Party Advisory"
+                            ],
                             "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-v7wg-cpwc-24m4"
                         },
                         {
                             "name": "https://github.com/pgjdbc/pgjdbc/commit/f4d0ed69c0b3aae8531d83d6af4c57f22312c813",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Patch",
+                                "Third Party Advisory"
+                            ],
                             "url": "https://github.com/pgjdbc/pgjdbc/commit/f4d0ed69c0b3aae8531d83d6af4c57f22312c813"
                         }
                     ]
                 }
             },
-            "impact": {},
-            "lastModifiedDate": "2022-02-02T13:15Z",
+            "impact": {
+                "baseMetricV2": {
+                    "acInsufInfo": false,
+                    "cvssV2": {
+                        "accessComplexity": "LOW",
+                        "accessVector": "NETWORK",
+                        "authentication": "NONE",
+                        "availabilityImpact": "PARTIAL",
+                        "baseScore": 7.5,
+                        "confidentialityImpact": "PARTIAL",
+                        "integrityImpact": "PARTIAL",
+                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+                        "version": "2.0"
+                    },
+                    "exploitabilityScore": 10.0,
+                    "impactScore": 6.4,
+                    "obtainAllPrivilege": false,
+                    "obtainOtherPrivilege": false,
+                    "obtainUserPrivilege": false,
+                    "severity": "HIGH",
+                    "userInteractionRequired": false
+                },
+                "baseMetricV3": {
+                    "cvssV3": {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 9.8,
+                        "baseSeverity": "CRITICAL",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    },
+                    "exploitabilityScore": 3.9,
+                    "impactScore": 5.9
+                }
+            },
+            "lastModifiedDate": "2022-02-07T19:56Z",
             "publishedDate": "2022-02-02T12:15Z"
         }
     }
