@@ -8,17 +8,11 @@ We love your input! We want to make contributing to this project as easy and tra
 - Proposing new features, use cases, tooling, data types, everything
 - Becoming a contributor, maintainer or whatever level of involvement you're comfortable with
 
-Please note that the gsd-database repo is the data, if you want to contribute tools that are experimental please go to the [gsd-experimental](https://github.com/cloudsecurityalliance/gsd-experimental) repo or the tools that are more mature in the [gsd-tools](https://github.com/cloudsecurityalliance/gsd-tools) repo.
-
 ## We Develop with Github
 
-We currently use github to host code, to track issues and feature requests, as well as accept pull requests.
+We currently use github to host code, to track issues and feature requests, as well as accept pull requests. Any contribution to the code in any of the GSD repositories will require a GitHub account. Please create a GitHub account and use only one account to submit changes. We are working on a system that supports people who contribute often. 
 
-## We also communicate in other ways
-
-The CSA Circle Community is available at https://csaurl.org/circle-gsd
-
-There is also a mailing list at https://csaurl.org/list-gsd
+Please note that the [gsd-database repo](https://github.com/cloudsecurityalliance/gsd-database) is the data, if you want to contribute tools that are experimental please go to the [gsd-project-plans](https://github.com/cloudsecurityalliance/gsd-project-plans) repo or the tools that are more mature in the [gsd-tools](https://github.com/cloudsecurityalliance/gsd-tools) repo. Currently [gsd-tools repo has a CONTRIBUTING.md](https://github.com/cloudsecurityalliance/gsd-tools/blob/main/CONTRIBUTING.md) that describes the preferred change model. 
 
 ## We Use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow), So All Code Changes Happen Through Pull Requests
 Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow)). We actively welcome your pull requests:
@@ -43,6 +37,10 @@ People *love* thorough bug reports. I'm not even kidding.
 ## Use a Consistent Data Schema
 
 Currently the GSD namespace does not have an official data schema, but we do generally use the OSV format. Feel free to use the OSV format, CVE format, or whichever format you prefer, and please add a "data_type" tag if the data doesn't have one to make parsing easier.
+
+## We also communicate in other ways - Get In Touch
+
+All the GSD Quick Links are available at : https://csaurl.org/gsd-quick-links
 
 ## License
 By contributing, you agree that your contributions will be licensed under the Creative Commons Zero v1.0 Universal License.
