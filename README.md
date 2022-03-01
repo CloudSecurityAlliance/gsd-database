@@ -2,6 +2,10 @@
 
 This is the Global Security Database (GSD) which contains all the GSD's and their data. For more informaiton please see https://csaurl.org/gsd-quick-links.
 
+# Contributing
+
+See the [Contribution Guide](CONTRIBUTING.md).
+
 # Accessing the Data
 
 There are two easy ways to access the data:
