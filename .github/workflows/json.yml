@@ -1,0 +1,16 @@
+name: JSON check
+
+on:
+  push:
+    paths:
+      - '**.json'
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: json-check
+	run: |
+	find . -iname "*.json" | xargs -n1 -I {} echo python -m json.tool {} >> /dev/null && exit 0 || echo "NOT valid JSON"; exit 1
