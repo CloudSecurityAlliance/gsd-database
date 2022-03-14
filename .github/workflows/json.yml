@@ -11,5 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
       - name: json-check
-        run: git diff --name-only "$GITHUB_BASE_REF..$GITHUB_SHA" | grep "json" | xargs -n1 -I {} python -m json.tool {} >> /dev/null && exit 0 || echo "NOT valid JSON"; exit 1
+        run: |
+          echo "Listing Changed JSON Files"
+          FILES=$(git diff --name-only origin/main HEAD | grep "json")
+          echo "$FILES"
+          echo "$FILES" | xargs -n1 -I {} python -m json.tool {}
