@@ -2,7 +2,10 @@
     "GSD": {
         "alias": "CVE-2020-15211",
         "description": "In TensorFlow Lite before versions 1.15.4, 2.0.3, 2.1.2, 2.2.1 and 2.3.1, saved models in the flatbuffer format use a double indexing scheme: a model has a set of subgraphs, each subgraph has a set of operators and each operator has a set of input/output tensors. The flatbuffer format uses indices for the tensors, indexing into an array of tensors that is owned by the subgraph. This results in a pattern of double array indexing when trying to get the data of each tensor. However, some operators can have some tensors be optional. To handle this scenario, the flatbuffer model uses a negative `-1` value as index for these tensors. This results in special casing during validation at model loading time. Unfortunately, this means that the `-1` index is a valid tensor index for any operator, including those that don't expect optional inputs and including for output tensors. Thus, this allows writing and reading from outside the bounds of heap allocated arrays, although only at a specific offset from the start of these arrays. This results in both read and write gadgets, albeit very limited in scope. The issue is patched in several commits (46d5b0852, 00302787b7, e11f5558, cd31fd0ce, 1970c21, and fff2c83), and is released in TensorFlow versions 1.15.4, 2.0.3, 2.1.2, 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that only operators which accept optional inputs use the `-1` special value and only for the tensors that they expect to be optional. Since this allow-list type approach is erro-prone, we advise upgrading to the patched code.",
-        "id": "GSD-2020-15211"
+        "id": "GSD-2020-15211",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2020-15211.html"
+        ]
     },
     "namespaces": {
         "cve.org": {

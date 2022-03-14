@@ -2,7 +2,11 @@
     "GSD": {
         "alias": "CVE-2018-14779",
         "description": "A buffer overflow issue was discovered in the Yubico-Piv 1.5.0 smartcard driver. The file lib/ykpiv.c contains the following code in the function `ykpiv_transfer_data()`: {% highlight c %} if(*out_len + recv_len - 2 > max_out) { fprintf(stderr, \"Output buffer to small, wanted to write %lu, max was %lu.\", *out_len + recv_len - 2, max_out); } if(out_data) { memcpy(out_data, data, recv_len - 2); out_data += recv_len - 2; *out_len += recv_len - 2; } {% endhighlight %} -- it is clearly checked whether the buffer is big enough to hold the data copied using `memcpy()`, but no error handling happens to avoid the `memcpy()` in such cases. This code path can be triggered with malicious data coming from a smartcard.",
-        "id": "GSD-2018-14779"
+        "id": "GSD-2018-14779",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2018-14779.html",
+            "https://ubuntu.com/security/CVE-2018-14779"
+        ]
     },
     "namespaces": {
         "cve.org": {
