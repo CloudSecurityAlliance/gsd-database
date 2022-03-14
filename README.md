@@ -1,6 +1,6 @@
 # Global Security Database (GSD)
 
-This is the Global Security Database (GSD) which contains all the GSD's and their data. For more informaiton please see https://csaurl.org/gsd-quick-links.
+This is the Global Security Database (GSD) which contains all the GSD's and their data.
 
 # Accessing the Data
 
