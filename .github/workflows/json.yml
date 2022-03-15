@@ -1,0 +1,21 @@
+name: JSON check
+
+on:
+  push:
+    paths:
+      - '**.json'
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: json-check
+        run: |
+          echo "Listing Changed JSON Files"
+          FILES=$(git diff --name-only origin/main HEAD | grep "json")
+          echo "$FILES"
+          echo "$FILES" | xargs -n1 -I {} python -m json.tool {}
