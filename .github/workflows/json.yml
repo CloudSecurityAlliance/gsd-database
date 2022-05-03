@@ -10,17 +10,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: '0'
+          fetch-depth: '2'
       - name: deletion-check
-        run: |
-          echo "Check for deletions in commit"
-          ! git diff --name-status origin/main HEAD | grep '^D.*\.json'
+        uses: cloudsecurityalliance/gsd-tools/actions/deletion-check@main
       - name: json-check
-        run: |
-          echo "Listing Changed JSON Files"
-          FILES=$(git diff --name-only origin/main HEAD | grep '\.json$' || true)
-          echo "$FILES"
-          [[ -z "$FILES" ]] && exit 0
-          echo "$FILES" | xargs -n1 -I {} python -m json.tool {}
+        uses: cloudsecurityalliance/gsd-tools/actions/json-check@main
