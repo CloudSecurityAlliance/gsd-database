@@ -9,21 +9,29 @@ For more information please see https://csaurl.org/gsd-quick-links.
 # Table of contents
 1. [GSD Repos](#gsd-repos)
 
-# GSD Repos
+## GSD Repos
 
 There are 3 primary repositories. 
 
-## gsd-database
+### gsd-database
+ 
+The gsd-database repo is the actual data for identifiers in the Global Security Database in the form of GSD-YEAR-INTEGER. To maintain easier compatibility with the CVE ecosystem we have decided to reserve numbers below 1 million for CVE data, using the same integer to make matching up entries easy.
 
-*** TODO ***
+#### Issues
 
-## gsd-project
+Please file any data related issues in the gsd-database repo. If you need to file issues against the data format(s) themselves please file an issue in the gsd-project repo.
 
-*** TODO ***
+### gsd-project
 
-## gsd-tools
+The gsd-project repo is designed to support the project, meeting times, agendas, minutes, planning, roadmaps, vision, etc. are contained here.
 
-*** TODO ***
+#### Issues
+
+Please file any project, governance, road maps, planning, data formats, process related issues or any general cross repo or project issues in the gsd-project repo.
+
+### gsd-tools
+
+The gsd-tools repo is the Global Security Database (GSD) tools repo which contains all the GSD tools. For more informaiton please see https://csaurl.org/gsd-quick-links.
 
 # Using the Data
 
