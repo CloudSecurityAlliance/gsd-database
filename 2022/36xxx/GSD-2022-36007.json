@@ -102,6 +102,72 @@
                 "advisory": "GHSA-4mmh-5vw7-rgvj",
                 "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2022-36007"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Venice is a Clojure inspired sandboxed Lisp dialect with excellent Java interoperability. A partial path traversal issue exists within the functions `load-file` and `load-resource`. These functions can be limited to load files from a list of load paths. Assuming Venice has been configured with the load paths: `[ \"/Users/foo/resources\" ]` When passing **relative** paths to these two vulnerable functions everything is fine: `(load-resource \"test.png\")` => loads the file \"/Users/foo/resources/test.png\" `(load-resource \"../resources-alt/test.png\")` => rejected, outside the load path When passing **absolute** paths to these two vulnerable functions Venice may return files outside the configured load paths: `(load-resource \"/Users/foo/resources/test.png\")` => loads the file \"/Users/foo/resources/test.png\" `(load-resource \"/Users/foo/resources-alt/test.png\")` => loads the file \"/Users/foo/resources-alt/test.png\" !!! The latter call suffers from the _Partial Path Traversal_ vulnerability. This issue\u2019s scope is limited to absolute paths whose name prefix matches a load path. E.g. for a load-path `\"/Users/foo/resources\"`, the actor can cause loading a resource also from `\"/Users/foo/resources-alt\"`, but not from `\"/Users/foo/images\"`. Versions of Venice before and including v1.10.17 are affected by this issue. Upgrade to Venice >= 1.10.18, if you are on a version < 1.10.18. There are currently no known workarounds."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-22"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/jlangch/venice/commit/215ae91bb964013b0a2d70718a692832d561ae0a",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/jlangch/venice/commit/215ae91bb964013b0a2d70718a692832d561ae0a"
+                        },
+                        {
+                            "name": "https://github.com/jlangch/venice/security/advisories/GHSA-4mmh-5vw7-rgvj",
+                            "refsource": "CONFIRM",
+                            "tags": [],
+                            "url": "https://github.com/jlangch/venice/security/advisories/GHSA-4mmh-5vw7-rgvj"
+                        },
+                        {
+                            "name": "https://github.com/jlangch/venice/commit/c942c73136333bc493050910f171a48e6f575b23",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/jlangch/venice/commit/c942c73136333bc493050910f171a48e6f575b23"
+                        },
+                        {
+                            "name": "https://github.com/jlangch/venice/releases/tag/v1.10.17",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/jlangch/venice/releases/tag/v1.10.17"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2022-08-15T12:59Z",
+            "publishedDate": "2022-08-15T11:21Z"
         }
     }
 }
