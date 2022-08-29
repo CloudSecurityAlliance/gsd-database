@@ -2,7 +2,10 @@
     "GSD": {
         "alias": "CVE-2022-35949",
         "description": "undici is an HTTP/1.1 client, written from scratch for Node.js.`undici` is vulnerable to SSRF (Server-side Request Forgery) when an application takes in **user input** into the `path/pathname` option of `undici.request`. If a user specifies a URL such as `http://127.0.0.1` or `//127.0.0.1` ```js const undici = require(\"undici\") undici.request({origin: \"http://example.com\", pathname: \"//127.0.0.1\"}) ``` Instead of processing the request as `http://example.org//127.0.0.1` (or `http://example.org/http://127.0.0.1` when `http://127.0.0.1 is used`), it actually processes the request as `http://127.0.0.1/` and sends it to `http://127.0.0.1`. If a developer passes in user input into `path` parameter of `undici.request`, it can result in an _SSRF_ as they will assume that the hostname cannot change, when in actual fact it can change because the specified path parameter is combined with the base URL. This issue was fixed in `undici@5.8.1`. The best workaround is to validate user input before passing it to the `undici.request` call.",
-        "id": "GSD-2022-35949"
+        "id": "GSD-2022-35949",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2022-35949.html"
+        ]
     },
     "namespaces": {
         "cve.org": {
