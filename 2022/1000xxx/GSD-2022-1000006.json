@@ -1,60 +1,7 @@
 {
   "GSD": {
     "id": "GSD-2022-1000006",
-    "alias": "CVE-2021-42392",
-    "vendor_name": "h2database",
-    "product_name": [
-      "h2"
-    ],
-    "product_version": "<2.0.206,",
-    "vulnerability_type": "unspecified",
-    "affected_component": "unspecified",
-    "attack_vector": "network",
-    "credit": "",
-    "data_format": "MITRE",
-    "data_type": "CVE",
-    "data_version": "4.0",
-    "impact": {
-      "cvss": {
-        "attackVector": "NETWORK",
-        "attackComplexity": "LOW",
-        "privilegesRequired": "NONE",
-        "userInteraction": "NONE",
-        "scope": "CHANGED",
-        "confidentialityImpact": "HIGH",
-        "integrityImpact": "HIGH",
-        "availabilityImpact": "HIGH",
-        "baseScore": 10,
-        "baseSeverity": "CRITICAL",
-        "exploitCodeMaturity": "HIGH",
-        "remediationLevel ": "OFFICIALFIX",
-        "reportConfidence": "CONFIRMED",
-        "temporalScore": 9.5,
-        "temporalSeverity": "CRITICAL",
-        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H/E:H/RL:O/RC:C",
-        "version": "3.1"
-      }
-    },
-    "description": "To quote portions of the original JFrog advisory (https://jfrog.com/blog/the-jndi-strikes-back-unauthenticated-rce-in-h2-database-console/): \n\n # A short preamble \n\n Very recently, the JFrog security research team has disclosed an issue in the H2 database console which was issued a critical CVE – CVE-2021-42392. This issue has the same root cause as the infamous Log4Shell vulnerability in Apache Log4j (JNDI remote class loading). \n\n H2 is a very popular open-source Java SQL database offering a lightweight in-memory solution that doesn’t require data to be stored on disk. This makes it a popular data storage solution for various projects from web platforms like Spring Boot to IoT platforms like ThingWorks. The com.h2database:h2 package is part of the top 50 most popular Maven packages, with almost 7000 artifact dependencies. \n\n Due to the current sensitivities around anything (Java) JNDI-related, we want to clarify a few of the conditions and configurations that must be present in order to be at risk before getting into the technical details of our H2 vulnerability findings. \n\n Although this is a critical issue with a similar root cause, CVE-2021-42392 should not be as widespread as Log4Shell (CVE-2021-44228) due to the following factors: \n\n 1. Unlike Log4Shell, this vulnerability has a  \"direct \" scope of impact. This means that typically the server that processes the initial request (the H2 console) will be the server that gets impacted with RCE. This is less severe compared to Log4Shell since the vulnerable servers should be easier to find. \n 2. On vanilla distributions of the H2 database, by default the H2 console only listens to localhost connections – making the default setting safe. This is unlike Log4Shell which was exploitable in the default configuration of Log4j. However – it’s worth noting the H2 console can easily be changed to listen to remote connections as well.  \n 3. Many vendors may be running the H2 database, but not running the H2 console. Although there are other vectors to exploit this issue other than the console, these other vectors are context-dependent and less likely to be exposed to remote attackers. \n That being said, if you are running an H2 console which is exposed to your LAN (or worse, WAN) this issue is extremely critical (unauthenticated remote code execution) and you should update your H2 database to version 2.0.206 immediately. \n\n # Why are we scanning for JNDI flaws? \n\n # Vulnerability root cause – JNDI remote class loading \n\n # CVE-2021-42392 attack vectors \n\n ## H2 console – non-context-dependent, unauthenticated RCE \n\n ## H2 Shell tool – context-dependent RCE \n\n ## SQL-based vectors – authenticated (high privileges) RCE \n\n # How can I check if I’m vulnerable to CVE-2021-42392? \n\n # How did JFrog detect CVE-2021-42392? \n\n # What is the suggested fix for CVE-2021-42392? \n\n We recommend all users of the H2 database to upgrade to version 2.0.206, even if you are not directly using the H2 console. This is due to the fact that other attack vectors exist, and their exploitability may be difficult to ascertain. \n\n Version 2.0.206 fixes CVE-2021-42392 by limiting JNDI URLs to use the (local) java protocol only, which denies any remote LDAP/RMI queries. This is similar to the fix applied in Log4j 2.17.0. \n\n # How can CVE-2021-42392 be mitigated? \n\n The best fix for the vulnerability is to upgrade the H2 database. \n\n For vendors that are currently unable to upgrade H2, we offer the following mitigation options: \n\n Similarly to the Log4Shell vulnerability, newer versions of Java contain the trustURLCodebase mitigation that will not allow remote codebases to be loaded naively via JNDI. Vendors may wish to upgrade their Java (JRE/JDK) version to enable this mitigation. \n\n This mitigation is enabled by default on the following versions of Java (or any later version) – \n\n * 6u211 \n * 7u201 \n * 8u191 \n * 11.0.1 \n\n However, this mitigation is not bulletproof, as it can be bypassed by sending a serialized  \"gadget \" Java object through LDAP, as long as the respective  \"gadget \" class is included in the classpath (depends on the server that runs the H2 database). For more information, please see  \"Using serialized Java Objects with local gadget classes \" from our Log4Shell blog post. \n\n When the H2 console Servlet is deployed on a web server (not using the standalone H2 web server), a security constraint can be added that will allow only specific users access to the console page. A suitable configuration example can be found here. \n\n # Acknowledgements \n\n # Conclusion \n\n",
-    "references": [
-      {
-        "refsource": "ARTICLE",
-        "name": "The JNDI Strikes Back – Unauthenticated RCE in H2 Database Console",
-        "url": "https://jfrog.com/blog/the-jndi-strikes-back-unauthenticated-rce-in-h2-database-console/"
-      },
-      {
-        "refsource": "RELEASE",
-        "name": "Version 2.0.206",
-        "url": "https://github.com/h2database/h2database/releases/tag/version-2.0.206"
-      },
-      {
-        "refsource": "ADVISORY",
-        "name": "RCE in H2 Console6",
-        "url": "https://github.com/h2database/h2database/security/advisories/GHSA-h376-j262-vhq6"
-      }
-    ],
-    "reporter": "kurtseifried",
-    "reporter_id": 582211,
-    "notes": ""
+    "modified": "2022-09-07T12:59:24Z",
+    "alias": "GSD-2021-42392"
   }
 }
