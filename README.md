@@ -45,6 +45,10 @@ There are several ways to use the data, an incomplete list is:
 
 *** TODO *** (describe how to use git tools, other methods of interaction?)
 
+# Contributing
+
+See the [Contribution Guide](CONTRIBUTING.md).
+
 # Accessing the Data
 
 There are two easy ways to access the data:
