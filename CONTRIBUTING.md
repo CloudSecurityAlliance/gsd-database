@@ -5,6 +5,7 @@ and ask away!
 
 - [Circle Community (Forums)](https://csaurl.org/gsd-circle)
 - [Mailing list](https://csaurl.org/gsd-mailing-list)
+- [CSA Public Slack](https://csaurl.org/csa-public-slack)
 
 ## Contributing to the database itself
 
