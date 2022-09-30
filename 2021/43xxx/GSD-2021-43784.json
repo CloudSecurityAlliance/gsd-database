@@ -2,7 +2,13 @@
     "GSD": {
         "alias": "CVE-2021-43784",
         "description": "runc is a CLI tool for spawning and running containers on Linux according to the OCI specification. In runc, netlink is used internally as a serialization system for specifying the relevant container configuration to the `C` portion of the code (responsible for the based namespace setup of containers). In all versions of runc prior to 1.0.3, the encoder did not handle the possibility of an integer overflow in the 16-bit length field for the byte array attribute type, meaning that a large enough malicious byte array attribute could result in the length overflowing and the attribute contents being parsed as netlink messages for container configuration. This vulnerability requires the attacker to have some control over the configuration of the container and would allow the attacker to bypass the namespace restrictions of the container by simply adding their own netlink payload which disables all namespaces. The main users impacted are those who allow untrusted images with untrusted configurations to run on their machines (such as with shared cloud infrastructure). runc version 1.0.3 contains a fix for this bug. As a workaround, one may try disallowing untrusted namespace paths from your container. It should be noted that untrusted namespace paths would allow the attacker to disable namespace protections entirely even in the absence of this bug.",
-        "id": "GSD-2021-43784"
+        "id": "GSD-2021-43784",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2021-43784.html",
+            "https://advisories.mageia.org/CVE-2021-43784.html",
+            "https://security.archlinux.org/CVE-2021-43784",
+            "https://packetstormsecurity.com/files/cve/CVE-2021-43784"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -115,6 +121,43 @@
         },
         "gitlab.com": {
             "advisories": [
+                {
+                    "affected_range": "<1.0.3",
+                    "affected_versions": "All versions before 1.0.3",
+                    "cvss_v2": "AV:N/AC:M/Au:S/C:P/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-190",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-08",
+                    "description": "runc is a CLI tool for spawning and running containers on Linux according to the OCI specification. In runc, netlink is used internally as a serialization system for specifying the relevant container configuration to the `C` portion of the code (responsible for the based namespace setup of containers). In all versions of runc prior to 1.0.3, the encoder did not handle the possibility of an integer overflow in the 16-bit length field for the byte array attribute type, meaning that a large enough malicious byte array attribute could result in the length overflowing and the attribute contents being parsed as netlink messages for container configuration. This vulnerability requires the attacker to have some control over the configuration of the container and would allow the attacker to bypass the namespace restrictions of the container by simply adding their own netlink payload which disables all namespaces. The main users impacted are those who allow untrusted images with untrusted configurations to run on their machines (such as with shared cloud infrastructure). runc version 1.0.3 contains a fix for this bug. As a workaround, one may try disallowing untrusted namespace paths from your container. It should be noted that untrusted namespace paths would allow the attacker to disable namespace protections entirely even in the absence of this bug.",
+                    "fixed_versions": [
+                        "1.0.3"
+                    ],
+                    "identifier": "CVE-2021-43784",
+                    "identifiers": [
+                        "GHSA-v95c-p5hm-xq8f",
+                        "CVE-2021-43784"
+                    ],
+                    "not_impacted": "All versions starting from 1.0.3",
+                    "package_slug": "go/github.com/opencontainers/runc",
+                    "pubdate": "2021-12-07",
+                    "solution": "Upgrade to version 1.0.3 or above.",
+                    "title": "Integer Overflow or Wraparound",
+                    "urls": [
+                        "https://github.com/opencontainers/runc/security/advisories/GHSA-v95c-p5hm-xq8f",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-43784",
+                        "https://github.com/opencontainers/runc/commit/9c444070ec7bb83995dbc0185da68284da71c554",
+                        "https://github.com/opencontainers/runc/commit/d72d057ba794164c3cce9451a00b72a78b25e1ae",
+                        "https://github.com/opencontainers/runc/commit/f50369af4b571e358f20b139eea52d612eb55eed",
+                        "https://bugs.chromium.org/p/project-zero/issues/detail?id=2241",
+                        "https://lists.debian.org/debian-lts-announce/2021/12/msg00005.html",
+                        "https://github.com/advisories/GHSA-v95c-p5hm-xq8f"
+                    ],
+                    "uuid": "dbf17836-609e-4c76-a93e-63376347bc45"
+                },
                 {
                     "affected_range": "<v1.0.3",
                     "affected_versions": "All versions before 1.0.3",

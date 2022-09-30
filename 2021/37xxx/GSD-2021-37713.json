@@ -2,7 +2,11 @@
     "GSD": {
         "alias": "CVE-2021-37713",
         "description": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be outside of the extraction target directory is not extracted. This is, in part, accomplished by sanitizing absolute paths of entries within the archive, skipping archive entries that contain `..` path portions, and resolving the sanitized paths against the extraction target directory. This logic was insufficient on Windows systems when extracting tar files that contained a path that was not an absolute path, but specified a drive letter different from the extraction target, such as `C:some\\path`. If the drive letter does not match the extraction target, for example `D:\\extraction\\dir`, then the result of `path.resolve(extractionDirectory, entryPath)` would resolve against the current working directory on the `C:` drive, rather than the extraction target directory. Additionally, a `..` portion of the path could occur immediately after the drive letter, such as `C:../foo`, and was not properly sanitized by the logic that checked for `..` within the normalized and split portions of the path. This only affects users of `node-tar` on Windows systems. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. There is no reasonable way to work around this issue without performing the same path normalization procedures that node-tar now does. Users are encouraged to upgrade to the latest patched versions of node-tar, rather than attempt to sanitize paths themselves.",
-        "id": "GSD-2021-37713"
+        "id": "GSD-2021-37713",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2021-37713.html",
+            "https://advisories.mageia.org/CVE-2021-37713.html"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -96,6 +100,11 @@
                         "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
                         "refsource": "MISC",
                         "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+                    },
+                    {
+                        "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+                        "refsource": "CONFIRM",
+                        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
                     }
                 ]
             },
@@ -116,7 +125,7 @@
                         "CWE-22",
                         "CWE-937"
                     ],
-                    "date": "2021-12-03",
+                    "date": "2022-03-10",
                     "description": "The npm package \"tar\" (aka node-tar) has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be outside of the extraction target directory is not extracted.",
                     "fixed_versions": [
                         "4.4.18",
@@ -153,20 +162,20 @@
                                     {
                                         "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
                                         "cpe_name": [],
-                                        "versionEndIncluding": "4.4.17",
+                                        "versionEndExcluding": "4.4.18",
                                         "vulnerable": true
                                     },
                                     {
                                         "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
                                         "cpe_name": [],
-                                        "versionEndIncluding": "5.0.9",
+                                        "versionEndExcluding": "5.0.10",
                                         "versionStartIncluding": "5.0.0",
                                         "vulnerable": true
                                     },
                                     {
                                         "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
                                         "cpe_name": [],
-                                        "versionEndIncluding": "6.1.8",
+                                        "versionEndExcluding": "6.1.9",
                                         "versionStartIncluding": "6.0.0",
                                         "vulnerable": true
                                     }
@@ -199,6 +208,18 @@
                             {
                                 "cpe23Uri": "cpe:2.3:a:oracle:graalvm:21.2.0:*:*:*:enterprise:*:*:*",
                                 "cpe_name": [],
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "1.0.1.1",
                                 "vulnerable": true
                             }
                         ],
@@ -262,6 +283,15 @@
                                 "Third Party Advisory"
                             ],
                             "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+                        },
+                        {
+                            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+                            "refsource": "CONFIRM",
+                            "tags": [
+                                "Patch",
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
                         }
                     ]
                 }
@@ -307,7 +337,7 @@
                     "impactScore": 6.0
                 }
             },
-            "lastModifiedDate": "2021-12-03T20:45Z",
+            "lastModifiedDate": "2022-04-25T18:40Z",
             "publishedDate": "2021-08-31T17:15Z"
         }
     }

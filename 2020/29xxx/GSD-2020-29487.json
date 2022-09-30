@@ -2,7 +2,10 @@
     "GSD": {
         "alias": "CVE-2020-29487",
         "description": "An issue was discovered in Xen XAPI before 2020-12-15. Certain xenstore keys provide feedback from the guest, and are therefore watched by toolstack. Specifically, keys are watched by xenopsd, and data are forwarded via RPC through message-switch to xapi. The watching logic in xenopsd sends one RPC update containing all data, any time any single xenstore key is updated, and therefore has O(N^2) time complexity. Furthermore, message-switch retains recent (currently 128) RPC messages for diagnostic purposes, yielding O(M*N) space complexity. The quantity of memory a single guest can monopolise is bounded by xenstored quota, but the quota is fairly large. It is believed to be in excess of 1G per malicious guest. In practice, this manifests as a host denial of service, either through message-switch thrashing against swap, or OOMing entirely, depending on dom0's configuration. (There are no quotas in xenopsd to limit the quantity of keys that result in RPC traffic.) A buggy or malicious guest can cause unreasonable memory usage in dom0, resulting in a host denial of service. All versions of XAPI are vulnerable. Systems that are not using the XAPI toolstack are not vulnerable.",
-        "id": "GSD-2020-29487"
+        "id": "GSD-2020-29487",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2020-29487.html"
+        ]
     },
     "namespaces": {
         "cve.org": {

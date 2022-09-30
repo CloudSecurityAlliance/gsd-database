@@ -1,0 +1,293 @@
+{
+    "GSD": {
+        "affected_component": "AVX512 support",
+        "alias": "CVE-2022-2274",
+        "attack_vector": "network",
+        "credit": "xry111 Xi Ruoyao",
+        "description": "In OpenSSL version 3.0.4 a heap buffer overflow exists in the AVX512 support that can be attacked via network resulting in code execution. This is reachable via four code paths: RSAZ 1024, RSAZ 512, Dual 1024 RSAZ, and Default constant-time Montgomery modular exponentiation. Please note this issue is especially serious as OpenSSL 3.0.4 contains a security fix for CVE-2022-2068 which allows arbitrary code execution. This means that all users of OpenSSL 3 are affected by a number of serious security vulnerabilities. Intel AXV-512 support is present in Intel CPUs releases including Knights Landing (Xeon Phi x200, 2016), Knights Mill (Xeon Phi x205, 2017), Skylake-SP, Skylake-X (2017), Cannon Lake (2018), Cascade Lake (2019), Cooper Lake (2020), Ice Lake (2019), Tiger Lake (2020), Rocket Lake (2021). Please note that on Alder Lake (2021) AVX-512 is not officially supported, but can be enabled on some motherboards with some BIOS versions. For AMD all Zen4 CPUs contain AVX-512 support.",
+        "id": "GSD-2022-2274",
+        "impact": "code execution",
+        "notes": "",
+        "product_name": "OpenSSL",
+        "product_version": "3.0.4",
+        "references": [
+            "https://github.com/openssl/openssl/issues/18625",
+            "https://github.com/openssl/openssl/commit/10d8a109be0fe50315e4eeb0676f6571914cd47a",
+            "https://www.theregister.com/2022/06/27/openssl_304_memory_corruption_bug/",
+            "https://guidovranken.com/2022/06/27/notes-on-openssl-remote-memory-corruption/",
+            "https://twitter.com/GuidoVranken/status/1539687342939820032",
+            "https://en.wikipedia.org/wiki/AVX-512",
+            "https://www.suse.com/security/cve/CVE-2022-2274.html"
+        ],
+        "reporter": "kurtseifried",
+        "reporter_id": 582211,
+        "vendor_name": "OpenSSL",
+        "vulnerability_type": "heap buffer overflow"
+    },
+    "OSV": {
+        "affected": [
+            {
+                "package": {
+                    "ecosystem": "GSD",
+                    "name": "OpenSSL"
+                },
+                "versions": [
+                    "3.0.4"
+                ]
+            }
+        ],
+        "details": "In OpenSSL version 3.0.4 a heap buffer overflow exists in the AVX512 support that can be attacked via network resulting in code execution. This is reachable via four code paths: RSAZ 1024, RSAZ 512, Dual 1024 RSAZ, and Default constant-time Montgomery modular exponentiation. Please note this issue is especially serious as OpenSSL 3.0.4 contains a security fix for CVE-2022-2068 which allows arbitrary code execution. This means that all users of OpenSSL 3 are affected by a number of serious security vulnerabilities. Intel AXV-512 support is present in Intel CPUs releases including Knights Landing (Xeon Phi x200, 2016), Knights Mill (Xeon Phi x205, 2017), Skylake-SP, Skylake-X (2017), Cannon Lake (2018), Cascade Lake (2019), Cooper Lake (2020), Ice Lake (2019), Tiger Lake (2020), Rocket Lake (2021). Please note that on Alder Lake (2021) AVX-512 is not officially supported, but can be enabled on some motherboards with some BIOS versions. For AMD all Zen4 CPUs contain AVX-512 support. Please note that this was previously assigned GSD-2022-1002526 but we have updated the ID to reflect the assignment of the CVE.",
+        "id": "GSD-2022-2274",
+        "modified": "2022-06-28T02:20:38.695078Z",
+        "published": "2022-06-28T02:20:38.695078Z",
+        "references": [
+            {
+                "type": "WEB",
+                "url": "https://github.com/openssl/openssl/issues/18625"
+            },
+            {
+                "type": "WEB",
+                "url": "https://github.com/openssl/openssl/commit/10d8a109be0fe50315e4eeb0676f6571914cd47a"
+            },
+            {
+                "type": "WEB",
+                "url": "https://www.theregister.com/2022/06/27/openssl_304_memory_corruption_bug/"
+            },
+            {
+                "type": "WEB",
+                "url": "https://guidovranken.com/2022/06/27/notes-on-openssl-remote-memory-corruption/"
+            },
+            {
+                "type": "WEB",
+                "url": "https://twitter.com/GuidoVranken/status/1539687342939820032"
+            },
+            {
+                "type": "WEB",
+                "url": "https://en.wikipedia.org/wiki/AVX-512"
+            }
+        ],
+        "summary": "heap buffer overflow in OpenSSL version 3.0.4"
+    },
+    "namespaces": {
+        "cve.org": {
+            "CVE_data_meta": {
+                "ASSIGNER": "openssl-security@openssl.org",
+                "DATE_PUBLIC": "2022-06-09",
+                "ID": "CVE-2022-2274",
+                "STATE": "PUBLIC",
+                "TITLE": "RSA implementation bug in AVX512IFMA instructions"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "OpenSSL",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_value": "Affects OpenSSL 3.0.4"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "OpenSSL"
+                        }
+                    ]
+                }
+            },
+            "credit": [
+                {
+                    "lang": "eng",
+                    "value": ""
+                }
+            ],
+            "data_format": "MITRE",
+            "data_type": "CVE",
+            "data_version": "4.0",
+            "description": {
+                "description_data": [
+                    {
+                        "lang": "eng",
+                        "value": "The OpenSSL 3.0.4 release introduced a serious bug in the RSA implementation for X86_64 CPUs supporting the AVX512IFMA instructions. This issue makes the RSA implementation with 2048 bit private keys incorrect on such machines and memory corruption will happen during the computation. As a consequence of the memory corruption an attacker may be able to trigger a remote code execution on the machine performing the computation. SSL/TLS servers or other servers using 2048 bit RSA private keys running on machines supporting AVX512IFMA instructions of the X86_64 architecture are affected by this issue."
+                    }
+                ]
+            },
+            "impact": [
+                {
+                    "lang": "eng",
+                    "url": "https://www.openssl.org/policies/secpolicy.html#high",
+                    "value": "High"
+                }
+            ],
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "lang": "eng",
+                                "value": "Memory Corruption"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/openssl/openssl/issues/18625",
+                        "refsource": "CONFIRM",
+                        "url": "https://github.com/openssl/openssl/issues/18625"
+                    },
+                    {
+                        "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=4d8a88c134df634ba610ff8db1eb8478ac5fd345",
+                        "refsource": "CONFIRM",
+                        "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=4d8a88c134df634ba610ff8db1eb8478ac5fd345"
+                    },
+                    {
+                        "name": "https://www.openssl.org/news/secadv/20220705.txt",
+                        "refsource": "CONFIRM",
+                        "url": "https://www.openssl.org/news/secadv/20220705.txt"
+                    },
+                    {
+                        "name": "https://security.netapp.com/advisory/ntap-20220715-0010/",
+                        "refsource": "CONFIRM",
+                        "url": "https://security.netapp.com/advisory/ntap-20220715-0010/"
+                    }
+                ]
+            }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": [
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.0.4:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    }
+                ]
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "openssl-security@openssl.org",
+                    "ID": "CVE-2022-2274"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "The OpenSSL 3.0.4 release introduced a serious bug in the RSA implementation for X86_64 CPUs supporting the AVX512IFMA instructions. This issue makes the RSA implementation with 2048 bit private keys incorrect on such machines and memory corruption will happen during the computation. As a consequence of the memory corruption an attacker may be able to trigger a remote code execution on the machine performing the computation. SSL/TLS servers or other servers using 2048 bit RSA private keys running on machines supporting AVX512IFMA instructions of the X86_64 architecture are affected by this issue."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-787"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=4d8a88c134df634ba610ff8db1eb8478ac5fd345",
+                            "refsource": "CONFIRM",
+                            "tags": [
+                                "Mailing List",
+                                "Patch",
+                                "Vendor Advisory"
+                            ],
+                            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=4d8a88c134df634ba610ff8db1eb8478ac5fd345"
+                        },
+                        {
+                            "name": "https://github.com/openssl/openssl/issues/18625",
+                            "refsource": "CONFIRM",
+                            "tags": [
+                                "Exploit",
+                                "Issue Tracking",
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://github.com/openssl/openssl/issues/18625"
+                        },
+                        {
+                            "name": "https://www.openssl.org/news/secadv/20220705.txt",
+                            "refsource": "CONFIRM",
+                            "tags": [
+                                "Vendor Advisory"
+                            ],
+                            "url": "https://www.openssl.org/news/secadv/20220705.txt"
+                        },
+                        {
+                            "name": "https://security.netapp.com/advisory/ntap-20220715-0010/",
+                            "refsource": "CONFIRM",
+                            "tags": [],
+                            "url": "https://security.netapp.com/advisory/ntap-20220715-0010/"
+                        }
+                    ]
+                }
+            },
+            "impact": {
+                "baseMetricV2": {
+                    "acInsufInfo": false,
+                    "cvssV2": {
+                        "accessComplexity": "LOW",
+                        "accessVector": "NETWORK",
+                        "authentication": "NONE",
+                        "availabilityImpact": "COMPLETE",
+                        "baseScore": 10.0,
+                        "confidentialityImpact": "COMPLETE",
+                        "integrityImpact": "COMPLETE",
+                        "vectorString": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+                        "version": "2.0"
+                    },
+                    "exploitabilityScore": 10.0,
+                    "impactScore": 10.0,
+                    "obtainAllPrivilege": false,
+                    "obtainOtherPrivilege": false,
+                    "obtainUserPrivilege": false,
+                    "severity": "HIGH",
+                    "userInteractionRequired": false
+                },
+                "baseMetricV3": {
+                    "cvssV3": {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 9.8,
+                        "baseSeverity": "CRITICAL",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    },
+                    "exploitabilityScore": 3.9,
+                    "impactScore": 5.9
+                }
+            },
+            "lastModifiedDate": "2022-07-15T16:15Z",
+            "publishedDate": "2022-07-01T08:15Z"
+        }
+    }
+}

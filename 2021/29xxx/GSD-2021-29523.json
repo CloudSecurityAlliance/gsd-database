@@ -2,7 +2,11 @@
     "GSD": {
         "alias": "CVE-2021-29523",
         "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a denial of service via a `CHECK`-fail in `tf.raw_ops.AddManySparseToTensorsMap`. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/6f9896890c4c703ae0a0845394086e2e1e523299/tensorflow/core/kernels/sparse_tensors_map_ops.cc#L257) takes the values specified in `sparse_shape` as dimensions for the output shape. The `TensorShape` constructor(https://github.com/tensorflow/tensorflow/blob/6f9896890c4c703ae0a0845394086e2e1e523299/tensorflow/core/framework/tensor_shape.cc#L183-L188) uses a `CHECK` operation which triggers when `InitDims`(https://github.com/tensorflow/tensorflow/blob/6f9896890c4c703ae0a0845394086e2e1e523299/tensorflow/core/framework/tensor_shape.cc#L212-L296) returns a non-OK status. This is a legacy implementation of the constructor and operations should use `BuildTensorShapeBase` or `AddDimWithStatus` to prevent `CHECK`-failures in the presence of overflows. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
-        "id": "GSD-2021-29523"
+        "id": "GSD-2021-29523",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2021-29523.html",
+            "https://security.archlinux.org/CVE-2021-29523"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -104,6 +108,78 @@
         },
         "gitlab.com": {
             "advisories": [
+                {
+                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-190",
+                        "CWE-937"
+                    ],
+                    "date": "2021-05-21",
+                    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a denial of service via a `CHECK`-fail in `tf.raw_ops.AddManySparseToTensorsMap`. This is because the implementation takes the values specified in `sparse_shape` as dimensions for the output shape. The `TensorShape` constructor uses a `CHECK` operation which triggers when `InitDims` returns a non-OK status. This is a legacy implementation of the constructor and operations should use `BuildTensorShapeBase` or `AddDimWithStatus` to prevent `CHECK`-failures in the presence of overflows. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+                    "fixed_versions": [
+                        "2.1.4",
+                        "2.2.3",
+                        "2.3.3",
+                        "2.4.2"
+                    ],
+                    "identifier": "CVE-2021-29523",
+                    "identifiers": [
+                        "GHSA-2cpx-427x-q2c6",
+                        "CVE-2021-29523"
+                    ],
+                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+                    "package_slug": "pypi/tensorflow-cpu",
+                    "pubdate": "2021-05-21",
+                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+                    "title": "Integer Overflow or Wraparound",
+                    "urls": [
+                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-2cpx-427x-q2c6",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29523",
+                        "https://github.com/tensorflow/tensorflow/commit/69c68ecbb24dff3fa0e46da0d16c821a2dd22d7c",
+                        "https://github.com/advisories/GHSA-2cpx-427x-q2c6"
+                    ],
+                    "uuid": "d47cbe82-358b-44c6-98fb-56fac596ea32"
+                },
+                {
+                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-190",
+                        "CWE-937"
+                    ],
+                    "date": "2021-05-21",
+                    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a denial of service via a `CHECK`-fail in `tf.raw_ops.AddManySparseToTensorsMap`. This is because the implementation takes the values specified in `sparse_shape` as dimensions for the output shape. The `TensorShape` constructor uses a `CHECK` operation which triggers when `InitDims` returns a non-OK status. This is a legacy implementation of the constructor and operations should use `BuildTensorShapeBase` or `AddDimWithStatus` to prevent `CHECK`-failures in the presence of overflows. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+                    "fixed_versions": [
+                        "2.1.4",
+                        "2.2.3",
+                        "2.3.3",
+                        "2.4.2"
+                    ],
+                    "identifier": "CVE-2021-29523",
+                    "identifiers": [
+                        "GHSA-2cpx-427x-q2c6",
+                        "CVE-2021-29523"
+                    ],
+                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+                    "package_slug": "pypi/tensorflow-gpu",
+                    "pubdate": "2021-05-21",
+                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+                    "title": "Integer Overflow or Wraparound",
+                    "urls": [
+                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-2cpx-427x-q2c6",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29523",
+                        "https://github.com/tensorflow/tensorflow/commit/69c68ecbb24dff3fa0e46da0d16c821a2dd22d7c",
+                        "https://github.com/advisories/GHSA-2cpx-427x-q2c6"
+                    ],
+                    "uuid": "310c5a41-174d-4c2a-ad5f-57aa6c88ec5d"
+                },
                 {
                     "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
                     "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",

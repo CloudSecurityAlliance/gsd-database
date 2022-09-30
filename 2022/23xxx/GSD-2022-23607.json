@@ -2,7 +2,10 @@
     "GSD": {
         "alias": "CVE-2022-23607",
         "description": "treq is an HTTP library inspired by requests but written on top of Twisted's Agents. Treq's request methods (`treq.get`, `treq.post`, etc.) and `treq.client.HTTPClient` constructor accept cookies as a dictionary. Such cookies are not bound to a single domain, and are therefore sent to *every* domain (\"supercookies\"). This can potentially cause sensitive information to leak upon an HTTP redirect to a different domain., e.g. should `https://example.com` redirect to `http://cloudstorageprovider.com` the latter will receive the cookie `session`. Treq 2021.1.0 and later bind cookies given to request methods (`treq.request`, `treq.get`, `HTTPClient.request`, `HTTPClient.get`, etc.) to the origin of the *url* parameter. Users are advised to upgrade. For users unable to upgrade Instead of passing a dictionary as the *cookies* argument, pass a `http.cookiejar.CookieJar` instance with properly domain- and scheme-scoped cookies in it.",
-        "id": "GSD-2022-23607"
+        "id": "GSD-2022-23607",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2022-23607.html"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -19,18 +22,18 @@
                             "product": {
                                 "product_data": [
                                     {
-                                        "product_name": "n/a",
+                                        "product_name": "treq",
                                         "version": {
                                             "version_data": [
                                                 {
-                                                    "version_value": "n/a"
+                                                    "version_value": "< 22.1.0"
                                                 }
                                             ]
                                         }
                                     }
                                 ]
                             },
-                            "vendor_name": "n/a"
+                            "vendor_name": "twisted"
                         }
                     ]
                 }
@@ -68,7 +71,7 @@
                         "description": [
                             {
                                 "lang": "eng",
-                                "value": "n/a"
+                                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
                             }
                         ]
                     }
@@ -80,6 +83,11 @@
                         "name": "https://github.com/twisted/treq/security/advisories/GHSA-fhpf-pp6p-55qc",
                         "refsource": "CONFIRM",
                         "url": "https://github.com/twisted/treq/security/advisories/GHSA-fhpf-pp6p-55qc"
+                    },
+                    {
+                        "name": "[debian-lts-announce] 20220318 [SECURITY] [DLA 2954-1] python-treq security update",
+                        "refsource": "MLIST",
+                        "url": "https://lists.debian.org/debian-lts-announce/2022/03/msg00025.html"
                     }
                 ]
             },
@@ -87,6 +95,41 @@
                 "advisory": "GHSA-fhpf-pp6p-55qc",
                 "discovery": "UNKNOWN"
             }
+        },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "<22.1.0",
+                    "affected_versions": "All versions before 22.1.0",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2022-02-01",
+                    "description": "treq is an HTTP library inspired by requests but written on top of Twisted's Agents. Treq's request methods (`treq.get`, `treq.post`, etc.) and `treq.client.HTTPClient` constructor accept cookies as a dictionary. Such cookies are not bound to a single domain, and are therefore sent to *every* domain (\"supercookies\"). This can potentially cause sensitive information to leak upon an HTTP redirect to a different domain., e.g. should `https://example.com` redirect to `http://cloudstorageprovider.com` the latter will receive the cookie `session`. Treq bind cookies given to request methods (`treq.request`, `treq.get`, `HTTPClient.request`, `HTTPClient.get`, etc.) to the origin of the *url* parameter. Users are advised to upgrade. For users unable to upgrade Instead of passing a dictionary as the *cookies* argument, pass a `http.cookiejar.CookieJar` instance with properly domain- and scheme-scoped cookies in it.",
+                    "fixed_versions": [
+                        "22.1.0"
+                    ],
+                    "identifier": "CVE-2022-23607",
+                    "identifiers": [
+                        "GHSA-fhpf-pp6p-55qc",
+                        "CVE-2022-23607"
+                    ],
+                    "not_impacted": "All versions starting from 22.1.0",
+                    "package_slug": "pypi/treq",
+                    "pubdate": "2022-02-01",
+                    "solution": "Upgrade to version 22.1.0 or above.",
+                    "title": "Unsafe handling of user-specified cookies in treq",
+                    "urls": [
+                        "https://github.com/twisted/treq/security/advisories/GHSA-fhpf-pp6p-55qc",
+                        "https://github.com/twisted/treq/commit/1da6022cc880bbcff59321abe02bf8498b89efb2",
+                        "https://github.com/twisted/treq/releases/tag/release-22.1.0",
+                        "https://huntr.dev/bounties/3c9204fc-a3d1-4441-8599-924c5f57e7ae/?token=06d930e37046c914bcb037e85cc227dc7b510b475989fc69837566562ba899277d46b0fb4b1e21cdcb6ddc1b7d9b1ded632cf3a3551ecb89afca16a63b34641284b50479d5195bba2ac09b116f3dd4fad27f54404c2de922c05c8c8b744aec27bb4d4d198cb8b3abf479af0c2d5fbaa10412da7922594ac3eb39",
+                        "https://github.com/advisories/GHSA-fhpf-pp6p-55qc"
+                    ],
+                    "uuid": "d80f2ea8-4ff2-4050-aa54-65e003d414f3"
+                }
+            ]
         },
         "nvd.nist.gov": {
             "configurations": {
@@ -100,6 +143,17 @@
                                 "cpe_name": [],
                                 "versionEndExcluding": "22.1.0",
                                 "versionStartIncluding": "21.1.0",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                                "cpe_name": [],
                                 "vulnerable": true
                             }
                         ],
@@ -129,7 +183,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-601"
+                                    "value": "CWE-200"
                                 }
                             ]
                         }
@@ -145,6 +199,15 @@
                                 "Third Party Advisory"
                             ],
                             "url": "https://github.com/twisted/treq/security/advisories/GHSA-fhpf-pp6p-55qc"
+                        },
+                        {
+                            "name": "[debian-lts-announce] 20220318 [SECURITY] [DLA 2954-1] python-treq security update",
+                            "refsource": "MLIST",
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://lists.debian.org/debian-lts-announce/2022/03/msg00025.html"
                         }
                     ]
                 }
@@ -190,7 +253,7 @@
                     "impactScore": 4.0
                 }
             },
-            "lastModifiedDate": "2022-02-08T15:25Z",
+            "lastModifiedDate": "2022-05-01T01:25Z",
             "publishedDate": "2022-02-01T11:15Z"
         }
     }

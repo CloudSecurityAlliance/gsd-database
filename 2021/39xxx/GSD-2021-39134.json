@@ -2,7 +2,12 @@
     "GSD": {
         "alias": "CVE-2021-39134",
         "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above.",
-        "id": "GSD-2021-39134"
+        "id": "GSD-2021-39134",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2021-39134.html",
+            "https://advisories.mageia.org/CVE-2021-39134.html",
+            "https://security.archlinux.org/CVE-2021-39134"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -90,6 +95,11 @@
                         "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
                         "refsource": "MISC",
                         "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+                    },
+                    {
+                        "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+                        "refsource": "CONFIRM",
+                        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
                     }
                 ]
             },
@@ -110,7 +120,7 @@
                         "CWE-61",
                         "CWE-937"
                     ],
-                    "date": "2021-12-03",
+                    "date": "2022-03-10",
                     "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder.",
                     "fixed_versions": [
                         "2.8.2"
@@ -184,6 +194,18 @@
                             }
                         ],
                         "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "1.0.1.1",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
                     }
                 ]
             },
@@ -209,7 +231,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-61"
+                                    "value": "CWE-178"
                                 }
                             ]
                         }
@@ -221,6 +243,7 @@
                             "name": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
                             "refsource": "CONFIRM",
                             "tags": [
+                                "Mitigation",
                                 "Third Party Advisory"
                             ],
                             "url": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc"
@@ -242,6 +265,15 @@
                                 "Third Party Advisory"
                             ],
                             "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+                        },
+                        {
+                            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+                            "refsource": "CONFIRM",
+                            "tags": [
+                                "Patch",
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
                         }
                     ]
                 }
@@ -287,7 +319,7 @@
                     "impactScore": 5.9
                 }
             },
-            "lastModifiedDate": "2021-12-03T20:45Z",
+            "lastModifiedDate": "2022-08-12T17:49Z",
             "publishedDate": "2021-08-31T17:15Z"
         }
     }
