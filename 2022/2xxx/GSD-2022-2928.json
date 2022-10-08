@@ -8,7 +8,7 @@
         "cve.org": {
             "CVE_data_meta": {
                 "ASSIGNER": "security-officer@isc.org",
-                "DATE_PUBLIC": "2022-10-05T10:00:00.000Z",
+                "DATE_PUBLIC": "2022-10-05T12:01:00.000Z",
                 "ID": "CVE-2022-2928",
                 "STATE": "PUBLIC",
                 "TITLE": "An option refcount overflow exists in dhcpd"
@@ -20,23 +20,18 @@
                             "product": {
                                 "product_data": [
                                     {
-                                        "product_name": "ISC DHCP",
+                                        "product_name": "n/a",
                                         "version": {
                                             "version_data": [
                                                 {
-                                                    "version_name": "4.4",
-                                                    "version_value": "4.4.0 through versions before 4.4.3-P1"
-                                                },
-                                                {
-                                                    "version_name": "4.1 ESV",
-                                                    "version_value": "4.1-ESV-R1 through versions before 4.1-ESV-R16-P1"
+                                                    "version_value": "n/a"
                                                 }
                                             ]
                                         }
                                     }
                                 ]
                             },
-                            "vendor_name": "ISC"
+                            "vendor_name": "n/a"
                         }
                     ]
                 }
@@ -86,7 +81,7 @@
                         "description": [
                             {
                                 "lang": "eng",
-                                "value": "A DHCP server configured with allow leasequery;, a remote machine with access to the server can send lease queries for the same lease multiple times, leading to the add_option() function being repeatedly called. This could cause an option's refcount field to overflow and the server to abort. Internally, reference counters are integers and thus overflow at 2^31 references, so even at 1000 lease query responses per second, it would take more than three weeks to crash the server. Affects In ISC DHCP 4.4.0 -> 4.4.3, ISC DHCP 4.1-ESV-R1 -> 4.1-ESV-R16-P1"
+                                "value": "n/a"
                             }
                         ]
                     }
@@ -116,6 +111,49 @@
                     "value": "Disable lease query on the server for DHCPv4 or restart the server periodically."
                 }
             ]
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-officer@isc.org",
+                    "ID": "CVE-2022-2928"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "In ISC DHCP 4.4.0 -> 4.4.3, ISC DHCP 4.1-ESV-R1 -> 4.1-ESV-R16-P1, when the function option_code_hash_lookup() is called from add_option(), it increases the option's refcount field. However, there is not a corresponding call to option_dereference() to decrement the refcount field. The function add_option() is only used in server responses to lease query packets. Each lease query response calls this function for several options, so eventually, the reference counters could overflow and cause the server to abort."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://kb.isc.org/docs/cve-2022-2928",
+                            "refsource": "CONFIRM",
+                            "tags": [],
+                            "url": "https://kb.isc.org/docs/cve-2022-2928"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2022-10-07T12:45Z",
+            "publishedDate": "2022-10-07T05:15Z"
         }
     }
 }
