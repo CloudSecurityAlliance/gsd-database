@@ -116,6 +116,80 @@
                     "cwe_ids": [
                         "CWE-1035",
                         "CWE-665",
+                        "CWE-707",
+                        "CWE-937"
+                    ],
+                    "date": "2021-05-21",
+                    "description": "TensorFlow is an end-to-end open source platform for machine learning. The implementation of `tf.io.decode_raw` produces incorrect results and crashes the Python interpreter when combining `fixed_length` and wider datatypes. The implementation of the padded version is buggy due to a confusion about pointer arithmetic rules. First, the code computes the width of each output element by dividing the `fixed_length` value to the size of the type argument. The `fixed_length` argument is also used to determine the size needed for the output tensor. This is followed by reencoding code. The erroneous code is the last line above: it is moving the `out_data` pointer by `fixed_length * sizeof` bytes whereas it only copied at most `fixed_length` bytes from the input. This results in parts of the input not being decoded into the output. Furthermore, because the pointer advance is far wider than desired, this quickly leads to writing to outside the bounds of the backing data. This OOB write leads to interpreter crash in the reproducer mentioned here, but more severe attacks can be mounted too, given that this gadget allows writing to periodically placed locations in memory. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+                    "fixed_versions": [
+                        "2.1.4",
+                        "2.2.3",
+                        "2.3.3",
+                        "2.4.2"
+                    ],
+                    "identifier": "CVE-2021-29614",
+                    "identifiers": [
+                        "GHSA-8pmx-p244-g88h",
+                        "CVE-2021-29614"
+                    ],
+                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+                    "package_slug": "pypi/tensorflow-cpu",
+                    "pubdate": "2021-05-21",
+                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+                    "title": "Improper Initialization",
+                    "urls": [
+                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-8pmx-p244-g88h",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29614",
+                        "https://github.com/tensorflow/tensorflow/commit/698e01511f62a3c185754db78ebce0eee1f0184d",
+                        "https://github.com/advisories/GHSA-8pmx-p244-g88h"
+                    ],
+                    "uuid": "ee9d152d-6b8e-4234-bd85-9ae17f59a815"
+                },
+                {
+                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-665",
+                        "CWE-707",
+                        "CWE-937"
+                    ],
+                    "date": "2021-05-21",
+                    "description": "TensorFlow is an end-to-end open source platform for machine learning. The implementation of `tf.io.decode_raw` produces incorrect results and crashes the Python interpreter when combining `fixed_length` and wider datatypes. The implementation of the padded version is buggy due to a confusion about pointer arithmetic rules. First, the code computes the width of each output element by dividing the `fixed_length` value to the size of the type argument. The `fixed_length` argument is also used to determine the size needed for the output tensor. This is followed by reencoding code. The erroneous code is the last line above: it is moving the `out_data` pointer by `fixed_length * sizeof` bytes whereas it only copied at most `fixed_length` bytes from the input. This results in parts of the input not being decoded into the output. Furthermore, because the pointer advance is far wider than desired, this quickly leads to writing to outside the bounds of the backing data. This OOB write leads to interpreter crash in the reproducer mentioned here, but more severe attacks can be mounted too, given that this gadget allows writing to periodically placed locations in memory. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+                    "fixed_versions": [
+                        "2.1.4",
+                        "2.2.3",
+                        "2.3.3",
+                        "2.4.2"
+                    ],
+                    "identifier": "CVE-2021-29614",
+                    "identifiers": [
+                        "GHSA-8pmx-p244-g88h",
+                        "CVE-2021-29614"
+                    ],
+                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+                    "package_slug": "pypi/tensorflow-gpu",
+                    "pubdate": "2021-05-21",
+                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+                    "title": "Improper Initialization",
+                    "urls": [
+                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-8pmx-p244-g88h",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29614",
+                        "https://github.com/tensorflow/tensorflow/commit/698e01511f62a3c185754db78ebce0eee1f0184d",
+                        "https://github.com/advisories/GHSA-8pmx-p244-g88h"
+                    ],
+                    "uuid": "aee87923-de7e-4f0a-abd9-655ddad3f646"
+                },
+                {
+                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-665",
                         "CWE-937"
                     ],
                     "date": "2021-05-20",
@@ -201,7 +275,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-665"
+                                    "value": "CWE-787"
                                 }
                             ]
                         }
@@ -272,7 +346,7 @@
                     "impactScore": 5.9
                 }
             },
-            "lastModifiedDate": "2021-05-20T18:59Z",
+            "lastModifiedDate": "2022-04-25T20:09Z",
             "publishedDate": "2021-05-14T20:15Z"
         }
     }

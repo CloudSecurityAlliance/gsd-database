@@ -1,30 +1,144 @@
 {
     "GSD": {
+        "affected_component": "unspecified",
         "alias": "CVE-2021-45046",
-        "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j 2.15.0 was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, $${ctx:loginId}) or a Thread Context Map pattern (%X, %mdc, or %MDC) to craft malicious input data using a JNDI Lookup pattern resulting in an information leak and remote code execution in some environments and local code execution in all environments. Log4j 2.16.0 (Java 8) and 2.12.2 (Java 7) fix this issue by removing support for message lookup patterns and disabling JNDI functionality by default.",
+        "attack_vector": "network",
+        "credit": "",
+        "description": "The vulnerability reported in GSD-2021-1002352 (CVE-2021-44228) was not correctly fixed \"in certain non-default configuration\" and a new vulnerability and patch have been released, as such Apache log4js 2.15 is vulnerable. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, $${ctx:loginId}) or a Thread Context Map pattern (%X, %mdc, or %MDC) to craft malicious input data using a JNDI Lookup pattern resulting in a denial of service (DOS) attack. Log4j 2.15.0 restricts JNDI LDAP lookups to localhost by default. Note that previous mitigations involving configuration such as to set the system property `log4j2.noFormatMsgLookup` to `true` do NOT mitigate this specific vulnerability. Log4j 2.16.0 fixes this issue by removing support for message lookup patterns and disabling JNDI functionality by default. This issue can be mitigated in prior releases (<2.16.0) by removing the JndiLookup class from the classpath (example: zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class).",
         "id": "GSD-2021-45046",
+        "impact": "remote code execution",
+        "modified": "2022-09-03T22:57:05Z",
+        "notes": "",
+        "product_name": [
+            "Log4j",
+            "Log4j2"
+        ],
+        "product_version": "<2.16.0",
         "references": [
-            "https://www.suse.com/security/cve/CVE-2021-45046.html",
-            "https://www.debian.org/security/2021/dsa-5022",
-            "https://access.redhat.com/errata/RHSA-2022:0223",
-            "https://access.redhat.com/errata/RHSA-2022:0222",
-            "https://access.redhat.com/errata/RHSA-2022:0216",
-            "https://access.redhat.com/errata/RHSA-2022:0205",
-            "https://access.redhat.com/errata/RHSA-2022:0203",
-            "https://access.redhat.com/errata/RHSA-2022:0083",
-            "https://access.redhat.com/errata/RHSA-2021:5148",
-            "https://access.redhat.com/errata/RHSA-2021:5141",
-            "https://access.redhat.com/errata/RHSA-2021:5137",
-            "https://access.redhat.com/errata/RHSA-2021:5129",
-            "https://access.redhat.com/errata/RHSA-2021:5128",
-            "https://access.redhat.com/errata/RHSA-2021:5127",
-            "https://access.redhat.com/errata/RHSA-2021:5108",
-            "https://access.redhat.com/errata/RHSA-2021:5107",
-            "https://access.redhat.com/errata/RHSA-2021:5106",
-            "https://access.redhat.com/errata/RHSA-2021:5094",
-            "https://ubuntu.com/security/CVE-2021-45046",
-            "https://advisories.mageia.org/CVE-2021-45046.html"
-        ]
+            {
+                "name": "https://github.com/logpresso/CVE-2021-44228-Scanner",
+                "type": "EVIDENCE",
+                "url": "https://github.com/logpresso/CVE-2021-44228-Scanner"
+            },
+            {
+                "content": "Further development of this tool will continue at corretto/hotpatch-for-apache-log4j2.",
+                "name": "https://github.com/simonis/Log4jPatch",
+                "type": "EVIDENCE",
+                "url": "https://github.com/simonis/Log4jPatch"
+            },
+            {
+                "content": "This is a tool which injects a Java agent into a running JVM process. The agent will attempt to patch the lookup() method of all loaded org.apache.logging.log4j.core.lookup.JndiLookup instances to unconditionally return the string \"Patched JndiLookup::lookup()\". It is designed to address the CVE-2021-44228 remote code execution vulnerability in Log4j without restarting the Java process.",
+                "name": "Log4jHotPatch",
+                "type": "EVIDENCE",
+                "url": "https://github.com/corretto/hotpatch-for-apache-log4j2"
+            },
+            {
+                "content": "A Byte Buddy Java agent-based fix for CVE-2021-44228, the log4j 2.x \"JNDI LDAP\" vulnerability.\n\nIt does three things:\n\n* Disables the internal method handler for jndi: format strings (\"lookups\").\n* Logs a message to System.err (i.e stderr) indicating that a log4j JNDI attempt has been made (including the format string attempted, with any ${} characters sanitized to prevent transitive injections).\n* Resolves the format string to \"(log4j jndi disabled)\" in the log message (to prevent transitive injections).",
+                "name": "log4j-jndi-be-gone",
+                "type": "EVIDENCE",
+                "url": "https://github.com/nccgroup/log4j-jndi-be-gone"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://www.suse.com/security/cve/CVE-2021-45046.html"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://www.debian.org/security/2021/dsa-5022"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0223"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0222"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0216"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0205"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0203"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:0083"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5148"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5141"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5137"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5129"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5128"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5127"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5108"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5107"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5106"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2021:5094"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://ubuntu.com/security/CVE-2021-45046"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://advisories.mageia.org/CVE-2021-45046.html"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:1296"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:1297"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://access.redhat.com/errata/RHSA-2022:1299"
+            },
+            {
+                "type": "ADVISORY",
+                "url": "https://alas.aws.amazon.com/cve/html/CVE-2021-45046.html"
+            }
+        ],
+        "reporter": "kurtseifried",
+        "reporter_id": 582211,
+        "vendor_name": "Apache",
+        "vulnerability_type": "CWE-502 Deserialization of Untrusted Data"
     },
     "namespaces": {
         "cve.org": {
@@ -181,164 +295,22 @@
                         "name": "https://www.oracle.com/security-alerts/cpujan2022.html",
                         "refsource": "MISC",
                         "url": "https://www.oracle.com/security-alerts/cpujan2022.html"
+                    },
+                    {
+                        "name": "https://www.oracle.com/security-alerts/cpuapr2022.html",
+                        "refsource": "MISC",
+                        "url": "https://www.oracle.com/security-alerts/cpuapr2022.html"
+                    },
+                    {
+                        "name": "https://www.oracle.com/security-alerts/cpujul2022.html",
+                        "refsource": "MISC",
+                        "url": "https://www.oracle.com/security-alerts/cpujul2022.html"
                     }
                 ]
             },
             "source": {
                 "discovery": "UNKNOWN"
             }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "[2.0,2.12.2),[2.13.0,2.16.0)",
-                    "affected_versions": "All versions starting from 2.0 before 2.12.2, all versions starting from 2.13.0 before 2.16.0",
-                    "cvss_v2": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-07",
-                    "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, `$${ctx:loginId})` or a Thread Context Map pattern (`%X`, `%mdc`, or `%MDC`) to craft malicious input data using a JNDI Lookup pattern resulting in a denial of service (DOS) attack. Log4j restricts JNDI LDAP lookups to localhost by default. Note that previous mitigations involving configuration such as to set the system property `log4j2.noFormatMsgLookup` to `true` do NOT mitigate this specific vulnerability. Log4j fixes this issue by removing support for message lookup patterns and disabling JNDI functionality by default. This issue can be mitigated in prior releases (<2.16.0) by removing the JndiLookup class from the classpath (example: zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class).",
-                    "fixed_versions": [
-                        "2.12.2",
-                        "2.16.0"
-                    ],
-                    "identifier": "CVE-2021-45046",
-                    "identifiers": [
-                        "CVE-2021-45046"
-                    ],
-                    "not_impacted": "All versions starting from starting from 2.12.2 before 2.13.0, all versions starting from 2.16.0",
-                    "package_slug": "maven/log4j/log4j",
-                    "pubdate": "2021-12-14",
-                    "solution": "Upgrade to version 2.12.2, 2.17.0 or above.",
-                    "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-45046",
-                        "http://www.openwall.com/lists/oss-security/2021/12/14/4",
-                        "https://logging.apache.org/log4j/2.x/security.html"
-                    ],
-                    "uuid": "bdefae49-1896-4c8e-bba8-f2234bec5d78"
-                },
-                {
-                    "affected_range": "(,2.16.0)",
-                    "affected_versions": "All versions before 2.16.0",
-                    "cvss_v2": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-78",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-08",
-                    "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j 2.15.0 was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, $${ctx:loginId}) or a Thread Context Map pattern (%X, %mdc, or %MDC) to craft malicious input data using a JNDI Lookup pattern resulting in an information leak and remote code execution in some environments and local code execution in all environments. Log4j 2.16.0 (Java 8) and 2.12.2 (Java 7) fix this issue by removing support for message lookup patterns and disabling JNDI functionality by default.",
-                    "fixed_versions": [
-                        "2.16.0"
-                    ],
-                    "identifier": "CVE-2021-45046",
-                    "identifiers": [
-                        "GHSA-7rjr-3q55-vv33",
-                        "CVE-2021-45046"
-                    ],
-                    "not_impacted": "All versions starting from 2.16.0",
-                    "package_slug": "maven/org.apache.logging.log4j/log4j-api",
-                    "pubdate": "2021-12-14",
-                    "solution": "Upgrade to version 2.16.0 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-45046",
-                        "https://github.com/advisories/GHSA-jfh8-c2jp-5v3q",
-                        "https://logging.apache.org/log4j/2.x/security.html",
-                        "https://www.openwall.com/lists/oss-security/2021/12/14/4",
-                        "https://www.cve.org/CVERecord?id=CVE-2021-44228",
-                        "http://www.openwall.com/lists/oss-security/2021/12/14/4",
-                        "https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-apache-log4j-qRuKNEbd",
-                        "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00646.html",
-                        "http://www.openwall.com/lists/oss-security/2021/12/15/3",
-                        "https://cert-portal.siemens.com/productcert/pdf/ssa-661247.pdf",
-                        "https://cert-portal.siemens.com/productcert/pdf/ssa-714170.pdf",
-                        "https://www.kb.cert.org/vuls/id/930724",
-                        "https://www.debian.org/security/2021/dsa-5022",
-                        "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2021-0032",
-                        "https://www.oracle.com/security-alerts/alert-cve-2021-44228.html",
-                        "http://www.openwall.com/lists/oss-security/2021/12/18/1",
-                        "https://cert-portal.siemens.com/productcert/pdf/ssa-397453.pdf",
-                        "https://cert-portal.siemens.com/productcert/pdf/ssa-479842.pdf",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EOKPQGV24RRBBI4TBZUDQMM4MEH7MXCY/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SIG7FZULMNK2XF6FZRU4VWYDQXNMUGAJ/",
-                        "https://www.oracle.com/security-alerts/cpujan2022.html",
-                        "https://github.com/advisories/GHSA-7rjr-3q55-vv33"
-                    ],
-                    "uuid": "a78ef337-2b3d-475c-9c66-a226d17bc057"
-                },
-                {
-                    "affected_range": "[2.0,2.12.2),[2.13.0,2.16.0)",
-                    "affected_versions": "All versions starting from 2.0 before 2.12.2, all versions starting from 2.13.0 before 2.16.0",
-                    "cvss_v2": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-07",
-                    "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, `$${ctx:loginId})` or a Thread Context Map pattern (`%X`, `%mdc`, or `%MDC`) to craft malicious input data using a JNDI Lookup pattern resulting in a denial of service (DOS) attack. Log4j restricts JNDI LDAP lookups to localhost by default. Note that previous mitigations involving configuration such as to set the system property `log4j2.noFormatMsgLookup` to `true` do NOT mitigate this specific vulnerability. Log4j fixes this issue by removing support for message lookup patterns and disabling JNDI functionality by default. This issue can be mitigated in prior releases (<2.16.0) by removing the JndiLookup class from the classpath (example: zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class).",
-                    "fixed_versions": [
-                        "2.12.2",
-                        "2.16.0"
-                    ],
-                    "identifier": "CVE-2021-45046",
-                    "identifiers": [
-                        "CVE-2021-45046"
-                    ],
-                    "not_impacted": "All versions starting from starting from 2.12.2 before 2.13.0, all versions starting from 2.16.0",
-                    "package_slug": "maven/org.apache.logging.log4j/log4j-core",
-                    "pubdate": "2021-12-14",
-                    "solution": "Upgrade to version 2.12.2, 2.17.0 or above.",
-                    "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-45046",
-                        "http://www.openwall.com/lists/oss-security/2021/12/14/4",
-                        "https://logging.apache.org/log4j/2.x/security.html"
-                    ],
-                    "uuid": "788f3d07-b01c-41d3-b9f0-56693bb21ec8"
-                },
-                {
-                    "affected_range": "[2.0,2.12.2),[2.13.0,2.16.0)",
-                    "affected_versions": "All versions starting from 2.0 before 2.12.2, all versions starting from 2.13.0 before 2.16.0",
-                    "cvss_v2": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-07",
-                    "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, `$${ctx:loginId})` or a Thread Context Map pattern (`%X`, `%mdc`, or `%MDC`) to craft malicious input data using a JNDI Lookup pattern resulting in a denial of service (DOS) attack. Log4j restricts JNDI LDAP lookups to localhost by default. Note that previous mitigations involving configuration such as to set the system property `log4j2.noFormatMsgLookup` to `true` do NOT mitigate this specific vulnerability. Log4j fixes this issue by removing support for message lookup patterns and disabling JNDI functionality by default.",
-                    "fixed_versions": [
-                        "2.12.2",
-                        "2.17.0"
-                    ],
-                    "identifier": "CVE-2021-45046",
-                    "identifiers": [
-                        "CVE-2021-45046"
-                    ],
-                    "not_impacted": "All versions starting from starting from 2.12.2 before 2.13.0, all versions starting from 2.16.0",
-                    "package_slug": "maven/org.apache.logging.log4j/log4j",
-                    "pubdate": "2021-12-14",
-                    "solution": "Upgrade to version 2.12.2, 2.17.0 or above.",
-                    "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-45046",
-                        "http://www.openwall.com/lists/oss-security/2021/12/14/4",
-                        "https://logging.apache.org/log4j/2.x/security.html"
-                    ],
-                    "uuid": "8cdf1573-c3e8-41dc-b775-f58e278f6da1"
-                }
-            ]
         },
         "nvd.nist.gov": {
             "configurations": {
@@ -348,7 +320,7 @@
                         "children": [],
                         "cpe_match": [
                             {
-                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:-:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:rc1:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -358,12 +330,12 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:rc1:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:rc2:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:rc2:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:apache:log4j:2.0:-:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -388,12 +360,12 @@
                         "children": [],
                         "cpe_match": [
                             {
-                                "cpe23Uri": "cpe:2.3:a:intel:audio_development_kit:-:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:intel:oneapi:-:*:*:*:*:eclipse:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:intel:computer_vision_annotation_tool:-:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:intel:audio_development_kit:-:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -403,12 +375,7 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:intel:genomics_kernel_library:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:intel:oneapi:-:*:*:*:*:eclipse:*:*",
+                                "cpe23Uri": "cpe:2.3:a:intel:system_debugger:-:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -423,7 +390,12 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:intel:system_debugger:-:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:intel:computer_vision_annotation_tool:-:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:intel:genomics_kernel_library:-:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -467,28 +439,121 @@
                         "children": [],
                         "cpe_match": [
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:captial:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2019.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:captial:2019.1:-:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:logo\\!_soft_comfort:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:captial:2019.1:sp1912:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:sp7:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:comos:*:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:-:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_advanced_reports:4.0:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "4.70",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_control_pro:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip_prepay:3.7:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip_prepay:3.8:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:sp8:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_identity:1.6:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_identity:1.5:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_command:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndIncluding": "4.16.2.1",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:sipass_integrated:2.85:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:sipass_integrated:2.80:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:head-end_system_universal_device_integration_system:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:gma-manager:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "8.6.2j-398",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.5:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.6:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.7:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:9.0:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:energy_engage:3.1:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:e-car_operation_center:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "2021-12-13",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_info_center:5.0:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_info_center:5.1:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -513,64 +578,60 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_info_center:5.0:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_advanced_reports:4.0:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:desigo_cc_info_center:5.1:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:comos:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:e-car_operation_center:*:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:captial:2019.1:sp1912:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:siemens:navigator:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "versionEndExcluding": "2021-12-13",
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energy_engage:3.1:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:xpedition_package_integrator:-:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.5:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:xpedition_enterprise:-:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.6:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:2019.1:sp1912:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:8.7:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:2019.1:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip:9.0:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
+                                "versionEndExcluding": "2019.1",
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip_prepay:3.7:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:captial:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
+                                "versionEndExcluding": "2019.1",
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:energyip_prepay:3.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:gma-manager:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "8.6.2j-398",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:head-end_system_universal_device_integration_system:*:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:captial:2019.1:-:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
@@ -586,11 +647,6 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:logo\\!_soft_comfort:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
                                 "cpe23Uri": "cpe:2.3:a:siemens:mendix:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
@@ -599,12 +655,6 @@
                                 "cpe23Uri": "cpe:2.3:a:siemens:mindsphere:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "versionEndExcluding": "2021-12-11",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:navigator:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2021-12-13",
                                 "vulnerable": true
                             },
                             {
@@ -650,37 +700,6 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:sipass_integrated:2.80:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:sipass_integrated:2.85:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_command:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "4.16.2.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_control_pro:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_identity:1.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:siveillance_identity:1.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
                                 "cpe23Uri": "cpe:2.3:a:siemens:siveillance_vantage:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
@@ -717,27 +736,6 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "4.70",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:sp7:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_4:4.70:sp8:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
                                 "cpe23Uri": "cpe:2.3:a:siemens:spectrum_power_7:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "versionEndExcluding": "2.30",
@@ -764,38 +762,12 @@
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:tracealertserverplus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2019.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:2019.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
                                 "cpe23Uri": "cpe:2.3:a:siemens:vesys:2019.1:-:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:siemens:vesys:2019.1:sp1912:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:xpedition_enterprise:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:xpedition_package_integrator:-:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:siemens:tracealertserverplus:*:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             }
@@ -1176,6 +1148,22 @@
                                 "Third Party Advisory"
                             ],
                             "url": "https://www.oracle.com/security-alerts/cpujan2022.html"
+                        },
+                        {
+                            "name": "https://www.oracle.com/security-alerts/cpuapr2022.html",
+                            "refsource": "MISC",
+                            "tags": [
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://www.oracle.com/security-alerts/cpuapr2022.html"
+                        },
+                        {
+                            "name": "N/A",
+                            "refsource": "N/A",
+                            "tags": [
+                                "Third Party Advisory"
+                            ],
+                            "url": "https://www.oracle.com/security-alerts/cpujul2022.html"
                         }
                     ]
                 }
@@ -1221,7 +1209,7 @@
                     "impactScore": 6.0
                 }
             },
-            "lastModifiedDate": "2022-02-19T04:42Z",
+            "lastModifiedDate": "2022-10-06T02:54Z",
             "publishedDate": "2021-12-14T19:15Z"
         }
     }

@@ -2,7 +2,12 @@
     "GSD": {
         "alias": "CVE-2022-26520",
         "description": "** DISPUTED ** In pgjdbc before 42.3.3, an attacker (who controls the jdbc URL or properties) can call java.util.logging.FileHandler to write to arbitrary files through the loggerFile and loggerLevel connection properties. An example situation is that an attacker could create an executable JSP file under a Tomcat web root. NOTE: the vendor's position is that there is no pgjdbc vulnerability; instead, it is a vulnerability for any application to use the pgjdbc driver with untrusted connection properties.",
-        "id": "GSD-2022-26520"
+        "id": "GSD-2022-26520",
+        "references": [
+            "https://www.suse.com/security/cve/CVE-2022-26520.html",
+            "https://access.redhat.com/errata/RHSA-2022:5532",
+            "https://www.debian.org/security/2022/dsa-5196"
+        ]
     },
     "namespaces": {
         "cve.org": {
@@ -78,6 +83,11 @@
                         "name": "https://jdbc.postgresql.org/documentation/head/tomcat.html",
                         "refsource": "MISC",
                         "url": "https://jdbc.postgresql.org/documentation/head/tomcat.html"
+                    },
+                    {
+                        "name": "DSA-5196",
+                        "refsource": "DEBIAN",
+                        "url": "https://www.debian.org/security/2022/dsa-5196"
                     }
                 ]
             }
@@ -85,7 +95,28 @@
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
-                "nodes": []
+                "nodes": [
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndIncluding": "42.1.4",
+                                "versionStartIncluding": "42.1.0",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "42.3.3",
+                                "versionStartIncluding": "42.3.0",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    }
+                ]
             },
             "cve": {
                 "CVE_data_meta": {
@@ -106,7 +137,12 @@
                 "problemtype": {
                     "problemtype_data": [
                         {
-                            "description": []
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "NVD-CWE-noinfo"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -115,32 +151,88 @@
                         {
                             "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-673j-qm5f-xpv8",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Third Party Advisory"
+                            ],
                             "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-673j-qm5f-xpv8"
                         },
                         {
                             "name": "https://jdbc.postgresql.org/documentation/changelog.html#version_42.3.3",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Release Notes",
+                                "Vendor Advisory"
+                            ],
                             "url": "https://jdbc.postgresql.org/documentation/changelog.html#version_42.3.3"
                         },
                         {
                             "name": "https://github.com/pgjdbc/pgjdbc/pull/2454/commits/017b929977b4f85795f9ad2fa5de6e80978b8ccc",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Patch",
+                                "Third Party Advisory"
+                            ],
                             "url": "https://github.com/pgjdbc/pgjdbc/pull/2454/commits/017b929977b4f85795f9ad2fa5de6e80978b8ccc"
                         },
                         {
                             "name": "https://jdbc.postgresql.org/documentation/head/tomcat.html",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Vendor Advisory"
+                            ],
                             "url": "https://jdbc.postgresql.org/documentation/head/tomcat.html"
+                        },
+                        {
+                            "name": "DSA-5196",
+                            "refsource": "DEBIAN",
+                            "tags": [],
+                            "url": "https://www.debian.org/security/2022/dsa-5196"
                         }
                     ]
                 }
             },
-            "impact": {},
-            "lastModifiedDate": "2022-03-10T17:53Z",
+            "impact": {
+                "baseMetricV2": {
+                    "acInsufInfo": false,
+                    "cvssV2": {
+                        "accessComplexity": "LOW",
+                        "accessVector": "NETWORK",
+                        "authentication": "NONE",
+                        "availabilityImpact": "PARTIAL",
+                        "baseScore": 7.5,
+                        "confidentialityImpact": "PARTIAL",
+                        "integrityImpact": "PARTIAL",
+                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+                        "version": "2.0"
+                    },
+                    "exploitabilityScore": 10.0,
+                    "impactScore": 6.4,
+                    "obtainAllPrivilege": false,
+                    "obtainOtherPrivilege": false,
+                    "obtainUserPrivilege": false,
+                    "severity": "HIGH",
+                    "userInteractionRequired": false
+                },
+                "baseMetricV3": {
+                    "cvssV3": {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 9.8,
+                        "baseSeverity": "CRITICAL",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    },
+                    "exploitabilityScore": 3.9,
+                    "impactScore": 5.9
+                }
+            },
+            "lastModifiedDate": "2022-08-01T11:15Z",
             "publishedDate": "2022-03-10T17:47Z"
         }
     }

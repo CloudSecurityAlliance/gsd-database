@@ -93,6 +93,43 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "<2.6.3",
+                    "affected_versions": "All versions before 2.6.3",
+                    "cvss_v2": "AV:N/AC:M/Au:S/C:N/I:P/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:C/C:N/I:H/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-350",
+                        "CWE-937"
+                    ],
+                    "date": "2021-05-27",
+                    "description": "In Weave Net before version 2.6.3, an attacker able to run a process as root in a container is able to respond to DNS requests from the host and thereby insert themselves as a fake service. In a cluster with an IPv4 internal network, if IPv6 is not totally disabled on the host (via ipv6.disable=1 on the kernel cmdline), it will be either unconfigured or configured on some interfaces, but it's pretty likely that ipv6 forwarding is disabled, ie /proc/sys/net/ipv6/conf//forwarding == 0. Also by default, /proc/sys/net/ipv6/conf//accept_ra == 1. The combination of these 2 sysctls means that the host accepts router advertisements and configure the IPv6 stack using them. By sending rogue router advertisements, an attacker can reconfigure the host to redirect part or all of the IPv6 traffic of the host to the attacker controlled container. Even if there was no IPv6 traffic before, if the DNS returns A (IPv4) and AAAA (IPv6) records, many HTTP libraries will try to connect via IPv6 first then fallback to IPv4, giving an opportunity to the attacker to respond. If by chance you also have on the host a vulnerability like last year's RCE in apt (CVE-2019-3462), you can now escalate to the host. Weave Net version 2.6.3 disables the accept_ra option on the veth devices that it creates.",
+                    "fixed_versions": [
+                        "2.6.3"
+                    ],
+                    "identifier": "CVE-2020-11091",
+                    "identifiers": [
+                        "GHSA-59qg-grp7-5r73",
+                        "CVE-2020-11091"
+                    ],
+                    "not_impacted": "All versions starting from 2.6.3",
+                    "package_slug": "go/github.com/weaveworks/weave",
+                    "pubdate": "2021-05-27",
+                    "solution": "Upgrade to version 2.6.3 or above.",
+                    "title": "Reliance on Reverse DNS Resolution for a Security-Critical Action",
+                    "urls": [
+                        "https://github.com/weaveworks/weave/security/advisories/GHSA-59qg-grp7-5r73",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2020-11091",
+                        "https://github.com/weaveworks/weave/commit/15f21f1899060f7716c70a8555a084e836f39a60",
+                        "https://github.com/advisories/GHSA-59qg-grp7-5r73"
+                    ],
+                    "uuid": "d7b73012-7e2a-43cb-9ca1-0acabf3fee36"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
