@@ -159,7 +159,7 @@
                     "description_data": [
                         {
                             "lang": "en",
-                            "value": "Linux kernel built with the KVM visualization support (CONFIG_KVM), with nested visualization (nVMX) feature enabled (nested=1), is vulnerable to a crash due to disabled external interrupts. As L2 guest could access (r/w) hardware CR8 register of the host(L0). In a nested visualization setup, L2 guest user could use this flaw to potentially crash the host(L0) resulting in DoS."
+                            "value": "The prepare_vmcs02 function in arch/x86/kvm/vmx.c in the Linux kernel through 4.13.3 does not ensure that the \"CR8-load exiting\" and \"CR8-store exiting\" L0 vmcs02 controls exist in cases where L1 omits the \"use TPR shadow\" vmcs12 control, which allows KVM L2 guest OS users to obtain read and write access to the hardware CR8 register."
                         }
                     ]
                 },
@@ -261,18 +261,13 @@
                             "refsource": "REDHAT",
                             "tags": [],
                             "url": "https://access.redhat.com/errata/RHSA-2019:1946"
-                        },
-                        {
-                            "name": "https://access.redhat.com/security/cve/CVE-2017-12154",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://access.redhat.com/security/cve/CVE-2017-12154"
                         }
                     ]
                 }
             },
             "impact": {
                 "baseMetricV2": {
+                    "acInsufInfo": false,
                     "cvssV2": {
                         "accessComplexity": "LOW",
                         "accessVector": "LOCAL",
@@ -311,7 +306,7 @@
                     "impactScore": 5.2
                 }
             },
-            "lastModifiedDate": "2023-02-02T16:17Z",
+            "lastModifiedDate": "2023-02-12T23:27Z",
             "publishedDate": "2017-09-26T05:29Z"
         }
     }
