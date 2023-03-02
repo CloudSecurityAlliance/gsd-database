@@ -10,4 +10,4 @@ Please file an issue and use the keyword "security" in the title if it is not se
 
 If you feel it is serious and want to report it privately please email security@gsd.id.
 
-Please note that as a vcolunteer driven project response times may vary.
+Please note that as a volunteer driven project response times may vary.
