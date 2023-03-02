@@ -1,0 +1,10 @@
+name: JSON check
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: json-check
+        run: git diff --name-only "$GITHUB_BASE_REF..$GITHUB_SHA" | grep "json" | xargs -n1 -I {} python -m json.tool {}
