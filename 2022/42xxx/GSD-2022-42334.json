@@ -21,8 +21,15 @@
                                         "version": {
                                             "version_data": [
                                                 {
-                                                    "version_affected": "?",
-                                                    "version_value": "consult Xen advisory XSA-428"
+                                                    "version_value": "not down converted",
+                                                    "x_cve_json_5_version_data": {
+                                                        "versions": [
+                                                            {
+                                                                "status": "unknown",
+                                                                "version": "consult Xen advisory XSA-428"
+                                                            }
+                                                        ]
+                                                    }
                                                 }
                                             ]
                                         }
@@ -34,30 +41,12 @@
                     ]
                 }
             },
-            "configuration": {
-                "configuration_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Xen versions 4.11 through 4.17 are vulnerable.  Older versions contain\nthe same functionality, but it is exposed there only via an interface\nwhich is subject to XSA-77's constraints.\n\nOnly x86 systems are potentially vulnerable.  Arm systems are not\nvulnerable.\n\nOnly entities controlling HVM guests can leverage the vulnerability.\nThese are device models running in either a stub domain or de-privileged\nin Dom0."
-                            }
-                        ]
-                    }
+            "credits": [
+                {
+                    "lang": "en",
+                    "value": "{'credit_data': {'description': {'description_data': [{'lang': 'eng', 'value': 'Aspects of this issue were discovered by Andrew Cooper of XenServer and\\nJan Beulich of SUSE.'}]}}}"
                 }
-            },
-            "credit": {
-                "credit_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Aspects of this issue were discovered by Andrew Cooper of XenServer and\nJan Beulich of SUSE."
-                            }
-                        ]
-                    }
-                }
-            },
+            ],
             "data_format": "MITRE",
             "data_type": "CVE",
             "data_version": "4.0",
@@ -68,18 +57,6 @@
                         "value": "x86/HVM pinned cache attributes mis-handling T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] To allow cachability control for HVM guests with passed through devices, an interface exists to explicitly override defaults which would otherwise be put in place. While not exposed to the affected guests themselves, the interface specifically exists for domains controlling such guests. This interface may therefore be used by not fully privileged entities, e.g. qemu running deprivileged in Dom0 or qemu running in a so called stub-domain. With this exposure it is an issue that - the number of the such controlled regions was unbounded (CVE-2022-42333), - installation and removal of such regions was not properly serialized (CVE-2022-42334)."
                     }
                 ]
-            },
-            "impact": {
-                "impact_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Entities controlling HVM guests can run the host out of resources or\nstall execution of a physical CPU for effectively unbounded periods of\ntime, resulting in a Denial of Servis (DoS) affecting the entire host.\nCrashes, information leaks, or elevation of privilege cannot be ruled\nout."
-                            }
-                        ]
-                    }
-                }
             },
             "problemtype": {
                 "problemtype_data": [
@@ -101,38 +78,31 @@
                         "url": "https://xenbits.xenproject.org/xsa/advisory-428.txt"
                     },
                     {
+                        "name": "https://www.debian.org/security/2023/dsa-5378",
+                        "refsource": "MISC",
+                        "url": "https://www.debian.org/security/2023/dsa-5378"
+                    },
+                    {
+                        "name": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/",
+                        "refsource": "MISC",
+                        "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/"
+                    },
+                    {
+                        "name": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/",
+                        "refsource": "MISC",
+                        "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/"
+                    },
+                    {
                         "name": "http://xenbits.xen.org/xsa/advisory-428.html",
-                        "refsource": "CONFIRM",
+                        "refsource": "MISC",
                         "url": "http://xenbits.xen.org/xsa/advisory-428.html"
                     },
                     {
-                        "name": "[oss-security] 20230321 Xen Security Advisory 428 v3 (CVE-2022-42333,CVE-2022-42334) - x86/HVM pinned cache attributes mis-handling",
-                        "refsource": "MLIST",
+                        "name": "http://www.openwall.com/lists/oss-security/2023/03/21/2",
+                        "refsource": "MISC",
                         "url": "http://www.openwall.com/lists/oss-security/2023/03/21/2"
-                    },
-                    {
-                        "name": "FEDORA-2023-703f133eb3",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/"
-                    },
-                    {
-                        "name": "FEDORA-2023-da8315e641",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/"
                     }
                 ]
-            },
-            "workaround": {
-                "workaround_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Running only PV or PVH guests will avoid the vulnerability.\n\n(Switching from a device model stub domain or a de-privileged device\nmodel to a fully privileged Dom0 device model does NOT mitigate this\nvulnerability.  Rather, it simply recategorises the vulnerability to\nhostile management code, regarding it \"as designed\"; thus it merely\nreclassifies these issues as \"not a bug\".  The security of a Xen system\nusing stub domains is still better than with a qemu-dm running as a Dom0\nprocess.  Users and vendors of stub qemu dm systems should not change\ntheir configuration to use a Dom0 qemu process.)"
-                            }
-                        ]
-                    }
-                }
             }
         },
         "nvd.nist.gov": {
@@ -184,22 +154,28 @@
                             "url": "http://www.openwall.com/lists/oss-security/2023/03/21/2"
                         },
                         {
-                            "name": "FEDORA-2023-703f133eb3",
-                            "refsource": "FEDORA",
+                            "name": "DSA-5378",
+                            "refsource": "DEBIAN",
                             "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/"
+                            "url": "https://www.debian.org/security/2023/dsa-5378"
                         },
                         {
-                            "name": "FEDORA-2023-da8315e641",
-                            "refsource": "FEDORA",
+                            "name": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/",
+                            "refsource": "MISC",
                             "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/"
+                            "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/5L6PM4RE7MUE6OWA32ZVOXCP235RM2TM/"
+                        },
+                        {
+                            "name": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/APBMS2Q6746AXAFAITNJMGBNFGNMVLWR/"
                         }
                     ]
                 }
             },
             "impact": {},
-            "lastModifiedDate": "2023-03-26T03:15Z",
+            "lastModifiedDate": "2023-03-27T00:15Z",
             "publishedDate": "2023-03-21T13:15Z"
         }
     }
