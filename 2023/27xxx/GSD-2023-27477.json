@@ -1,5 +1,135 @@
 {
+    "GSD": {
+        "alias": "CVE-2023-27477",
+        "id": "GSD-2023-27477"
+    },
     "namespaces": {
+        "cve.org": {
+            "CVE_data_meta": {
+                "ASSIGNER": "security-advisories@github.com",
+                "ID": "CVE-2023-27477",
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "wasmtime",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "cranelift-codegen: >= 0.88.0, < 0.91.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "cranelift-codegen: >= 0.92.0, < 0.92.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "cranelift-codegen: >= 0.93.0, < 0.93.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " wasmtime: >= 0.37.0, < 4.0.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " wasmtime: >= 5.0.0, < 5.0.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " wasmtime: >= 6.0.0, < 6.0.1"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "bytecodealliance"
+                        }
+                    ]
+                }
+            },
+            "data_format": "MITRE",
+            "data_type": "CVE",
+            "data_version": "4.0",
+            "description": {
+                "description_data": [
+                    {
+                        "lang": "eng",
+                        "value": "wasmtime is a fast and secure runtime for WebAssembly. Wasmtime's code generation backend, Cranelift, has a bug on x86_64 platforms for the WebAssembly `i8x16.select` instruction which will produce the wrong results when the same operand is provided to the instruction and some of the selected indices are greater than 16. There is an off-by-one error in the calculation of the mask to the `pshufb` instruction which causes incorrect results to be returned if lanes are selected from the second vector. This codegen bug has been fixed in Wasmtiem 6.0.1, 5.0.1, and 4.0.1. Users are recommended to upgrade to these updated versions. If upgrading is not an option for you at this time, you can avoid this miscompilation by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other platforms such as AArch64 and s390x are not affected."
+                    }
+                ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "HIGH",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "NONE",
+                        "baseScore": 3.1,
+                        "baseSeverity": "LOW",
+                        "confidentialityImpact": "NONE",
+                        "integrityImpact": "LOW",
+                        "privilegesRequired": "LOW",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:N/I:L/A:N",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-193",
+                                "lang": "eng",
+                                "value": "CWE-193: Off-by-one Error"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+                        "refsource": "MISC",
+                        "url": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd"
+                    },
+                    {
+                        "name": "https://github.com/webassembly/simd",
+                        "refsource": "MISC",
+                        "url": "https://github.com/webassembly/simd"
+                    },
+                    {
+                        "name": "https://groups.google.com/a/bytecodealliance.org/g/sec-announce/c/Mov-ItrNJsQ",
+                        "refsource": "MISC",
+                        "url": "https://groups.google.com/a/bytecodealliance.org/g/sec-announce/c/Mov-ItrNJsQ"
+                    },
+                    {
+                        "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-xm67-587q-r2vw",
+                        "refsource": "MISC",
+                        "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-xm67-587q-r2vw"
+                    },
+                    {
+                        "name": "https://github.com/bytecodealliance/wasmtime/commit/5dc2bbccbb363e474d2c9a1b8e38a89a43bbd5d1",
+                        "refsource": "MISC",
+                        "url": "https://github.com/bytecodealliance/wasmtime/commit/5dc2bbccbb363e474d2c9a1b8e38a89a43bbd5d1"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-xm67-587q-r2vw",
+                "discovery": "UNKNOWN"
+            }
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
