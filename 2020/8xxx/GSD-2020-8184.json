@@ -10,6 +10,41 @@
             "https://advisories.mageia.org/CVE-2020-8184.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-8184",
+            "modified": "2020-06-15T00:00:00.000Z",
+            "published": "2020-06-15T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-8184",
+                "GHSA-j6w9-fv6q-3q52"
+            ],
+            "summary": "Percent-encoded cookies can be used to overwrite existing prefixed cookie names",
+            "details": "It is possible to forge a secure or host-only cookie prefix in Rack using\nan arbitrary cookie write by using URL encoding (percent-encoding) on the\nname of the cookie. This could result in an application that is dependent on\nthis prefix to determine if a cookie is safe to process being manipulated\ninto processing an insecure or cross-origin request.\nThis vulnerability has been assigned the CVE identifier CVE-2020-8184.\n\nVersions Affected:  rack < 2.2.3, rack < 2.1.4\nNot affected:       Applications which do not rely on __Host- and __Secure- prefixes to determine if a cookie is safe to process\nFixed Versions:     rack >= 2.2.3, rack >= 2.1.4\n\nImpact\n------\n\nAn attacker may be able to trick a vulnerable application into processing an\ninsecure (non-SSL) or cross-origin request if they can gain the ability to write\narbitrary cookies that are sent to the application.\n\nWorkarounds\n-----------\n\nIf your application is impacted but you cannot upgrade to the released versions or apply\nthe provided patch, this issue can be temporarily addressed by adding the following workaround:\n\n```\nmodule Rack\n  module Utils\n    module_function def parse_cookies_header(header)\n      return {} unless header\n      header.split(/[;] */n).each_with_object({}) do |cookie, cookies|\n        next if cookie.empty?\n        key, value = cookie.split('=', 2)\n        cookies[key] = (unescape(value) rescue value) unless cookies.key?(key)\n      end\n    end\n  end\nend\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "rack",
+                        "purl": "pkg:gem/rack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/rubyonrails-security/c/OWtmozPH9Ak"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -301,6 +336,20 @@
             },
             "lastModifiedDate": "2023-02-16T19:24Z",
             "publishedDate": "2020-06-19T17:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "rack",
+            "cve": "2020-8184",
+            "ghsa": "j6w9-fv6q-3q52",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/OWtmozPH9Ak",
+            "title": "Percent-encoded cookies can be used to overwrite existing prefixed cookie names",
+            "date": "2020-06-15",
+            "description": "It is possible to forge a secure or host-only cookie prefix in Rack using\nan arbitrary cookie write by using URL encoding (percent-encoding) on the\nname of the cookie. This could result in an application that is dependent on\nthis prefix to determine if a cookie is safe to process being manipulated\ninto processing an insecure or cross-origin request.\nThis vulnerability has been assigned the CVE identifier CVE-2020-8184.\n\nVersions Affected:  rack < 2.2.3, rack < 2.1.4\nNot affected:       Applications which do not rely on __Host- and __Secure- prefixes to determine if a cookie is safe to process\nFixed Versions:     rack >= 2.2.3, rack >= 2.1.4\n\nImpact\n------\n\nAn attacker may be able to trick a vulnerable application into processing an\ninsecure (non-SSL) or cross-origin request if they can gain the ability to write\narbitrary cookies that are sent to the application.\n\nWorkarounds\n-----------\n\nIf your application is impacted but you cannot upgrade to the released versions or apply\nthe provided patch, this issue can be temporarily addressed by adding the following workaround:\n\n```\nmodule Rack\n  module Utils\n    module_function def parse_cookies_header(header)\n      return {} unless header\n      header.split(/[;] */n).each_with_object({}) do |cookie, cookies|\n        next if cookie.empty?\n        key, value = cookie.split('=', 2)\n        cookies[key] = (unescape(value) rescue value) unless cookies.key?(key)\n      end\n    end\n  end\nend\n```\n",
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                "~> 2.1.4",
+                ">= 2.2.3"
+            ]
         }
     }
 }

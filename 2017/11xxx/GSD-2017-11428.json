@@ -4,6 +4,53 @@
         "description": "OneLogin Ruby-SAML 1.6.0 and earlier may incorrectly utilize the results of XML DOM traversal and canonicalization APIs in such a way that an attacker may be able to manipulate the SAML data without invalidating the cryptographic signature, allowing the attack to potentially bypass authentication to SAML service providers.",
         "id": "GSD-2017-11428"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2017-11428",
+            "modified": "2018-02-27T00:00:00.000Z",
+            "published": "2018-02-27T00:00:00.000Z",
+            "aliases": [
+                "CVE-2017-11428",
+                "GHSA-x2fr-v8wf-8wwv"
+            ],
+            "summary": "Authentication bypass via incorrect XML canonicalization and DOM traversal",
+            "details": "ruby-saml prior to version 1.7.0 is vulnerable to an authentication bypass via incorrect\nXML canonicalization and DOM traversal. Specifically, there are inconsistencies in\nhandling of comments within XML nodes, resulting in incorrect parsing of the inner text\nof XML nodes such that any inner text after the comment is lost prior to\ncryptographically signing the SAML message. Text after the comment therefore has no\nimpact on the signature on the SAML message.\n\nA remote attacker can modify SAML content for a SAML service provider without\ninvalidating the cryptographic signature, which may allow attackers to bypass\nprimary authentication for the affected SAML service provider.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 6.3
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.7
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "ruby-saml",
+                        "purl": "pkg:gem/ruby-saml"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://www.kb.cert.org/vuls/id/475445"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -250,6 +297,26 @@
             },
             "lastModifiedDate": "2019-10-09T23:22Z",
             "publishedDate": "2019-04-17T14:29Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "ruby-saml",
+            "cve": "2017-11428",
+            "ghsa": "x2fr-v8wf-8wwv",
+            "url": "https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f",
+            "title": "Authentication bypass via incorrect XML canonicalization and DOM traversal",
+            "date": "2018-02-27",
+            "description": "ruby-saml prior to version 1.7.0 is vulnerable to an authentication bypass via incorrect\nXML canonicalization and DOM traversal. Specifically, there are inconsistencies in\nhandling of comments within XML nodes, resulting in incorrect parsing of the inner text\nof XML nodes such that any inner text after the comment is lost prior to\ncryptographically signing the SAML message. Text after the comment therefore has no\nimpact on the signature on the SAML message.\n\nA remote attacker can modify SAML content for a SAML service provider without\ninvalidating the cryptographic signature, which may allow attackers to bypass\nprimary authentication for the affected SAML service provider.\n",
+            "cvss_v2": 6.3,
+            "cvss_v3": 7.7,
+            "patched_versions": [
+                ">= 1.7.0"
+            ],
+            "related": {
+                "url": [
+                    "https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations",
+                    "https://www.kb.cert.org/vuls/id/475445"
+                ]
+            }
         }
     }
 }

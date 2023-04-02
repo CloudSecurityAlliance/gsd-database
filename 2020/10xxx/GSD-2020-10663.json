@@ -21,6 +21,48 @@
             "https://linux.oracle.com/cve/CVE-2020-10663.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-10663",
+            "modified": "2020-03-19T00:00:00.000Z",
+            "published": "2020-03-19T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-10663",
+                "GHSA-jphg-qwrw-7w9g"
+            ],
+            "related": [
+                "CVE-2013-0269"
+            ],
+            "summary": "json Gem for Ruby Unsafe Object Creation Vulnerability (additional fix)",
+            "details": "There is an unsafe object creation vulnerability in the json gem bundled with\nRuby. This vulnerability has been assigned the CVE identifier CVE-2020-10663.\nWe strongly recommend upgrading the json gem.\n\nDetails\n-------\n\nWhen parsing certain JSON documents, the json gem (including the one bundled\nwith Ruby) can be coerced into creating arbitrary objects in the target system.\n\nThis is the same issue as CVE-2013-0269. The previous fix was incomplete, which\naddressed JSON.parse(user_input), but didn’t address some other styles of JSON\nparsing including JSON(user_input) and JSON.parse(user_input, nil).\n\nSee CVE-2013-0269 in detail. Note that the issue was exploitable to cause a\nDenial of Service by creating many garbage-uncollectable Symbol objects, but\nthis kind of attack is no longer valid because Symbol objects are now\ngarbage-collectable. However, creating arbitrary objects may cause severe\nsecurity consequences depending upon the application code.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "json",
+                        "purl": "pkg:gem/json"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://www.ruby-lang.org/en/news/2020/03/19/json-dos-cve-2020-10663/"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/ermX1eQqqKA"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -553,6 +595,27 @@
             },
             "lastModifiedDate": "2023-03-28T18:06Z",
             "publishedDate": "2020-04-28T21:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "json",
+            "cve": "2020-10663",
+            "ghsa": "jphg-qwrw-7w9g",
+            "url": "https://www.ruby-lang.org/en/news/2020/03/19/json-dos-cve-2020-10663/",
+            "title": "json Gem for Ruby Unsafe Object Creation Vulnerability (additional fix)",
+            "date": "2020-03-19",
+            "description": "There is an unsafe object creation vulnerability in the json gem bundled with\nRuby. This vulnerability has been assigned the CVE identifier CVE-2020-10663.\nWe strongly recommend upgrading the json gem.\n\nDetails\n-------\n\nWhen parsing certain JSON documents, the json gem (including the one bundled\nwith Ruby) can be coerced into creating arbitrary objects in the target system.\n\nThis is the same issue as CVE-2013-0269. The previous fix was incomplete, which\naddressed JSON.parse(user_input), but didn’t address some other styles of JSON\nparsing including JSON(user_input) and JSON.parse(user_input, nil).\n\nSee CVE-2013-0269 in detail. Note that the issue was exploitable to cause a\nDenial of Service by creating many garbage-uncollectable Symbol objects, but\nthis kind of attack is no longer valid because Symbol objects are now\ngarbage-collectable. However, creating arbitrary objects may cause severe\nsecurity consequences depending upon the application code.\n",
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                ">= 2.3.0"
+            ],
+            "related": {
+                "cve": [
+                    "2013-0269"
+                ],
+                "url": [
+                    "https://groups.google.com/forum/#!topic/ruby-security-ann/ermX1eQqqKA"
+                ]
+            }
         }
     }
 }

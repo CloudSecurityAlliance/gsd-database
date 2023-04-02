@@ -8,6 +8,53 @@
             "https://access.redhat.com/errata/RHSA-2022:7242"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-31163",
+            "modified": "2022-07-21T00:00:00.000Z",
+            "published": "2022-07-21T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-31163",
+                "GHSA-5cm2-9h8c-rvfx"
+            ],
+            "summary": "TZInfo relative path traversal vulnerability allows loading of arbitrary files",
+            "details": "# Impact\n\n## Affected versions\n\n- 0.3.60 and earlier.\n- 1.0.0 to 1.2.9 when used with the Ruby data source (tzinfo-data).\n\n## Vulnerability\n\nWith the Ruby data source (the tzinfo-data gem for tzinfo version 1.0.0 and\nlater and built-in to earlier versions), time zones are defined in Ruby files.\nThere is one file per time zone. Time zone files are loaded with `require` on\ndemand. In the affected versions, `TZInfo::Timezone.get` fails to validate\ntime zone identifiers correctly, allowing a new line character within the\nidentifier. With Ruby version 1.9.3 and later, `TZInfo::Timezone.get` can be\nmade to load unintended files with `require`, executing them within the Ruby\nprocess.\n\nFor example, with version 1.2.9, you can run the following to load a file with\npath `/tmp/payload.rb`:\n\n```ruby\nTZInfo::Timezone.get(\\\"foo\\\n/../../../../../../../../../../../../../../../../tmp/payload\\\")\n```\n\nThe exact number of parent directory traversals needed will vary depending on\nthe location of the tzinfo-data gem.\n\nTZInfo versions 1.2.6 to 1.2.9 can be made to load files from outside of the\nRuby load path. Versions up to and including 1.2.5 can only be made to load\nfiles from directories within the load path.\n\nThis could be exploited in, for example, a Ruby on Rails application using\ntzinfo version 1.2.9, that allows file uploads and has a time zone selector\nthat accepts arbitrary time zone identifiers.\nThe CVSS score and severity have been set on this basis.\n\nVersions 2.0.0 and later are not vulnerable.\n\n# Patches\n\nVersions 0.3.61 and 1.2.10 include fixes to correctly validate time zone\nidentifiers.\n\nNote that version 0.3.61 can still load arbitrary files from the Ruby load\npath if their name follows the rules for a valid time zone identifier and the\nfile has a prefix of `tzinfo/definition` within a directory in the load path.\nFor example if `/tmp/upload` was in the load path, then\n`TZInfo::Timezone.get('foo')` could load a file with path\n`/tmp/upload/tzinfo/definition/foo.rb`. Applications should ensure that\nuntrusted files are not placed in a directory on the load path.\n\n# Workarounds\n\nAs a workaround, the time zone identifier can be validated before passing to\n`TZInfo::Timezone.get` by ensuring it matches the regular expression\n`\\\\A[A-Za-z0-9+\\\\-_]+(?:\\\\/[A-Za-z0-9+\\\\-_]+)*\\\\z`.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "tzinfo",
+                        "purl": "pkg:gem/tzinfo"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/tzinfo/tzinfo/security/advisories/GHSA-5cm2-9h8c-rvfx"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/tzinfo/tzinfo/commit/ca29f349856d62cb2b2edb3257d9ddd2f97b3c27"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/tzinfo/tzinfo/releases/tag/v0.3.61"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/tzinfo/tzinfo/releases/tag/v1.2.10"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -277,6 +324,30 @@
             },
             "lastModifiedDate": "2022-10-26T19:00Z",
             "publishedDate": "2022-07-22T04:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "tzinfo",
+            "cve": "2022-31163",
+            "ghsa": "5cm2-9h8c-rvfx",
+            "url": "https://github.com/tzinfo/tzinfo/security/advisories/GHSA-5cm2-9h8c-rvfx",
+            "title": "TZInfo relative path traversal vulnerability allows loading of arbitrary files",
+            "date": "2022-07-21",
+            "description": "# Impact\n\n## Affected versions\n\n- 0.3.60 and earlier.\n- 1.0.0 to 1.2.9 when used with the Ruby data source (tzinfo-data).\n\n## Vulnerability\n\nWith the Ruby data source (the tzinfo-data gem for tzinfo version 1.0.0 and\nlater and built-in to earlier versions), time zones are defined in Ruby files.\nThere is one file per time zone. Time zone files are loaded with `require` on\ndemand. In the affected versions, `TZInfo::Timezone.get` fails to validate\ntime zone identifiers correctly, allowing a new line character within the\nidentifier. With Ruby version 1.9.3 and later, `TZInfo::Timezone.get` can be\nmade to load unintended files with `require`, executing them within the Ruby\nprocess.\n\nFor example, with version 1.2.9, you can run the following to load a file with\npath `/tmp/payload.rb`:\n\n```ruby\nTZInfo::Timezone.get(\\\"foo\\\n/../../../../../../../../../../../../../../../../tmp/payload\\\")\n```\n\nThe exact number of parent directory traversals needed will vary depending on\nthe location of the tzinfo-data gem.\n\nTZInfo versions 1.2.6 to 1.2.9 can be made to load files from outside of the\nRuby load path. Versions up to and including 1.2.5 can only be made to load\nfiles from directories within the load path.\n\nThis could be exploited in, for example, a Ruby on Rails application using\ntzinfo version 1.2.9, that allows file uploads and has a time zone selector\nthat accepts arbitrary time zone identifiers.\nThe CVSS score and severity have been set on this basis.\n\nVersions 2.0.0 and later are not vulnerable.\n\n# Patches\n\nVersions 0.3.61 and 1.2.10 include fixes to correctly validate time zone\nidentifiers.\n\nNote that version 0.3.61 can still load arbitrary files from the Ruby load\npath if their name follows the rules for a valid time zone identifier and the\nfile has a prefix of `tzinfo/definition` within a directory in the load path.\nFor example if `/tmp/upload` was in the load path, then\n`TZInfo::Timezone.get('foo')` could load a file with path\n`/tmp/upload/tzinfo/definition/foo.rb`. Applications should ensure that\nuntrusted files are not placed in a directory on the load path.\n\n# Workarounds\n\nAs a workaround, the time zone identifier can be validated before passing to\n`TZInfo::Timezone.get` by ensuring it matches the regular expression\n`\\\\A[A-Za-z0-9+\\\\-_]+(?:\\\\/[A-Za-z0-9+\\\\-_]+)*\\\\z`.\n",
+            "cvss_v3": 7.5,
+            "unaffected_versions": [
+                ">= 2.0.0"
+            ],
+            "patched_versions": [
+                "~> 0.3.61",
+                ">= 1.2.10"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/tzinfo/tzinfo/commit/ca29f349856d62cb2b2edb3257d9ddd2f97b3c27",
+                    "https://github.com/tzinfo/tzinfo/releases/tag/v0.3.61",
+                    "https://github.com/tzinfo/tzinfo/releases/tag/v1.2.10"
+                ]
+            }
         }
     }
 }

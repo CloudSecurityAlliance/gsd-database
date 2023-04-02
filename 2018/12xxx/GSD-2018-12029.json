@@ -8,6 +8,44 @@
             "https://ubuntu.com/security/CVE-2018-12029"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2018-12029",
+            "modified": "2018-06-12T00:00:00.000Z",
+            "published": "2018-06-12T00:00:00.000Z",
+            "aliases": [
+                "CVE-2018-12029"
+            ],
+            "summary": "CHMOD race vulnerability",
+            "details": "The file system access race condition allows for local privilege escalation and affects the Nginx module for Passenger versions 5.3.1, all the way back to 3.0.0 (the chown command entered the code in 2010).\nThe vulnerability was exploitable only when running a non-standard `passenger_instance_registry_dir`, via a race condition where after a file was created, there was a window in which it could be replaced with a symlink before it was chowned via the path and not the file descriptor.\nIf the symlink target was to a file which would be executed by root such as root's crontab file, then privilege escalation was possible.",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 4.4
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.0
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "passenger",
+                        "purl": "pkg:gem/passenger"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://blog.phusion.nl/2018/06/12/passenger-5-3-2-various-security-fixes/"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -260,6 +298,22 @@
             },
             "lastModifiedDate": "2019-03-08T14:12Z",
             "publishedDate": "2018-06-17T20:29Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "passenger",
+            "cve": "2018-12029",
+            "url": "https://blog.phusion.nl/2018/06/12/passenger-5-3-2-various-security-fixes/",
+            "title": "CHMOD race vulnerability",
+            "date": "2018-06-12",
+            "description": "The file system access race condition allows for local privilege escalation and affects the Nginx module for Passenger versions 5.3.1, all the way back to 3.0.0 (the chown command entered the code in 2010).\nThe vulnerability was exploitable only when running a non-standard `passenger_instance_registry_dir`, via a race condition where after a file was created, there was a window in which it could be replaced with a symlink before it was chowned via the path and not the file descriptor.\nIf the symlink target was to a file which would be executed by root such as root's crontab file, then privilege escalation was possible.",
+            "cvss_v2": 4.4,
+            "cvss_v3": 7.0,
+            "unaffected_versions": [
+                "< 3.0.0"
+            ],
+            "patched_versions": [
+                ">= 5.3.2"
+            ]
         }
     }
 }

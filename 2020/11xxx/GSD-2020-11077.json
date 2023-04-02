@@ -7,6 +7,41 @@
             "https://www.suse.com/security/cve/CVE-2020-11077.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-11077",
+            "modified": "2020-05-22T00:00:00.000Z",
+            "published": "2020-05-22T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-11077",
+                "GHSA-w64w-qqph-5gxm"
+            ],
+            "summary": "HTTP Smuggling via Transfer-Encoding Header in Puma",
+            "details": "### Impact\n\nThis is a similar but different vulnerability to the one patched in 3.12.5 and 4.3.4.\n\nA client could smuggle a request through a proxy, causing the proxy to send a response\nback to another unknown client.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP\npipelining, the proxy may mistake it as the first request's body. Puma, however,\nwould see it as two requests, and when processing the second request, send back\na response that the proxy does not expect. If the proxy has reused the persistent\nconnection to Puma to send another request for a different client, the second response\nfrom the first client will be sent to the second client.\n\n### Patches\n\nThe problem has been fixed in Puma 3.12.6 and Puma 4.3.5.",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.8
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "puma",
+                        "purl": "pkg:gem/puma"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/puma/puma/security/advisories/GHSA-w64w-qqph-5gxm"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -376,6 +411,20 @@
             },
             "lastModifiedDate": "2023-03-03T14:41Z",
             "publishedDate": "2020-05-22T15:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "puma",
+            "cve": "2020-11077",
+            "ghsa": "w64w-qqph-5gxm",
+            "url": "https://github.com/puma/puma/security/advisories/GHSA-w64w-qqph-5gxm",
+            "title": "HTTP Smuggling via Transfer-Encoding Header in Puma",
+            "date": "2020-05-22",
+            "description": "### Impact\n\nThis is a similar but different vulnerability to the one patched in 3.12.5 and 4.3.4.\n\nA client could smuggle a request through a proxy, causing the proxy to send a response\nback to another unknown client.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP\npipelining, the proxy may mistake it as the first request's body. Puma, however,\nwould see it as two requests, and when processing the second request, send back\na response that the proxy does not expect. If the proxy has reused the persistent\nconnection to Puma to send another request for a different client, the second response\nfrom the first client will be sent to the second client.\n\n### Patches\n\nThe problem has been fixed in Puma 3.12.6 and Puma 4.3.5.",
+            "cvss_v3": 6.8,
+            "patched_versions": [
+                "~> 3.12.6",
+                ">= 4.3.5"
+            ]
         }
     }
 }

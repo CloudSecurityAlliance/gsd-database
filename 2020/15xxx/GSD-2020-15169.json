@@ -9,6 +9,41 @@
             "https://access.redhat.com/errata/RHSA-2021:1313"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-15169",
+            "modified": "2020-09-09T00:00:00.000Z",
+            "published": "2020-09-09T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-15169",
+                "GHSA-cfjv-5498-mph5"
+            ],
+            "summary": "Potential XSS vulnerability in Action View",
+            "details": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can’t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 5.4
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionview",
+                        "purl": "pkg:gem/actionview"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -304,6 +339,21 @@
             },
             "lastModifiedDate": "2020-12-08T18:58Z",
             "publishedDate": "2020-09-11T16:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionview",
+            "framework": "rails",
+            "cve": "2020-15169",
+            "ghsa": "cfjv-5498-mph5",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc",
+            "title": "Potential XSS vulnerability in Action View",
+            "date": "2020-09-09",
+            "description": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can’t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
+            "cvss_v3": 5.4,
+            "patched_versions": [
+                "~> 5.2.4, >= 5.2.4.4",
+                ">= 6.0.3.3"
+            ]
         }
     }
 }

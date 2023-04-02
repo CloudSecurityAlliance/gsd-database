@@ -4,6 +4,41 @@
         "description": "CarrierWave is an open-source RubyGem which provides a simple and flexible way to upload files from Ruby applications. In CarrierWave before versions 1.3.2 and 2.1.1, there is a code injection vulnerability. The \"#manipulate!\" method inappropriately evals the content of mutation option(:read/:write), allowing attackers to craft a string that can be executed as a Ruby code. If an application developer supplies untrusted inputs to the option, it will lead to remote code execution(RCE). This is fixed in versions 1.3.2 and 2.1.1.",
         "id": "GSD-2021-21305"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-21305",
+            "modified": "2021-02-08T00:00:00.000Z",
+            "published": "2021-02-08T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-21305",
+                "GHSA-cf3w-g86h-35x4"
+            ],
+            "summary": "Code Injection vulnerability in CarrierWave::RMagick",
+            "details": "### Impact\n[CarrierWave::RMagick](https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb)\nhas a Code Injection vulnerability. Its `#manipulate!` method inappropriately evals the content of mutation\noption(`:read`/`:write`), allowing attackers to craft a string that can be executed as a Ruby code.\nIf an application developer supplies untrusted inputs to the option, it will lead to remote code execution(RCE).\n\n(But supplying untrusted input to the option itself is dangerous even in absence of this vulnerability, since is prone to\nDoS vulnerability - attackers can try to consume massive amounts of memory by resizing to a very large dimension)\n\n### Proof of Concept\n```ruby\nclass MyUploader < CarrierWave::Uploader::Base\n  include CarrierWave::RMagick\nend\n\nMyUploader.new.manipulate!({ read: { density: \"1 }; p 'Hacked'; {\" }}) # => shows \"Hacked\"\n```\n\n### Patches\nUpgrade to [2.1.1](https://rubygems.org/gems/carrierwave/versions/2.1.1) or\n[1.3.2](https://rubygems.org/gems/carrierwave/versions/1.3.2).\n\n### Workarounds\nStop supplying untrusted input to `#manipulate!`'s mutation option.",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.4
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "carrierwave",
+                        "purl": "pkg:gem/carrierwave"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/carrierwaveuploader/carrierwave/security/advisories/GHSA-cf3w-g86h-35x4"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -292,6 +327,20 @@
             },
             "lastModifiedDate": "2022-04-26T15:59Z",
             "publishedDate": "2021-02-08T20:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "carrierwave",
+            "cve": "2021-21305",
+            "ghsa": "cf3w-g86h-35x4",
+            "url": "https://github.com/carrierwaveuploader/carrierwave/security/advisories/GHSA-cf3w-g86h-35x4",
+            "title": "Code Injection vulnerability in CarrierWave::RMagick",
+            "date": "2021-02-08",
+            "description": "### Impact\n[CarrierWave::RMagick](https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb)\nhas a Code Injection vulnerability. Its `#manipulate!` method inappropriately evals the content of mutation\noption(`:read`/`:write`), allowing attackers to craft a string that can be executed as a Ruby code.\nIf an application developer supplies untrusted inputs to the option, it will lead to remote code execution(RCE).\n\n(But supplying untrusted input to the option itself is dangerous even in absence of this vulnerability, since is prone to\nDoS vulnerability - attackers can try to consume massive amounts of memory by resizing to a very large dimension)\n\n### Proof of Concept\n```ruby\nclass MyUploader < CarrierWave::Uploader::Base\n  include CarrierWave::RMagick\nend\n\nMyUploader.new.manipulate!({ read: { density: \"1 }; p 'Hacked'; {\" }}) # => shows \"Hacked\"\n```\n\n### Patches\nUpgrade to [2.1.1](https://rubygems.org/gems/carrierwave/versions/2.1.1) or\n[1.3.2](https://rubygems.org/gems/carrierwave/versions/1.3.2).\n\n### Workarounds\nStop supplying untrusted input to `#manipulate!`'s mutation option.",
+            "cvss_v3": 7.4,
+            "patched_versions": [
+                "~> 1.3.2",
+                ">= 2.1.1"
+            ]
         }
     }
 }

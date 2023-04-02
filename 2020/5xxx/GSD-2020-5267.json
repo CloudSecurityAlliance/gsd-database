@@ -8,6 +8,41 @@
             "https://access.redhat.com/errata/RHSA-2020:4366"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-5267",
+            "modified": "2020-03-19T00:00:00.000Z",
+            "published": "2020-03-19T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-5267",
+                "GHSA-65cv-r6x7-79hv"
+            ],
+            "summary": "Possible XSS vulnerability in ActionView",
+            "details": "There is a possible XSS vulnerability in ActionView's JavaScript literal\nescape helpers.  Views that use the `j` or `escape_javascript` methods\nmay be susceptible to XSS attacks.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.2.2, 5.2.4.2\n\nImpact\n------\nThere is a possible XSS vulnerability in the `j` and `escape_javascript`\nmethods in ActionView.  These methods are used for escaping JavaScript string\nliterals.  Impacted code will look something like this:\n\n```erb\n<script>let a = `<%= j unknown_input %>`</script>\n```\n\nor\n\n```erb\n<script>let a = `<%= escape_javascript unknown_input %>`</script>\n```\n\nReleases\n--------\nThe 6.0.2.2 and 5.2.4.2 releases are available at the normal locations.\n\nWorkarounds\n-----------\nFor those that can't upgrade, the following monkey patch may be used:\n\n```ruby\nActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP.merge!(\n  {\n    \"`\" => \"\\\\`\",\n    \"$\" => \"\\\\$\"\n  }\n)\n\nmodule ActionView::Helpers::JavaScriptHelper\n  alias :old_ej :escape_javascript\n  alias :old_j :j\n\n  def escape_javascript(javascript)\n    javascript = javascript.to_s\n    if javascript.empty?\n      result = \"\"\n    else\n      result = javascript.gsub(/(\\\\|<\\/|\\r\\n|\\342\\200\\250|\\342\\200\\251|[\\n\\r\"']|[`]|[$])/u, JS_ESCAPE_MAP)\n    end\n    javascript.html_safe? ? result.html_safe : result\n  end\n\n  alias :j :escape_javascript\nend\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 4.0
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionview",
+                        "purl": "pkg:gem/actionview"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/55reWMM_Pg8"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -340,6 +375,21 @@
             },
             "lastModifiedDate": "2023-02-03T16:39Z",
             "publishedDate": "2020-03-19T18:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionview",
+            "framework": "rails",
+            "cve": "2020-5267",
+            "ghsa": "65cv-r6x7-79hv",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/55reWMM_Pg8",
+            "title": "Possible XSS vulnerability in ActionView",
+            "date": "2020-03-19",
+            "description": "There is a possible XSS vulnerability in ActionView's JavaScript literal\nescape helpers.  Views that use the `j` or `escape_javascript` methods\nmay be susceptible to XSS attacks.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.2.2, 5.2.4.2\n\nImpact\n------\nThere is a possible XSS vulnerability in the `j` and `escape_javascript`\nmethods in ActionView.  These methods are used for escaping JavaScript string\nliterals.  Impacted code will look something like this:\n\n```erb\n<script>let a = `<%= j unknown_input %>`</script>\n```\n\nor\n\n```erb\n<script>let a = `<%= escape_javascript unknown_input %>`</script>\n```\n\nReleases\n--------\nThe 6.0.2.2 and 5.2.4.2 releases are available at the normal locations.\n\nWorkarounds\n-----------\nFor those that can't upgrade, the following monkey patch may be used:\n\n```ruby\nActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP.merge!(\n  {\n    \"`\" => \"\\\\`\",\n    \"$\" => \"\\\\$\"\n  }\n)\n\nmodule ActionView::Helpers::JavaScriptHelper\n  alias :old_ej :escape_javascript\n  alias :old_j :j\n\n  def escape_javascript(javascript)\n    javascript = javascript.to_s\n    if javascript.empty?\n      result = \"\"\n    else\n      result = javascript.gsub(/(\\\\|<\\/|\\r\\n|\\342\\200\\250|\\342\\200\\251|[\\n\\r\"']|[`]|[$])/u, JS_ESCAPE_MAP)\n    end\n    javascript.html_safe? ? result.html_safe : result\n  end\n\n  alias :j :escape_javascript\nend\n```\n",
+            "cvss_v3": 4.0,
+            "patched_versions": [
+                "~> 5.2.4, >= 5.2.4.2",
+                ">= 6.0.2.2"
+            ]
         }
     }
 }

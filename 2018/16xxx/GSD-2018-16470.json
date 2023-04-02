@@ -8,6 +8,35 @@
             "https://access.redhat.com/errata/RHSA-2019:3172"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2018-16470",
+            "modified": "2018-11-05T00:00:00.000Z",
+            "published": "2018-11-05T00:00:00.000Z",
+            "aliases": [
+                "CVE-2018-16470",
+                "GHSA-hg78-4f6x-99wq"
+            ],
+            "summary": "Possible DoS vulnerability in Rack",
+            "details": "There is a possible DoS vulnerability in the multipart parser in Rack. This\nvulnerability has been assigned the CVE identifier CVE-2018-16470.\n\nVersions Affected:  2.0.4, 2.0.5\nNot affected:       <= 2.0.3\nFixed Versions:     2.0.6\n\nImpact\n------\nThere is a possible DoS vulnerability in the multipart parser in Rack.\nCarefully crafted requests can cause the multipart parser to enter a\npathological state, causing the parser to use CPU resources disproportionate to\nthe request size.\n\nImpacted code can look something like this:\n\n```\nRack::Request.new(env).params\n```\n\nBut any code that uses the multi-part parser may be vulnerable.\n\nRack users that have manually adjusted the buffer size in the multipart parser\nmay be vulnerable as well.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 release is available at the normal locations.\n\nWorkarounds\n-----------\nTo work around this issue, the following code can be used:\n\n```\nrequire \"rack/multipart/parser\"\n\nRack::Multipart::Parser.send :remove_const, :BUFSIZE\nRack::Multipart::Parser.const_set :BUFSIZE, 16384\n```\n",
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "rack",
+                        "purl": "pkg:gem/rack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/Dz4sRl-ktKk"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -223,6 +252,21 @@
             },
             "lastModifiedDate": "2019-10-09T23:36Z",
             "publishedDate": "2018-11-13T23:29Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "rack",
+            "cve": "2018-16470",
+            "ghsa": "hg78-4f6x-99wq",
+            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/Dz4sRl-ktKk",
+            "title": "Possible DoS vulnerability in Rack",
+            "date": "2018-11-05",
+            "description": "There is a possible DoS vulnerability in the multipart parser in Rack. This\nvulnerability has been assigned the CVE identifier CVE-2018-16470.\n\nVersions Affected:  2.0.4, 2.0.5\nNot affected:       <= 2.0.3\nFixed Versions:     2.0.6\n\nImpact\n------\nThere is a possible DoS vulnerability in the multipart parser in Rack.\nCarefully crafted requests can cause the multipart parser to enter a\npathological state, causing the parser to use CPU resources disproportionate to\nthe request size.\n\nImpacted code can look something like this:\n\n```\nRack::Request.new(env).params\n```\n\nBut any code that uses the multi-part parser may be vulnerable.\n\nRack users that have manually adjusted the buffer size in the multipart parser\nmay be vulnerable as well.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 release is available at the normal locations.\n\nWorkarounds\n-----------\nTo work around this issue, the following code can be used:\n\n```\nrequire \"rack/multipart/parser\"\n\nRack::Multipart::Parser.send :remove_const, :BUFSIZE\nRack::Multipart::Parser.const_set :BUFSIZE, 16384\n```\n",
+            "unaffected_versions": [
+                "<= 2.0.3"
+            ],
+            "patched_versions": [
+                ">= 2.0.6"
+            ]
         }
     }
 }

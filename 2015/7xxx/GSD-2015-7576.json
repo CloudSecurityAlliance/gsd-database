@@ -11,6 +11,45 @@
             "https://access.redhat.com/errata/RHSA-2016:0296"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2015-7576",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2015-7576",
+                "GHSA-p692-7mm3-3fxg"
+            ],
+            "summary": "Timing attack vulnerability in basic authentication in Action Controller.",
+            "details": "There is a timing attack vulnerability in the basic authentication support\nin Action Controller. This vulnerability has been assigned the CVE\nidentifier CVE-2015-7576.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nDue to the way that Action Controller compares user names and passwords in\nbasic authentication authorization code, it is possible for an attacker to\nanalyze the time taken by a response and intuit the password.\n\nFor example, this string comparison:\n\n  \"foo\" == \"bar\"\n\nis possibly faster than this comparison:\n\n  \"foo\" == \"fo1\"\n\nAttackers can use this information to attempt to guess the username and\npassword used in the basic authentication system.\n\nYou can tell you application is vulnerable to this attack by looking for\n`http_basic_authenticate_with` method calls in your application.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/basic_auth_fix.rb\nmodule ActiveSupport\n  module SecurityUtils\n    def secure_compare(a, b)\n      return false unless a.bytesize == b.bytesize\n\n      l = a.unpack \"C#{a.bytesize}\"\n\n      res = 0\n      b.each_byte { |byte| res |= byte ^ l.shift }\n      res == 0\n    end\n    module_function :secure_compare\n\n    def variable_size_secure_compare(a, b)\n      secure_compare(::Digest::SHA256.hexdigest(a), ::Digest::SHA256.hexdigest(b))\n    end\n    module_function :variable_size_secure_compare\n  end\nend\n\nmodule ActionController\n  class Base\n    def self.http_basic_authenticate_with(options = {})\n      before_action(options.except(:name, :password, :realm)) do\n        authenticate_or_request_with_http_basic(options[:realm] || \"Application\") do |name, password|\n          # This comparison uses & so that it doesn't short circuit and\n          # uses `variable_size_secure_compare` so that length information\n          # isn't leaked.\n          ActiveSupport::SecurityUtils.variable_size_secure_compare(name, options[:name]) &\n            ActiveSupport::SecurityUtils.variable_size_secure_compare(password, options[:password])\n        end\n      end\n    end\n  end\nend\n```\n\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-basic_auth.patch - Patch for 4.1 series\n* 4-2-basic_auth.patch - Patch for 4.2 series\n* 5-0-basic_auth.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\n\nThank you to Daniel Waterworth for reporting the problem and working with us to\nfix it.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 4.3
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 3.7
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/ANv0HDHEC3k"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -765,6 +804,24 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionpack",
+            "framework": "rails",
+            "cve": "2015-7576",
+            "ghsa": "p692-7mm3-3fxg",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/ANv0HDHEC3k",
+            "title": "Timing attack vulnerability in basic authentication in Action Controller.",
+            "date": "2016-01-25",
+            "description": "There is a timing attack vulnerability in the basic authentication support\nin Action Controller. This vulnerability has been assigned the CVE\nidentifier CVE-2015-7576.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nDue to the way that Action Controller compares user names and passwords in\nbasic authentication authorization code, it is possible for an attacker to\nanalyze the time taken by a response and intuit the password.\n\nFor example, this string comparison:\n\n  \"foo\" == \"bar\"\n\nis possibly faster than this comparison:\n\n  \"foo\" == \"fo1\"\n\nAttackers can use this information to attempt to guess the username and\npassword used in the basic authentication system.\n\nYou can tell you application is vulnerable to this attack by looking for\n`http_basic_authenticate_with` method calls in your application.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/basic_auth_fix.rb\nmodule ActiveSupport\n  module SecurityUtils\n    def secure_compare(a, b)\n      return false unless a.bytesize == b.bytesize\n\n      l = a.unpack \"C#{a.bytesize}\"\n\n      res = 0\n      b.each_byte { |byte| res |= byte ^ l.shift }\n      res == 0\n    end\n    module_function :secure_compare\n\n    def variable_size_secure_compare(a, b)\n      secure_compare(::Digest::SHA256.hexdigest(a), ::Digest::SHA256.hexdigest(b))\n    end\n    module_function :variable_size_secure_compare\n  end\nend\n\nmodule ActionController\n  class Base\n    def self.http_basic_authenticate_with(options = {})\n      before_action(options.except(:name, :password, :realm)) do\n        authenticate_or_request_with_http_basic(options[:realm] || \"Application\") do |name, password|\n          # This comparison uses & so that it doesn't short circuit and\n          # uses `variable_size_secure_compare` so that length information\n          # isn't leaked.\n          ActiveSupport::SecurityUtils.variable_size_secure_compare(name, options[:name]) &\n            ActiveSupport::SecurityUtils.variable_size_secure_compare(password, options[:password])\n        end\n      end\n    end\n  end\nend\n```\n\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-basic_auth.patch - Patch for 4.1 series\n* 4-2-basic_auth.patch - Patch for 4.2 series\n* 5-0-basic_auth.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\n\nThank you to Daniel Waterworth for reporting the problem and working with us to\nfix it.\n",
+            "cvss_v2": 4.3,
+            "cvss_v3": 3.7,
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1",
+                "~> 3.2.22.1"
+            ]
         }
     }
 }

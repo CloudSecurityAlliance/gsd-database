@@ -4,6 +4,34 @@
         "description": "Ember.js 1.0.x before 1.0.1, 1.1.x before 1.1.3, 1.2.x before 1.2.1, 1.3.x before 1.3.1, and 1.4.x before 1.4.0-beta.2 allows remote attackers to conduct cross-site scripting (XSS) attacks by leveraging an application that contains templates whose context is set to a user-supplied primitive value and also contain the `{{this}}` special Handlebars variable.",
         "id": "GSD-2014-0013"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2014-0013",
+            "modified": "2014-01-14T00:00:00.000Z",
+            "published": "2014-01-14T00:00:00.000Z",
+            "aliases": [
+                "CVE-2014-0013"
+            ],
+            "summary": "Ember.js Potential XSS Exploit With User-Supplied Data When Binding\nPrimitive Values\n",
+            "details": "In general, Ember.js escapes or strips any user-supplied content before\ninserting it in strings that will be sent to innerHTML.  However, we have\nidentified a vulnerability that could lead to unescaped content being inserted\ninto the innerHTML string without being sanitized.\n\nWhen a primitive value is used as the Handlebars context, that value is not\nproperly escaped.  An example of this would be using the `{{each}}` helper to\niterate over an array of user-supplied strings and using `{{this}}` inside the\nblock to display each string.\n\nIn applications that contain templates whose context is a primitive value and\nuse the `{{this}}` keyword to display that value, a specially-crafted payload\ncould execute arbitrary JavaScript in the context of the current domain\n(\"XSS\").\n\nThis vulnerability affects applications that contain templates whose context is\nset to a user-supplied primitive value (such as a string or number) and also\ncontain the `{{this}}` special Handlebars variable to display the value.\n",
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "ember-source",
+                        "purl": "pkg:gem/ember-source"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/ember-security/2kpXXCxISS4"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -402,6 +430,21 @@
             },
             "lastModifiedDate": "2018-08-13T21:47Z",
             "publishedDate": "2018-02-15T21:29Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "ember-source",
+            "cve": "2014-0013",
+            "url": "https://groups.google.com/forum/#!topic/ember-security/2kpXXCxISS4",
+            "title": "Ember.js Potential XSS Exploit With User-Supplied Data When Binding\nPrimitive Values\n",
+            "date": "2014-01-14",
+            "description": "In general, Ember.js escapes or strips any user-supplied content before\ninserting it in strings that will be sent to innerHTML.  However, we have\nidentified a vulnerability that could lead to unescaped content being inserted\ninto the innerHTML string without being sanitized.\n\nWhen a primitive value is used as the Handlebars context, that value is not\nproperly escaped.  An example of this would be using the `{{each}}` helper to\niterate over an array of user-supplied strings and using `{{this}}` inside the\nblock to display each string.\n\nIn applications that contain templates whose context is a primitive value and\nuse the `{{this}}` keyword to display that value, a specially-crafted payload\ncould execute arbitrary JavaScript in the context of the current domain\n(\"XSS\").\n\nThis vulnerability affects applications that contain templates whose context is\nset to a user-supplied primitive value (such as a string or number) and also\ncontain the `{{this}}` special Handlebars variable to display the value.\n",
+            "patched_versions": [
+                "~> 1.0.1",
+                "~> 1.1.3",
+                "~> 1.2.1",
+                "~> 1.3.1",
+                ">= 1.4.0.beta.2"
+            ]
         }
     }
 }

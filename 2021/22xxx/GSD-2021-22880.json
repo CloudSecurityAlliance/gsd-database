@@ -8,6 +8,41 @@
             "https://www.debian.org/security/2021/dsa-4929"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-22880",
+            "modified": "2021-02-10T00:00:00.000Z",
+            "published": "2021-02-10T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-22880",
+                "GHSA-8hc4-xxm3-5ppp"
+            ],
+            "summary": "Possible DoS Vulnerability in Active Record PostgreSQL adapter",
+            "details": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 5.3
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activerecord",
+                        "purl": "pkg:gem/activerecord"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -348,6 +383,25 @@
             },
             "lastModifiedDate": "2022-01-04T16:38Z",
             "publishedDate": "2021-02-11T18:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activerecord",
+            "framework": "rails",
+            "cve": "2021-22880",
+            "ghsa": "8hc4-xxm3-5ppp",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI",
+            "title": "Possible DoS Vulnerability in Active Record PostgreSQL adapter",
+            "date": "2021-02-10",
+            "description": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
+            "cvss_v3": 5.3,
+            "unaffected_versions": [
+                "< 4.2.0"
+            ],
+            "patched_versions": [
+                "~> 5.2.4, >= 5.2.4.5",
+                "~> 6.0.3, >= 6.0.3.5",
+                ">= 6.1.2.1"
+            ]
         }
     }
 }

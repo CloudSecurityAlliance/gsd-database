@@ -4,6 +4,41 @@
         "description": "In Shrine before version 3.3.0, when using the `derivation_endpoint` plugin, it's possible for the attacker to use a timing attack to guess the signature of the derivation URL. The problem has been fixed by comparing sent and calculated signature in constant time, using `Rack::Utils.secure_compare`. Users using the `derivation_endpoint` plugin are urged to upgrade to Shrine 3.3.0 or greater. A possible workaround is provided in the linked advisory.",
         "id": "GSD-2020-15237"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-15237",
+            "modified": "2020-10-05T00:00:00.000Z",
+            "published": "2020-10-05T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-15237",
+                "GHSA-5jjv-x4fq-qjwp"
+            ],
+            "summary": "Possible timing attack in derivation_endpoint",
+            "details": "### Impact\n\nWhen using the `derivation_endpoint` plugin, it's possible for the attacker to use a timing attack\nto guess the signature of the derivation URL.\n\n### Patches\n\nThe problem has been fixed by comparing sent and calculated signature in constant time, using\n`Rack::Utils.secure_compare`. Users using the `derivation_endpoint` plugin are urged to upgrade\nto Shrine 3.3.0 or greater.\n\n### Workarounds\n\nUsers of older Shrine versions can apply the following monkey-patch after loading the `derivation_endpoint` plugin:\n\n```rb\nclass Shrine\n  class UrlSigner\n    def verify_signature(string, signature)\n      if signature.nil?\n        fail InvalidSignature, \"missing \\\"signature\\\" param\"\n      elsif !Rack::Utils.secure_compare(signature, generate_signature(string))\n        fail InvalidSignature, \"provided signature does not match the calculated signature\"\n      end\n    end\n  end\nend\n```\n\n### References\n\nYou can read more about timing attacks [here](https://en.wikipedia.org/wiki/Timing_attack).",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 5.9
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "shrine",
+                        "purl": "pkg:gem/shrine"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/shrinerb/shrine/security/advisories/GHSA-5jjv-x4fq-qjwp"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -251,6 +286,19 @@
             },
             "lastModifiedDate": "2020-10-19T13:39Z",
             "publishedDate": "2020-10-05T19:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "shrine",
+            "cve": "2020-15237",
+            "ghsa": "5jjv-x4fq-qjwp",
+            "url": "https://github.com/shrinerb/shrine/security/advisories/GHSA-5jjv-x4fq-qjwp",
+            "title": "Possible timing attack in derivation_endpoint",
+            "date": "2020-10-05",
+            "description": "### Impact\n\nWhen using the `derivation_endpoint` plugin, it's possible for the attacker to use a timing attack\nto guess the signature of the derivation URL.\n\n### Patches\n\nThe problem has been fixed by comparing sent and calculated signature in constant time, using\n`Rack::Utils.secure_compare`. Users using the `derivation_endpoint` plugin are urged to upgrade\nto Shrine 3.3.0 or greater.\n\n### Workarounds\n\nUsers of older Shrine versions can apply the following monkey-patch after loading the `derivation_endpoint` plugin:\n\n```rb\nclass Shrine\n  class UrlSigner\n    def verify_signature(string, signature)\n      if signature.nil?\n        fail InvalidSignature, \"missing \\\"signature\\\" param\"\n      elsif !Rack::Utils.secure_compare(signature, generate_signature(string))\n        fail InvalidSignature, \"provided signature does not match the calculated signature\"\n      end\n    end\n  end\nend\n```\n\n### References\n\nYou can read more about timing attacks [here](https://en.wikipedia.org/wiki/Timing_attack).",
+            "cvss_v3": 5.9,
+            "patched_versions": [
+                ">= 3.3.0"
+            ]
         }
     }
 }

@@ -8,6 +8,44 @@
             "https://security.archlinux.org/CVE-2021-22903"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-22903",
+            "modified": "2021-05-05T00:00:00.000Z",
+            "published": "2021-05-05T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-22903",
+                "GHSA-5hq2-xf89-9jxq"
+            ],
+            "related": [
+                "CVE-2021-22881"
+            ],
+            "summary": "Possible Open Redirect Vulnerability in Action Pack",
+            "details": "There is a possible Open Redirect Vulnerability in Action Pack. This\nvulnerability has been assigned the CVE identifier CVE-2021-22903.\n\nVersions Affected:  >= v6.1.0.rc2\nNot affected:       < v6.1.0.rc2\nFixed Versions:     6.1.3.2\n\nImpact\n------\nThis is similar to CVE-2021-22881: Specially crafted Host headers in\ncombination with certain \"allowed host\" formats can cause the Host\nAuthorization middleware in Action Pack to redirect users to a malicious\nwebsite.\n\nSince rails/rails@9bc7ea5, strings in config.hosts that do not have a leading\ndot are converted to regular expressions without proper escaping. This causes,\nfor example, config.hosts << \"sub.example.com\" to permit a request with a Host\nheader value of sub-example.com.\n\nWorkarounds\n-----------\nThe following monkey patch put in an initializer can be used as a workaround:\n\n```ruby\nclass ActionDispatch::HostAuthorization::Permissions\n  def sanitize_string(host)\n    if host.start_with?(\".\")\n      /\\A(.+\\.)?#{Regexp.escape(host[1..-1])}\\z/i\n    else\n      /\\A#{Regexp.escape host}\\z/i\n    end\n  end\nend\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/rubyonrails-security/c/8TxqXEtgSF0"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -259,6 +297,28 @@
             },
             "lastModifiedDate": "2021-10-21T14:32Z",
             "publishedDate": "2021-06-11T16:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionpack",
+            "framework": "rails",
+            "cve": "2021-22903",
+            "ghsa": "5hq2-xf89-9jxq",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/8TxqXEtgSF0",
+            "title": "Possible Open Redirect Vulnerability in Action Pack",
+            "date": "2021-05-05",
+            "description": "There is a possible Open Redirect Vulnerability in Action Pack. This\nvulnerability has been assigned the CVE identifier CVE-2021-22903.\n\nVersions Affected:  >= v6.1.0.rc2\nNot affected:       < v6.1.0.rc2\nFixed Versions:     6.1.3.2\n\nImpact\n------\nThis is similar to CVE-2021-22881: Specially crafted Host headers in\ncombination with certain \"allowed host\" formats can cause the Host\nAuthorization middleware in Action Pack to redirect users to a malicious\nwebsite.\n\nSince rails/rails@9bc7ea5, strings in config.hosts that do not have a leading\ndot are converted to regular expressions without proper escaping. This causes,\nfor example, config.hosts << \"sub.example.com\" to permit a request with a Host\nheader value of sub-example.com.\n\nWorkarounds\n-----------\nThe following monkey patch put in an initializer can be used as a workaround:\n\n```ruby\nclass ActionDispatch::HostAuthorization::Permissions\n  def sanitize_string(host)\n    if host.start_with?(\".\")\n      /\\A(.+\\.)?#{Regexp.escape(host[1..-1])}\\z/i\n    else\n      /\\A#{Regexp.escape host}\\z/i\n    end\n  end\nend\n```\n",
+            "cvss_v3": 6.1,
+            "unaffected_versions": [
+                "< 6.1.0.rc2"
+            ],
+            "patched_versions": [
+                ">= 6.1.3.2"
+            ],
+            "related": {
+                "cve": [
+                    "2021-22881"
+                ]
+            }
         }
     }
 }
