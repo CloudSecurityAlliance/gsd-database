@@ -7,6 +7,41 @@
             "https://www.debian.org/security/2021/dsa-5005"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-11082",
+            "modified": "2020-05-28T00:00:00.000Z",
+            "published": "2020-05-28T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-11082",
+                "GHSA-r5jw-62xg-j433"
+            ],
+            "summary": "Cross-Site Scripting in Kaminari via `original_script_name` parameter",
+            "details": "### Impact\nThere was a vulnerability in versions of Kaminari that would allow an attacker to inject arbitrary code into pages with pagination links.\n\nFor example, an attacker could craft pagination links that link to other domain or host:\nhttps://example.com/posts?page=4&original_script_name=https://another-host.example.com\n\nIn addition, an attacker could also craft pagination links that include JavaScript code that runs when a user clicks the link:\nhttps://example.com/posts?page=4&original_script_name=javascript:alert(42)%3b//\n\n### Releases\nThe 1.2.1 gem including the patch has already been released.\nAll past released versions are affected by this vulnerability.\n\n### Workarounds\nApplication developers who can't update the gem can workaround by overriding the `PARAM_KEY_EXCEPT_LIST` constant.\n\n```ruby\nmodule Kaminari::Helpers\n  PARAM_KEY_EXCEPT_LIST = [:authenticity_token, :commit, :utf8, :_method, :script_name, :original_script_name].freeze\nend\n```",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.4
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "kaminari",
+                        "purl": "pkg:gem/kaminari"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/kaminari/kaminari/security/advisories/GHSA-r5jw-62xg-j433"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -298,6 +333,19 @@
             },
             "lastModifiedDate": "2021-11-30T22:07Z",
             "publishedDate": "2020-05-28T21:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "kaminari",
+            "cve": "2020-11082",
+            "ghsa": "r5jw-62xg-j433",
+            "url": "https://github.com/kaminari/kaminari/security/advisories/GHSA-r5jw-62xg-j433",
+            "title": "Cross-Site Scripting in Kaminari via `original_script_name` parameter",
+            "date": "2020-05-28",
+            "description": "### Impact\nThere was a vulnerability in versions of Kaminari that would allow an attacker to inject arbitrary code into pages with pagination links.\n\nFor example, an attacker could craft pagination links that link to other domain or host:\nhttps://example.com/posts?page=4&original_script_name=https://another-host.example.com\n\nIn addition, an attacker could also craft pagination links that include JavaScript code that runs when a user clicks the link:\nhttps://example.com/posts?page=4&original_script_name=javascript:alert(42)%3b//\n\n### Releases\nThe 1.2.1 gem including the patch has already been released.\nAll past released versions are affected by this vulnerability.\n\n### Workarounds\nApplication developers who can't update the gem can workaround by overriding the `PARAM_KEY_EXCEPT_LIST` constant.\n\n```ruby\nmodule Kaminari::Helpers\n  PARAM_KEY_EXCEPT_LIST = [:authenticity_token, :commit, :utf8, :_method, :script_name, :original_script_name].freeze\nend\n```",
+            "cvss_v3": 6.4,
+            "patched_versions": [
+                ">= 1.2.1"
+            ]
         }
     }
 }

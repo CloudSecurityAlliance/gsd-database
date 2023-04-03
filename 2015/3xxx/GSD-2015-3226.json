@@ -8,6 +8,35 @@
             "https://www.debian.org/security/2016/dsa-3464"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2015-3226",
+            "modified": "2015-06-16T00:00:00.000Z",
+            "published": "2015-06-16T00:00:00.000Z",
+            "aliases": [
+                "CVE-2015-3226",
+                "GHSA-vxvp-4xwc-jpp6"
+            ],
+            "summary": "XSS Vulnerability in ActiveSupport::JSON.encode",
+            "details": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activesupport",
+                        "purl": "pkg:gem/activesupport"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -382,6 +411,23 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2015-07-26T22:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activesupport",
+            "framework": "rails",
+            "cve": "2015-3226",
+            "ghsa": "vxvp-4xwc-jpp6",
+            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU",
+            "title": "XSS Vulnerability in ActiveSupport::JSON.encode",
+            "date": "2015-06-16",
+            "description": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
+            "unaffected_versions": [
+                "< 4.1.0"
+            ],
+            "patched_versions": [
+                ">= 4.2.2",
+                "~> 4.1.11"
+            ]
         }
     }
 }

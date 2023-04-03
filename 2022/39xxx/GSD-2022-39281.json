@@ -4,6 +4,49 @@
         "description": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue.",
         "id": "GSD-2022-39281"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-39281",
+            "modified": "2022-10-07T00:00:00.000Z",
+            "published": "2022-10-07T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-39281",
+                "GHSA-p75c-5x3h-cxcg"
+            ],
+            "summary": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint",
+            "details": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "fat_free_crm",
+                        "purl": "pkg:gem/fat_free_crm"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -197,6 +240,25 @@
             },
             "lastModifiedDate": "2022-10-11T15:30Z",
             "publishedDate": "2022-10-08T01:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "fat_free_crm",
+            "cve": "2022-39281",
+            "ghsa": "p75c-5x3h-cxcg",
+            "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
+            "title": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint",
+            "date": "2022-10-07",
+            "description": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
+            "cvss_v3": 6.5,
+            "patched_versions": [
+                ">= 0.20.1"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
+                    "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
+                ]
+            }
         }
     }
 }

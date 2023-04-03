@@ -9,6 +9,41 @@
             "https://access.redhat.com/errata/RHSA-2021:1313"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-8165",
+            "modified": "2020-05-18T00:00:00.000Z",
+            "published": "2020-05-18T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-8165",
+                "GHSA-2p68-f74v-9wc6"
+            ],
+            "summary": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore",
+            "details": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 9.8
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activesupport",
+                        "purl": "pkg:gem/activesupport"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -381,6 +416,21 @@
             },
             "lastModifiedDate": "2022-05-24T16:45Z",
             "publishedDate": "2020-06-19T18:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activesupport",
+            "framework": "rails",
+            "cve": "2020-8165",
+            "ghsa": "2p68-f74v-9wc6",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c",
+            "title": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore",
+            "date": "2020-05-18",
+            "description": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
+            "cvss_v3": 9.8,
+            "patched_versions": [
+                "~> 5.2.4, >= 5.2.4.3",
+                ">= 6.0.3.1"
+            ]
         }
     }
 }

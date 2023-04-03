@@ -8,6 +8,41 @@
             "https://access.redhat.com/errata/RHSA-2021:1313"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-8185",
+            "modified": "2020-06-17T00:00:00.000Z",
+            "published": "2020-06-17T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-8185",
+                "GHSA-c6qr-h5vq-59jc"
+            ],
+            "summary": "Untrusted users able to run pending migrations in production",
+            "details": "There is a vulnerability in versions of Rails prior to 6.0.3.2 that allowed\nan untrusted user to run any pending migrations on a Rails app running in\nproduction.\n\nThis vulnerability has been assigned the CVE identifier CVE-2020-8185.\n\nVersions Affected:  6.0.0 < rails < 6.0.3.2\nNot affected:       Applications with `config.action_dispatch.show_exceptions = false` (this is not a default setting in production)\nFixed Versions:     rails >= 6.0.3.2\n\nImpact\n------\n\nUsing this issue, an attacker would be able to execute any migrations that\nare pending for a Rails app running in production mode. It is important to\nnote that an attacker is limited to running migrations the application\ndeveloper has already defined in their application and ones that have not\nalready ran.\n\nWorkarounds\n-----------\n\nUntil such time as the patch can be applied, application developers should\ndisable the ActionDispatch middleware in their production environment via\na line such as this one in their config/environment/production.rb:\n\n`config.middleware.delete ActionDispatch::ActionableExceptions`\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/rubyonrails-security/c/pAe9EV8gbM0"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -279,6 +314,23 @@
             },
             "lastModifiedDate": "2021-10-21T14:36Z",
             "publishedDate": "2020-07-02T19:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionpack",
+            "framework": "rails",
+            "cve": "2020-8185",
+            "ghsa": "c6qr-h5vq-59jc",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/pAe9EV8gbM0",
+            "title": "Untrusted users able to run pending migrations in production",
+            "date": "2020-06-17",
+            "description": "There is a vulnerability in versions of Rails prior to 6.0.3.2 that allowed\nan untrusted user to run any pending migrations on a Rails app running in\nproduction.\n\nThis vulnerability has been assigned the CVE identifier CVE-2020-8185.\n\nVersions Affected:  6.0.0 < rails < 6.0.3.2\nNot affected:       Applications with `config.action_dispatch.show_exceptions = false` (this is not a default setting in production)\nFixed Versions:     rails >= 6.0.3.2\n\nImpact\n------\n\nUsing this issue, an attacker would be able to execute any migrations that\nare pending for a Rails app running in production mode. It is important to\nnote that an attacker is limited to running migrations the application\ndeveloper has already defined in their application and ones that have not\nalready ran.\n\nWorkarounds\n-----------\n\nUntil such time as the patch can be applied, application developers should\ndisable the ActionDispatch middleware in their production environment via\na line such as this one in their config/environment/production.rb:\n\n`config.middleware.delete ActionDispatch::ActionableExceptions`\n",
+            "cvss_v3": 6.5,
+            "unaffected_versions": [
+                "< 6.0.0"
+            ],
+            "patched_versions": [
+                ">= 6.0.3.2"
+            ]
         }
     }
 }

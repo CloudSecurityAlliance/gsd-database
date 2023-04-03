@@ -9,6 +9,49 @@
             "https://www.debian.org/security/2023/dsa-5372"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-23633",
+            "modified": "2022-02-11T00:00:00.000Z",
+            "published": "2022-02-11T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-23633",
+                "GHSA-wh98-p28r-vrc9"
+            ],
+            "summary": "Possible exposure of information vulnerability in Action Pack",
+            "details": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.4
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -368,6 +411,32 @@
             },
             "lastModifiedDate": "2023-03-14T08:15Z",
             "publishedDate": "2022-02-11T21:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionpack",
+            "framework": "rails",
+            "cve": "2022-23633",
+            "ghsa": "wh98-p28r-vrc9",
+            "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ",
+            "title": "Possible exposure of information vulnerability in Action Pack",
+            "date": "2022-02-11",
+            "description": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
+            "cvss_v3": 7.4,
+            "unaffected_versions": [
+                "< 5.0.0"
+            ],
+            "patched_versions": [
+                "~> 5.2.6, >= 5.2.6.2",
+                "~> 6.0.4, >= 6.0.4.6",
+                "~> 6.1.4, >= 6.1.4.6",
+                ">= 7.0.2.2"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5",
+                    "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
+                ]
+            }
         }
     }
 }

@@ -9,6 +9,57 @@
             "https://advisories.mageia.org/CVE-2021-43809.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-43809",
+            "modified": "2021-12-08T00:00:00.000Z",
+            "published": "2021-12-08T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-43809",
+                "GHSA-fj7f-vq84-fh43"
+            ],
+            "summary": "Local Code Execution through Argument Injection via dash leading git url parameter in Gemfile",
+            "details": "In `bundler` versions before 2.2.33, when working with untrusted and apparently harmless\n`Gemfile`'s, it is not expected that they lead to execution of external code, unless\nthat's explicit in the ruby code inside the `Gemfile` itself. However, if the `Gemfile`\nincludes `gem` entries that use the `git` option with invalid, but seemingly harmless,\nvalues with a leading dash, this can be false.\n\nTo handle dependencies that come from a Git repository instead of a registry, Bundler\nuses various commands, such as `git clone`. These commands are being constructed using\nuser input (e.g. the repository URL). When building the commands, Bundler versions\nbefore 2.2.33 correctly avoid Command Injection vulnerabilities by passing an array of\narguments instead of a command string. However, there is the possibility that a user\ninput starts with a dash (`-`) and is therefore treated as an optional argument instead\nof a positional one. This can lead to Code Execution because some of the commands have\noptions that can be leveraged to run arbitrary executables.\n\nSince this value comes from the `Gemfile` file, it can contain any character, including\na leading dash.\n\n### Exploitation\n\nTo exploit this vulnerability, an attacker has to craft a directory containing a\n`Gemfile` file that declares a dependency that is located in a Git repository. This\ndependency has to have a Git URL in the form of `-u./payload`. This URL will be used to\nconstruct a Git clone command but will be interpreted as the\n[upload-pack](https://git-scm.com/docs/git-clone#Documentation/git-clone.txt--ultupload-packgt)\nargument. Then this directory needs to be shared with the victim, who then needs to run\na command that evaluates the Gemfile, such as `bundle lock`, inside.\n\n### Impact\n\nThis vulnerability can lead to Arbitrary Code Execution, which could potentially lead\nto the takeover of the system. However, as explained above, the exploitability is very\nlow, because it requires a lot of user interaction. It still could put developers at\nrisk when dealing with untrusted files in a way they think is safe, because the exploit\nstill works when the victim tries to make sure nothing can happen, e.g. by manually\nreviewing the `Gemfile` (although they would need the weird URL with a leading dash to\nnot raise any flags).\n\nThis kind of attack vector\n[has been used in the past](https://www.cnbc.com/2021/01/26/north-korean-hackers-targeting-security-researchers-on-twitter.html)\nto target security researchers by sending them projects to collaborate on.\n\n### Patches\n\nBundler 2.2.33 has patched this problem by inserting `--` as an argument before any\npositional arguments to those Git commands that were affected by this issue.\n\n### Workarounds\n\nRegardless of whether users can upgrade or not, they should review any untrusted\n`Gemfile`'s before running any `bundler` commands that may read them, since they\ncan contain arbitrary ruby code.",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.7
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "bundler",
+                        "purl": "pkg:gem/bundler"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rubygems/rubygems/security/advisories/GHSA-fj7f-vq84-fh43"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rubygems/rubygems/pull/5142"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rubygems/rubygems/commit/0fad1ccfe9dd7a3c5b82c1496df3c2b4842870d3"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rubygems/rubygems/commit/a4f2f8ac17e6ce81c689527a8b6f14381060d95f"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://cwe.mitre.org/data/definitions/88.html"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -276,6 +327,27 @@
             },
             "lastModifiedDate": "2021-12-13T18:50Z",
             "publishedDate": "2021-12-08T19:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "bundler",
+            "cve": "2021-43809",
+            "ghsa": "fj7f-vq84-fh43",
+            "url": "https://github.com/rubygems/rubygems/security/advisories/GHSA-fj7f-vq84-fh43",
+            "title": "Local Code Execution through Argument Injection via dash leading git url parameter in Gemfile",
+            "date": "2021-12-08",
+            "description": "In `bundler` versions before 2.2.33, when working with untrusted and apparently harmless\n`Gemfile`'s, it is not expected that they lead to execution of external code, unless\nthat's explicit in the ruby code inside the `Gemfile` itself. However, if the `Gemfile`\nincludes `gem` entries that use the `git` option with invalid, but seemingly harmless,\nvalues with a leading dash, this can be false.\n\nTo handle dependencies that come from a Git repository instead of a registry, Bundler\nuses various commands, such as `git clone`. These commands are being constructed using\nuser input (e.g. the repository URL). When building the commands, Bundler versions\nbefore 2.2.33 correctly avoid Command Injection vulnerabilities by passing an array of\narguments instead of a command string. However, there is the possibility that a user\ninput starts with a dash (`-`) and is therefore treated as an optional argument instead\nof a positional one. This can lead to Code Execution because some of the commands have\noptions that can be leveraged to run arbitrary executables.\n\nSince this value comes from the `Gemfile` file, it can contain any character, including\na leading dash.\n\n### Exploitation\n\nTo exploit this vulnerability, an attacker has to craft a directory containing a\n`Gemfile` file that declares a dependency that is located in a Git repository. This\ndependency has to have a Git URL in the form of `-u./payload`. This URL will be used to\nconstruct a Git clone command but will be interpreted as the\n[upload-pack](https://git-scm.com/docs/git-clone#Documentation/git-clone.txt--ultupload-packgt)\nargument. Then this directory needs to be shared with the victim, who then needs to run\na command that evaluates the Gemfile, such as `bundle lock`, inside.\n\n### Impact\n\nThis vulnerability can lead to Arbitrary Code Execution, which could potentially lead\nto the takeover of the system. However, as explained above, the exploitability is very\nlow, because it requires a lot of user interaction. It still could put developers at\nrisk when dealing with untrusted files in a way they think is safe, because the exploit\nstill works when the victim tries to make sure nothing can happen, e.g. by manually\nreviewing the `Gemfile` (although they would need the weird URL with a leading dash to\nnot raise any flags).\n\nThis kind of attack vector\n[has been used in the past](https://www.cnbc.com/2021/01/26/north-korean-hackers-targeting-security-researchers-on-twitter.html)\nto target security researchers by sending them projects to collaborate on.\n\n### Patches\n\nBundler 2.2.33 has patched this problem by inserting `--` as an argument before any\npositional arguments to those Git commands that were affected by this issue.\n\n### Workarounds\n\nRegardless of whether users can upgrade or not, they should review any untrusted\n`Gemfile`'s before running any `bundler` commands that may read them, since they\ncan contain arbitrary ruby code.",
+            "cvss_v3": 6.7,
+            "patched_versions": [
+                ">= 2.2.33"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/rubygems/rubygems/pull/5142",
+                    "https://github.com/rubygems/rubygems/commit/0fad1ccfe9dd7a3c5b82c1496df3c2b4842870d3",
+                    "https://github.com/rubygems/rubygems/commit/a4f2f8ac17e6ce81c689527a8b6f14381060d95f",
+                    "https://cwe.mitre.org/data/definitions/88.html"
+                ]
+            }
         }
     }
 }

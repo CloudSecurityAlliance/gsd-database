@@ -23,6 +23,41 @@
             "https://access.redhat.com/errata/RHSA-2022:6856"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-41817",
+            "modified": "2021-11-15T00:00:00.000Z",
+            "published": "2021-11-15T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-41817",
+                "GHSA-qg54-694p-wgpp"
+            ],
+            "summary": "Regular Expression Denial of Service Vulnerability of Date Parsing Methods",
+            "details": "Date's parsing methods including `Date.parse` are using Regexps internally, some of\nwhich are vulnerable against regular expression denial of service. Applications and\nlibraries that apply such methods to untrusted input may be affected.\n\nThe fix limits the input length up to 128 bytes by default instead of changing the\nregexps. This is because Date gem uses many Regexps and it is possible that there are\nstill undiscovered vulnerable Regexps. For compatibility, it is allowed to remove the\nlimitation by explicitly passing `limit` keywords as `nil` like\n`Date.parse(str, limit: nil)`, but note that it may take a long time to parse.\n\nPlease update the date gem to version 3.2.1, 3.1.2, 3.0.2, and 2.0.1, or later.  You\ncan use `gem update date` to update it.  If you are using bundler, please add\n`gem \"date\", \">= 3.2.1\"` to your `Gemfile`.",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "date",
+                        "purl": "pkg:gem/date"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://www.ruby-lang.org/en/news/2021/11/15/date-parsing-method-regexp-dos-cve-2021-41817/"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -399,6 +434,22 @@
             },
             "lastModifiedDate": "2022-09-10T02:39Z",
             "publishedDate": "2022-01-01T05:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "date",
+            "cve": "2021-41817",
+            "ghsa": "qg54-694p-wgpp",
+            "url": "https://www.ruby-lang.org/en/news/2021/11/15/date-parsing-method-regexp-dos-cve-2021-41817/",
+            "title": "Regular Expression Denial of Service Vulnerability of Date Parsing Methods",
+            "date": "2021-11-15",
+            "description": "Date's parsing methods including `Date.parse` are using Regexps internally, some of\nwhich are vulnerable against regular expression denial of service. Applications and\nlibraries that apply such methods to untrusted input may be affected.\n\nThe fix limits the input length up to 128 bytes by default instead of changing the\nregexps. This is because Date gem uses many Regexps and it is possible that there are\nstill undiscovered vulnerable Regexps. For compatibility, it is allowed to remove the\nlimitation by explicitly passing `limit` keywords as `nil` like\n`Date.parse(str, limit: nil)`, but note that it may take a long time to parse.\n\nPlease update the date gem to version 3.2.1, 3.1.2, 3.0.2, and 2.0.1, or later.  You\ncan use `gem update date` to update it.  If you are using bundler, please add\n`gem \"date\", \">= 3.2.1\"` to your `Gemfile`.",
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                "~> 2.0.1",
+                "~> 3.0.2",
+                "~> 3.1.2",
+                ">= 3.2.1"
+            ]
         }
     }
 }

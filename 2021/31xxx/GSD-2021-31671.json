@@ -4,6 +4,41 @@
         "description": "pgsync before 0.6.7 is affected by Information Disclosure of sensitive information. Syncing the schema with the --schema-first and --schema-only options is mishandled. For example, the sslmode connection parameter may be lost, which means that SSL would not be used.",
         "id": "GSD-2021-31671"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2021-31671",
+            "modified": "2021-04-26T00:00:00.000Z",
+            "published": "2021-04-26T00:00:00.000Z",
+            "aliases": [
+                "CVE-2021-31671",
+                "GHSA-72rj-36qc-47g7"
+            ],
+            "summary": "Connection security vulnerability with schema sync",
+            "details": "pgsync drops connection parameters when syncing the schema with the\n--schema-first and --schema-only options. Some of these parameters may\naffect security. For instance, if sslmode is dropped, the connection\nmay not use SSL. The first connection parameter is not affected.\n\npgsync drops connection parameters when syncing the schema with the\n`--schema-first` and `--schema-only` options. Some of these parameters\nmay affect security. For instance, if `sslmode` is dropped, the\nconnection may not use SSL. The first connection parameter is not affected.\n\nAn example where `sslmode` is dropped (`connect_timeout` is not affected):\n\n```yaml\nfrom: postgres://user:pass@host/dbname?connect_timeout=10&sslmode=require\n```\n\nThis applies to both the `to` and `from` connections.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "pgsync",
+                        "purl": "pkg:gem/pgsync"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/ankane/pgsync/issues/121"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -205,6 +240,19 @@
             },
             "lastModifiedDate": "2021-05-04T00:16Z",
             "publishedDate": "2021-04-27T03:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "pgsync",
+            "cve": "2021-31671",
+            "ghsa": "72rj-36qc-47g7",
+            "url": "https://github.com/ankane/pgsync/issues/121",
+            "title": "Connection security vulnerability with schema sync",
+            "date": "2021-04-26",
+            "description": "pgsync drops connection parameters when syncing the schema with the\n--schema-first and --schema-only options. Some of these parameters may\naffect security. For instance, if sslmode is dropped, the connection\nmay not use SSL. The first connection parameter is not affected.\n\npgsync drops connection parameters when syncing the schema with the\n`--schema-first` and `--schema-only` options. Some of these parameters\nmay affect security. For instance, if `sslmode` is dropped, the\nconnection may not use SSL. The first connection parameter is not affected.\n\nAn example where `sslmode` is dropped (`connect_timeout` is not affected):\n\n```yaml\nfrom: postgres://user:pass@host/dbname?connect_timeout=10&sslmode=require\n```\n\nThis applies to both the `to` and `from` connections.\n",
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                ">= 0.6.7"
+            ]
         }
     }
 }

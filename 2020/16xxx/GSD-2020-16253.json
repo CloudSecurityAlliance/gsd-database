@@ -4,6 +4,41 @@
         "description": "The PgHero gem through 2.6.0 for Ruby allows CSRF.",
         "id": "GSD-2020-16253"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-16253",
+            "modified": "2020-08-04T00:00:00.000Z",
+            "published": "2020-08-04T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-16253",
+                "GHSA-v6fx-752r-ccp2"
+            ],
+            "summary": "CSRF Vulnerability with Non-Session Based Authentication",
+            "details": "The PgHero dashboard is vulnerable to CSRF with non-session based authentication methods.\n\n## Impact\nThe PgHero dashboard is vulnerable to cross-site request forgery (CSRF). This affects the Docker\nimage, Linux packages, and in specific cases, the Ruby gem. The Ruby gem is vulnerable with\nnon-session based authentication methods like basic authentication - session-based authentication\nmethods (like Devise's default authentication) are not affected.\n\nA CSRF attack works by getting an authorized user to visit a malicious website and then performing\nrequests on behalf of the user. In this instance, actions include:\n\n1. Canceling running queries\n2. Running `EXPLAIN` on queries (without seeing the results, but can be used for denial of service\n   and other attacks)\n3. Resetting query stats (running `pg_stat_statements_reset()`)\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 8.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "pghero",
+                        "purl": "pkg:gem/pghero"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/ankane/pghero/issues/330"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -215,6 +250,19 @@
             },
             "lastModifiedDate": "2020-08-05T15:35Z",
             "publishedDate": "2020-08-05T14:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "pghero",
+            "cve": "2020-16253",
+            "ghsa": "v6fx-752r-ccp2",
+            "url": "https://github.com/ankane/pghero/issues/330",
+            "title": "CSRF Vulnerability with Non-Session Based Authentication",
+            "date": "2020-08-04",
+            "description": "The PgHero dashboard is vulnerable to CSRF with non-session based authentication methods.\n\n## Impact\nThe PgHero dashboard is vulnerable to cross-site request forgery (CSRF). This affects the Docker\nimage, Linux packages, and in specific cases, the Ruby gem. The Ruby gem is vulnerable with\nnon-session based authentication methods like basic authentication - session-based authentication\nmethods (like Devise's default authentication) are not affected.\n\nA CSRF attack works by getting an authorized user to visit a malicious website and then performing\nrequests on behalf of the user. In this instance, actions include:\n\n1. Canceling running queries\n2. Running `EXPLAIN` on queries (without seeing the results, but can be used for denial of service\n   and other attacks)\n3. Resetting query stats (running `pg_stat_statements_reset()`)\n",
+            "cvss_v3": 8.1,
+            "patched_versions": [
+                ">= 2.7.0"
+            ]
         }
     }
 }

@@ -11,6 +11,45 @@
             "https://access.redhat.com/errata/RHSA-2016:0296"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2016-0751",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2016-0751",
+                "GHSA-ffpv-c4hm-3x6v"
+            ],
+            "summary": "Possible Object Leak and Denial of Service attack in Action Pack",
+            "details": "There is a possible object leak which can lead to a denial of service\nvulnerability in Action Pack. This vulnerability has been\nassigned the CVE identifier CVE-2016-0751.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nA carefully crafted accept header can cause a global cache of mime types to\ngrow indefinitely which can lead to a possible denial of service attack in\nAction Pack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThis attack can be mitigated by a proxy that only allows known mime types in\nthe Accept header.\n\nPlacing the following code in an initializer will also mitigate the issue:\n\n```ruby\nrequire 'action_dispatch/http/mime_type'\n\nMime.const_set :LOOKUP, Hash.new { |h,k|\n  Mime::Type.new(k) unless k.blank?\n}\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 5-0-mime_types_leak.patch - Patch for 5.0 series\n* 4-2-mime_types_leak.patch - Patch for 4.2 series\n* 4-1-mime_types_leak.patch - Patch for 4.1 series\n* 3-2-mime_types_leak.patch - Patch for 3.2 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nAaron Patterson <3<3\n",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 5.0
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/9oLY_FCzvoc"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -653,6 +692,24 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionpack",
+            "framework": "rails",
+            "cve": "2016-0751",
+            "ghsa": "ffpv-c4hm-3x6v",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/9oLY_FCzvoc",
+            "title": "Possible Object Leak and Denial of Service attack in Action Pack",
+            "date": "2016-01-25",
+            "description": "There is a possible object leak which can lead to a denial of service\nvulnerability in Action Pack. This vulnerability has been\nassigned the CVE identifier CVE-2016-0751.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nA carefully crafted accept header can cause a global cache of mime types to\ngrow indefinitely which can lead to a possible denial of service attack in\nAction Pack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThis attack can be mitigated by a proxy that only allows known mime types in\nthe Accept header.\n\nPlacing the following code in an initializer will also mitigate the issue:\n\n```ruby\nrequire 'action_dispatch/http/mime_type'\n\nMime.const_set :LOOKUP, Hash.new { |h,k|\n  Mime::Type.new(k) unless k.blank?\n}\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 5-0-mime_types_leak.patch - Patch for 5.0 series\n* 4-2-mime_types_leak.patch - Patch for 4.2 series\n* 4-1-mime_types_leak.patch - Patch for 4.1 series\n* 3-2-mime_types_leak.patch - Patch for 3.2 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nAaron Patterson <3<3\n",
+            "cvss_v2": 5.0,
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1",
+                "~> 3.2.22.1"
+            ]
         }
     }
 }

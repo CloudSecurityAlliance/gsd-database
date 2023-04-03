@@ -7,6 +7,41 @@
             "https://www.suse.com/security/cve/CVE-2015-7580.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2015-7580",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2015-7580",
+                "GHSA-ghqm-pgxj-37gq"
+            ],
+            "summary": "Possible XSS vulnerability in rails-html-sanitizer",
+            "details": "There is a possible XSS vulnerability in the white list sanitizer in the\nrails-html-sanitizer gem. This vulnerability has been assigned the CVE\nidentifier CVE-2015-7580.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     v1.0.3\n\nImpact\n------\nCarefully crafted strings can cause user input to bypass the sanitization in\nthe white list sanitizer which will can lead to an XSS attack.\n\nVulnerable code will look something like this:\n\n  <%= sanitize user_input, tags: %w(em) %>\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nPutting the following monkey patch in an initializer can help to mitigate the\nissue:\n\n```\nclass Rails::Html::PermitScrubber\n  alias :old_scrub :scrub\n  alias :old_skip_node? :skip_node?\n\n  def scrub(node)\n    if node.cdata?\n      text = node.document.create_text_node node.text\n      node.replace text\n      return CONTINUE\n    end\n    old_scrub node\n  end\n\n  def skip_node?(node); node.text?; end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 1-0-whitelist_sanitizer_xss.patch - Patch for 1.0 series\n\nCredits\n-------\nThanks to Arnaud Germis, Nate Clark, and John Colvin for reporting this issue.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "rails-html-sanitizer",
+                        "purl": "pkg:gem/rails-html-sanitizer"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/uh--W4TDwmI"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -420,6 +455,19 @@
             },
             "lastModifiedDate": "2019-08-08T15:16Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "rails-html-sanitizer",
+            "cve": "2015-7580",
+            "ghsa": "ghqm-pgxj-37gq",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/uh--W4TDwmI",
+            "title": "Possible XSS vulnerability in rails-html-sanitizer",
+            "date": "2016-01-25",
+            "description": "There is a possible XSS vulnerability in the white list sanitizer in the\nrails-html-sanitizer gem. This vulnerability has been assigned the CVE\nidentifier CVE-2015-7580.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     v1.0.3\n\nImpact\n------\nCarefully crafted strings can cause user input to bypass the sanitization in\nthe white list sanitizer which will can lead to an XSS attack.\n\nVulnerable code will look something like this:\n\n  <%= sanitize user_input, tags: %w(em) %>\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nPutting the following monkey patch in an initializer can help to mitigate the\nissue:\n\n```\nclass Rails::Html::PermitScrubber\n  alias :old_scrub :scrub\n  alias :old_skip_node? :skip_node?\n\n  def scrub(node)\n    if node.cdata?\n      text = node.document.create_text_node node.text\n      node.replace text\n      return CONTINUE\n    end\n    old_scrub node\n  end\n\n  def skip_node?(node); node.text?; end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 1-0-whitelist_sanitizer_xss.patch - Patch for 1.0 series\n\nCredits\n-------\nThanks to Arnaud Germis, Nate Clark, and John Colvin for reporting this issue.\n",
+            "cvss_v3": 6.1,
+            "patched_versions": [
+                ">= 1.0.3"
+            ]
         }
     }
 }

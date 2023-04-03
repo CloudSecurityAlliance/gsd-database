@@ -4,6 +4,41 @@
         "description": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests.",
         "id": "GSD-2018-3777"
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2018-3777",
+            "modified": "2018-07-27T00:00:00.000Z",
+            "published": "2018-07-27T00:00:00.000Z",
+            "aliases": [
+                "CVE-2018-3777",
+                "GHSA-534w-937m-v7x3"
+            ],
+            "summary": "Insufficient URI encoding in restforce",
+            "details": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 9.8
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "restforce",
+                        "purl": "pkg:gem/restforce"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/restforce/restforce/pull/392"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -205,6 +240,20 @@
             },
             "lastModifiedDate": "2023-02-28T17:55Z",
             "publishedDate": "2018-08-03T20:29Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "restforce",
+            "cve": "2018-3777",
+            "ghsa": "534w-937m-v7x3",
+            "url": "https://github.com/restforce/restforce/pull/392",
+            "title": "Insufficient URI encoding in restforce",
+            "date": "2018-07-27",
+            "description": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
+            "cvss_v3": 9.8,
+            "patched_versions": [
+                "~> 2.5.4",
+                ">= 3.0.0"
+            ]
         }
     }
 }

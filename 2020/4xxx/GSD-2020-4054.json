@@ -9,6 +9,41 @@
             "https://ubuntu.com/security/CVE-2020-4054"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-4054",
+            "modified": "2020-06-16T00:00:00.000Z",
+            "published": "2020-06-16T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-4054",
+                "GHSA-p4x4-rw2p-8j8m"
+            ],
+            "summary": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize",
+            "details": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.3
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "sanitize",
+                        "purl": "pkg:gem/sanitize"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -280,6 +315,22 @@
             },
             "lastModifiedDate": "2020-09-28T20:15Z",
             "publishedDate": "2020-06-16T22:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "sanitize",
+            "cve": "2020-4054",
+            "ghsa": "p4x4-rw2p-8j8m",
+            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
+            "title": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize",
+            "date": "2020-06-16",
+            "description": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
+            "cvss_v3": 7.3,
+            "unaffected_versions": [
+                "< 3.0.0"
+            ],
+            "patched_versions": [
+                ">= 5.2.1"
+            ]
         }
     }
 }

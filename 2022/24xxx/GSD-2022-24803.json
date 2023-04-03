@@ -1,8 +1,51 @@
 {
     "GSD": {
         "alias": "CVE-2022-24803",
-        "description": "Asciidoctor-include-ext is Asciidoctor\u2019s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits.",
+        "description": "Asciidoctor-include-ext is Asciidoctor’s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits.",
         "id": "GSD-2022-24803"
+    },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-24803",
+            "modified": "2022-03-31T00:00:00.000Z",
+            "published": "2022-03-31T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-24803",
+                "GHSA-v222-6mr4-qj29"
+            ],
+            "summary": "Command Injection vulnerability in asciidoctor-include-ext",
+            "details": "### Impact\n\nApplications using [Asciidoctor (Ruby)](https://github.com/asciidoctor/asciidoctor)\nwith [asciidoctor-include-ext](https://github.com/jirutka/asciidoctor-include-ext)\n(prior to version 0.4.0), which render user-supplied input in AsciiDoc markup, may\nallow an attacker to execute arbitrary system commands on the host operating system.\nThis attack is possible even when `allow-uri-read` is disabled!\n\n### Patches\n\nThe vulnerability has been fixed in commit c7ea001 (and further improved in cbaccf3),\nwhich is included in version\n[0.4.0](https://rubygems.org/gems/asciidoctor-include-ext/versions/0.4.0).\n\n### Workarounds\n\n```rb\nrequire 'asciidoctor/include_ext'\n\nclass Asciidoctor::IncludeExt::IncludeProcessor\n  # Overrides superclass private method to mitigate Command Injection\n  # vulnerability in asciidoctor-include-ext <0.4.0.\n  def target_uri?(target)\n    target.downcase.start_with?('http://', 'https://') \\\n      && URI.parse(target).is_a?(URI::HTTP)\n  rescue URI::InvalidURIError\n    false\n  end\nend\n```\n\n### References\n\n* https://sakurity.com/blog/2015/02/28/openuri.html",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 10.0
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "asciidoctor-include-ext",
+                        "purl": "pkg:gem/asciidoctor-include-ext"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/jirutka/asciidoctor-include-ext/security/advisories/GHSA-v222-6mr4-qj29"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/jirutka/asciidoctor-include-ext/commit/c7ea001a597c7033575342c51483dab7b87ae155"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/jirutka/asciidoctor-include-ext/commit/cbaccf3de533cbca224bf61d0b74e4b84d41d8ee"
+                }
+            ]
+        }
     },
     "namespaces": {
         "cve.org": {
@@ -42,7 +85,7 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "Asciidoctor-include-ext is Asciidoctor\u2019s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits."
+                        "value": "Asciidoctor-include-ext is Asciidoctor’s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits."
                     }
                 ]
             },
@@ -128,7 +171,7 @@
                     "description_data": [
                         {
                             "lang": "en",
-                            "value": "Asciidoctor-include-ext is Asciidoctor\u2019s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits."
+                            "value": "Asciidoctor-include-ext is Asciidoctor’s standard include processor reimplemented as an extension. Versions prior to 0.4.0, when used to render user-supplied input in AsciiDoc markup, may allow an attacker to execute arbitrary system commands on the host operating system. This attack is possible even when `allow-uri-read` is disabled! The problem has been patched in the referenced commits."
                         }
                     ]
                 },
@@ -219,6 +262,25 @@
             },
             "lastModifiedDate": "2022-04-11T20:15Z",
             "publishedDate": "2022-04-01T00:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "asciidoctor-include-ext",
+            "cve": "2022-24803",
+            "ghsa": "v222-6mr4-qj29",
+            "url": "https://github.com/jirutka/asciidoctor-include-ext/security/advisories/GHSA-v222-6mr4-qj29",
+            "title": "Command Injection vulnerability in asciidoctor-include-ext",
+            "date": "2022-03-31",
+            "description": "### Impact\n\nApplications using [Asciidoctor (Ruby)](https://github.com/asciidoctor/asciidoctor)\nwith [asciidoctor-include-ext](https://github.com/jirutka/asciidoctor-include-ext)\n(prior to version 0.4.0), which render user-supplied input in AsciiDoc markup, may\nallow an attacker to execute arbitrary system commands on the host operating system.\nThis attack is possible even when `allow-uri-read` is disabled!\n\n### Patches\n\nThe vulnerability has been fixed in commit c7ea001 (and further improved in cbaccf3),\nwhich is included in version\n[0.4.0](https://rubygems.org/gems/asciidoctor-include-ext/versions/0.4.0).\n\n### Workarounds\n\n```rb\nrequire 'asciidoctor/include_ext'\n\nclass Asciidoctor::IncludeExt::IncludeProcessor\n  # Overrides superclass private method to mitigate Command Injection\n  # vulnerability in asciidoctor-include-ext <0.4.0.\n  def target_uri?(target)\n    target.downcase.start_with?('http://', 'https://') \\\n      && URI.parse(target).is_a?(URI::HTTP)\n  rescue URI::InvalidURIError\n    false\n  end\nend\n```\n\n### References\n\n* https://sakurity.com/blog/2015/02/28/openuri.html",
+            "cvss_v3": 10.0,
+            "patched_versions": [
+                ">= 0.4.0"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/jirutka/asciidoctor-include-ext/commit/c7ea001a597c7033575342c51483dab7b87ae155",
+                    "https://github.com/jirutka/asciidoctor-include-ext/commit/cbaccf3de533cbca224bf61d0b74e4b84d41d8ee"
+                ]
+            }
         }
     }
 }

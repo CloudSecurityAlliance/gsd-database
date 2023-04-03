@@ -10,6 +10,45 @@
             "https://access.redhat.com/errata/RHSA-2022:8532"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-24790",
+            "modified": "2022-03-30T00:00:00.000Z",
+            "published": "2022-03-30T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-24790",
+                "GHSA-h99w-9q5r-gjq9"
+            ],
+            "summary": "HTTP Request Smuggling in puma",
+            "details": "### Impact\n\nWhen using Puma behind a proxy that does not properly validate that the\nincoming HTTP request matches the RFC7230 standard, Puma and the frontend\nproxy may disagree on where a request starts and ends. This would allow\nrequests to be smuggled via the front-end proxy to Puma.\n\nThe following vulnerabilities are addressed by this advisory:\n- Lenient parsing of `Transfer-Encoding` headers, when unsupported encodings\n  should be rejected and the final encoding must be `chunked`.\n- Lenient parsing of malformed `Content-Length` headers and chunk sizes, when\n  only digits and hex digits should be allowed.\n- Lenient parsing of duplicate `Content-Length` headers, when they should be\n  rejected.\n- Lenient parsing of the ending of chunked segments, when they should end\n  with `\\r\\n`.\n\n### Patches\n\nThe vulnerability has been fixed in 5.6.4 and 4.3.12.\n\n### Workarounds\n\nWhen deploying a proxy in front of Puma, turning on any and all functionality\nto make sure that the request matches the RFC7230 standard.\n\nThese proxy servers are known to have \"good\" behavior re: this standard and\nupgrading Puma may not be necessary. Users are encouraged to validate for\nthemselves.\n\n- Nginx (latest)\n- Apache (latest)\n- Haproxy 2.5+\n- Caddy (latest)\n- Traefik (latest)\n\n### References\n\n[HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 9.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "puma",
+                        "purl": "pkg:gem/puma"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/puma/puma/security/advisories/GHSA-h99w-9q5r-gjq9"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/puma/puma/commit/5bb7d202e24dec00a898dca4aa11db391d7787a5"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -340,6 +379,25 @@
             },
             "lastModifiedDate": "2022-10-12T13:15Z",
             "publishedDate": "2022-03-30T22:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "puma",
+            "cve": "2022-24790",
+            "ghsa": "h99w-9q5r-gjq9",
+            "url": "https://github.com/puma/puma/security/advisories/GHSA-h99w-9q5r-gjq9",
+            "title": "HTTP Request Smuggling in puma",
+            "date": "2022-03-30",
+            "description": "### Impact\n\nWhen using Puma behind a proxy that does not properly validate that the\nincoming HTTP request matches the RFC7230 standard, Puma and the frontend\nproxy may disagree on where a request starts and ends. This would allow\nrequests to be smuggled via the front-end proxy to Puma.\n\nThe following vulnerabilities are addressed by this advisory:\n- Lenient parsing of `Transfer-Encoding` headers, when unsupported encodings\n  should be rejected and the final encoding must be `chunked`.\n- Lenient parsing of malformed `Content-Length` headers and chunk sizes, when\n  only digits and hex digits should be allowed.\n- Lenient parsing of duplicate `Content-Length` headers, when they should be\n  rejected.\n- Lenient parsing of the ending of chunked segments, when they should end\n  with `\\r\\n`.\n\n### Patches\n\nThe vulnerability has been fixed in 5.6.4 and 4.3.12.\n\n### Workarounds\n\nWhen deploying a proxy in front of Puma, turning on any and all functionality\nto make sure that the request matches the RFC7230 standard.\n\nThese proxy servers are known to have \"good\" behavior re: this standard and\nupgrading Puma may not be necessary. Users are encouraged to validate for\nthemselves.\n\n- Nginx (latest)\n- Apache (latest)\n- Haproxy 2.5+\n- Caddy (latest)\n- Traefik (latest)\n\n### References\n\n[HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
+            "cvss_v3": 9.1,
+            "patched_versions": [
+                "~> 4.3.12",
+                ">= 5.6.4"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/puma/puma/commit/5bb7d202e24dec00a898dca4aa11db391d7787a5"
+                ]
+            }
         }
     }
 }

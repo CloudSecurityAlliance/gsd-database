@@ -9,6 +9,45 @@
             "https://access.redhat.com/errata/RHSA-2016:0296"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2016-0753",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2016-0753",
+                "GHSA-543v-gj2c-r3ch"
+            ],
+            "summary": "Possible Input Validation Circumvention in Active Model",
+            "details": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 5.0
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 5.3
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activemodel",
+                        "purl": "pkg:gem/activemodel"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/6jQVC1geukQ"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -561,6 +600,26 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activemodel",
+            "framework": "rails",
+            "cve": "2016-0753",
+            "ghsa": "543v-gj2c-r3ch",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/6jQVC1geukQ",
+            "title": "Possible Input Validation Circumvention in Active Model",
+            "date": "2016-01-25",
+            "description": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
+            "cvss_v2": 5.0,
+            "cvss_v3": 5.3,
+            "unaffected_versions": [
+                "<= 4.0.13"
+            ],
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1"
+            ]
         }
     }
 }

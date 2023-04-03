@@ -7,6 +7,41 @@
             "https://access.redhat.com/errata/RHSA-2020:4366"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-5217",
+            "modified": "2020-01-23T00:00:00.000Z",
+            "published": "2020-01-23T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-5217",
+                "GHSA-xq52-rv6w-397c"
+            ],
+            "summary": "secure_headers directive injection using semicolon",
+            "details": "If user-supplied input was passed into append/override_content_security_policy_directives,\na semicolon could be injected leading to directive injection.\n\nThis could be used to e.g. override a script-src directive. Duplicate directives are ignored\nand the first one wins. The directives in secure_headers are sorted alphabetically so they\npretty much all come before script-src. A previously undefined directive would receive a value\neven if SecureHeaders::OPT_OUT was supplied.\n\nThe fixed versions will silently convert the semicolons to spaces and emit a deprecation warning\nwhen this happens. This will result in innocuous browser console messages if being\nexploited/accidentally used. In future releases, we will raise application errors resulting in\n500s.\n\n> Duplicate script-src directives detected. All but the first instance will be ignored.\n\nSee https://www.w3.org/TR/CSP3/#parse-serialized-policy\n\n> Note: In this case, the user agent SHOULD notify developers that a duplicate directive was\n> ignored. A console warning might be appropriate, for example.\n\n# Workarounds\n\nIf you are passing user input into the above methods, you could filter out the input:\n\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\";\", \" \")])\n```",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 4.4
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "secure_headers",
+                        "purl": "pkg:gem/secure_headers"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-xq52-rv6w-397c"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -290,6 +325,21 @@
             },
             "lastModifiedDate": "2020-05-21T13:51Z",
             "publishedDate": "2020-01-23T03:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "secure_headers",
+            "cve": "2020-5217",
+            "ghsa": "xq52-rv6w-397c",
+            "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-xq52-rv6w-397c",
+            "title": "secure_headers directive injection using semicolon",
+            "date": "2020-01-23",
+            "description": "If user-supplied input was passed into append/override_content_security_policy_directives,\na semicolon could be injected leading to directive injection.\n\nThis could be used to e.g. override a script-src directive. Duplicate directives are ignored\nand the first one wins. The directives in secure_headers are sorted alphabetically so they\npretty much all come before script-src. A previously undefined directive would receive a value\neven if SecureHeaders::OPT_OUT was supplied.\n\nThe fixed versions will silently convert the semicolons to spaces and emit a deprecation warning\nwhen this happens. This will result in innocuous browser console messages if being\nexploited/accidentally used. In future releases, we will raise application errors resulting in\n500s.\n\n> Duplicate script-src directives detected. All but the first instance will be ignored.\n\nSee https://www.w3.org/TR/CSP3/#parse-serialized-policy\n\n> Note: In this case, the user agent SHOULD notify developers that a duplicate directive was\n> ignored. A console warning might be appropriate, for example.\n\n# Workarounds\n\nIf you are passing user input into the above methods, you could filter out the input:\n\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\";\", \" \")])\n```",
+            "cvss_v3": 4.4,
+            "patched_versions": [
+                "~> 3.8",
+                "~> 5.1",
+                ">= 6.2.0"
+            ]
         }
     }
 }

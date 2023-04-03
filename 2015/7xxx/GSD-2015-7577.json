@@ -11,6 +11,45 @@
             "https://access.redhat.com/errata/RHSA-2016:0296"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2015-7577",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2015-7577",
+                "GHSA-xrr6-3pc4-m447"
+            ],
+            "summary": "Nested attributes rejection proc bypass in Active Record",
+            "details": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
+            "severity": [
+                {
+                    "type": "CVSS_V2",
+                    "score": 5.0
+                },
+                {
+                    "type": "CVSS_V3",
+                    "score": 5.3
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activerecord",
+                        "purl": "pkg:gem/activerecord"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -744,6 +783,28 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activerecord",
+            "framework": "rails",
+            "cve": "2015-7577",
+            "ghsa": "xrr6-3pc4-m447",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g",
+            "title": "Nested attributes rejection proc bypass in Active Record",
+            "date": "2016-01-25",
+            "description": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
+            "cvss_v2": 5.0,
+            "cvss_v3": 5.3,
+            "unaffected_versions": [
+                "~> 3.0.0",
+                "< 3.0.0"
+            ],
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1",
+                "~> 3.2.22.1"
+            ]
         }
     }
 }

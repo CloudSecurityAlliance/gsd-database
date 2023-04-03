@@ -7,6 +7,41 @@
             "https://www.suse.com/security/cve/CVE-2015-7579.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2015-7579",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2015-7579",
+                "GHSA-r9c2-cr39-c8g6"
+            ],
+            "summary": "XSS vulnerability in rails-html-sanitizer",
+            "details": "There is a XSS vulnerability in `Rails::Html::FullSanitizer` used by Action View's `strip_tags`.\nThis vulnerability has been assigned the CVE identifier CVE-2015-7579.\n\nVersions Affected:  1.0.2\nNot affected:       1.0.0, 1.0.1\nFixed Versions:     1.0.3\n\nImpact\n------\nDue to the way that `Rails::Html::FullSanitizer` is implemented, if an attacker\npasses an already escaped HTML entity to the input of Action View's `strip_tags`\nthese entities will be unescaped what may cause a XSS attack if used in combination\nwith `raw` or `html_safe`.\n\nFor example:\n\n    strip_tags(\"&lt;script&gt;alert('XSS')&lt;/script&gt;\")\n\nWould generate:\n\n    <script>alert('XSS')</script>\n\nAfter the fix it will generate:\n\n    &lt;script&gt;alert('XSS')&lt;/script&gt;\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/strip_tags_fix.rb\nclass ActionView::Base\n  def strip_tags(html)\n    self.class.full_sanitizer.sanitize(html)\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches\nfor the two supported release series. They are in git-am format and consist\nof a single changeset.\n\n* Do-not-unescape-already-escaped-HTML-entities.patch\n\nCredits\n-------\nThank you to Arthur Neves from GitHub and Spyros Livathinos from Zendesk for\nreporting the problem and working with us to fix it.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "rails-html-sanitizer",
+                        "purl": "pkg:gem/rails-html-sanitizer"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/OU9ugTZcbjc"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -443,6 +478,23 @@
             },
             "lastModifiedDate": "2019-08-08T15:16Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "rails-html-sanitizer",
+            "cve": "2015-7579",
+            "ghsa": "r9c2-cr39-c8g6",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/OU9ugTZcbjc",
+            "title": "XSS vulnerability in rails-html-sanitizer",
+            "date": "2016-01-25",
+            "description": "There is a XSS vulnerability in `Rails::Html::FullSanitizer` used by Action View's `strip_tags`.\nThis vulnerability has been assigned the CVE identifier CVE-2015-7579.\n\nVersions Affected:  1.0.2\nNot affected:       1.0.0, 1.0.1\nFixed Versions:     1.0.3\n\nImpact\n------\nDue to the way that `Rails::Html::FullSanitizer` is implemented, if an attacker\npasses an already escaped HTML entity to the input of Action View's `strip_tags`\nthese entities will be unescaped what may cause a XSS attack if used in combination\nwith `raw` or `html_safe`.\n\nFor example:\n\n    strip_tags(\"&lt;script&gt;alert('XSS')&lt;/script&gt;\")\n\nWould generate:\n\n    <script>alert('XSS')</script>\n\nAfter the fix it will generate:\n\n    &lt;script&gt;alert('XSS')&lt;/script&gt;\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/strip_tags_fix.rb\nclass ActionView::Base\n  def strip_tags(html)\n    self.class.full_sanitizer.sanitize(html)\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches\nfor the two supported release series. They are in git-am format and consist\nof a single changeset.\n\n* Do-not-unescape-already-escaped-HTML-entities.patch\n\nCredits\n-------\nThank you to Arthur Neves from GitHub and Spyros Livathinos from Zendesk for\nreporting the problem and working with us to fix it.\n",
+            "cvss_v3": 6.1,
+            "unaffected_versions": [
+                "~> 1.0.0",
+                "~> 1.0.1"
+            ],
+            "patched_versions": [
+                ">= 1.0.3"
+            ]
         }
     }
 }

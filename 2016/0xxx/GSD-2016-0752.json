@@ -12,6 +12,34 @@
             "https://packetstormsecurity.com/files/cve/CVE-2016-0752"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2016-0752",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
+            "aliases": [
+                "CVE-2016-0752"
+            ],
+            "summary": "Possible Information Leak Vulnerability in Action View",
+            "details": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "actionpack",
+                        "purl": "pkg:gem/actionpack"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cisa.gov": {
             "cveID": "CVE-2016-0752",
@@ -653,6 +681,24 @@
             },
             "lastModifiedDate": "2019-08-08T15:43Z",
             "publishedDate": "2016-02-16T02:59Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "actionview",
+            "framework": "rails",
+            "cve": "2016-0752",
+            "ghsa": "xrr4-p6fq-hjg7",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00",
+            "title": "Possible Information Leak Vulnerability in Action View",
+            "date": "2016-01-25",
+            "description": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
+            "cvss_v2": 5.0,
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1"
+            ],
+            "notes": "'~> 3.2.22.1' is found in gems/actionpack/CVE-2016-0752.yml"
         }
     }
 }

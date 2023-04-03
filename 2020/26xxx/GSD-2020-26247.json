@@ -10,6 +10,45 @@
             "https://advisories.mageia.org/CVE-2020-26247.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-26247",
+            "modified": "2020-12-30T00:00:00.000Z",
+            "published": "2020-12-30T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-26247",
+                "GHSA-vr8q-g5c7-m54m"
+            ],
+            "summary": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability",
+            "details": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 2.6
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "nokogiri",
+                        "purl": "pkg:gem/nokogiri"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://hackerone.com/reports/747489"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -362,6 +401,24 @@
             },
             "lastModifiedDate": "2022-10-19T18:53Z",
             "publishedDate": "2020-12-30T19:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "nokogiri",
+            "cve": "2020-26247",
+            "ghsa": "vr8q-g5c7-m54m",
+            "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
+            "title": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability",
+            "date": "2020-12-30",
+            "description": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
+            "cvss_v3": 2.6,
+            "patched_versions": [
+                ">= 1.11.0.rc4"
+            ],
+            "related": {
+                "url": [
+                    "https://hackerone.com/reports/747489"
+                ]
+            }
         }
     }
 }

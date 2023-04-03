@@ -7,6 +7,41 @@
             "https://www.suse.com/security/cve/CVE-2020-8151.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2020-8151",
+            "modified": "2020-05-05T00:00:00.000Z",
+            "published": "2020-05-05T00:00:00.000Z",
+            "aliases": [
+                "CVE-2020-8151",
+                "GHSA-46j2-xjgp-jrfm"
+            ],
+            "summary": "activeresource Gem for Ruby lib/active_resource/base.rb element_path Lack of Encoding",
+            "details": "activeresource contains a lack of encoding flaw in the element_path function of\nlib/active_resource/base.rb.\n\nThere is an issue with the way Active Resource encodes data before querying the back end server.  This encoding mechanism can allow specially crafted requests to possibly access data that may not be expected.\n\nImpacted code will look something like this:\n\n```\nrequire 'activeresource'\n\nclass Test < ActiveResource::Base\n  self.site = 'http://127.0.0.1:3000'\nend\n\nTest.exists?(untrusted_user_input)\n```\n\nWhere untrusted user input is passed to an Active Resource model.  Specially crafted untrusted input can cause Active Resource to access data in an unexpected way and possibly leak information.\n\nWorkarounds\n-------------\n\nFor those that can't upgrade, the following monkey patch can be applied:\n\n```\nmodule ActiveResource\n class Base\n   class << self\n     def element_path(id, prefix_options = {}, query_options = nil)\n       check_prefix_options(prefix_options)\n\n       prefix_options, query_options = split_options(prefix_options) if query_options.nil?\n       \"#{prefix(prefix_options)}#{collection_name}/#{URI.encode_www_form_component(id.to_s)}#{format_extension}#{query_string(query_options)}\"\n     end\n   end\n end\nend\n```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activeresource",
+                        "purl": "pkg:gem/activeresource"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pktoF4VmiM8"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -232,6 +267,19 @@
             },
             "lastModifiedDate": "2021-10-07T17:19Z",
             "publishedDate": "2020-05-12T13:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activeresource",
+            "cve": "2020-8151",
+            "ghsa": "46j2-xjgp-jrfm",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pktoF4VmiM8",
+            "title": "activeresource Gem for Ruby lib/active_resource/base.rb element_path Lack of Encoding",
+            "date": "2020-05-05",
+            "description": "activeresource contains a lack of encoding flaw in the element_path function of\nlib/active_resource/base.rb.\n\nThere is an issue with the way Active Resource encodes data before querying the back end server.  This encoding mechanism can allow specially crafted requests to possibly access data that may not be expected.\n\nImpacted code will look something like this:\n\n```\nrequire 'activeresource'\n\nclass Test < ActiveResource::Base\n  self.site = 'http://127.0.0.1:3000'\nend\n\nTest.exists?(untrusted_user_input)\n```\n\nWhere untrusted user input is passed to an Active Resource model.  Specially crafted untrusted input can cause Active Resource to access data in an unexpected way and possibly leak information.\n\nWorkarounds\n-------------\n\nFor those that can't upgrade, the following monkey patch can be applied:\n\n```\nmodule ActiveResource\n class Base\n   class << self\n     def element_path(id, prefix_options = {}, query_options = nil)\n       check_prefix_options(prefix_options)\n\n       prefix_options, query_options = split_options(prefix_options) if query_options.nil?\n       \"#{prefix(prefix_options)}#{collection_name}/#{URI.encode_www_form_component(id.to_s)}#{format_extension}#{query_string(query_options)}\"\n     end\n   end\n end\nend\n```\n",
+            "cvss_v3": 7.5,
+            "patched_versions": [
+                ">= 5.1.1"
+            ]
         }
     }
 }

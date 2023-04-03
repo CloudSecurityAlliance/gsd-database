@@ -6,6 +6,49 @@
             "https://www.suse.com/security/cve/CVE-2022-23519.html"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2022-23519",
+            "modified": "2022-12-13T00:00:00.000Z",
+            "published": "2022-12-13T00:00:00.000Z",
+            "aliases": [
+                "CVE-2022-23519",
+                "GHSA-9h9g-93gc-623h"
+            ],
+            "summary": "Possible XSS vulnerability with certain configurations of rails-html-sanitizer",
+            "details": "## Summary\n\nThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\n\n- Versions affected: ALL\n- Not affected: NONE\n- Fixed versions: 1.4.4\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags in either of the following ways:\n\n- allow both \"math\" and \"style\" elements,\n- or allow both \"svg\" and \"style\" elements\n\nCode is only impacted if allowed tags are being overridden. Applications may be doing this in four different ways:\n\n1. using application configuration:\n\n  ```ruby\n  # In config/application.rb\n  config.action_view.sanitized_allowed_tags = [\"math\", \"style\"]\n  # or\n  config.action_view.sanitized_allowed_tags = [\"svg\", \"style\"]\n  ```\n\n  see https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\n2. using a `:tags` option to the Action View helper `sanitize`:\n\n  ```\n  <%= sanitize @comment.body, tags: [\"math\", \"style\"] %>\n  <%# or %>\n  <%= sanitize @comment.body, tags: [\"svg\", \"style\"] %>\n  ```\n\n  see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\n3. using Rails::Html::SafeListSanitizer class method `allowed_tags=`:\n\n  ```ruby\n  # class-level option\n  Rails::Html::SafeListSanitizer.allowed_tags = [\"math\", \"style\"]\n  # or\n  Rails::Html::SafeListSanitizer.allowed_tags = [\"svg\", \"style\"]\n  ```\n\n4. using a `:tags` options to the Rails::Html::SafeListSanitizer instance method `sanitize`:\n\n  ```ruby\n  # instance-level option\n  Rails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"math\", \"style\"])\n  # or\n  Rails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"svg\", \"style\"])\n  ```\n\nAll users overriding the allowed tags by any of the above mechanisms to include ((\"math\" or \"svg\") and \"style\") should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove \"style\" from the overridden allowed tags, or remove \"math\" and \"svg\" from the overridden allowed tags.\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 6.1
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "rails-html-sanitizer",
+                        "purl": "pkg:gem/rails-html-sanitizer"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://github.com/rails/rails-html-sanitizer/security/advisories/GHSA-9h9g-93gc-623h"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://cwe.mitre.org/data/definitions/79.html"
+                },
+                {
+                    "type": "WEB",
+                    "url": "https://hackerone.com/reports/1656627"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -189,6 +232,25 @@
             },
             "lastModifiedDate": "2022-12-16T21:48Z",
             "publishedDate": "2022-12-14T17:15Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "rails-html-sanitizer",
+            "cve": "2022-23519",
+            "ghsa": "9h9g-93gc-623h",
+            "url": "https://github.com/rails/rails-html-sanitizer/security/advisories/GHSA-9h9g-93gc-623h",
+            "title": "Possible XSS vulnerability with certain configurations of rails-html-sanitizer",
+            "date": "2022-12-13",
+            "description": "## Summary\n\nThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\n\n- Versions affected: ALL\n- Not affected: NONE\n- Fixed versions: 1.4.4\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags in either of the following ways:\n\n- allow both \"math\" and \"style\" elements,\n- or allow both \"svg\" and \"style\" elements\n\nCode is only impacted if allowed tags are being overridden. Applications may be doing this in four different ways:\n\n1. using application configuration:\n\n  ```ruby\n  # In config/application.rb\n  config.action_view.sanitized_allowed_tags = [\"math\", \"style\"]\n  # or\n  config.action_view.sanitized_allowed_tags = [\"svg\", \"style\"]\n  ```\n\n  see https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\n2. using a `:tags` option to the Action View helper `sanitize`:\n\n  ```\n  <%= sanitize @comment.body, tags: [\"math\", \"style\"] %>\n  <%# or %>\n  <%= sanitize @comment.body, tags: [\"svg\", \"style\"] %>\n  ```\n\n  see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\n3. using Rails::Html::SafeListSanitizer class method `allowed_tags=`:\n\n  ```ruby\n  # class-level option\n  Rails::Html::SafeListSanitizer.allowed_tags = [\"math\", \"style\"]\n  # or\n  Rails::Html::SafeListSanitizer.allowed_tags = [\"svg\", \"style\"]\n  ```\n\n4. using a `:tags` options to the Rails::Html::SafeListSanitizer instance method `sanitize`:\n\n  ```ruby\n  # instance-level option\n  Rails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"math\", \"style\"])\n  # or\n  Rails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"svg\", \"style\"])\n  ```\n\nAll users overriding the allowed tags by any of the above mechanisms to include ((\"math\" or \"svg\") and \"style\") should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove \"style\" from the overridden allowed tags, or remove \"math\" and \"svg\" from the overridden allowed tags.\n",
+            "cvss_v3": 6.1,
+            "patched_versions": [
+                ">= 1.4.4"
+            ],
+            "related": {
+                "url": [
+                    "https://cwe.mitre.org/data/definitions/79.html",
+                    "https://hackerone.com/reports/1656627"
+                ]
+            }
         }
     }
 }

@@ -8,6 +8,41 @@
             "https://access.redhat.com/errata/RHSA-2016:1855"
         ]
     },
+    "gsd": {
+        "osvSchema": {
+            "schema_version": "1.4.0",
+            "id": "GSD-2016-6317",
+            "modified": "2016-08-11T00:00:00.000Z",
+            "published": "2016-08-11T00:00:00.000Z",
+            "aliases": [
+                "CVE-2016-6317",
+                "GHSA-pr3r-4wrp-r2pv"
+            ],
+            "summary": "Unsafe Query Generation Risk in Active Record",
+            "details": "There is a vulnerability when Active Record is used in conjunction with JSON\nparameter parsing. This vulnerability is similar to CVE-2012-2660,\nCVE-2012-2694 and CVE-2013-0155.\n\nImpact\n------\n\nDue to the way Active Record interprets parameters in combination with the way\nthat JSON parameters are parsed, it is possible for an attacker to issue\nunexpected database queries with \"IS NULL\" or empty where clauses.  This issue\ndoes *not* let an attacker insert arbitrary values into an SQL query, however\nthey can cause the query to check for NULL or eliminate a WHERE clause when\nmost users wouldn't expect it.\n\nFor example, a system has password reset with token functionality:\n\n```ruby\n    unless params[:token].nil?\n      user = User.find_by_token(params[:token])\n      user.reset_password!\n    end\n```\n\nAn attacker can craft a request such that `params[:token]` will return\n`[nil]`.  The `[nil]` value will bypass the test for nil, but will still add\nan \"IN ('xyz', NULL)\" clause to the SQL query.\n\nSimilarly, an attacker can craft a request such that `params[:token]` will\nreturn an empty hash.  An empty hash will eliminate the WHERE clause of the\nquery, but can bypass the `nil?` check.\n\nNote that this impacts not only dynamic finders (`find_by_*`) but also\nrelations (`User.where(:name => params[:name])`).\n\nAll users running an affected release should either upgrade or use one of the\nwork arounds immediately. All users running an affected release should upgrade\nimmediately. Please note, this vulnerability is a variant of CVE-2012-2660,\nCVE-2012-2694, and CVE-2013-0155.  Even if you upgraded to address those\nissues, you must take action again.\n\nIf this chance in behavior impacts your application, you can manually decode\nthe original values from the request like so:\n\n    `ActiveSupport::JSON.decode(request.body)`\n\nWorkarounds\n-----------\nThis problem can be mitigated by casting the parameter to a string before\npassing it to Active Record.  For example:\n\n  ```ruby\n    unless params[:token].nil? || params[:token].to_s.empty?\n      user = User.find_by_token(params[:token].to_s)\n      user.reset_password!\n    end\n  ```\n",
+            "severity": [
+                {
+                    "type": "CVSS_V3",
+                    "score": 7.5
+                }
+            ],
+            "affected": [
+                {
+                    "package": {
+                        "ecosystem": "RubyGems",
+                        "name": "activerecord",
+                        "purl": "pkg:gem/activerecord"
+                    }
+                }
+            ],
+            "references": [
+                {
+                    "type": "WEB",
+                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/rgO20zYW33s"
+                }
+            ]
+        }
+    },
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
@@ -417,6 +452,24 @@
             },
             "lastModifiedDate": "2019-08-08T15:16Z",
             "publishedDate": "2016-09-07T19:28Z"
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "gem": "activerecord",
+            "framework": "rails",
+            "cve": "2016-6317",
+            "ghsa": "pr3r-4wrp-r2pv",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/rgO20zYW33s",
+            "title": "Unsafe Query Generation Risk in Active Record",
+            "date": "2016-08-11",
+            "description": "There is a vulnerability when Active Record is used in conjunction with JSON\nparameter parsing. This vulnerability is similar to CVE-2012-2660,\nCVE-2012-2694 and CVE-2013-0155.\n\nImpact\n------\n\nDue to the way Active Record interprets parameters in combination with the way\nthat JSON parameters are parsed, it is possible for an attacker to issue\nunexpected database queries with \"IS NULL\" or empty where clauses.  This issue\ndoes *not* let an attacker insert arbitrary values into an SQL query, however\nthey can cause the query to check for NULL or eliminate a WHERE clause when\nmost users wouldn't expect it.\n\nFor example, a system has password reset with token functionality:\n\n```ruby\n    unless params[:token].nil?\n      user = User.find_by_token(params[:token])\n      user.reset_password!\n    end\n```\n\nAn attacker can craft a request such that `params[:token]` will return\n`[nil]`.  The `[nil]` value will bypass the test for nil, but will still add\nan \"IN ('xyz', NULL)\" clause to the SQL query.\n\nSimilarly, an attacker can craft a request such that `params[:token]` will\nreturn an empty hash.  An empty hash will eliminate the WHERE clause of the\nquery, but can bypass the `nil?` check.\n\nNote that this impacts not only dynamic finders (`find_by_*`) but also\nrelations (`User.where(:name => params[:name])`).\n\nAll users running an affected release should either upgrade or use one of the\nwork arounds immediately. All users running an affected release should upgrade\nimmediately. Please note, this vulnerability is a variant of CVE-2012-2660,\nCVE-2012-2694, and CVE-2013-0155.  Even if you upgraded to address those\nissues, you must take action again.\n\nIf this chance in behavior impacts your application, you can manually decode\nthe original values from the request like so:\n\n    `ActiveSupport::JSON.decode(request.body)`\n\nWorkarounds\n-----------\nThis problem can be mitigated by casting the parameter to a string before\npassing it to Active Record.  For example:\n\n  ```ruby\n    unless params[:token].nil? || params[:token].to_s.empty?\n      user = User.find_by_token(params[:token].to_s)\n      user.reset_password!\n    end\n  ```\n",
+            "cvss_v3": 7.5,
+            "unaffected_versions": [
+                "< 4.2.0",
+                ">= 5.0.0"
+            ],
+            "patched_versions": [
+                ">= 4.2.7.1"
+            ]
         }
     }
 }
