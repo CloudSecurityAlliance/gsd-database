@@ -1,3 +1,3 @@
-# Getting Started with GSD
+# Contributing to GSD
 
-Please see: https://gsd.id/getting-started
+Please see: https://gsd.id/contribute

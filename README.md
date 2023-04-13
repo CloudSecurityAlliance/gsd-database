@@ -21,7 +21,7 @@ https://gsd.id/getting-started#using-gsd-ids
 
 ## Contributing to GSD
 
-https://gsd.id/getting-started#contribute
+https://gsd.id/contribute
 
 ## Accessing the Data
 
