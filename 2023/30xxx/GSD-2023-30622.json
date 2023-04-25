@@ -6,9 +6,33 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-30622",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "clusternet",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "< 0.15.2"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "clusternet"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +41,113 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "Clusternet is a general-purpose system for controlling Kubernetes clusters across different environments. An issue in clusternet prior to version 0.15.2 can be leveraged to lead to a cluster-level privilege escalation. The clusternet has a deployment called `cluster-hub` inside the `clusternet-system` Kubernetes namespace, which runs on worker nodes randomly. The deployment has a service account called `clusternet-hub`, which has a cluster role called `clusternet:hub` via cluster role binding. The `clusternet:hub` cluster role has `\"*\" verbs of \"*.*\"` resources. Thus, if a malicious user can access the worker node which runs the clusternet, they can leverage the service account to do malicious actions to critical system resources. For example, the malicious user can leverage the service account to get ALL secrets in the entire cluster, resulting in cluster-level privilege escalation. Version 0.15.2 contains a fix for this issue."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "HIGH",
+                        "attackVector": "LOCAL",
+                        "availabilityImpact": "LOW",
+                        "baseScore": 6.6,
+                        "baseSeverity": "MEDIUM",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "LOW",
+                        "privilegesRequired": "HIGH",
+                        "scope": "CHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:H/I:L/A:L",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-269",
+                                "lang": "eng",
+                                "value": "CWE-269: Improper Privilege Management"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/clusternet/clusternet/security/advisories/GHSA-833c-xh79-p429",
+                        "refsource": "MISC",
+                        "url": "https://github.com/clusternet/clusternet/security/advisories/GHSA-833c-xh79-p429"
+                    },
+                    {
+                        "name": "https://github.com/clusternet/clusternet/releases/tag/v0.15.2",
+                        "refsource": "MISC",
+                        "url": "https://github.com/clusternet/clusternet/releases/tag/v0.15.2"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-833c-xh79-p429",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-30622"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Clusternet is a general-purpose system for controlling Kubernetes clusters across different environments. An issue in clusternet prior to version 0.15.2 can be leveraged to lead to a cluster-level privilege escalation. The clusternet has a deployment called `cluster-hub` inside the `clusternet-system` Kubernetes namespace, which runs on worker nodes randomly. The deployment has a service account called `clusternet-hub`, which has a cluster role called `clusternet:hub` via cluster role binding. The `clusternet:hub` cluster role has `\"*\" verbs of \"*.*\"` resources. Thus, if a malicious user can access the worker node which runs the clusternet, they can leverage the service account to do malicious actions to critical system resources. For example, the malicious user can leverage the service account to get ALL secrets in the entire cluster, resulting in cluster-level privilege escalation. Version 0.15.2 contains a fix for this issue."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-269"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/clusternet/clusternet/security/advisories/GHSA-833c-xh79-p429",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/clusternet/clusternet/security/advisories/GHSA-833c-xh79-p429"
+                        },
+                        {
+                            "name": "https://github.com/clusternet/clusternet/releases/tag/v0.15.2",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/clusternet/clusternet/releases/tag/v0.15.2"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-04-24T16:52Z",
+            "publishedDate": "2023-04-24T16:15Z"
         }
     }
 }
