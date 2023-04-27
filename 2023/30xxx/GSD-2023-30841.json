@@ -6,9 +6,33 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-30841",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "baremetal-operator",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "< 0.3.0"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "metal3-io"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +41,113 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "Baremetal Operator (BMO) is a bare metal host provisioning integration for Kubernetes. Prior to version 0.3.0, ironic and ironic-inspector deployed within Baremetal Operator using the included `deploy.sh` store their `.htpasswd` files as ConfigMaps instead of Secrets. This causes the plain-text username and hashed password to be readable by anyone having a cluster-wide read-access to the management cluster, or access to the management cluster's Etcd storage. This issue is patched in baremetal-operator PR#1241, and is included in BMO release 0.3.0 onwards. As a workaround, users may modify the kustomizations and redeploy the BMO, or recreate the required ConfigMaps as Secrets per instructions in baremetal-operator PR#1241."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "LOCAL",
+                        "availabilityImpact": "NONE",
+                        "baseScore": 6,
+                        "baseSeverity": "MEDIUM",
+                        "confidentialityImpact": "NONE",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "HIGH",
+                        "scope": "CHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:N/I:H/A:N",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-200",
+                                "lang": "eng",
+                                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/metal3-io/baremetal-operator/security/advisories/GHSA-9wh7-397j-722m",
+                        "refsource": "MISC",
+                        "url": "https://github.com/metal3-io/baremetal-operator/security/advisories/GHSA-9wh7-397j-722m"
+                    },
+                    {
+                        "name": "https://github.com/metal3-io/baremetal-operator/pull/1241",
+                        "refsource": "MISC",
+                        "url": "https://github.com/metal3-io/baremetal-operator/pull/1241"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-9wh7-397j-722m",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-30841"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Baremetal Operator (BMO) is a bare metal host provisioning integration for Kubernetes. Prior to version 0.3.0, ironic and ironic-inspector deployed within Baremetal Operator using the included `deploy.sh` store their `.htpasswd` files as ConfigMaps instead of Secrets. This causes the plain-text username and hashed password to be readable by anyone having a cluster-wide read-access to the management cluster, or access to the management cluster's Etcd storage. This issue is patched in baremetal-operator PR#1241, and is included in BMO release 0.3.0 onwards. As a workaround, users may modify the kustomizations and redeploy the BMO, or recreate the required ConfigMaps as Secrets per instructions in baremetal-operator PR#1241."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-200"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/metal3-io/baremetal-operator/pull/1241",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/metal3-io/baremetal-operator/pull/1241"
+                        },
+                        {
+                            "name": "https://github.com/metal3-io/baremetal-operator/security/advisories/GHSA-9wh7-397j-722m",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/metal3-io/baremetal-operator/security/advisories/GHSA-9wh7-397j-722m"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-04-26T19:15Z",
+            "publishedDate": "2023-04-26T19:15Z"
         }
     }
 }
