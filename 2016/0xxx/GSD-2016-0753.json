@@ -11,26 +11,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2016-0753",
-            "modified": "2016-01-25T00:00:00.000Z",
-            "published": "2016-01-25T00:00:00.000Z",
-            "aliases": [
-                "CVE-2016-0753",
-                "GHSA-543v-gj2c-r3ch"
-            ],
-            "summary": "Possible Input Validation Circumvention in Active Model",
-            "details": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
-            "severity": [
-                {
-                    "type": "CVSS_V2",
-                    "score": 5.0
-                },
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.3
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -40,12 +20,32 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2016-0753",
+                "GHSA-543v-gj2c-r3ch"
+            ],
+            "details": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
+            "id": "GSD-2016-0753",
+            "modified": "2016-01-25T00:00:00.000Z",
+            "published": "2016-01-25T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
                     "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/6jQVC1geukQ"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 5.0,
+                    "type": "CVSS_V2"
+                },
+                {
+                    "score": 5.3,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Possible Input Validation Circumvention in Active Model"
         }
     },
     "namespaces": {
@@ -171,6 +171,26 @@
                 ]
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2016-0753",
+            "cvss_v2": 5.0,
+            "cvss_v3": 5.3,
+            "date": "2016-01-25",
+            "description": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
+            "framework": "rails",
+            "gem": "activemodel",
+            "ghsa": "543v-gj2c-r3ch",
+            "patched_versions": [
+                ">= 5.0.0.beta1.1",
+                "~> 4.2.5, >= 4.2.5.1",
+                "~> 4.1.14, >= 4.1.14.1"
+            ],
+            "title": "Possible Input Validation Circumvention in Active Model",
+            "unaffected_versions": [
+                "<= 4.0.13"
+            ],
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/6jQVC1geukQ"
+        },
         "gitlab.com": {
             "advisories": [
                 {
@@ -244,202 +264,59 @@
                         "children": [],
                         "cpe_match": [
                             {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.1.11:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
                                 "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:5.0.0:beta1:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "4.1.14.1",
+                                "versionStartIncluding": "4.1.0",
+                                "vulnerable": true
+                            },
+                            {
+                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "4.2.5.1",
+                                "versionStartIncluding": "4.2.0",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
+                                "cpe_name": [],
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:22:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             },
                             {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.2:*:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:23:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
-                            },
+                            }
+                        ],
+                        "operator": "OR"
+                    },
+                    {
+                        "children": [],
+                        "cpe_match": [
                             {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc2:*:*:*:*:*:*",
+                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:42.1:*:*:*:*:*:*:*",
                                 "cpe_name": [],
                                 "vulnerable": true
                             }
@@ -470,7 +347,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-20"
+                                    "value": "NVD-CWE-noinfo"
                                 }
                             ]
                         }
@@ -481,79 +358,117 @@
                         {
                             "name": "[ruby-security-ann] 20160125 [CVE-2016-0753] Possible Input Validation Circumvention in Active Model",
                             "refsource": "MLIST",
-                            "tags": [],
+                            "tags": [
+                                "Broken Link"
+                            ],
                             "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/6jQVC1geukQ/3Iy0GU1ZEgAJ"
                         },
                         {
                             "name": "[oss-security] 20160125 [CVE-2016-0753] Possible Input Validation Circumvention in Active Model",
                             "refsource": "MLIST",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://www.openwall.com/lists/oss-security/2016/01/25/14"
                         },
                         {
                             "name": "82247",
                             "refsource": "BID",
-                            "tags": [],
+                            "tags": [
+                                "Broken Link",
+                                "Third Party Advisory",
+                                "VDB Entry"
+                            ],
                             "url": "http://www.securityfocus.com/bid/82247"
                         },
                         {
                             "name": "FEDORA-2016-73fe05d878",
                             "refsource": "FEDORA",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178041.html"
                         },
                         {
                             "name": "SUSE-SU-2016:1146",
                             "refsource": "SUSE",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
                         },
                         {
                             "name": "FEDORA-2016-94e71ee673",
                             "refsource": "FEDORA",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178043.html"
                         },
                         {
                             "name": "FEDORA-2016-cb30088b06",
                             "refsource": "FEDORA",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178047.html"
                         },
                         {
                             "name": "RHSA-2016:0296",
                             "refsource": "REDHAT",
-                            "tags": [],
+                            "tags": [
+                                "Third Party Advisory"
+                            ],
                             "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
                         },
                         {
                             "name": "FEDORA-2016-cc465a34df",
                             "refsource": "FEDORA",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178065.html"
                         },
                         {
                             "name": "FEDORA-2016-eb4d6e8aab",
                             "refsource": "FEDORA",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178066.html"
                         },
                         {
                             "name": "openSUSE-SU-2016:0372",
                             "refsource": "SUSE",
-                            "tags": [],
+                            "tags": [
+                                "Mailing List",
+                                "Third Party Advisory"
+                            ],
                             "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
                         },
                         {
                             "name": "DSA-3464",
                             "refsource": "DEBIAN",
-                            "tags": [],
+                            "tags": [
+                                "Third Party Advisory"
+                            ],
                             "url": "http://www.debian.org/security/2016/dsa-3464"
                         },
                         {
                             "name": "1034816",
                             "refsource": "SECTRACK",
-                            "tags": [],
+                            "tags": [
+                                "Broken Link",
+                                "Third Party Advisory",
+                                "VDB Entry"
+                            ],
                             "url": "http://www.securitytracker.com/id/1034816"
                         }
                     ]
@@ -591,35 +506,15 @@
                         "privilegesRequired": "NONE",
                         "scope": "UNCHANGED",
                         "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-                        "version": "3.0"
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                        "version": "3.1"
                     },
                     "exploitabilityScore": 3.9,
                     "impactScore": 1.4
                 }
             },
-            "lastModifiedDate": "2019-08-08T15:43Z",
+            "lastModifiedDate": "2023-05-19T16:36Z",
             "publishedDate": "2016-02-16T02:59Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activemodel",
-            "framework": "rails",
-            "cve": "2016-0753",
-            "ghsa": "543v-gj2c-r3ch",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/6jQVC1geukQ",
-            "title": "Possible Input Validation Circumvention in Active Model",
-            "date": "2016-01-25",
-            "description": "There is a possible input validation circumvention vulnerability in Active\nModel. This vulnerability has been assigned the CVE identifier CVE-2016-0753.\n\nVersions Affected:  4.1.0 and newer\nNot affected:       4.0.13 and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1\n\nImpact\n------\nCode that uses Active Model based models (including Active Record models) and\ndoes not validate user input before passing it to the model can be subject to\nan attack where specially crafted input will cause the model to skip\nvalidations.\n\nVulnerable code will look something like this:\n\n```ruby\nSomeModel.new(unverified_user_input)\n```\n\nRails users using Strong Parameters are generally not impacted by this issue\nas they are encouraged to whitelist parameters and must specifically opt-out\nof input verification using the `permit!` method to allow mass assignment.\n\nFor example, a vulnerable Rails application will have code that looks like\nthis:\n\n```ruby\ndef create\n  params.permit! # allow all parameters\n  @user = User.new params[:users]\nend\n```\n\nActive Model and Active Record objects are not equipped to handle arbitrary\nuser input.  It is up to the application to verify input before passing it to\nActive Model models.  Rails users already have Strong Parameters in place to\nhandle white listing, but applications using Active Model and Active Record\noutside of a Rails environment may be impacted.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nThere are several workarounds depending on the application.  Inside a Rails\napplication, stop using `permit!`.  Outside a Rails application, either use\nHash#slice to select the parameters you need, or integrate Strong Parameters\nwith your application.\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 4-1-validation_skip.patch - Patch for 4.1 series\n* 4-2-validation_skip.patch - Patch for 4.2 series\n* 5-0-validation_skip.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks to:\n\n[John Backus](https://github.com/backus) from BlockScore for reporting this!\n",
-            "cvss_v2": 5.0,
-            "cvss_v3": 5.3,
-            "unaffected_versions": [
-                "<= 4.0.13"
-            ],
-            "patched_versions": [
-                ">= 5.0.0.beta1.1",
-                "~> 4.2.5, >= 4.2.5.1",
-                "~> 4.1.14, >= 4.1.14.1"
-            ]
         }
     }
 }
