@@ -6,9 +6,37 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-32689",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "parse-server",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "< 5.4.4"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": ">= 6.0.0, < 6.1.1"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "parse-community"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +45,119 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Versions prior to 5.4.4 and 6.1.1 are vulnerable to a phishing attack vulnerability that involves a user uploading malicious files. A malicious user could upload an HTML file to Parse Server via its public API. That HTML file would then be accessible at the internet domain at which Parse Server is hosted. The URL of the the uploaded HTML could be shared for phishing attacks. The HTML page may seem legitimate because it is served under the internet domain where Parse Server is hosted, which may be the same as a company's official website domain.\n\nAn additional security issue arises when the Parse JavaScript SDK is used. The SDK stores sessions in the internet browser's local storage, which usually restricts data access depending on the internet domain. A malicious HTML file could contain a script that retrieves the user's session token from local storage and then share it with the attacker.\n\nThe fix included in versions 5.4.4 and 6.1.1 adds a new Parse Server option `fileUpload.fileExtensions` to restrict file upload on Parse Server by file extension. It is recommended to restrict file upload for HTML file extensions, which this fix disables by default. If an app requires upload of files with HTML file extensions, the option can be set to `['.*']` or another custom value to override the default."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "HIGH",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "NONE",
+                        "baseScore": 6.3,
+                        "baseSeverity": "MEDIUM",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "NONE",
+                        "privilegesRequired": "LOW",
+                        "scope": "CHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-434",
+                                "lang": "eng",
+                                "value": "CWE-434: Unrestricted Upload of File with Dangerous Type"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/parse-community/parse-server/security/advisories/GHSA-9prm-jqwx-45x9",
+                        "refsource": "MISC",
+                        "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-9prm-jqwx-45x9"
+                    },
+                    {
+                        "name": "https://github.com/parse-community/parse-server/pull/8537",
+                        "refsource": "MISC",
+                        "url": "https://github.com/parse-community/parse-server/pull/8537"
+                    },
+                    {
+                        "name": "https://github.com/parse-community/parse-server/pull/8538",
+                        "refsource": "MISC",
+                        "url": "https://github.com/parse-community/parse-server/pull/8538"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-9prm-jqwx-45x9",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-32689"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Versions prior to 5.4.4 and 6.1.1 are vulnerable to a phishing attack vulnerability that involves a user uploading malicious files. A malicious user could upload an HTML file to Parse Server via its public API. That HTML file would then be accessible at the internet domain at which Parse Server is hosted. The URL of the the uploaded HTML could be shared for phishing attacks. The HTML page may seem legitimate because it is served under the internet domain where Parse Server is hosted, which may be the same as a company's official website domain.\n\nAn additional security issue arises when the Parse JavaScript SDK is used. The SDK stores sessions in the internet browser's local storage, which usually restricts data access depending on the internet domain. A malicious HTML file could contain a script that retrieves the user's session token from local storage and then share it with the attacker.\n\nThe fix included in versions 5.4.4 and 6.1.1 adds a new Parse Server option `fileUpload.fileExtensions` to restrict file upload on Parse Server by file extension. It is recommended to restrict file upload for HTML file extensions, which this fix disables by default. If an app requires upload of files with HTML file extensions, the option can be set to `['.*']` or another custom value to override the default."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/parse-community/parse-server/security/advisories/GHSA-9prm-jqwx-45x9",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-9prm-jqwx-45x9"
+                        },
+                        {
+                            "name": "https://github.com/parse-community/parse-server/pull/8537",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/parse-community/parse-server/pull/8537"
+                        },
+                        {
+                            "name": "https://github.com/parse-community/parse-server/pull/8538",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/parse-community/parse-server/pull/8538"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-05-30T18:52Z",
+            "publishedDate": "2023-05-30T18:15Z"
         }
     }
 }
