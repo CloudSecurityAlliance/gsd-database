@@ -6,9 +6,33 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-34252",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "grav",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "< 1.7.42"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "getgrav"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +41,148 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "Grav is a file-based Web platform. Prior to version 1.7.42, there is a logic flaw in the `GravExtension.filterFilter()` function whereby validation against a denylist of unsafe functions is only performed when the argument passed to filter is a string. However, passing an array as a callable argument allows the validation check to be skipped. Consequently, a low privileged attacker with login access to Grav Admin panel and page creation/update permissions is able to inject malicious templates to obtain remote code execution. The vulnerability can be found in the `GravExtension.filterFilter()` function declared in `/system/src/Grav/Common/Twig/Extension/GravExtension.php`. Version 1.7.42 contains a patch for this issue. End users should also ensure that `twig.undefined_functions` and `twig.undefined_filters` properties in `/path/to/webroot/system/config/system.yaml` configuration file are set to `false` to disallow Twig from treating undefined filters/functions as PHP functions and executing them."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 8.8,
+                        "baseSeverity": "HIGH",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "LOW",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-184",
+                                "lang": "eng",
+                                "value": "CWE-184: Incomplete List of Disallowed Inputs"
+                            }
+                        ]
+                    },
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-1336",
+                                "lang": "eng",
+                                "value": "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/getgrav/grav/security/advisories/GHSA-96xv-rmwj-6p9w",
+                        "refsource": "MISC",
+                        "url": "https://github.com/getgrav/grav/security/advisories/GHSA-96xv-rmwj-6p9w"
+                    },
+                    {
+                        "name": "https://github.com/getgrav/grav/commit/244758d4383034fe4cd292d41e477177870b65ec",
+                        "refsource": "MISC",
+                        "url": "https://github.com/getgrav/grav/commit/244758d4383034fe4cd292d41e477177870b65ec"
+                    },
+                    {
+                        "name": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Twig/Extension/GravExtension.php#L1692-L1698",
+                        "refsource": "MISC",
+                        "url": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Twig/Extension/GravExtension.php#L1692-L1698"
+                    },
+                    {
+                        "name": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Utils.php#L1956-L2074",
+                        "refsource": "MISC",
+                        "url": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Utils.php#L1956-L2074"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-96xv-rmwj-6p9w",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-34252"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Grav is a file-based Web platform. Prior to version 1.7.42, there is a logic flaw in the `GravExtension.filterFilter()` function whereby validation against a denylist of unsafe functions is only performed when the argument passed to filter is a string. However, passing an array as a callable argument allows the validation check to be skipped. Consequently, a low privileged attacker with login access to Grav Admin panel and page creation/update permissions is able to inject malicious templates to obtain remote code execution. The vulnerability can be found in the `GravExtension.filterFilter()` function declared in `/system/src/Grav/Common/Twig/Extension/GravExtension.php`. Version 1.7.42 contains a patch for this issue. End users should also ensure that `twig.undefined_functions` and `twig.undefined_filters` properties in `/path/to/webroot/system/config/system.yaml` configuration file are set to `false` to disallow Twig from treating undefined filters/functions as PHP functions and executing them."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-184"
+                                },
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-1336"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Twig/Extension/GravExtension.php#L1692-L1698",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Twig/Extension/GravExtension.php#L1692-L1698"
+                        },
+                        {
+                            "name": "https://github.com/getgrav/grav/security/advisories/GHSA-96xv-rmwj-6p9w",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/getgrav/grav/security/advisories/GHSA-96xv-rmwj-6p9w"
+                        },
+                        {
+                            "name": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Utils.php#L1956-L2074",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/getgrav/grav/blob/1.7.40/system/src/Grav/Common/Utils.php#L1956-L2074"
+                        },
+                        {
+                            "name": "https://github.com/getgrav/grav/commit/244758d4383034fe4cd292d41e477177870b65ec",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/getgrav/grav/commit/244758d4383034fe4cd292d41e477177870b65ec"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-06-14T23:15Z",
+            "publishedDate": "2023-06-14T22:15Z"
         }
     }
 }
