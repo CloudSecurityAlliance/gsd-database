@@ -6,10 +6,40 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "psirt@netskope.com",
                 "ID": "CVE-2022-4149",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
             },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "Netskope Client",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "95, 0"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "Netskope"
+                        }
+                    ]
+                }
+            },
+            "credits": [
+                {
+                    "lang": "en",
+                    "value": "Netskope credits Dawson Medin from Mandiant for reporting this flaw."
+                }
+            ],
             "data_format": "MITRE",
             "data_type": "CVE",
             "data_version": "4.0",
@@ -17,10 +47,142 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "The Netskope client service (prior to R96) on Windows runs as NT AUTHORITY\\SYSTEM which writes log files to a writable directory (C:\\Users\\Public\\netSkope) for a standard user. The files are created and written with a SYSTEM account except one file (logplaceholder) which inherits permission giving all users full access control list. Netskope client restricts access to this file by allowing only read permissions as a standard user. Whenever the Netskope client service restarts, it deletes the logplaceholder and recreates, creating a race condition, which can be exploited by a malicious local user to create the file and set ACL permissions on the file. Once the file is created by a malicious user with proper ACL permissions, all files within C:\\Users\\Public\\netSkope\\ becomes modifiable by the unprivileged user. By using Windows pseudo-symlink, these files can be pointed to other places in the system and thus malicious users will be able to elevate privileges.\n"
                     }
                 ]
-            }
+            },
+            "exploit": [
+                {
+                    "lang": "en",
+                    "supportingMedia": [
+                        {
+                            "base64": false,
+                            "type": "text/html",
+                            "value": "<p>Netskope is not aware of any public disclosure and exploitation of this vulnerability at the time of publication.&nbsp;</p>"
+                        }
+                    ],
+                    "value": "Netskope is not aware of any public disclosure and exploitation of this vulnerability at the time of publication.\u00a0\n\n"
+                }
+            ],
+            "generator": {
+                "engine": "Vulnogram 0.1.0-dev"
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "HIGH",
+                        "attackVector": "LOCAL",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 7,
+                        "baseSeverity": "HIGH",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "LOW",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-367",
+                                "lang": "eng",
+                                "value": "CWE-367 Time-of-check Time-of-use (TOCTOU) Race Condition"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://www.netskope.com/company/security-compliance-and-assurance/security-advisories-and-disclosures/netskope-security-advisory-nskpsa-2023-002",
+                        "refsource": "MISC",
+                        "url": "https://www.netskope.com/company/security-compliance-and-assurance/security-advisories-and-disclosures/netskope-security-advisory-nskpsa-2023-002"
+                    }
+                ]
+            },
+            "solution": [
+                {
+                    "lang": "en",
+                    "supportingMedia": [
+                        {
+                            "base64": false,
+                            "type": "text/html",
+                            "value": "<span style=\"background-color: rgb(255, 255, 255);\">Netskope has patched the vulnerability and released a binary with a fix. Customers are recommended to upgrade their Netskope clients to v100 or later. Netskope download Instructions \u2013 </span><a target=\"_blank\" rel=\"nofollow\" href=\"https://support.netskope.com/s/article/Download-Netskope-Client-and-Scripts\">Download Netskope Client and Scripts \u2013 Netskope Support</a><br>"
+                        }
+                    ],
+                    "value": "Netskope has patched the vulnerability and released a binary with a fix. Customers are recommended to upgrade their Netskope clients to v100 or later. Netskope download Instructions \u2013  Download Netskope Client and Scripts \u2013 Netskope Support https://support.netskope.com/s/article/Download-Netskope-Client-and-Scripts \n"
+                }
+            ],
+            "source": {
+                "advisory": "NSKPSA-2023-002",
+                "defect": [
+                    "NSKPSA-2023-002"
+                ],
+                "discovery": "EXTERNAL"
+            },
+            "work_around": [
+                {
+                    "lang": "en",
+                    "supportingMedia": [
+                        {
+                            "base64": false,
+                            "type": "text/html",
+                            "value": "Netskope recommends using hardening guidelines listed here -&nbsp;<span style=\"background-color: rgb(255, 255, 255);\">\u2013 </span><a target=\"_blank\" rel=\"nofollow\" href=\"https://docs.netskope.com/en/netskope-client-hardening.html\">https://docs.netskope.com/en/netskope-client-hardening.html</a>&nbsp;<br>"
+                        }
+                    ],
+                    "value": "Netskope recommends using hardening guidelines listed here -\u00a0\u2013  https://docs.netskope.com/en/netskope-client-hardening.html https://docs.netskope.com/en/netskope-client-hardening.html \u00a0\n"
+                }
+            ]
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "psirt@netskope.com",
+                    "ID": "CVE-2022-4149"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "The Netskope client service (prior to R96) on Windows runs as NT AUTHORITY\\SYSTEM which writes log files to a writable directory (C:\\Users\\Public\\netSkope) for a standard user. The files are created and written with a SYSTEM account except one file (logplaceholder) which inherits permission giving all users full access control list. Netskope client restricts access to this file by allowing only read permissions as a standard user. Whenever the Netskope client service restarts, it deletes the logplaceholder and recreates, creating a race condition, which can be exploited by a malicious local user to create the file and set ACL permissions on the file. Once the file is created by a malicious user with proper ACL permissions, all files within C:\\Users\\Public\\netSkope\\ becomes modifiable by the unprivileged user. By using Windows pseudo-symlink, these files can be pointed to other places in the system and thus malicious users will be able to elevate privileges.\n"
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://www.netskope.com/company/security-compliance-and-assurance/security-advisories-and-disclosures/netskope-security-advisory-nskpsa-2023-002",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://www.netskope.com/company/security-compliance-and-assurance/security-advisories-and-disclosures/netskope-security-advisory-nskpsa-2023-002"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-06-15T12:39Z",
+            "publishedDate": "2023-06-15T07:15Z"
         }
     }
 }
