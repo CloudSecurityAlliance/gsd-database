@@ -9,22 +9,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2022-24720",
-            "modified": "2022-03-01T00:00:00.000Z",
-            "published": "2022-03-01T00:00:00.000Z",
-            "aliases": [
-                "CVE-2022-24720",
-                "GHSA-cxf7-qrc5-9446"
-            ],
-            "summary": "Remote shell execution vulnerability when applying commands from user input",
-            "details": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.8
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -34,6 +18,14 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2022-24720",
+                "GHSA-cxf7-qrc5-9446"
+            ],
+            "details": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
+            "id": "GSD-2022-24720",
+            "modified": "2022-03-01T00:00:00.000Z",
+            "published": "2022-03-01T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
@@ -43,7 +35,15 @@
                     "type": "WEB",
                     "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 9.8,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Remote shell execution vulnerability when applying commands from user input"
         }
     },
     "namespaces": {
@@ -140,6 +140,24 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2022-24720",
+            "cvss_v3": 9.8,
+            "date": "2022-03-01",
+            "description": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
+            "gem": "image_processing",
+            "ghsa": "cxf7-qrc5-9446",
+            "patched_versions": [
+                ">= 1.12.2"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
+                ]
+            },
+            "title": "Remote shell execution vulnerability when applying commands from user input",
+            "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
+        },
         "gitlab.com": {
             "advisories": [
                 {
@@ -223,7 +241,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-20"
+                                    "value": "NVD-CWE-Other"
                                 }
                             ]
                         }
@@ -300,26 +318,8 @@
                     "impactScore": 5.9
                 }
             },
-            "lastModifiedDate": "2023-02-22T17:49Z",
+            "lastModifiedDate": "2023-07-03T20:35Z",
             "publishedDate": "2022-03-01T23:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "image_processing",
-            "cve": "2022-24720",
-            "ghsa": "cxf7-qrc5-9446",
-            "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446",
-            "title": "Remote shell execution vulnerability when applying commands from user input",
-            "date": "2022-03-01",
-            "description": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
-            "cvss_v3": 9.8,
-            "patched_versions": [
-                ">= 1.12.2"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
-                ]
-            }
         }
     }
 }
