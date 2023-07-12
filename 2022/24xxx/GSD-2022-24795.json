@@ -11,22 +11,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2022-24795",
-            "modified": "2022-04-05T00:00:00.000Z",
-            "published": "2022-04-05T00:00:00.000Z",
-            "aliases": [
-                "CVE-2022-24795",
-                "GHSA-jj47-x69x-mxrm"
-            ],
-            "summary": "Reallocation bug can trigger heap memory corruption",
-            "details": "The 1.x branch and the 2.x branch of [yajl](https://github.com/lloyd/yajl)\ncontain an integer overflow which leads to subsequent heap memory corruption\nwhen dealing with large (~2GB) inputs.\n\n### Details\n\nThe [reallocation logic at yajl_buf.c#L64](https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64)\nmay result in the `need` 32bit integer wrapping to 0 when `need` approaches\na value of 0x80000000 (i.e. ~2GB of data), which results in a reallocation\nof buf->alloc into a small heap chunk.\n\nThese integers are declared as `size_t` in the 2.x branch of `yajl`, which\npractically prevents the issue from triggering on 64bit platforms, however\nthis does not preclude this issue triggering on 32bit builds on which\n`size_t` is a 32bit integer.\n\nSubsequent population of this under-allocated heap chunk is based on the\noriginal buffer size, leading to heap memory corruption.\n\n### Impact\n\nWe rate this as a moderate severity vulnerability which mostly impacts\nprocess availability as we believe exploitation for arbitrary code\nexecution to be unlikely.\n\n### Patches\n\nPatched in yajl-ruby 1.4.2\n\n### Workarounds\n\nAvoid passing large inputs to YAJL\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.9
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -36,6 +20,14 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2022-24795",
+                "GHSA-jj47-x69x-mxrm"
+            ],
+            "details": "The 1.x branch and the 2.x branch of [yajl](https://github.com/lloyd/yajl)\ncontain an integer overflow which leads to subsequent heap memory corruption\nwhen dealing with large (~2GB) inputs.\n\n### Details\n\nThe [reallocation logic at yajl_buf.c#L64](https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64)\nmay result in the `need` 32bit integer wrapping to 0 when `need` approaches\na value of 0x80000000 (i.e. ~2GB of data), which results in a reallocation\nof buf->alloc into a small heap chunk.\n\nThese integers are declared as `size_t` in the 2.x branch of `yajl`, which\npractically prevents the issue from triggering on 64bit platforms, however\nthis does not preclude this issue triggering on 32bit builds on which\n`size_t` is a 32bit integer.\n\nSubsequent population of this under-allocated heap chunk is based on the\noriginal buffer size, leading to heap memory corruption.\n\n### Impact\n\nWe rate this as a moderate severity vulnerability which mostly impacts\nprocess availability as we believe exploitation for arbitrary code\nexecution to be unlikely.\n\n### Patches\n\nPatched in yajl-ruby 1.4.2\n\n### Workarounds\n\nAvoid passing large inputs to YAJL\n",
+            "id": "GSD-2022-24795",
+            "modified": "2022-04-05T00:00:00.000Z",
+            "published": "2022-04-05T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
@@ -45,7 +37,15 @@
                     "type": "WEB",
                     "url": "https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 5.9,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Reallocation bug can trigger heap memory corruption"
         }
     },
     "namespaces": {
@@ -142,6 +142,11 @@
                         "name": "https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64",
                         "refsource": "MISC",
                         "url": "https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64"
+                    },
+                    {
+                        "name": "[debian-lts-announce] 20230711 [SECURITY] [DLA 3492-1] yajl security update",
+                        "refsource": "MLIST",
+                        "url": "https://lists.debian.org/debian-lts-announce/2023/07/msg00013.html"
                     }
                 ]
             },
@@ -149,6 +154,24 @@
                 "advisory": "GHSA-jj47-x69x-mxrm",
                 "discovery": "UNKNOWN"
             }
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2022-24795",
+            "cvss_v3": 5.9,
+            "date": "2022-04-05",
+            "description": "The 1.x branch and the 2.x branch of [yajl](https://github.com/lloyd/yajl)\ncontain an integer overflow which leads to subsequent heap memory corruption\nwhen dealing with large (~2GB) inputs.\n\n### Details\n\nThe [reallocation logic at yajl_buf.c#L64](https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64)\nmay result in the `need` 32bit integer wrapping to 0 when `need` approaches\na value of 0x80000000 (i.e. ~2GB of data), which results in a reallocation\nof buf->alloc into a small heap chunk.\n\nThese integers are declared as `size_t` in the 2.x branch of `yajl`, which\npractically prevents the issue from triggering on 64bit platforms, however\nthis does not preclude this issue triggering on 32bit builds on which\n`size_t` is a 32bit integer.\n\nSubsequent population of this under-allocated heap chunk is based on the\noriginal buffer size, leading to heap memory corruption.\n\n### Impact\n\nWe rate this as a moderate severity vulnerability which mostly impacts\nprocess availability as we believe exploitation for arbitrary code\nexecution to be unlikely.\n\n### Patches\n\nPatched in yajl-ruby 1.4.2\n\n### Workarounds\n\nAvoid passing large inputs to YAJL\n",
+            "gem": "yajl-ruby",
+            "ghsa": "jj47-x69x-mxrm",
+            "patched_versions": [
+                ">= 1.4.2"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64"
+                ]
+            },
+            "title": "Reallocation bug can trigger heap memory corruption",
+            "url": "https://github.com/brianmario/yajl-ruby/security/advisories/GHSA-jj47-x69x-mxrm"
         },
         "nvd.nist.gov": {
             "configurations": {
@@ -228,6 +251,12 @@
                                 "Third Party Advisory"
                             ],
                             "url": "https://github.com/brianmario/yajl-ruby/commit/7168bd79b888900aa94523301126f968a93eb3a6"
+                        },
+                        {
+                            "name": "[debian-lts-announce] 20230711 [SECURITY] [DLA 3492-1] yajl security update",
+                            "refsource": "MLIST",
+                            "tags": [],
+                            "url": "https://lists.debian.org/debian-lts-announce/2023/07/msg00013.html"
                         }
                     ]
                 }
@@ -273,26 +302,8 @@
                     "impactScore": 3.6
                 }
             },
-            "lastModifiedDate": "2022-04-18T10:05Z",
+            "lastModifiedDate": "2023-07-11T20:15Z",
             "publishedDate": "2022-04-05T16:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "yajl-ruby",
-            "cve": "2022-24795",
-            "ghsa": "jj47-x69x-mxrm",
-            "url": "https://github.com/brianmario/yajl-ruby/security/advisories/GHSA-jj47-x69x-mxrm",
-            "title": "Reallocation bug can trigger heap memory corruption",
-            "date": "2022-04-05",
-            "description": "The 1.x branch and the 2.x branch of [yajl](https://github.com/lloyd/yajl)\ncontain an integer overflow which leads to subsequent heap memory corruption\nwhen dealing with large (~2GB) inputs.\n\n### Details\n\nThe [reallocation logic at yajl_buf.c#L64](https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64)\nmay result in the `need` 32bit integer wrapping to 0 when `need` approaches\na value of 0x80000000 (i.e. ~2GB of data), which results in a reallocation\nof buf->alloc into a small heap chunk.\n\nThese integers are declared as `size_t` in the 2.x branch of `yajl`, which\npractically prevents the issue from triggering on 64bit platforms, however\nthis does not preclude this issue triggering on 32bit builds on which\n`size_t` is a 32bit integer.\n\nSubsequent population of this under-allocated heap chunk is based on the\noriginal buffer size, leading to heap memory corruption.\n\n### Impact\n\nWe rate this as a moderate severity vulnerability which mostly impacts\nprocess availability as we believe exploitation for arbitrary code\nexecution to be unlikely.\n\n### Patches\n\nPatched in yajl-ruby 1.4.2\n\n### Workarounds\n\nAvoid passing large inputs to YAJL\n",
-            "cvss_v3": 5.9,
-            "patched_versions": [
-                ">= 1.4.2"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/brianmario/yajl-ruby/blob/7168bd79b888900aa94523301126f968a93eb3a6/ext/yajl/yajl_buf.c#L64"
-                ]
-            }
         }
     }
 }
