@@ -11,22 +11,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2022-30122",
-            "modified": "2022-06-27T00:00:00.000Z",
-            "published": "2022-06-27T00:00:00.000Z",
-            "aliases": [
-                "CVE-2022-30122",
-                "GHSA-hxqx-xwvh-44m2"
-            ],
-            "summary": "Denial of Service Vulnerability in Rack Multipart Parsing",
-            "details": "There is a possible denial of service vulnerability in the multipart parsing\ncomponent of Rack.  This vulnerability has been assigned the CVE identifier\nCVE-2022-30122.\n\nVersions Affected:  >= 1.2\nNot affected:       < 1.2\nFixed Versions:     2.0.9.1, 2.1.4.1, 2.2.3.1\n\n## Impact\nCarefully crafted multipart POST requests can cause Rack's multipart parser to\ntake much longer than expected, leading to a possible denial of service\nvulnerability.\n\nImpacted code will use Rack's multipart parser to parse multipart posts.  This\nincludes directly using the multipart parser like this:\n\n```\nparams = Rack::Multipart.parse_multipart(env)\n```\n\nBut it also includes reading POST data from a Rack request object like this:\n\n```\np request.POST # read POST data\np request.params # reads both query params and POST data\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n## Workarounds\nThere are no feasible workarounds for this issue.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.5
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -36,12 +20,28 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2022-30122",
+                "GHSA-hxqx-xwvh-44m2"
+            ],
+            "details": "There is a possible denial of service vulnerability in the multipart parsing\ncomponent of Rack.  This vulnerability has been assigned the CVE identifier\nCVE-2022-30122.\n\nVersions Affected:  >= 1.2\nNot affected:       < 1.2\nFixed Versions:     2.0.9.1, 2.1.4.1, 2.2.3.1\n\n## Impact\nCarefully crafted multipart POST requests can cause Rack's multipart parser to\ntake much longer than expected, leading to a possible denial of service\nvulnerability.\n\nImpacted code will use Rack's multipart parser to parse multipart posts.  This\nincludes directly using the multipart parser like this:\n\n```\nparams = Rack::Multipart.parse_multipart(env)\n```\n\nBut it also includes reading POST data from a Rack request object like this:\n\n```\np request.POST # read POST data\np request.params # reads both query params and POST data\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n## Workarounds\nThere are no feasible workarounds for this issue.\n",
+            "id": "GSD-2022-30122",
+            "modified": "2022-06-27T00:00:00.000Z",
+            "published": "2022-06-27T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
                     "url": "https://groups.google.com/g/ruby-security-ann/c/L2Axto442qk"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 7.5,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Denial of Service Vulnerability in Rack Multipart Parsing"
         }
     },
     "namespaces": {
@@ -107,6 +107,24 @@
                 ]
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2022-30122",
+            "cvss_v3": 7.5,
+            "date": "2022-06-27",
+            "description": "There is a possible denial of service vulnerability in the multipart parsing\ncomponent of Rack.  This vulnerability has been assigned the CVE identifier\nCVE-2022-30122.\n\nVersions Affected:  >= 1.2\nNot affected:       < 1.2\nFixed Versions:     2.0.9.1, 2.1.4.1, 2.2.3.1\n\n## Impact\nCarefully crafted multipart POST requests can cause Rack's multipart parser to\ntake much longer than expected, leading to a possible denial of service\nvulnerability.\n\nImpacted code will use Rack's multipart parser to parse multipart posts.  This\nincludes directly using the multipart parser like this:\n\n```\nparams = Rack::Multipart.parse_multipart(env)\n```\n\nBut it also includes reading POST data from a Rack request object like this:\n\n```\np request.POST # read POST data\np request.params # reads both query params and POST data\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n## Workarounds\nThere are no feasible workarounds for this issue.\n",
+            "gem": "rack",
+            "ghsa": "hxqx-xwvh-44m2",
+            "patched_versions": [
+                "~> 2.0.9, >= 2.0.9.1",
+                "~> 2.1.4, >= 2.1.4.1",
+                ">= 2.2.3.1"
+            ],
+            "title": "Denial of Service Vulnerability in Rack Multipart Parsing",
+            "unaffected_versions": [
+                "< 1.2"
+            ],
+            "url": "https://groups.google.com/g/ruby-security-ann/c/L2Axto442qk"
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
@@ -142,7 +160,7 @@
             },
             "cve": {
                 "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
+                    "ASSIGNER": "support@hackerone.com",
                     "ID": "CVE-2022-30122"
                 },
                 "data_format": "MITRE",
@@ -162,7 +180,7 @@
                             "description": [
                                 {
                                     "lang": "en",
-                                    "value": "CWE-400"
+                                    "value": "CWE-1333"
                                 }
                             ]
                         }
@@ -201,26 +219,8 @@
                     "impactScore": 3.6
                 }
             },
-            "lastModifiedDate": "2022-12-07T04:39Z",
+            "lastModifiedDate": "2023-07-21T16:56Z",
             "publishedDate": "2022-12-05T22:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "rack",
-            "cve": "2022-30122",
-            "ghsa": "hxqx-xwvh-44m2",
-            "url": "https://groups.google.com/g/ruby-security-ann/c/L2Axto442qk",
-            "title": "Denial of Service Vulnerability in Rack Multipart Parsing",
-            "date": "2022-06-27",
-            "description": "There is a possible denial of service vulnerability in the multipart parsing\ncomponent of Rack.  This vulnerability has been assigned the CVE identifier\nCVE-2022-30122.\n\nVersions Affected:  >= 1.2\nNot affected:       < 1.2\nFixed Versions:     2.0.9.1, 2.1.4.1, 2.2.3.1\n\n## Impact\nCarefully crafted multipart POST requests can cause Rack's multipart parser to\ntake much longer than expected, leading to a possible denial of service\nvulnerability.\n\nImpacted code will use Rack's multipart parser to parse multipart posts.  This\nincludes directly using the multipart parser like this:\n\n```\nparams = Rack::Multipart.parse_multipart(env)\n```\n\nBut it also includes reading POST data from a Rack request object like this:\n\n```\np request.POST # read POST data\np request.params # reads both query params and POST data\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n## Workarounds\nThere are no feasible workarounds for this issue.\n",
-            "cvss_v3": 7.5,
-            "unaffected_versions": [
-                "< 1.2"
-            ],
-            "patched_versions": [
-                "~> 2.0.9, >= 2.0.9.1",
-                "~> 2.1.4, >= 2.1.4.1",
-                ">= 2.2.3.1"
-            ]
         }
     }
 }
