@@ -111,6 +111,133 @@
         "gitlab.com": {
             "advisories": [
                 {
+                    "affected_range": ">=0.19.0 <0.30.0",
+                    "affected_versions": "All versions starting from 0.19.0 before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-416",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.19.0 and before version 0.30.0 there was a use-after-free bug when passing `externref`s from the host to guest Wasm content. To trigger the bug, you have to explicitly pass multiple `externref`s from the host to a Wasm instance at the same time, either by passing multiple `externref`s as arguments from host code to a Wasm function, or returning multiple `externref`s to Wasm from a multi-value return function defined in the host. If you do not have host code that matches one of these shapes, then you are not impacted. If Wasmtime's `VMExternRefActivationsTable` became filled to capacity after passing the first `externref` in, then passing in the second `externref` could trigger a garbage collection. However the first `externref` is not rooted until we pass control to Wasm, and therefore could be reclaimed by the collector if nothing else was holding a reference to it or otherwise keeping it alive. Then, when control was passed to Wasm after the garbage collection, Wasm could use the first `externref`, which at this point has already been freed. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. The bug has been fixed, and users should upgrade to Wasmtime 0.30.0. If you cannot upgrade Wasmtime yet, you can avoid the bug by disabling reference types support in Wasmtime by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+                    "fixed_versions": [
+                        "0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39216",
+                    "identifiers": [
+                        "CVE-2021-39216",
+                        "GHSA-v4cp-h94r-m7xf"
+                    ],
+                    "not_impacted": "All versions before 0.19.0, all versions starting from 0.30.0",
+                    "package_slug": "conan/wasmtime",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Use After Free",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39216",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/101998733b74624cbd348a2366d05760b40181f3",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-v4cp-h94r-m7xf",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "2b5f8e4d-c083-40c9-b9fa-1d865c2a9dd5"
+                },
+                {
+                    "affected_range": ">=v0.19.0 <v0.30.0",
+                    "affected_versions": "All versions starting from 0.19.0 before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-416",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.19.0 and before version 0.30.0 there was a use-after-free bug when passing `externref`s from the host to guest Wasm content. To trigger the bug, you have to explicitly pass multiple `externref`s from the host to a Wasm instance at the same time, either by passing multiple `externref`s as arguments from host code to a Wasm function, or returning multiple `externref`s to Wasm from a multi-value return function defined in the host. If you do not have host code that matches one of these shapes, then you are not impacted. If Wasmtime's `VMExternRefActivationsTable` became filled to capacity after passing the first `externref` in, then passing in the second `externref` could trigger a garbage collection. However the first `externref` is not rooted until we pass control to Wasm, and therefore could be reclaimed by the collector if nothing else was holding a reference to it or otherwise keeping it alive. Then, when control was passed to Wasm after the garbage collection, Wasm could use the first `externref`, which at this point has already been freed. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. The bug has been fixed, and users should upgrade to Wasmtime 0.30.0. If you cannot upgrade Wasmtime yet, you can avoid the bug by disabling reference types support in Wasmtime by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+                    "fixed_versions": [
+                        "v0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39216",
+                    "identifiers": [
+                        "CVE-2021-39216",
+                        "GHSA-v4cp-h94r-m7xf"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Use After Free",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39216",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/101998733b74624cbd348a2366d05760b40181f3",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-v4cp-h94r-m7xf",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "7dab65e0-6819-4d59-98d0-516217da755c",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "b1b054c8d98ce2b121c695902b2a51144d3eae68",
+                                "tags": [
+                                    "v0.19.0"
+                                ],
+                                "timestamp": "20200717211020"
+                            },
+                            "number": "v0.19.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "e5704ca48f2ac43faaebaa4055c9f4cd01bac8c0",
+                                "tags": [
+                                    "v0.30.0"
+                                ],
+                                "timestamp": "20210917191246"
+                            },
+                            "number": "v0.30.0"
+                        }
+                    ]
+                },
+                {
+                    "affected_range": "[0.19.0,0.30.0)",
+                    "affected_versions": "All versions starting from 0.19.0 before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-416",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.19.0 and before version 0.30.0 there was a use-after-free bug when passing `externref`s from the host to guest Wasm content. To trigger the bug, you have to explicitly pass multiple `externref`s from the host to a Wasm instance at the same time, either by passing multiple `externref`s as arguments from host code to a Wasm function, or returning multiple `externref`s to Wasm from a multi-value return function defined in the host. If you do not have host code that matches one of these shapes, then you are not impacted. If Wasmtime's `VMExternRefActivationsTable` became filled to capacity after passing the first `externref` in, then passing in the second `externref` could trigger a garbage collection. However the first `externref` is not rooted until we pass control to Wasm, and therefore could be reclaimed by the collector if nothing else was holding a reference to it or otherwise keeping it alive. Then, when control was passed to Wasm after the garbage collection, Wasm could use the first `externref`, which at this point has already been freed. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. The bug has been fixed, and users should upgrade to Wasmtime 0.30.0. If you cannot upgrade Wasmtime yet, you can avoid the bug by disabling reference types support in Wasmtime by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+                    "fixed_versions": [
+                        "0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39216",
+                    "identifiers": [
+                        "CVE-2021-39216",
+                        "GHSA-v4cp-h94r-m7xf"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "nuget/Wasmtime",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Use After Free",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39216",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/101998733b74624cbd348a2366d05760b40181f3",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-v4cp-h94r-m7xf",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "e9c9832b-1659-40a1-92fd-7f8fc6e86bfe"
+                },
+                {
                     "affected_range": ">=0.19.0,<0.30.0",
                     "affected_versions": "All versions starting from 0.19.0 before 0.30.0",
                     "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",

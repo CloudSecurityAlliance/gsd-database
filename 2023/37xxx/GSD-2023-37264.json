@@ -100,6 +100,63 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=v0.35.0 <=v0.49.0",
+                    "affected_versions": "All versions starting from 0.35.0 up to 0.49.0",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-345",
+                        "CWE-937"
+                    ],
+                    "date": "2023-07-07",
+                    "description": "Tekton Pipelines project provides k8s-style resources for declaring CI/CD-style pipelines. Starting in version 0.35.0, pipelines do not validate child UIDs, which means that a user that has access to create TaskRuns can create their own Tasks that the Pipelines controller will accept as the child Task. While the software stores and validates the PipelineRun's (api version, kind, name, uid) in the child Run's OwnerReference, it only store (api version, kind, name) in the ChildStatusReference. This means that if a client had access to create TaskRuns on a cluster, they could create a child TaskRun for a pipeline with the same name + owner reference, and the Pipeline controller picks it up as if it was the original TaskRun. This is problematic since it can let users modify the config of Pipelines at runtime, which violates SLSA L2 Service Generated / Non-falsifiable requirements. This issue can be used to trick the Pipeline controller into associating unrelated Runs to the Pipeline, feeding its data through the rest of the Pipeline. This requires access to create TaskRuns, so impact may vary depending on one Tekton setup. If users already have unrestricted access to create any Task/PipelineRun, this does not grant any additional capabilities. As of time of publication, there are no known patches for this issue.",
+                    "fixed_versions": [],
+                    "identifier": "CVE-2023-37264",
+                    "identifiers": [
+                        "GHSA-w2h3-vvvq-3m53",
+                        "CVE-2023-37264"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "go/github.com/tektoncd/pipeline",
+                    "pubdate": "2023-07-07",
+                    "solution": "Unfortunately, there is no solution available yet.",
+                    "title": "Insufficient Verification of Data Authenticity",
+                    "urls": [
+                        "https://github.com/tektoncd/pipeline/security/advisories/GHSA-w2h3-vvvq-3m53",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2023-37264",
+                        "https://github.com/tektoncd/pipeline/blob/2d38f5fa840291395178422d34b36b1bc739e2a2/pkg/reconciler/pipelinerun/pipelinerun.go#L1358-L1372",
+                        "https://pkg.go.dev/github.com/tektoncd/pipeline/pkg/apis/pipeline/v1beta1#ChildStatusReference",
+                        "https://github.com/advisories/GHSA-w2h3-vvvq-3m53"
+                    ],
+                    "uuid": "049e54e1-fde0-4b6b-b416-18cd58c517ed",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "68f2a66c9b2ffcc23ef262bac95d1eb3856021cf",
+                                "tags": [
+                                    "v0.35.0"
+                                ],
+                                "timestamp": "20220426121521"
+                            },
+                            "number": "v0.35.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "c802069e0884af70b32a083f4c3a47e4db14f334",
+                                "tags": [
+                                    "v0.49.0"
+                                ],
+                                "timestamp": "20230620150236"
+                            },
+                            "number": "v0.49.0"
+                        }
+                    ]
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

@@ -88,6 +88,75 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "<15.0.0",
+                    "affected_versions": "All versions before 15.0.0",
+                    "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-639",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-16",
+                    "description": "OAuthenticator is an OAuth token library for the JupyerHub login handler. CILogonOAuthenticator is provided by the OAuthenticator package, and lets users log in to a JupyterHub via CILogon. This is primarily used to restrict a JupyterHub only to users of a given institute. The allowed_idps configuration trait of CILogonOAuthenticator is documented to be a list of domains that indicate the institutions whose users are authorized to access this JupyterHub. This authorization is validated by ensuring that the *email* field provided to us by CILogon has a *domain* that matches one of the domains listed in `allowed_idps`.If `allowed_idps` contains `berkeley.edu`, you might expect only users with valid current credentials provided by University of California, Berkeley to be able to access the JupyterHub. However, CILogonOAuthenticator does *not* verify which provider is used by the user to login, only the email address provided. So a user can login with a GitHub account that has email set to `<something>@berkeley.edu`, and that will be treated exactly the same as someone logging in using the UC Berkeley official Identity Provider. The patch fixing this issue makes a *breaking change* in how `allowed_idps` is interpreted. It's no longer a list of domains, but configuration representing the `EntityID` of the IdPs that are allowed, picked from the [list maintained by CILogon](https://cilogon.org/idplist/). Users are advised to upgrade.",
+                    "fixed_versions": [
+                        "15.0.0"
+                    ],
+                    "identifier": "CVE-2022-31027",
+                    "identifiers": [
+                        "CVE-2022-31027",
+                        "GHSA-r7v4-jwx9-wx43",
+                        "GMS-2022-1894"
+                    ],
+                    "not_impacted": "All versions starting from 15.0.0",
+                    "package_slug": "pypi/oauthenticator",
+                    "pubdate": "2022-06-09",
+                    "solution": "Upgrade to version 15.0.0 or above.",
+                    "title": "Authorization Bypass Through User-Controlled Key",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31027",
+                        "https://github.com/jupyterhub/oauthenticator/security/advisories/GHSA-r7v4-jwx9-wx43",
+                        "https://github.com/jupyterhub/oauthenticator/commit/5cd2d1816f90dc5c946e6e38fd2d0ba535624c5c",
+                        "https://github.com/advisories/GHSA-r7v4-jwx9-wx43"
+                    ],
+                    "uuid": "5cc20a78-1c97-4ddf-9af8-d733931358ed"
+                },
+                {
+                    "affected_range": "<0",
+                    "affected_versions": "All versions before 15.0.0",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-06",
+                    "description": "# Background\n\nCILogon is a federated auth provider that allows users to authenticate\nthemselves via a number of Identity Providers (IdP), focused primarily on educational and\nresearch institutions (such as Universities). More traditional and open IdPs\nsuch as GitHub, ORCID, Google, Microsoft, etc are also supported.\n\nCILogonOAuthenticator is provided by the OAuthenticator package, and lets users log\nin to a JupyterHub via CILogon. This is primarily used to restrict a JupyterHub\nonly to users of a given institute. The allowed_idps configuration trait of\nCILogonOAuthenticator is documented to be a list of domains that indicate the\ninstitutions whose users are authorized to access this JupyterHub. This authorization\nis validated by ensuring that the *email* field provided to us by CILogon has a\n*domain* that matches one of the domains listed in `allowed_idps`.\n\n# Impact\n\nIf `allowed_idps` contains `berkeley.edu`, you might expect only users with valid\ncurrent credentials provided by University of California, Berkeley to be able to\naccess the JupyterHub. However, CILogonOAuthenticator does *not* verify which provider\nis used by the user to login, only the email address provided. So a user can login\nwith a GitHub account that has email set to `<something>@berkeley.edu`, and that will\nbe treated exactly the same as someone logging in using the UC Berkeley official\nIdentity Provider. This has two consequences:\n\n1. Since GitHub (and most other providers we tested) only require you to verify\n  your email once, a user can access a JupyterHub even if their access to\n  the institution's IdP has been revoked or expired.\n2. CILogon supports hundreds of identity providers - if even one of them allows\n  users to set any email ids without verifying, that can be used to impersonate\n  *any* user on any other identity provider! While CILogon itself has a stellar\n  security record, this particular method of doing authorization means an attacker\n  would only need to compromise a single identity provider to compromise all of\n  CILogon\n\nWe currently do not know of any identity provider that provides *unverified*\nemail addresses to CILogon, so this is not a severe known vulnerability. However,\nthere are hundreds of IdPs, and we could not try them all.\n\n# Patches\n\nThis patch makes a *breaking change* in how `allowed_idps` is interpreted. It's\nno longer a list of domains, but configuration representing the `EntityID` of the\nIdPs that are allowed, picked from the [list maintained by CILogon](https://cilogon.org/idplist/).\nSo instead of `berkeley.edu`, you would specify `urn:mace:incommon:berkeley.edu` to\nallow logins from users currently with `berkeley.edu` accounts. GitHub users\nwith a verified `berkeley.edu` email will no longer be allowed to log in.\n\nFor details on how to transition your CILogonOAuthenticator configuration to the patched version 15.0.0 or above, see [the migration](https://oauthenticator.readthedocs.io/en/latest/migrations.html) documentation.",
+                    "fixed_versions": [
+                        "15.0.0"
+                    ],
+                    "identifier": "GMS-2022-1894",
+                    "identifiers": [
+                        "GHSA-r7v4-jwx9-wx43",
+                        "GMS-2022-1894",
+                        "CVE-2022-31027"
+                    ],
+                    "not_impacted": "All versions starting from 15.0.0",
+                    "package_slug": "pypi/oauthenticator",
+                    "pubdate": "2022-06-06",
+                    "solution": "Upgrade to version 15.0.0 or above.",
+                    "title": "Duplicate of ./pypi/oauthenticator/CVE-2022-31027.yml",
+                    "urls": [
+                        "https://github.com/jupyterhub/oauthenticator/security/advisories/GHSA-r7v4-jwx9-wx43",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31027",
+                        "https://github.com/jupyterhub/oauthenticator/commit/5cd2d1816f90dc5c946e6e38fd2d0ba535624c5c",
+                        "https://github.com/advisories/GHSA-r7v4-jwx9-wx43"
+                    ],
+                    "uuid": "7b938a66-555e-435a-a468-64744a9b5b63"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

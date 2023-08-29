@@ -21,6 +21,40 @@
                     }
                 ]
             }
+        },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "<=1.14.5",
+                    "affected_versions": "All versions up to 1.14.5",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2023-06-30",
+                    "description": "### Impact\nUsers with capabilities to upload media (editors and above) are succeptible to SSRF (Server-Side Request Forgery) when executing the `createMediaItem` Mutation. \n\nAuthenticated users making GraphQL requests that execute the `createMediaItem` could pass executable paths in the mutations `filePath` argument that could give them unwarranted access to the server. \n\nIt's recommended to update to WPGraphQL v1.14.6 or newer. If you're unable to do so, below is a snippet you can add to your functions.php (or similar) that filters the `createMediaItem` mutation's resolver. \n\n### Patches\n\n- [v1.14.6](https://github.com/wp-graphql/wp-graphql/releases/tag/v1.14.6)\n- https://github.com/wp-graphql/wp-graphql/pull/2840\n\n### Workarounds\nIf you're unable to upgrade to v1.14.6 or higher, you should be able to use the following snippet in your functions.php to override the vulnerable resolver. \n\nThis snippet has been tested as far back as WPGraphQL v0.15\n\n```php\nadd_filter( 'graphql_pre_resolve_field', function( $nil, $source, $args, $context, \\GraphQL\\Type\\Definition\\ResolveInfo $info, $type_name, $field_key, $field, $field_resolver ) {\n\n\tif ( $info->fieldName !== 'createMediaItem' ) {\n\t\treturn $nil;\n\t}\n\n\t$input = $args['input'] ?? null;\n\n    if ( ! isset( $input['filePath'] ) ) {\n\t\treturn $nil;\n\t}\n\n\t$uploaded_file_url  = $input['filePath'];\n\n\t// Check that the filetype is allowed\n\t$check_file = wp_check_filetype( $uploaded_file_url );\n\n\t// if the file does not pass the check, throw an error\n\tif ( ! $check_file['ext'] || ! $check_file['type'] || ! wp_http_validate_url( $uploaded_file_url ) ) {\n\t\tthrow new \\GraphQL\\Error\\UserError( sprintf( __( 'Invalid filePath \"%s\"', 'wp-graphql' ), $input['filePath'] ) );\n\t}\n\n\t$protocol = wp_parse_url( $input['filePath'], PHP_URL_SCHEME );\n\n\t// prevent the filePath from being submitted with a non-allowed protocols\n\t$allowed_protocols = [ 'https', 'http', 'file' ];\n\n\tif ( ! in_array( $protocol, $allowed_protocols, true ) ) {\n\t\tthrow new \\GraphQL\\Error\\UserError( sprintf( __( 'Invalid protocol. \"%1$s\". Only \"%2$s\" allowed.', 'wp-graphql' ), $protocol, implode( '\", \"', $allowed_protocols ) ) );\n\t}\n\n\treturn $nil;\n\n}, 10, 9 );\n```\n\n### References\n\n- https://patchstack.com/database/vulnerability/wp-graphql/wordpress-wp-graphql-plugin-1-14-5-server-side-request-forgery-ssrf-vulnerability \n",
+                    "fixed_versions": [
+                        "1.14.6"
+                    ],
+                    "identifier": "CVE-2023-23684",
+                    "identifiers": [
+                        "GHSA-cfh4-7wq9-6pgg",
+                        "CVE-2023-23684"
+                    ],
+                    "not_impacted": "All versions after 1.14.5",
+                    "package_slug": "packagist/wp-graphql/wp-graphql",
+                    "pubdate": "2023-06-30",
+                    "solution": "Upgrade to version 1.14.6 or above.",
+                    "title": "WPGraphQL Plugin vulnerable to Server Side Request Forgery (SSRF)",
+                    "urls": [
+                        "https://github.com/wp-graphql/wp-graphql/security/advisories/GHSA-cfh4-7wq9-6pgg",
+                        "https://github.com/wp-graphql/wp-graphql/pull/2840",
+                        "https://github.com/wp-graphql/wp-graphql/releases/tag/v1.14.6",
+                        "https://github.com/advisories/GHSA-cfh4-7wq9-6pgg"
+                    ],
+                    "uuid": "8a210cc3-b0fd-4ce5-a224-22d2afd903c8"
+                }
+            ]
         }
     }
 }

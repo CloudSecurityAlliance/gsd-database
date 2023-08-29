@@ -6,22 +6,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2022-31000",
-            "modified": "2022-06-01T00:00:00.000Z",
-            "published": "2022-06-01T00:00:00.000Z",
-            "aliases": [
-                "CVE-2022-31000",
-                "GHSA-8639-qx56-r428"
-            ],
-            "summary": "CSRF allows attacker to finalize/unfinalize order adjustments in solidus_backend",
-            "details": "### Impact\nCSRF vulnerability allowing attackers to change the state of an order's adjustments\nif they hold its number, and the execution happens on a store administrator's computer.\n\nReproduction steps:\n- Take an order's number.\n- Log in as an administrator.\n- Visit that order's adjustments section (_Orders -> {Click on number} -> Adjustments_) and check that its adjustments are finalized (closed padlock under the **State** column).\n- On another tab, visit `{your_site_url}/admin/orders/{order_number}/adjustments/unfinalize`.\n- Notice how the adjustments are unfinalized (open padlock), even if the previous was a `GET` request which could have been linked from any other site.\n- Visit `{your_site_url}/admin/orders/{order_number}/adjustments/finalize`.\n- Notice how the adjustments are again finalized.\n\nThat happened because both routes were handled as `GET` requests, which are skipped by Rails anti-forgery protection.\n\n### Patches\nUsers should upgrade to solidus_backend v3.1.6, v3.0.6, or v2.11.16, depending on the major and minor versions in use.\n\n### References\n- [Rails CSRF protection](https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html).\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 2.3
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -31,6 +15,14 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2022-31000",
+                "GHSA-8639-qx56-r428"
+            ],
+            "details": "### Impact\nCSRF vulnerability allowing attackers to change the state of an order's adjustments\nif they hold its number, and the execution happens on a store administrator's computer.\n\nReproduction steps:\n- Take an order's number.\n- Log in as an administrator.\n- Visit that order's adjustments section (_Orders -> {Click on number} -> Adjustments_) and check that its adjustments are finalized (closed padlock under the **State** column).\n- On another tab, visit `{your_site_url}/admin/orders/{order_number}/adjustments/unfinalize`.\n- Notice how the adjustments are unfinalized (open padlock), even if the previous was a `GET` request which could have been linked from any other site.\n- Visit `{your_site_url}/admin/orders/{order_number}/adjustments/finalize`.\n- Notice how the adjustments are again finalized.\n\nThat happened because both routes were handled as `GET` requests, which are skipped by Rails anti-forgery protection.\n\n### Patches\nUsers should upgrade to solidus_backend v3.1.6, v3.0.6, or v2.11.16, depending on the major and minor versions in use.\n\n### References\n- [Rails CSRF protection](https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html).\n",
+            "id": "GSD-2022-31000",
+            "modified": "2022-06-01T00:00:00.000Z",
+            "published": "2022-06-01T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
@@ -40,7 +32,15 @@
                     "type": "WEB",
                     "url": "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 2.3,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "CSRF allows attacker to finalize/unfinalize order adjustments in solidus_backend"
         }
     },
     "namespaces": {
@@ -137,6 +137,200 @@
                 "advisory": "GHSA-8639-qx56-r428",
                 "discovery": "UNKNOWN"
             }
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2022-31000",
+            "cvss_v3": 2.3,
+            "date": "2022-06-01",
+            "description": "### Impact\nCSRF vulnerability allowing attackers to change the state of an order's adjustments\nif they hold its number, and the execution happens on a store administrator's computer.\n\nReproduction steps:\n- Take an order's number.\n- Log in as an administrator.\n- Visit that order's adjustments section (_Orders -> {Click on number} -> Adjustments_) and check that its adjustments are finalized (closed padlock under the **State** column).\n- On another tab, visit `{your_site_url}/admin/orders/{order_number}/adjustments/unfinalize`.\n- Notice how the adjustments are unfinalized (open padlock), even if the previous was a `GET` request which could have been linked from any other site.\n- Visit `{your_site_url}/admin/orders/{order_number}/adjustments/finalize`.\n- Notice how the adjustments are again finalized.\n\nThat happened because both routes were handled as `GET` requests, which are skipped by Rails anti-forgery protection.\n\n### Patches\nUsers should upgrade to solidus_backend v3.1.6, v3.0.6, or v2.11.16, depending on the major and minor versions in use.\n\n### References\n- [Rails CSRF protection](https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html).\n",
+            "gem": "solidus_backend",
+            "ghsa": "8639-qx56-r428",
+            "patched_versions": [
+                "~> 2.11.16",
+                "~> 3.0.6",
+                ">= 3.1.6"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c"
+                ]
+            },
+            "title": "CSRF allows attacker to finalize/unfinalize order adjustments in solidus_backend",
+            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428"
+        },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "<2.11.16||>=3.0.0 <3.0.5||>=3.1.0 <3.1.6",
+                    "affected_versions": "All versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.6, all versions before 2.11.16",
+                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-352",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-08",
+                    "description": "solidus_backend is the admin interface for the Solidus e-commerce framework. Versions prior to 3.1.6, 3.0.6, and 2.11.16 contain a cross-site request forgery (CSRF) vulnerability. The vulnerability allows attackers to change the state of an order's adjustments if they hold its number, and the execution happens on a store administrator's computer. Users should upgrade to solidus_backend 3.1.6, 3.0.6, or 2.11.16 to receive a patch.",
+                    "fixed_versions": [
+                        "2.11.16",
+                        "3.0.5",
+                        "3.1.6"
+                    ],
+                    "identifier": "CVE-2022-31000",
+                    "identifiers": [
+                        "CVE-2022-31000",
+                        "GHSA-8639-qx56-r428"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "gem/solidus",
+                    "pubdate": "2022-06-01",
+                    "solution": "Upgrade to versions 2.11.16, 3.0.5, 3.1.6 or above.",
+                    "title": "Cross-Site Request Forgery (CSRF)",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31000",
+                        "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c",
+                        "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428"
+                    ],
+                    "uuid": "8146cf10-b241-49f8-89a3-53449ba12cd6"
+                },
+                {
+                    "affected_range": "<2.11.16||>=3.0.0 <3.0.5||>=3.1.0 <3.1.6",
+                    "affected_versions": "All versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.6, all versions before 2.11.16",
+                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-352",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-08",
+                    "description": "solidus_backend is the admin interface for the Solidus e-commerce framework. Versions prior to 3.1.6, 3.0.6, and 2.11.16 contain a cross-site request forgery (CSRF) vulnerability. The vulnerability allows attackers to change the state of an order's adjustments if they hold its number, and the execution happens on a store administrator's computer. Users should upgrade to solidus_backend 3.1.6, 3.0.6, or 2.11.16 to receive a patch.",
+                    "fixed_versions": [
+                        "2.11.16",
+                        "3.0.5",
+                        "3.1.6"
+                    ],
+                    "identifier": "CVE-2022-31000",
+                    "identifiers": [
+                        "CVE-2022-31000",
+                        "GHSA-8639-qx56-r428"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "gem/solidus_api",
+                    "pubdate": "2022-06-01",
+                    "solution": "Upgrade to versions 2.11.16, 3.0.5, 3.1.6 or above.",
+                    "title": "Cross-Site Request Forgery (CSRF)",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31000",
+                        "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c",
+                        "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428"
+                    ],
+                    "uuid": "49b6a9e9-e1ad-40b6-b99b-2f28d72b2669"
+                },
+                {
+                    "affected_range": "<2.11.16||>=3.0.0 <3.0.6||>=3.1.0 <3.1.6",
+                    "affected_versions": "All versions before 2.11.16, all versions starting from 3.0.0 before 3.0.6, all versions starting from 3.1.0 before 3.1.6",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-352",
+                        "CWE-352",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-01",
+                    "description": "solidus_backend is the admin interface for the Solidus e-commerce framework. Versions prior to 3.1.6, 3.0.6, and 2.11.16 contain a cross-site request forgery (CSRF) vulnerability. The vulnerability allows attackers to change the state of an order's adjustments if they hold its number, and the execution happens on a store administrator's computer. Users should upgrade to solidus_backend 3.1.6, 3.0.6, or 2.11.16 to receive a patch.",
+                    "fixed_versions": [
+                        "2.11.16",
+                        "3.0.6",
+                        "3.1.6"
+                    ],
+                    "identifier": "CVE-2022-31000",
+                    "identifiers": [
+                        "GHSA-8639-qx56-r428",
+                        "CVE-2022-31000"
+                    ],
+                    "not_impacted": "All versions starting from 2.11.16 before 3.0.0, all versions starting from 3.0.6 before 3.1.0, all versions starting from 3.1.6",
+                    "package_slug": "gem/solidus_backend",
+                    "pubdate": "2022-06-01",
+                    "solution": "Upgrade to versions 2.11.16, 3.0.6, 3.1.6 or above.",
+                    "title": "Cross-Site Request Forgery (CSRF)",
+                    "urls": [
+                        "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31000",
+                        "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c",
+                        "https://github.com/advisories/GHSA-8639-qx56-r428"
+                    ],
+                    "uuid": "19fc76f4-c6c3-4509-adb5-9f4657429a55"
+                },
+                {
+                    "affected_range": "<2.11.16||>=3.0.0 <3.0.5||>=3.1.0 <3.1.6",
+                    "affected_versions": "All versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.6, all versions before 2.11.16",
+                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-352",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-08",
+                    "description": "solidus_backend is the admin interface for the Solidus e-commerce framework. Versions prior to 3.1.6, 3.0.6, and 2.11.16 contain a cross-site request forgery (CSRF) vulnerability. The vulnerability allows attackers to change the state of an order's adjustments if they hold its number, and the execution happens on a store administrator's computer. Users should upgrade to solidus_backend 3.1.6, 3.0.6, or 2.11.16 to receive a patch.",
+                    "fixed_versions": [
+                        "2.11.16",
+                        "3.0.5",
+                        "3.1.6"
+                    ],
+                    "identifier": "CVE-2022-31000",
+                    "identifiers": [
+                        "CVE-2022-31000",
+                        "GHSA-8639-qx56-r428"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "gem/solidus_core",
+                    "pubdate": "2022-06-01",
+                    "solution": "Upgrade to versions 2.11.16, 3.0.5, 3.1.6 or above.",
+                    "title": "Cross-Site Request Forgery (CSRF)",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31000",
+                        "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c",
+                        "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428"
+                    ],
+                    "uuid": "3b628df7-ce1c-457a-95c0-a1492cec64f6"
+                },
+                {
+                    "affected_range": "<2.11.16||>=3.0.0 <3.0.5||>=3.1.0 <3.1.6",
+                    "affected_versions": "All versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.6, all versions before 2.11.16",
+                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-352",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-08",
+                    "description": "solidus_backend is the admin interface for the Solidus e-commerce framework. Versions prior to 3.1.6, 3.0.6, and 2.11.16 contain a cross-site request forgery (CSRF) vulnerability. The vulnerability allows attackers to change the state of an order's adjustments if they hold its number, and the execution happens on a store administrator's computer. Users should upgrade to solidus_backend 3.1.6, 3.0.6, or 2.11.16 to receive a patch.",
+                    "fixed_versions": [
+                        "2.11.16",
+                        "3.0.5",
+                        "3.1.6"
+                    ],
+                    "identifier": "CVE-2022-31000",
+                    "identifiers": [
+                        "CVE-2022-31000",
+                        "GHSA-8639-qx56-r428"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "gem/solidus_frontend",
+                    "pubdate": "2022-06-01",
+                    "solution": "Upgrade to versions 2.11.16, 3.0.5, 3.1.6 or above.",
+                    "title": "Cross-Site Request Forgery (CSRF)",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31000",
+                        "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c",
+                        "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428"
+                    ],
+                    "uuid": "e2d910ad-ae8d-47b1-ba4b-01c02617b94c"
+                }
+            ]
         },
         "nvd.nist.gov": {
             "configurations": {
@@ -264,26 +458,6 @@
             },
             "lastModifiedDate": "2022-06-08T20:13Z",
             "publishedDate": "2022-06-01T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "solidus_backend",
-            "cve": "2022-31000",
-            "ghsa": "8639-qx56-r428",
-            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-8639-qx56-r428",
-            "title": "CSRF allows attacker to finalize/unfinalize order adjustments in solidus_backend",
-            "date": "2022-06-01",
-            "description": "### Impact\nCSRF vulnerability allowing attackers to change the state of an order's adjustments\nif they hold its number, and the execution happens on a store administrator's computer.\n\nReproduction steps:\n- Take an order's number.\n- Log in as an administrator.\n- Visit that order's adjustments section (_Orders -> {Click on number} -> Adjustments_) and check that its adjustments are finalized (closed padlock under the **State** column).\n- On another tab, visit `{your_site_url}/admin/orders/{order_number}/adjustments/unfinalize`.\n- Notice how the adjustments are unfinalized (open padlock), even if the previous was a `GET` request which could have been linked from any other site.\n- Visit `{your_site_url}/admin/orders/{order_number}/adjustments/finalize`.\n- Notice how the adjustments are again finalized.\n\nThat happened because both routes were handled as `GET` requests, which are skipped by Rails anti-forgery protection.\n\n### Patches\nUsers should upgrade to solidus_backend v3.1.6, v3.0.6, or v2.11.16, depending on the major and minor versions in use.\n\n### References\n- [Rails CSRF protection](https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html).\n",
-            "cvss_v3": 2.3,
-            "patched_versions": [
-                "~> 2.11.16",
-                "~> 3.0.6",
-                ">= 3.1.6"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/solidusio/solidus/commit/de796a2e0be7f154cae48b46e267501559d9716c"
-                ]
-            }
         }
     }
 }

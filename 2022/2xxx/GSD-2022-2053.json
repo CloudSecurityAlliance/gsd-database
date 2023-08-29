@@ -79,6 +79,40 @@
                 ]
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "(,2.2.19),[2.3.0]",
+                    "affected_versions": "All versions before 2.2.19, version 2.3.0",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-400",
+                        "CWE-937"
+                    ],
+                    "date": "2022-08-11",
+                    "description": "When a POST request comes through AJP and the request exceeds the max-post-size limit (maxEntitySize), Undertow's AjpServerRequestConduit implementation closes a connection without sending any response to the client/proxy. This behavior results in that a front-end proxy marking the backend worker (application server) as an error state and not forward requests to the worker for a while. In mod_cluster, this continues until the next STATUS request (10 seconds intervals) from the application server updates the server state. So, in the worst case, it can result in \"All workers are in error state\" and mod_cluster responds \"503 Service Unavailable\" for a while (up to 10 seconds). In mod_proxy_balancer, it does not forward requests to the worker until the \"retry\" timeout passes. However, luckily, mod_proxy_balancer has \"forcerecovery\" setting (On by default; this parameter can force the immediate recovery of all workers without considering the retry parameter of the workers if all workers of a balancer are in error state.). So, unlike mod_cluster, mod_proxy_balancer does not result in responding \"503 Service Unavailable\". An attacker could use this behavior to send a malicious request and trigger server errors, resulting in DoS (denial of service). This flaw was fixed in Undertow 2.2.19.Final, Undertow 2.3.0.Alpha2.",
+                    "fixed_versions": [
+                        "2.2.19"
+                    ],
+                    "identifier": "CVE-2022-2053",
+                    "identifiers": [
+                        "CVE-2022-2053"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "maven/io.undertow/undertow-core",
+                    "pubdate": "2022-08-05",
+                    "solution": "Upgrade to version 2.2.19 or above.",
+                    "title": "Uncontrolled Resource Consumption",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-2053",
+                        "https://bugzilla.redhat.com/show_bug.cgi?id=2095862&comment#0",
+                        "https://issues.redhat.com/browse/UNDERTOW-2133"
+                    ],
+                    "uuid": "d7b534c9-1cd9-4da0-b89c-85822497b00e"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

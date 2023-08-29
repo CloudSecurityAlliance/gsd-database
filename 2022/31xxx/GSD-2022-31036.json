@@ -116,6 +116,176 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=v1.3.0 <=v1.8.7",
+                    "affected_versions": "All versions starting from 1.3.0 up to 1.8.7",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-21",
+                    "description": "### Impact\n\nAll unpatched versions of Argo CD starting with v1.3.0 is vulnerable to a symlink following bug allowing a malicious user with repository write access to leak sensitive YAML files from Argo CD's repo-server.\n\nA malicious Argo CD user with write access for a repository which is (or may be) used in a Helm-type Application may commit a symlink which points to an out-of-bounds file. If the target file is a valid YAML file, the attacker can read the contents of that file.\n\nSensitive files which could be leaked include manifest files from other Applications' source repositories (potentially decrypted files, if you are using a decryption plugin) or any YAML-formatted secrets which have been mounted as files on the repo-server.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.4.1\n* v2.3.5\n* v2.2.10\n* v2.1.16\n\n### Workarounds\n\n* If you are using >=v2.3.0 and do not have any Helm-type Applications, [disable the Helm config management tool](https://argo-cd.readthedocs.io/en/stable/user-guide/tool_detection/#disable-built-in-tools).\n\n#### Mitigations\n\n* Avoid mounting YAML-formatted secrets as files on the repo-server.\n* Upgrade to >=2.3.0 to significantly reduce the risk of leaking out-of-bounds manifest files. Starting with 2.3.0, repository paths are randomized, and read permissions are restricted when manifests are not being actively being generated. This makes it very difficult to craft and use a malicious symlink.\n\n#### Best practices which can mitigate risk\n\n* Limit who has push access to manifest repositories.\n* Limit who is allowed to configure new source repositories.\n\n### Credits\n\nDisclosed by ADA Logics in a security audit of the Argo project sponsored by CNCF and facilitated by OSTIF. Thanks to Adam Korczynski and David Korczynski for their work on the audit.\n\n### References\n\n* List of [types of Applications](https://argo-cd.readthedocs.io/en/stable/user-guide/application_sources/), including Helm-type\n* [RBAC documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/), showing how to limit repository permissions\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
+                    "fixed_versions": [
+                        "v2.1.16"
+                    ],
+                    "identifier": "GMS-2022-2557",
+                    "identifiers": [
+                        "GHSA-q4w5-4gq2-98vm",
+                        "GMS-2022-2557",
+                        "CVE-2022-31036"
+                    ],
+                    "not_impacted": "All versions before 1.3.0, all versions after 1.8.7",
+                    "package_slug": "go/github.com/argoproj/argo-cd",
+                    "pubdate": "2022-06-21",
+                    "solution": "Upgrade to version 2.1.16 or above.",
+                    "title": "Symlink following allows leaking out-of-bounds YAML files from Argo CD repo-server",
+                    "urls": [
+                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-q4w5-4gq2-98vm",
+                        "https://github.com/advisories/GHSA-q4w5-4gq2-98vm"
+                    ],
+                    "uuid": "5a2b98a3-a81a-43a6-904c-74752edd11c1",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "9f8608c9fcb2a1d8dcc06eeadd57e5c0334c5800",
+                                "tags": [
+                                    "v1.3.0"
+                                ],
+                                "timestamp": "20191113010324"
+                            },
+                            "number": "v1.3.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "eb3d1fb84b9b77cdffd70b14c4f949f1c64a9416",
+                                "tags": [
+                                    "v1.8.7"
+                                ],
+                                "timestamp": "20210303070237"
+                            },
+                            "number": "v1.8.7"
+                        },
+                        {
+                            "commit": {
+                                "sha": "903db5fe464032bd5a10bf32fe17639e76634c2a",
+                                "tags": [
+                                    "v2.1.16"
+                                ],
+                                "timestamp": "20220621161926"
+                            },
+                            "number": "v2.1.16"
+                        }
+                    ]
+                },
+                {
+                    "affected_range": "<v2.1.16 || >=v2.2.0 <v2.2.10 || >=v2.3.0 <v2.3.5 || =v2.4.0",
+                    "affected_versions": "All versions before 2.1.16, all versions starting from 2.2.0 before 2.2.10, all versions starting from 2.3.0 before 2.3.5, version 2.4.0",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2022-06-21",
+                    "description": "### Impact\n\nAll unpatched versions of Argo CD starting with v1.3.0 is vulnerable to a symlink following bug allowing a malicious user with repository write access to leak sensitive YAML files from Argo CD's repo-server.\n\nA malicious Argo CD user with write access for a repository which is (or may be) used in a Helm-type Application may commit a symlink which points to an out-of-bounds file. If the target file is a valid YAML file, the attacker can read the contents of that file.\n\nSensitive files which could be leaked include manifest files from other Applications' source repositories (potentially decrypted files, if you are using a decryption plugin) or any YAML-formatted secrets which have been mounted as files on the repo-server.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.4.1\n* v2.3.5\n* v2.2.10\n* v2.1.16\n\n### Workarounds\n\n* If you are using >=v2.3.0 and do not have any Helm-type Applications, [disable the Helm config management tool](https://argo-cd.readthedocs.io/en/stable/user-guide/tool_detection/#disable-built-in-tools).\n\n#### Mitigations\n\n* Avoid mounting YAML-formatted secrets as files on the repo-server.\n* Upgrade to >=2.3.0 to significantly reduce the risk of leaking out-of-bounds manifest files. Starting with 2.3.0, repository paths are randomized, and read permissions are restricted when manifests are not being actively being generated. This makes it very difficult to craft and use a malicious symlink.\n\n#### Best practices which can mitigate risk\n\n* Limit who has push access to manifest repositories.\n* Limit who is allowed to configure new source repositories.\n\n### Credits\n\nDisclosed by ADA Logics in a security audit of the Argo project sponsored by CNCF and facilitated by OSTIF. Thanks to Adam Korczynski and David Korczynski for their work on the audit.\n\n### References\n\n* List of [types of Applications](https://argo-cd.readthedocs.io/en/stable/user-guide/application_sources/), including Helm-type\n* [RBAC documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/), showing how to limit repository permissions\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
+                    "fixed_versions": [
+                        "v2.1.16",
+                        "v2.2.10",
+                        "v2.3.5",
+                        "v2.4.1"
+                    ],
+                    "identifier": "GMS-2022-2561",
+                    "identifiers": [
+                        "GHSA-q4w5-4gq2-98vm",
+                        "GMS-2022-2561",
+                        "CVE-2022-31036"
+                    ],
+                    "not_impacted": "All versions starting from 2.1.16 before 2.2.0, all versions starting from 2.2.10 before 2.3.0, all versions starting from 2.3.5 before 2.4.0, all versions after 2.4.0",
+                    "package_slug": "go/github.com/argoproj/argo-cd/v2",
+                    "pubdate": "2022-06-21",
+                    "solution": "Upgrade to versions 2.1.16, 2.2.10, 2.3.5, 2.4.1 or above.",
+                    "title": "Symlink following allows leaking out-of-bounds YAML files from Argo CD repo-server",
+                    "urls": [
+                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-q4w5-4gq2-98vm",
+                        "https://github.com/advisories/GHSA-q4w5-4gq2-98vm"
+                    ],
+                    "uuid": "6e2ebecd-366a-41a8-874d-c2f116e5ee29",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "6da92a8e8103ce4145bb0fe2b7e952be79c9ff0a",
+                                "tags": [
+                                    "v2.2.0"
+                                ],
+                                "timestamp": "20211214180104"
+                            },
+                            "number": "v2.2.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "fe427802293b090f43f91f5839393174df6c3b3a",
+                                "tags": [
+                                    "v2.3.0"
+                                ],
+                                "timestamp": "20220306061859"
+                            },
+                            "number": "v2.3.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "91aefabc5b213a258ddcfe04b8e69bb4a2dd2566",
+                                "tags": [
+                                    "stable",
+                                    "v2.4.0"
+                                ],
+                                "timestamp": "20220610171343"
+                            },
+                            "number": "v2.4.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "903db5fe464032bd5a10bf32fe17639e76634c2a",
+                                "tags": [
+                                    "v2.1.16"
+                                ],
+                                "timestamp": "20220621161926"
+                            },
+                            "number": "v2.1.16"
+                        },
+                        {
+                            "commit": {
+                                "sha": "8db0e57b738ff5b0b276031573576fdc3498c04f",
+                                "tags": [
+                                    "v2.2.10"
+                                ],
+                                "timestamp": "20220621162737"
+                            },
+                            "number": "v2.2.10"
+                        },
+                        {
+                            "commit": {
+                                "sha": "52e6025f8b565705025d029e8bed36d6caa5ecf7",
+                                "tags": [
+                                    "v2.4.1"
+                                ],
+                                "timestamp": "20220621162747"
+                            },
+                            "number": "v2.4.1"
+                        },
+                        {
+                            "commit": {
+                                "sha": "1287d24bfe47bcaa6e791e5ff12fa1c1bf57a442",
+                                "tags": [
+                                    "v2.3.5"
+                                ],
+                                "timestamp": "20220621162823"
+                            },
+                            "number": "v2.3.5"
+                        }
+                    ]
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

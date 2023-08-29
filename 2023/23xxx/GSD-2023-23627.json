@@ -5,22 +5,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2023-23627",
-            "modified": "2023-01-28T00:00:00.000Z",
-            "published": "2023-01-28T00:00:00.000Z",
-            "aliases": [
-                "CVE-2023-23627",
-                "GHSA-fw3g-2h3j-qmm7"
-            ],
-            "summary": "Improper neutralization of `noscript` element content may allow XSS in Sanitize",
-            "details": "### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize `>= 5.0.0, < 6.0.1` when Sanitize is configured with a custom allowlist that allows `noscript` elements. This could result in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser.\n\nSanitize's default configs don't allow `noscript` elements and are not vulnerable. This issue only affects users who are using a custom config that adds `noscript` to the element allowlist.\n\n### Patches\n\nSanitize `>= 6.0.1` always removes `noscript` elements and their contents, even when `noscript` is in the allowlist.\n\n### Workarounds\n\nUsers who are unable to upgrade can prevent this issue by using one of Sanitize's default configs or by ensuring that their custom config does not include `noscript` in the element allowlist.\n\n### Details\n\nThe root cause of this issue is that HTML parsing rules treat the contents of a `noscript` element differently depending on whether scripting is enabled in the user agent. Nokogiri (the HTML parser Sanitize uses) doesn't support scripting so it follows the \"scripting disabled\" rules, but a web browser with scripting enabled will follow the \"scripting enabled\" rules. This means that Sanitize can't reliably make the contents of a `noscript` element safe for scripting enabled browsers. The safest thing to do is to remove the element and its contents entirely, which is now what Sanitize does in version 6.0.1 and later.",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 6.1
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -30,6 +14,14 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2023-23627",
+                "GHSA-fw3g-2h3j-qmm7"
+            ],
+            "details": "### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize `>= 5.0.0, < 6.0.1` when Sanitize is configured with a custom allowlist that allows `noscript` elements. This could result in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser.\n\nSanitize's default configs don't allow `noscript` elements and are not vulnerable. This issue only affects users who are using a custom config that adds `noscript` to the element allowlist.\n\n### Patches\n\nSanitize `>= 6.0.1` always removes `noscript` elements and their contents, even when `noscript` is in the allowlist.\n\n### Workarounds\n\nUsers who are unable to upgrade can prevent this issue by using one of Sanitize's default configs or by ensuring that their custom config does not include `noscript` in the element allowlist.\n\n### Details\n\nThe root cause of this issue is that HTML parsing rules treat the contents of a `noscript` element differently depending on whether scripting is enabled in the user agent. Nokogiri (the HTML parser Sanitize uses) doesn't support scripting so it follows the \"scripting disabled\" rules, but a web browser with scripting enabled will follow the \"scripting enabled\" rules. This means that Sanitize can't reliably make the contents of a `noscript` element safe for scripting enabled browsers. The safest thing to do is to remove the element and its contents entirely, which is now what Sanitize does in version 6.0.1 and later.",
+            "id": "GSD-2023-23627",
+            "modified": "2023-01-28T00:00:00.000Z",
+            "published": "2023-01-28T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
@@ -43,7 +35,15 @@
                     "type": "WEB",
                     "url": "https://github.com/rgrove/sanitize/releases/tag/v6.0.1"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 6.1,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Improper neutralization of `noscript` element content may allow XSS in Sanitize"
         }
     },
     "namespaces": {
@@ -133,6 +133,64 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2023-23627",
+            "cvss_v3": 6.1,
+            "date": "2023-01-28",
+            "description": "### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize `>= 5.0.0, < 6.0.1` when Sanitize is configured with a custom allowlist that allows `noscript` elements. This could result in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser.\n\nSanitize's default configs don't allow `noscript` elements and are not vulnerable. This issue only affects users who are using a custom config that adds `noscript` to the element allowlist.\n\n### Patches\n\nSanitize `>= 6.0.1` always removes `noscript` elements and their contents, even when `noscript` is in the allowlist.\n\n### Workarounds\n\nUsers who are unable to upgrade can prevent this issue by using one of Sanitize's default configs or by ensuring that their custom config does not include `noscript` in the element allowlist.\n\n### Details\n\nThe root cause of this issue is that HTML parsing rules treat the contents of a `noscript` element differently depending on whether scripting is enabled in the user agent. Nokogiri (the HTML parser Sanitize uses) doesn't support scripting so it follows the \"scripting disabled\" rules, but a web browser with scripting enabled will follow the \"scripting enabled\" rules. This means that Sanitize can't reliably make the contents of a `noscript` element safe for scripting enabled browsers. The safest thing to do is to remove the element and its contents entirely, which is now what Sanitize does in version 6.0.1 and later.",
+            "gem": "sanitize",
+            "ghsa": "fw3g-2h3j-qmm7",
+            "patched_versions": [
+                ">= 6.0.1"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/rgrove/sanitize/commit/ec14265e530dc3fe31ce2ef773594d3a97778d22",
+                    "https://github.com/rgrove/sanitize/releases/tag/v6.0.1"
+                ]
+            },
+            "title": "Improper neutralization of `noscript` element content may allow XSS in Sanitize",
+            "unaffected_versions": [
+                "< 5.0.0"
+            ],
+            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-fw3g-2h3j-qmm7"
+        },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=5.0.0 <6.0.1",
+                    "affected_versions": "All versions starting from 5.0.0 before 6.0.1",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-79",
+                        "CWE-937"
+                    ],
+                    "date": "2023-02-06",
+                    "description": "Sanitize is an allowlist-based HTML and CSS sanitizer. Versions 5.0.0 and later, prior to 6.0.1, is vulnerable to Cross-site Scripting. When Sanitize is configured with a custom allowlist that allows `noscript` elements, attackers are able to include arbitrary HTML, resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. The default configurations do not allow `noscript` elements and are not vulnerable. This issue only affects users who are using a custom config that adds `noscript` to the element allowlist. This issue has been patched in version 6.0.1. Users who are unable to upgrade can prevent this issue by using one of Sanitize's default configs or by ensuring that their custom config does not include `noscript` in the element allowlist.",
+                    "fixed_versions": [
+                        "6.0.1"
+                    ],
+                    "identifier": "CVE-2023-23627",
+                    "identifiers": [
+                        "CVE-2023-23627",
+                        "GHSA-fw3g-2h3j-qmm7"
+                    ],
+                    "not_impacted": "All versions before 5.0.0, all versions starting from 6.0.1",
+                    "package_slug": "gem/sanitize",
+                    "pubdate": "2023-01-28",
+                    "solution": "Upgrade to version 6.0.1 or above.",
+                    "title": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+                    "urls": [
+                        "https://github.com/rgrove/sanitize/security/advisories/GHSA-fw3g-2h3j-qmm7",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2023-23627",
+                        "https://github.com/rgrove/sanitize/commit/ec14265e530dc3fe31ce2ef773594d3a97778d22",
+                        "https://github.com/advisories/GHSA-fw3g-2h3j-qmm7"
+                    ],
+                    "uuid": "a1a57593-2f27-48ab-9797-b13257c0b1fb"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
@@ -217,28 +275,6 @@
             },
             "lastModifiedDate": "2023-02-06T19:05Z",
             "publishedDate": "2023-01-28T00:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "sanitize",
-            "cve": "2023-23627",
-            "ghsa": "fw3g-2h3j-qmm7",
-            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-fw3g-2h3j-qmm7",
-            "title": "Improper neutralization of `noscript` element content may allow XSS in Sanitize",
-            "date": "2023-01-28",
-            "description": "### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize `>= 5.0.0, < 6.0.1` when Sanitize is configured with a custom allowlist that allows `noscript` elements. This could result in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser.\n\nSanitize's default configs don't allow `noscript` elements and are not vulnerable. This issue only affects users who are using a custom config that adds `noscript` to the element allowlist.\n\n### Patches\n\nSanitize `>= 6.0.1` always removes `noscript` elements and their contents, even when `noscript` is in the allowlist.\n\n### Workarounds\n\nUsers who are unable to upgrade can prevent this issue by using one of Sanitize's default configs or by ensuring that their custom config does not include `noscript` in the element allowlist.\n\n### Details\n\nThe root cause of this issue is that HTML parsing rules treat the contents of a `noscript` element differently depending on whether scripting is enabled in the user agent. Nokogiri (the HTML parser Sanitize uses) doesn't support scripting so it follows the \"scripting disabled\" rules, but a web browser with scripting enabled will follow the \"scripting enabled\" rules. This means that Sanitize can't reliably make the contents of a `noscript` element safe for scripting enabled browsers. The safest thing to do is to remove the element and its contents entirely, which is now what Sanitize does in version 6.0.1 and later.",
-            "cvss_v3": 6.1,
-            "unaffected_versions": [
-                "< 5.0.0"
-            ],
-            "patched_versions": [
-                ">= 6.0.1"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/rgrove/sanitize/commit/ec14265e530dc3fe31ce2ef773594d3a97778d22",
-                    "https://github.com/rgrove/sanitize/releases/tag/v6.0.1"
-                ]
-            }
         }
     }
 }
