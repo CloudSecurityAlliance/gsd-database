@@ -103,6 +103,43 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "(,1.10.17)",
+                    "affected_versions": "All versions before 1.10.17",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-22",
+                        "CWE-937"
+                    ],
+                    "date": "2022-08-16",
+                    "description": "Venice is a Clojure inspired sandboxed Lisp dialect with excellent Java interoperability. A partial path traversal issue exists within the functions `load-file` and `load-resource`. These functions can be limited to load files from a list of load paths. Assuming Venice has been configured with the load paths: `[ \"/Users/foo/resources\" ]` When passing **relative** paths to these two vulnerable functions everything is fine: `(load-resource \"test.png\")` => loads the file \"/Users/foo/resources/test.png\" `(load-resource \"../resources-alt/test.png\")` => rejected, outside the load path When passing **absolute** paths to these two vulnerable functions Venice may return files outside the configured load paths: `(load-resource \"/Users/foo/resources/test.png\")` => loads the file \"/Users/foo/resources/test.png\" `(load-resource \"/Users/foo/resources-alt/test.png\")` => loads the file \"/Users/foo/resources-alt/test.png\" !!! The latter call suffers from the _Partial Path Traversal_ vulnerability. This issue\u2019s scope is limited to absolute paths whose name prefix matches a load path. E.g. for a load-path `\"/Users/foo/resources\"`, the actor can cause loading a resource also from `\"/Users/foo/resources-alt\"`, but not from `\"/Users/foo/images\"`. Versions of Venice before and including v1.10.17 are affected by this issue. Upgrade to Venice >= 1.10.18, if you are on a version < 1.10.18. There are currently no known workarounds.",
+                    "fixed_versions": [
+                        "1.10.17"
+                    ],
+                    "identifier": "CVE-2022-36007",
+                    "identifiers": [
+                        "CVE-2022-36007",
+                        "GHSA-4mmh-5vw7-rgvj"
+                    ],
+                    "not_impacted": "All versions starting from 1.10.17",
+                    "package_slug": "maven/com.github.jlangch/venice",
+                    "pubdate": "2022-08-15",
+                    "solution": "Upgrade to version 1.10.17 or above.",
+                    "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-36007",
+                        "https://github.com/jlangch/venice/commit/215ae91bb964013b0a2d70718a692832d561ae0a",
+                        "https://github.com/jlangch/venice/security/advisories/GHSA-4mmh-5vw7-rgvj",
+                        "https://github.com/jlangch/venice/commit/c942c73136333bc493050910f171a48e6f575b23",
+                        "https://github.com/jlangch/venice/releases/tag/v1.10.17"
+                    ],
+                    "uuid": "eb3c7a98-4bbf-43a8-9f04-86f5594a6ec4"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

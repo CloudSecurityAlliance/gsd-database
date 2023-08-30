@@ -12,22 +12,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-41136",
-            "modified": "2021-10-12T00:00:00.000Z",
-            "published": "2021-10-12T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-41136",
-                "GHSA-48w2-rm65-62xx"
-            ],
-            "summary": "Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling') in puma",
-            "details": "### Impact\n\nPrior to `puma` version 5.5.0, using `puma` with a proxy which forwards LF characters as line endings could allow HTTP request smuggling. A client could smuggle a request through a proxy, causing the proxy to send a response back to another unknown client.\n\nThis behavior (forwarding LF characters as line endings) is very uncommon amongst proxy servers, so we have graded the impact here as \"low\". Puma is only aware of a single proxy server which has this behavior.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP pipelining, the proxy may mistake it as the first request's body. Puma, however, would see it as two requests, and when processing the second request, send back a response that the proxy does not expect. If the proxy has reused the persistent connection to Puma to send another request for a different client, the second response from the first client will be sent to the second client.\n\n### Patches\n\nThis vulnerability was patched in Puma 5.5.1 and 4.3.9.\n\n### Workarounds\n\nThis vulnerability only affects Puma installations without any proxy in front.\n\nUse a proxy which does not forward LF characters as line endings.\n\nProxies which do not forward LF characters as line endings:\n\n* Nginx\n* Apache (>2.4.25)\n* Haproxy\n* Caddy\n* Traefik\n\n### Possible Breakage\n\nIf you are [dealing with legacy clients that want to send `LF` as a line ending](https://stackoverflow.com/questions/43574428/have-apache-accept-lf-vs-crlf-in-request-headers) in an HTTP header, this will cause those clients to receive a `400` error.\n\n### References\n\n* [HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 3.7
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -37,12 +21,28 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2021-41136",
+                "GHSA-48w2-rm65-62xx"
+            ],
+            "details": "### Impact\n\nPrior to `puma` version 5.5.0, using `puma` with a proxy which forwards LF characters as line endings could allow HTTP request smuggling. A client could smuggle a request through a proxy, causing the proxy to send a response back to another unknown client.\n\nThis behavior (forwarding LF characters as line endings) is very uncommon amongst proxy servers, so we have graded the impact here as \"low\". Puma is only aware of a single proxy server which has this behavior.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP pipelining, the proxy may mistake it as the first request's body. Puma, however, would see it as two requests, and when processing the second request, send back a response that the proxy does not expect. If the proxy has reused the persistent connection to Puma to send another request for a different client, the second response from the first client will be sent to the second client.\n\n### Patches\n\nThis vulnerability was patched in Puma 5.5.1 and 4.3.9.\n\n### Workarounds\n\nThis vulnerability only affects Puma installations without any proxy in front.\n\nUse a proxy which does not forward LF characters as line endings.\n\nProxies which do not forward LF characters as line endings:\n\n* Nginx\n* Apache (>2.4.25)\n* Haproxy\n* Caddy\n* Traefik\n\n### Possible Breakage\n\nIf you are [dealing with legacy clients that want to send `LF` as a line ending](https://stackoverflow.com/questions/43574428/have-apache-accept-lf-vs-crlf-in-request-headers) in an HTTP header, this will cause those clients to receive a `400` error.\n\n### References\n\n* [HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
+            "id": "GSD-2021-41136",
+            "modified": "2021-10-12T00:00:00.000Z",
+            "published": "2021-10-12T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
                     "url": "https://github.com/puma/puma/security/advisories/GHSA-48w2-rm65-62xx"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 3.7,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling') in puma"
         }
     },
     "namespaces": {
@@ -152,6 +152,20 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2021-41136",
+            "cvss_v3": 3.7,
+            "date": "2021-10-12",
+            "description": "### Impact\n\nPrior to `puma` version 5.5.0, using `puma` with a proxy which forwards LF characters as line endings could allow HTTP request smuggling. A client could smuggle a request through a proxy, causing the proxy to send a response back to another unknown client.\n\nThis behavior (forwarding LF characters as line endings) is very uncommon amongst proxy servers, so we have graded the impact here as \"low\". Puma is only aware of a single proxy server which has this behavior.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP pipelining, the proxy may mistake it as the first request's body. Puma, however, would see it as two requests, and when processing the second request, send back a response that the proxy does not expect. If the proxy has reused the persistent connection to Puma to send another request for a different client, the second response from the first client will be sent to the second client.\n\n### Patches\n\nThis vulnerability was patched in Puma 5.5.1 and 4.3.9.\n\n### Workarounds\n\nThis vulnerability only affects Puma installations without any proxy in front.\n\nUse a proxy which does not forward LF characters as line endings.\n\nProxies which do not forward LF characters as line endings:\n\n* Nginx\n* Apache (>2.4.25)\n* Haproxy\n* Caddy\n* Traefik\n\n### Possible Breakage\n\nIf you are [dealing with legacy clients that want to send `LF` as a line ending](https://stackoverflow.com/questions/43574428/have-apache-accept-lf-vs-crlf-in-request-headers) in an HTTP header, this will cause those clients to receive a `400` error.\n\n### References\n\n* [HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
+            "gem": "puma",
+            "ghsa": "48w2-rm65-62xx",
+            "patched_versions": [
+                "~> 4.3.9",
+                ">= 5.5.1"
+            ],
+            "title": "Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling') in puma",
+            "url": "https://github.com/puma/puma/security/advisories/GHSA-48w2-rm65-62xx"
+        },
         "gitlab.com": {
             "advisories": [
                 {
@@ -164,7 +178,7 @@
                         "CWE-444",
                         "CWE-937"
                     ],
-                    "date": "2021-10-27",
+                    "date": "2022-10-12",
                     "description": "Puma is a HTTP server for Ruby/Rack applications., using `puma` with a proxy which forwards HTTP header values which contain the LF character could allow HTTP request smuggling. A client could smuggle a request through a proxy, causing the proxy to send a response back to another unknown client. The only proxy which has this behavior, as far as the Puma team is aware of, is Apache Traffic Server. If the proxy uses persistent connections and the client adds another request in via HTTP pipelining, the proxy may mistake it as the first request's body. Puma, however, would see it as two requests, and when processing the second request, send back a response that the proxy does not expect. If the proxy has reused the persistent connection to Puma to send another request for a different client, the second response from the first client will be sent to the second client.",
                     "fixed_versions": [
                         "4.3.9",
@@ -346,20 +360,6 @@
             },
             "lastModifiedDate": "2022-10-12T13:30Z",
             "publishedDate": "2021-10-12T16:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "puma",
-            "cve": "2021-41136",
-            "ghsa": "48w2-rm65-62xx",
-            "url": "https://github.com/puma/puma/security/advisories/GHSA-48w2-rm65-62xx",
-            "title": "Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling') in puma",
-            "date": "2021-10-12",
-            "description": "### Impact\n\nPrior to `puma` version 5.5.0, using `puma` with a proxy which forwards LF characters as line endings could allow HTTP request smuggling. A client could smuggle a request through a proxy, causing the proxy to send a response back to another unknown client.\n\nThis behavior (forwarding LF characters as line endings) is very uncommon amongst proxy servers, so we have graded the impact here as \"low\". Puma is only aware of a single proxy server which has this behavior.\n\nIf the proxy uses persistent connections and the client adds another request in via HTTP pipelining, the proxy may mistake it as the first request's body. Puma, however, would see it as two requests, and when processing the second request, send back a response that the proxy does not expect. If the proxy has reused the persistent connection to Puma to send another request for a different client, the second response from the first client will be sent to the second client.\n\n### Patches\n\nThis vulnerability was patched in Puma 5.5.1 and 4.3.9.\n\n### Workarounds\n\nThis vulnerability only affects Puma installations without any proxy in front.\n\nUse a proxy which does not forward LF characters as line endings.\n\nProxies which do not forward LF characters as line endings:\n\n* Nginx\n* Apache (>2.4.25)\n* Haproxy\n* Caddy\n* Traefik\n\n### Possible Breakage\n\nIf you are [dealing with legacy clients that want to send `LF` as a line ending](https://stackoverflow.com/questions/43574428/have-apache-accept-lf-vs-crlf-in-request-headers) in an HTTP header, this will cause those clients to receive a `400` error.\n\n### References\n\n* [HTTP Request Smuggling](https://portswigger.net/web-security/request-smuggling)\n",
-            "cvss_v3": 3.7,
-            "patched_versions": [
-                "~> 4.3.9",
-                ">= 5.5.1"
-            ]
         }
     }
 }

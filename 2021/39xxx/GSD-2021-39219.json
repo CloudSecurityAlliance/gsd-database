@@ -121,6 +121,123 @@
                         "CWE-937"
                     ],
                     "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. Wasmtime before version 0.30.0 is affected by a type confusion vulnerability. As a Rust library the `wasmtime` crate clearly marks which functions are safe and which are `unsafe`, guaranteeing that if consumers never use `unsafe` then it should not be possible to have memory unsafety issues in their embeddings of Wasmtime. An issue was discovered in the safe API of `Linker::func_*` APIs. These APIs were previously not sound when one `Engine` was used to create the `Linker` and then a different `Engine` was used to create a `Store` and then the `Linker` was used to instantiate a module into that `Store`. Cross-`Engine` usage of functions is not supported in Wasmtime and this can result in type confusion of function pointers, resulting in being able to safely call a function with the wrong type. Triggering this bug requires using at least two `Engine` values in an embedding and then additionally using two different values with a `Linker` (one at the creation time of the `Linker` and another when instantiating a module with the `Linker`). It's expected that usage of more-than-one `Engine` in an embedding is relatively rare since an `Engine` is intended to be a globally shared resource, so the expectation is that the impact of this issue is relatively small. The fix implemented is to change this behavior to `panic!()` in Rust instead of silently allowing it. Using different `Engine` instances with a `Linker` is a programmer bug that `wasmtime` catches at runtime. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime and are using more than one `Engine` in your embedding it's recommended to instead use only one `Engine` for the entire program if possible. An `Engine` is designed to be a globally shared resource that is suitable to have only one for the lifetime of an entire process. If using multiple `Engine`s is required then code should be audited to ensure that `Linker` is only used with one `Engine`.",
+                    "fixed_versions": [
+                        "0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39219",
+                    "identifiers": [
+                        "CVE-2021-39219",
+                        "GHSA-q879-9g95-56mx"
+                    ],
+                    "not_impacted": "All versions starting from 0.30.0",
+                    "package_slug": "conan/wasmtime",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Access of Resource Using Incompatible Type ('Type Confusion')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39219",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/b39f087414f27ae40c44449ed5d1154e03449bff",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-q879-9g95-56mx",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "2e013935-848e-4140-a78f-2deaf7e95e5d"
+                },
+                {
+                    "affected_range": "<v0.30.0",
+                    "affected_versions": "All versions before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-843",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. Wasmtime before version 0.30.0 is affected by a type confusion vulnerability. As a Rust library the `wasmtime` crate clearly marks which functions are safe and which are `unsafe`, guaranteeing that if consumers never use `unsafe` then it should not be possible to have memory unsafety issues in their embeddings of Wasmtime. An issue was discovered in the safe API of `Linker::func_*` APIs. These APIs were previously not sound when one `Engine` was used to create the `Linker` and then a different `Engine` was used to create a `Store` and then the `Linker` was used to instantiate a module into that `Store`. Cross-`Engine` usage of functions is not supported in Wasmtime and this can result in type confusion of function pointers, resulting in being able to safely call a function with the wrong type. Triggering this bug requires using at least two `Engine` values in an embedding and then additionally using two different values with a `Linker` (one at the creation time of the `Linker` and another when instantiating a module with the `Linker`). It's expected that usage of more-than-one `Engine` in an embedding is relatively rare since an `Engine` is intended to be a globally shared resource, so the expectation is that the impact of this issue is relatively small. The fix implemented is to change this behavior to `panic!()` in Rust instead of silently allowing it. Using different `Engine` instances with a `Linker` is a programmer bug that `wasmtime` catches at runtime. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime and are using more than one `Engine` in your embedding it's recommended to instead use only one `Engine` for the entire program if possible. An `Engine` is designed to be a globally shared resource that is suitable to have only one for the lifetime of an entire process. If using multiple `Engine`s is required then code should be audited to ensure that `Linker` is only used with one `Engine`.",
+                    "fixed_versions": [
+                        "v0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39219",
+                    "identifiers": [
+                        "CVE-2021-39219",
+                        "GHSA-q879-9g95-56mx"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Access of Resource Using Incompatible Type ('Type Confusion')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39219",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/b39f087414f27ae40c44449ed5d1154e03449bff",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-q879-9g95-56mx",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "c1bcc749-ffb7-4640-94f4-a61da336c229",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "e5704ca48f2ac43faaebaa4055c9f4cd01bac8c0",
+                                "tags": [
+                                    "v0.30.0"
+                                ],
+                                "timestamp": "20210917191246"
+                            },
+                            "number": "v0.30.0"
+                        }
+                    ]
+                },
+                {
+                    "affected_range": "(,0.30.0)",
+                    "affected_versions": "All versions before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-843",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
+                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. Wasmtime before version 0.30.0 is affected by a type confusion vulnerability. As a Rust library the `wasmtime` crate clearly marks which functions are safe and which are `unsafe`, guaranteeing that if consumers never use `unsafe` then it should not be possible to have memory unsafety issues in their embeddings of Wasmtime. An issue was discovered in the safe API of `Linker::func_*` APIs. These APIs were previously not sound when one `Engine` was used to create the `Linker` and then a different `Engine` was used to create a `Store` and then the `Linker` was used to instantiate a module into that `Store`. Cross-`Engine` usage of functions is not supported in Wasmtime and this can result in type confusion of function pointers, resulting in being able to safely call a function with the wrong type. Triggering this bug requires using at least two `Engine` values in an embedding and then additionally using two different values with a `Linker` (one at the creation time of the `Linker` and another when instantiating a module with the `Linker`). It's expected that usage of more-than-one `Engine` in an embedding is relatively rare since an `Engine` is intended to be a globally shared resource, so the expectation is that the impact of this issue is relatively small. The fix implemented is to change this behavior to `panic!()` in Rust instead of silently allowing it. Using different `Engine` instances with a `Linker` is a programmer bug that `wasmtime` catches at runtime. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime and are using more than one `Engine` in your embedding it's recommended to instead use only one `Engine` for the entire program if possible. An `Engine` is designed to be a globally shared resource that is suitable to have only one for the lifetime of an entire process. If using multiple `Engine`s is required then code should be audited to ensure that `Linker` is only used with one `Engine`.",
+                    "fixed_versions": [
+                        "0.30.0"
+                    ],
+                    "identifier": "CVE-2021-39219",
+                    "identifiers": [
+                        "CVE-2021-39219",
+                        "GHSA-q879-9g95-56mx"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "nuget/Wasmtime",
+                    "pubdate": "2021-09-17",
+                    "solution": "Upgrade to version 0.30.0 or above.",
+                    "title": "Access of Resource Using Incompatible Type ('Type Confusion')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39219",
+                        "https://crates.io/crates/wasmtime",
+                        "https://github.com/bytecodealliance/wasmtime/commit/b39f087414f27ae40c44449ed5d1154e03449bff",
+                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-q879-9g95-56mx",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+                    ],
+                    "uuid": "7d28a278-cbc9-4813-963e-af1e11237c77"
+                },
+                {
+                    "affected_range": "<0.30.0",
+                    "affected_versions": "All versions before 0.30.0",
+                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-843",
+                        "CWE-937"
+                    ],
+                    "date": "2021-12-21",
                     "description": "Wasmtime is an open source runtime for WebAssembly & WASI.As a Rust library the `wasmtime` crate clearly marks which functions are safe and which are `unsafe`, guaranteeing that if consumers never use `unsafe` then it should not be possible to have memory unsafety issues in their embeddings of Wasmtime.",
                     "fixed_versions": [
                         "0.30.0"

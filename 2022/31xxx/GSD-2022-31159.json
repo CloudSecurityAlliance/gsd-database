@@ -91,6 +91,40 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": "(,1.12.260]",
+                    "affected_versions": "All versions up to 1.12.260",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-22",
+                        "CWE-937"
+                    ],
+                    "date": "2022-07-22",
+                    "description": "The AWS SDK for Java enables Java developers to work with Amazon Web Services. A partial-path traversal issue exists within the `downloadDirectory` method in the AWS S3 TransferManager component of the AWS SDK for Java v1 prior to version 1.12.261. Applications using the SDK control the `destinationDirectory` argument, but S3 object keys are determined by the application that uploaded the objects. The `downloadDirectory` method allows the caller to pass a filesystem object in the object key but contained an issue in the validation logic for the key name. A knowledgeable actor could bypass the validation logic by including a UNIX double-dot in the bucket key. Under certain conditions, this could permit them to retrieve a directory from their S3 bucket that is one level up in the filesystem from their working directory. This issue\u2019s scope is limited to directories whose name prefix matches the destinationDirectory. E.g. for destination directory`/tmp/foo`, the actor can cause a download to `/tmp/foo-bar`, but not `/tmp/bar`. If `com.amazonaws.services.s3.transfer.TransferManager::downloadDirectory` is used to download an untrusted buckets contents, the contents of that bucket can be written outside of the intended destination directory. Version 1.12.261 contains a patch for this issue. As a workaround, when calling `com.amazonaws.services.s3.transfer.TransferManager::downloadDirectory`, pass a `KeyFilter` that forbids `S3ObjectSummary` objects that `getKey` method return a string containing the substring `..` .",
+                    "fixed_versions": [
+                        "1.12.261"
+                    ],
+                    "identifier": "CVE-2022-31159",
+                    "identifiers": [
+                        "CVE-2022-31159",
+                        "GHSA-c28r-hw5m-5gv3"
+                    ],
+                    "not_impacted": "All versions after 1.12.260",
+                    "package_slug": "maven/com.amazonaws/aws-java-sdk-s3",
+                    "pubdate": "2022-07-15",
+                    "solution": "Upgrade to version 1.12.261 or above.",
+                    "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31159",
+                        "https://github.com/aws/aws-sdk-java/security/advisories/GHSA-c28r-hw5m-5gv3"
+                    ],
+                    "uuid": "cad83918-11ed-43c4-9113-aa6bd5e6b63f"
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

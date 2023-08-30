@@ -9,22 +9,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2023-22794",
-            "modified": "2023-01-18T00:00:00.000Z",
-            "published": "2023-01-18T00:00:00.000Z",
-            "aliases": [
-                "CVE-2023-22794",
-                "GHSA-hq7p-j377-6v63"
-            ],
-            "summary": "SQL Injection Vulnerability via ActiveRecord comments",
-            "details": "There is a possible vulnerability in ActiveRecord related to the\nsanitization of comments. This vulnerability has been assigned the CVE\nidentifier CVE-2023-22794.\n\nVersions Affected: >= 6.0.0\nNot affected: < 6.0.0\nFixed Versions: 6.0.6.1, 6.1.7.1, 7.0.4.1\n\n# Impact\n\nPreviously the implementation of escaping for comments was insufficient for\n\nIf malicious user input is passed to either the annotate query method, the\noptimizer_hints query method, or through the QueryLogs interface which\nautomatically adds annotations, it may be sent to the database with\ninsufficient sanitization and be able to inject SQL outside of the comment.\n\nIn most cases these interfaces won’t be used with user input and users\nshould avoid doing so.\n\nExample vulnerable code:\n```\nPost.where(id: 1).annotate(\"#{params[:user_input]}\")\n\nPost.where(id: 1).optimizer_hints(\"#{params[:user_input]}\")\n```\n\nExample vulnerable QueryLogs configuration (the default configuration is not\nvulnerable):\n```\nconfig.active_record.query_log_tags = [\n  {\n    something: -> { <some value including user input> }\n  }\n]\n```\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n# Workarounds\n\nAvoid passing user input to annotate and avoid using QueryLogs configuration\nwhich can include user input.",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 8.8
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -34,6 +18,14 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2023-22794",
+                "GHSA-hq7p-j377-6v63"
+            ],
+            "details": "There is a possible vulnerability in ActiveRecord related to the\nsanitization of comments. This vulnerability has been assigned the CVE\nidentifier CVE-2023-22794.\n\nVersions Affected: >= 6.0.0\nNot affected: < 6.0.0\nFixed Versions: 6.0.6.1, 6.1.7.1, 7.0.4.1\n\n# Impact\n\nPreviously the implementation of escaping for comments was insufficient for\n\nIf malicious user input is passed to either the annotate query method, the\noptimizer_hints query method, or through the QueryLogs interface which\nautomatically adds annotations, it may be sent to the database with\ninsufficient sanitization and be able to inject SQL outside of the comment.\n\nIn most cases these interfaces won\u2019t be used with user input and users\nshould avoid doing so.\n\nExample vulnerable code:\n```\nPost.where(id: 1).annotate(\"#{params[:user_input]}\")\n\nPost.where(id: 1).optimizer_hints(\"#{params[:user_input]}\")\n```\n\nExample vulnerable QueryLogs configuration (the default configuration is not\nvulnerable):\n```\nconfig.active_record.query_log_tags = [\n  {\n    something: -> { <some value including user input> }\n  }\n]\n```\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n# Workarounds\n\nAvoid passing user input to annotate and avoid using QueryLogs configuration\nwhich can include user input.",
+            "id": "GSD-2023-22794",
+            "modified": "2023-01-18T00:00:00.000Z",
+            "published": "2023-01-18T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
@@ -43,7 +35,15 @@
                     "type": "WEB",
                     "url": "https://github.com/rails/rails/commit/d7aba06953f9fa789c411676b941d20df8ef73de"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 8.8,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "SQL Injection Vulnerability via ActiveRecord comments"
         }
     },
     "namespaces": {
@@ -113,6 +113,99 @@
                     }
                 ]
             }
+        },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2023-22794",
+            "cvss_v3": 8.8,
+            "date": "2023-01-18",
+            "description": "There is a possible vulnerability in ActiveRecord related to the\nsanitization of comments. This vulnerability has been assigned the CVE\nidentifier CVE-2023-22794.\n\nVersions Affected: >= 6.0.0\nNot affected: < 6.0.0\nFixed Versions: 6.0.6.1, 6.1.7.1, 7.0.4.1\n\n# Impact\n\nPreviously the implementation of escaping for comments was insufficient for\n\nIf malicious user input is passed to either the annotate query method, the\noptimizer_hints query method, or through the QueryLogs interface which\nautomatically adds annotations, it may be sent to the database with\ninsufficient sanitization and be able to inject SQL outside of the comment.\n\nIn most cases these interfaces won\u2019t be used with user input and users\nshould avoid doing so.\n\nExample vulnerable code:\n```\nPost.where(id: 1).annotate(\"#{params[:user_input]}\")\n\nPost.where(id: 1).optimizer_hints(\"#{params[:user_input]}\")\n```\n\nExample vulnerable QueryLogs configuration (the default configuration is not\nvulnerable):\n```\nconfig.active_record.query_log_tags = [\n  {\n    something: -> { <some value including user input> }\n  }\n]\n```\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n# Workarounds\n\nAvoid passing user input to annotate and avoid using QueryLogs configuration\nwhich can include user input.",
+            "gem": "activerecord",
+            "ghsa": "hq7p-j377-6v63",
+            "patched_versions": [
+                "~> 6.0.6, >= 6.0.6.1",
+                "~> 6.1.7, >= 6.1.7.1",
+                ">= 7.0.4.1"
+            ],
+            "related": {
+                "url": [
+                    "https://github.com/rails/rails/commit/d7aba06953f9fa789c411676b941d20df8ef73de"
+                ]
+            },
+            "title": "SQL Injection Vulnerability via ActiveRecord comments",
+            "unaffected_versions": [
+                "< 6.0.0"
+            ],
+            "url": "https://github.com/rails/rails/releases/tag/v7.0.4.1"
+        },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=6.0.0 <6.0.6.1||>=6.1.0 <6.1.7.1||>=7.0.0 <7.0.4.1",
+                    "affected_versions": "All versions starting from 6.0.0 before 6.0.6.1, all versions starting from 6.1.0 before 6.1.7.1, all versions starting from 7.0.0 before 7.0.4.1",
+                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-89",
+                        "CWE-937"
+                    ],
+                    "date": "2023-03-14",
+                    "description": "A vulnerability in ActiveRecord <6.0.6.1, v6.1.7.1 and v7.0.4.1 related to the sanitization of comments. If malicious user input is passed to either the `annotate` query method, the `optimizer_hints` query method, or through the QueryLogs interface which automatically adds annotations, it may be sent to the database with insufficient sanitization and be able to inject SQL outside of the comment.",
+                    "fixed_versions": [
+                        "6.0.6.1",
+                        "6.1.7.1",
+                        "7.0.4.1"
+                    ],
+                    "identifier": "CVE-2023-22794",
+                    "identifiers": [
+                        "CVE-2023-22794",
+                        "GHSA-hq7p-j377-6v63",
+                        "GMS-2023-60"
+                    ],
+                    "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.6.1 before 6.1.0, all versions starting from 6.1.7.1 before 7.0.0, all versions starting from 7.0.4.1",
+                    "package_slug": "gem/activerecord",
+                    "pubdate": "2023-02-09",
+                    "solution": "Upgrade to versions 6.0.6.1, 6.1.7.1, 7.0.4.1 or above.",
+                    "title": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                    "urls": [
+                        "https://nvd.nist.gov/vuln/detail/CVE-2023-22794",
+                        "https://discuss.rubyonrails.org/t/cve-2023-22794-sql-injection-vulnerability-via-activerecord-comments/82117",
+                        "https://github.com/rails/rails/releases/tag/v7.0.4.1",
+                        "https://github.com/advisories/GHSA-hq7p-j377-6v63"
+                    ],
+                    "uuid": "2dc2795e-86a7-46b3-89fa-4ace44065796"
+                },
+                {
+                    "affected_range": "<0",
+                    "affected_versions": "All versions starting from 6.0.0 before 6.0.6.1, all versions starting from 6.1.0 before 6.1.7.1, all versions starting from 7.0.0 before 7.0.4.1",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2023-01-18",
+                    "description": "There is a possible vulnerability in ActiveRecord related to the sanitization of comments. Previously the implementation of escaping for comments was insufficient. If malicious user input is passed to either the annotate query method, the optimizer_hints query method, or through the QueryLogs interface which automatically adds annotations, it may be sent to the database with insufficient sanitization and be able to inject SQL outside of the comment. In most cases these interfaces won\u2019t be used with user input and users should avoid doing so.",
+                    "fixed_versions": [
+                        "6.0.6.1",
+                        "6.1.7.1",
+                        "7.0.4.1"
+                    ],
+                    "identifier": "GMS-2023-60",
+                    "identifiers": [
+                        "GHSA-hq7p-j377-6v63",
+                        "GMS-2023-60",
+                        "CVE-2023-22794"
+                    ],
+                    "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.6.1 before 6.1.0, all versions starting from 6.1.7.1 before 7.0.0, all versions starting from 7.0.4.1",
+                    "package_slug": "gem/activerecord",
+                    "pubdate": "2023-01-18",
+                    "solution": "Upgrade to versions 6.0.6.1, 6.1.7.1, 7.0.4.1 or above.",
+                    "title": "Duplicate of ./gem/activerecord/CVE-2023-22794.yml",
+                    "urls": [
+                        "https://github.com/rails/rails/releases/tag/v7.0.4.1",
+                        "https://github.com/advisories/GHSA-hq7p-j377-6v63"
+                    ],
+                    "uuid": "157645fb-43ba-4338-b5c3-64cd1159cd62"
+                }
+            ]
         },
         "nvd.nist.gov": {
             "configurations": {
@@ -218,29 +311,6 @@
             },
             "lastModifiedDate": "2023-03-14T08:15Z",
             "publishedDate": "2023-02-09T20:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activerecord",
-            "cve": "2023-22794",
-            "ghsa": "hq7p-j377-6v63",
-            "url": "https://github.com/rails/rails/releases/tag/v7.0.4.1",
-            "title": "SQL Injection Vulnerability via ActiveRecord comments",
-            "date": "2023-01-18",
-            "description": "There is a possible vulnerability in ActiveRecord related to the\nsanitization of comments. This vulnerability has been assigned the CVE\nidentifier CVE-2023-22794.\n\nVersions Affected: >= 6.0.0\nNot affected: < 6.0.0\nFixed Versions: 6.0.6.1, 6.1.7.1, 7.0.4.1\n\n# Impact\n\nPreviously the implementation of escaping for comments was insufficient for\n\nIf malicious user input is passed to either the annotate query method, the\noptimizer_hints query method, or through the QueryLogs interface which\nautomatically adds annotations, it may be sent to the database with\ninsufficient sanitization and be able to inject SQL outside of the comment.\n\nIn most cases these interfaces won’t be used with user input and users\nshould avoid doing so.\n\nExample vulnerable code:\n```\nPost.where(id: 1).annotate(\"#{params[:user_input]}\")\n\nPost.where(id: 1).optimizer_hints(\"#{params[:user_input]}\")\n```\n\nExample vulnerable QueryLogs configuration (the default configuration is not\nvulnerable):\n```\nconfig.active_record.query_log_tags = [\n  {\n    something: -> { <some value including user input> }\n  }\n]\n```\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\n# Workarounds\n\nAvoid passing user input to annotate and avoid using QueryLogs configuration\nwhich can include user input.",
-            "cvss_v3": 8.8,
-            "unaffected_versions": [
-                "< 6.0.0"
-            ],
-            "patched_versions": [
-                "~> 6.0.6, >= 6.0.6.1",
-                "~> 6.1.7, >= 6.1.7.1",
-                ">= 7.0.4.1"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/rails/rails/commit/d7aba06953f9fa789c411676b941d20df8ef73de"
-                ]
-            }
         }
     }
 }

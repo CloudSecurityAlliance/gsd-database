@@ -104,6 +104,116 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=v0.1.0 <v2.29.0",
+                    "affected_versions": "All versions starting from 0.1.0 before 2.29.0",
+                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-276",
+                        "CWE-937"
+                    ],
+                    "date": "2023-06-06",
+                    "description": "### Summary\nWhen building packages directly from source control, file permissions on the checked-in files are not maintained. \n\n### Details\nWhen building packages directly from source control, file permissions on the checked-in files are not maintained. When nfpm packaged the files (without extra config for enforcing its own permissions) files could go out with bad permissions (chmod 666 or 777).\n\n### PoC\nCreate a default nfpm structure. \n\nWithin the test folder, create 3 files named `chmod-XXX.sh`. Each script has file \npermissions set corresponding with their file names (`chmod-777.sh` = `chmod 777`). Below each \nfile and permissions can be seen.\n\n```console\n$ ls -lart test \ntotal 24\n-rwxrwxrwx 1 user group 11 May 19 13:15 chmod-777.sh\n-rw-rw-rw- 1 user group 11 May 19 13:16 chmod-666.sh\ndrwxr-xr-x 5 user group 160 May 19 13:19 .\n-rw-rw-r-- 1 user group 11 May 19 13:19 chmod-664.sh\ndrwxr-xr-x 10 user group 320 May 19 13:29 ..\n```\n\nBelow is the snippet nfpm configuration file of the contents of the package. The test folder \nand files has no extra config for enforcing permissions. \n\n```yaml\ncontents:\n- src: foo-binary\n dst: /usr/bin/bar\n- src: bar-config.conf\n dst: /etc/foo-binary/bar-config.conf\n type: config\n- src: test\n dst: /etc/test/scripts\n```\n\nThe next step is to create a deb package.\n\n```console\n$ nfpm package -p deb # Create dep package\nusing deb packager...\ncreated package: foo_1.0.0_arm64.deb\n```\n\nWhen on a Ubuntu VM, install the foo package which was created\n\n```console\n$ sudo dpkg -i foo_1.0.0_arm64.deb # Installing deb package within Ubuntu\nSelecting previously unselected package foo.\n(Reading database ... 67540 files and directories currently installed.)\nPreparing to unpack foo_1.0.0_arm64.deb ...\nUnpacking foo (1.0.0) ...\nSetting up foo (1.0.0) ...\n```\n\nLooking at `/etc/test/scripts` and viewing the permissions. Permissions are passed exactly the same as the source.\n\n```console\n$ ls -lart /etc/test/scripts\ntotal 20\n-rwxrwxrwx 1 root root 11 May 22 12:15 chmod-777.sh\n-rw-rw-rw- 1 root root 11 May 22 12:16 chmod-666.sh\n-rw-rw-r-- 1 root root 11 May 22 12:19 chmod-664.sh\ndrwxr-xr-x 3 root root 4096 May 22 13:00 ..\ndrwxr-xr-x 2 root root 4096 May 22 13:00 .\n```\n\n\n## Solution\nTo prevent world-writable files from making it into the packages, add the ability to override the default permissions of packaged files using a umask config option in the packaging spec file. This feature in nfpm would allow applying a global umask across any files being packaged, therefore, with the correct configuration, preventing world-writable files without needing to list permissions on each and every file in the package\n\n\n### Impact\n\nVulnerability is https://cwe.mitre.org/data/definitions/276.html\nhttps://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N\n\nAnyone using nfpm for creating packages and not checking/setting file permissions before packaging could result in bad permissions for files/folders.",
+                    "fixed_versions": [
+                        "v2.29.0"
+                    ],
+                    "identifier": "CVE-2023-32698",
+                    "identifiers": [
+                        "CVE-2023-32698",
+                        "GHSA-w7jw-q4fg-qc4c"
+                    ],
+                    "not_impacted": "All versions before 0.1.0, all versions starting from 2.29.0",
+                    "package_slug": "go/github.com/goreleaser/nfpm",
+                    "pubdate": "2023-05-30",
+                    "solution": "Upgrade to version 2.29.0 or above.",
+                    "title": "nfpm has incorrect default permissions",
+                    "urls": [
+                        "https://github.com/goreleaser/nfpm/security/advisories/GHSA-w7jw-q4fg-qc4c",
+                        "https://github.com/goreleaser/nfpm/commit/ed9abdf63d5012cc884f2a83b4ab2b42b3680d30",
+                        "https://github.com/goreleaser/nfpm/releases/tag/v2.29.0",
+                        "https://github.com/advisories/GHSA-w7jw-q4fg-qc4c"
+                    ],
+                    "uuid": "501e3dbf-3591-440d-b8ef-4778afab8b26",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "37a2dbf86bc30fce37fdb68fef410f267a15ee37",
+                                "tags": [
+                                    "v0.1.0"
+                                ],
+                                "timestamp": "20180212211537"
+                            },
+                            "number": "v0.1.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "d614ec96365e18bec9449d8b0ae6e5d667ef0a2d",
+                                "tags": [
+                                    "v2.29.0"
+                                ],
+                                "timestamp": "20230524025709"
+                            },
+                            "number": "v2.29.0"
+                        }
+                    ]
+                },
+                {
+                    "affected_range": ">=v2.0.0 <v2.29.0",
+                    "affected_versions": "All versions starting from 2.0.0 before 2.29.0",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-937"
+                    ],
+                    "date": "2023-06-06",
+                    "description": "### Summary\nWhen building packages directly from source control, file permissions on the checked-in files are not maintained. \n\n### Details\nWhen building packages directly from source control, file permissions on the checked-in files are not maintained. When nfpm packaged the files (without extra config for enforcing its own permissions) files could go out with bad permissions (chmod 666 or 777).\n\n### PoC\nCreate a default nfpm structure. \n\nWithin the test folder, create 3 files named `chmod-XXX.sh`. Each script has file \npermissions set corresponding with their file names (`chmod-777.sh` = `chmod 777`). Below each \nfile and permissions can be seen.\n\n```console\n$ ls -lart test \ntotal 24\n-rwxrwxrwx 1 user group 11 May 19 13:15 chmod-777.sh\n-rw-rw-rw- 1 user group 11 May 19 13:16 chmod-666.sh\ndrwxr-xr-x 5 user group 160 May 19 13:19 .\n-rw-rw-r-- 1 user group 11 May 19 13:19 chmod-664.sh\ndrwxr-xr-x 10 user group 320 May 19 13:29 ..\n```\n\nBelow is the snippet nfpm configuration file of the contents of the package. The test folder \nand files has no extra config for enforcing permissions. \n\n```yaml\ncontents:\n- src: foo-binary\n dst: /usr/bin/bar\n- src: bar-config.conf\n dst: /etc/foo-binary/bar-config.conf\n type: config\n- src: test\n dst: /etc/test/scripts\n```\n\nThe next step is to create a deb package.\n\n```console\n$ nfpm package -p deb # Create dep package\nusing deb packager...\ncreated package: foo_1.0.0_arm64.deb\n```\n\nWhen on a Ubuntu VM, install the foo package which was created\n\n```console\n$ sudo dpkg -i foo_1.0.0_arm64.deb # Installing deb package within Ubuntu\nSelecting previously unselected package foo.\n(Reading database ... 67540 files and directories currently installed.)\nPreparing to unpack foo_1.0.0_arm64.deb ...\nUnpacking foo (1.0.0) ...\nSetting up foo (1.0.0) ...\n```\n\nLooking at `/etc/test/scripts` and viewing the permissions. Permissions are passed exactly the same as the source.\n\n```console\n$ ls -lart /etc/test/scripts\ntotal 20\n-rwxrwxrwx 1 root root 11 May 22 12:15 chmod-777.sh\n-rw-rw-rw- 1 root root 11 May 22 12:16 chmod-666.sh\n-rw-rw-r-- 1 root root 11 May 22 12:19 chmod-664.sh\ndrwxr-xr-x 3 root root 4096 May 22 13:00 ..\ndrwxr-xr-x 2 root root 4096 May 22 13:00 .\n```\n\n\n## Solution\nTo prevent world-writable files from making it into the packages, add the ability to override the default permissions of packaged files using a umask config option in the packaging spec file. This feature in nfpm would allow applying a global umask across any files being packaged, therefore, with the correct configuration, preventing world-writable files without needing to list permissions on each and every file in the package\n\n\n### Impact\n\nVulnerability is https://cwe.mitre.org/data/definitions/276.html\nhttps://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N\n\nAnyone using nfpm for creating packages and not checking/setting file permissions before packaging could result in bad permissions for files/folders.",
+                    "fixed_versions": [
+                        "v2.29.0"
+                    ],
+                    "identifier": "CVE-2023-32698",
+                    "identifiers": [
+                        "CVE-2023-32698",
+                        "GHSA-w7jw-q4fg-qc4c"
+                    ],
+                    "not_impacted": "All versions before 2.0.0, all versions starting from 2.29.0",
+                    "package_slug": "go/github.com/goreleaser/nfpm/v2",
+                    "pubdate": "2023-05-30",
+                    "solution": "Upgrade to version 2.29.0 or above.",
+                    "title": "nfpm has incorrect default permissions",
+                    "urls": [
+                        "https://github.com/goreleaser/nfpm/security/advisories/GHSA-w7jw-q4fg-qc4c",
+                        "https://github.com/goreleaser/nfpm/commit/ed9abdf63d5012cc884f2a83b4ab2b42b3680d30",
+                        "https://github.com/goreleaser/nfpm/releases/tag/v2.29.0",
+                        "https://github.com/advisories/GHSA-w7jw-q4fg-qc4c"
+                    ],
+                    "uuid": "80ef22c0-284d-4a15-bf6c-6409c4e13b4e",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "62357a65e28f92d5209e798221977fbeced698fe",
+                                "tags": [
+                                    "v2.0.0"
+                                ],
+                                "timestamp": "20201223132557"
+                            },
+                            "number": "v2.0.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "d614ec96365e18bec9449d8b0ae6e5d667ef0a2d",
+                                "tags": [
+                                    "v2.29.0"
+                                ],
+                                "timestamp": "20230524025709"
+                            },
+                            "number": "v2.29.0"
+                        }
+                    ]
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",

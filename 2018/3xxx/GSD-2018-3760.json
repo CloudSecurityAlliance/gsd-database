@@ -14,22 +14,6 @@
     },
     "gsd": {
         "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2018-3760",
-            "modified": "2018-06-19T00:00:00.000Z",
-            "published": "2018-06-19T00:00:00.000Z",
-            "aliases": [
-                "CVE-2018-3760",
-                "GHSA-pr3h-jjhj-573x"
-            ],
-            "summary": "Path Traversal in Sprockets",
-            "details": "Specially crafted requests can be used to access files that exist on\nthe filesystem that is outside an application's root directory, when the\nSprockets server is used in production.\n\nAll users running an affected release should either upgrade or use one of the work arounds immediately.\n\nWorkaround:\nIn Rails applications, work around this issue, set `config.assets.compile = false` and\n`config.public_file_server.enabled = true` in an initializer and precompile the assets.\n\n This work around will not be possible in all hosting environments and upgrading is advised.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.5
-                }
-            ],
             "affected": [
                 {
                     "package": {
@@ -39,12 +23,28 @@
                     }
                 }
             ],
+            "aliases": [
+                "CVE-2018-3760",
+                "GHSA-pr3h-jjhj-573x"
+            ],
+            "details": "Specially crafted requests can be used to access files that exist on\nthe filesystem that is outside an application's root directory, when the\nSprockets server is used in production.\n\nAll users running an affected release should either upgrade or use one of the work arounds immediately.\n\nWorkaround:\nIn Rails applications, work around this issue, set `config.assets.compile = false` and\n`config.public_file_server.enabled = true` in an initializer and precompile the assets.\n\n This work around will not be possible in all hosting environments and upgrading is advised.\n",
+            "id": "GSD-2018-3760",
+            "modified": "2018-06-19T00:00:00.000Z",
+            "published": "2018-06-19T00:00:00.000Z",
             "references": [
                 {
                     "type": "WEB",
                     "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/2S9Pwz2i16k"
                 }
-            ]
+            ],
+            "schema_version": "1.4.0",
+            "severity": [
+                {
+                    "score": 7.5,
+                    "type": "CVSS_V3"
+                }
+            ],
+            "summary": "Path Traversal in Sprockets"
         }
     },
     "namespaces": {
@@ -141,11 +141,26 @@
                 ]
             }
         },
+        "github.com/rubysec/ruby-advisory-db": {
+            "cve": "2018-3760",
+            "cvss_v3": 7.5,
+            "date": "2018-06-19",
+            "description": "Specially crafted requests can be used to access files that exist on\nthe filesystem that is outside an application's root directory, when the\nSprockets server is used in production.\n\nAll users running an affected release should either upgrade or use one of the work arounds immediately.\n\nWorkaround:\nIn Rails applications, work around this issue, set `config.assets.compile = false` and\n`config.public_file_server.enabled = true` in an initializer and precompile the assets.\n\n This work around will not be possible in all hosting environments and upgrading is advised.\n",
+            "gem": "sprockets",
+            "ghsa": "pr3h-jjhj-573x",
+            "patched_versions": [
+                ">= 2.12.5, < 3.0.0",
+                ">= 3.7.2, < 4.0.0",
+                ">= 4.0.0.beta8"
+            ],
+            "title": "Path Traversal in Sprockets",
+            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/2S9Pwz2i16k"
+        },
         "gitlab.com": {
             "advisories": [
                 {
-                    "affected_range": ">=2.0.0 <=2.12.4||>=3.0.0 <=4.0.0.beta7",
-                    "affected_versions": "All versions starting from 2.0.0 up to 2.12.4, all versions starting from 3.0.0 up to 4.0.0.beta7",
+                    "affected_range": "<2.12.5||>=3.0.0 <3.7.2",
+                    "affected_versions": "All versions before 2.12.5, all versions starting from 3.0.0 before 3.7.2",
                     "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
                     "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
                     "cwe_ids": [
@@ -153,23 +168,28 @@
                         "CWE-200",
                         "CWE-937"
                     ],
-                    "date": "2019-10-09",
+                    "date": "2023-06-23",
                     "description": "The package sprockets may leak confidential information. Specially crafted requests can be used to access files that exist on the filesystem that are outside an application's root directory when the server is used in production. All users running an affected release should either upgrade or use one of the work arounds immediately.",
                     "fixed_versions": [
                         "2.12.5",
+                        "3.7.2",
                         "4.0.0"
                     ],
                     "identifier": "CVE-2018-3760",
                     "identifiers": [
                         "CVE-2018-3760"
                     ],
-                    "not_impacted": "All versions before 2.0.0, all versions after 2.12.4 before 3.0.0, all versions after 4.0.0.beta7",
+                    "not_impacted": "All versions starting from 2.12.5 before 3.0.0, all versions starting from 3.7.2",
                     "package_slug": "gem/sprockets",
                     "pubdate": "2018-06-26",
-                    "solution": "Upgrade to versions 2.12.5, 4.0.0 or above.",
+                    "solution": "Upgrade to versions 2.12.5, 3.7.2 or above.",
                     "title": "Information Exposure",
                     "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2018-3760"
+                        "https://nvd.nist.gov/vuln/detail/CVE-2018-3760",
+                        "https://groups.google.com/g/ruby-security-ann/c/2S9Pwz2i16k",
+                        "https://github.com/rails/sprockets/commit/c09131cf5b2c479263939c8582e22b98ed616c5f",
+                        "https://github.com/rails/sprockets/commit/9c34fa05900b968d74f08ccf40917848a7be9441",
+                        "https://github.com/rails/sprockets/commit/18b8a7f07a50c245e9aee7854ecdbe606bbd8bb5"
                     ],
                     "uuid": "f7ce2186-d55b-4f87-8263-f068862734ad"
                 }
@@ -431,21 +451,6 @@
             },
             "lastModifiedDate": "2019-10-09T23:40Z",
             "publishedDate": "2018-06-26T19:29Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "sprockets",
-            "cve": "2018-3760",
-            "ghsa": "pr3h-jjhj-573x",
-            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/2S9Pwz2i16k",
-            "title": "Path Traversal in Sprockets",
-            "date": "2018-06-19",
-            "description": "Specially crafted requests can be used to access files that exist on\nthe filesystem that is outside an application's root directory, when the\nSprockets server is used in production.\n\nAll users running an affected release should either upgrade or use one of the work arounds immediately.\n\nWorkaround:\nIn Rails applications, work around this issue, set `config.assets.compile = false` and\n`config.public_file_server.enabled = true` in an initializer and precompile the assets.\n\n This work around will not be possible in all hosting environments and upgrading is advised.\n",
-            "cvss_v3": 7.5,
-            "patched_versions": [
-                ">= 2.12.5, < 3.0.0",
-                ">= 3.7.2, < 4.0.0",
-                ">= 4.0.0.beta8"
-            ]
         }
     }
 }

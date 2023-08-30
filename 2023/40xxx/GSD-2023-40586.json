@@ -95,6 +95,126 @@
                 "discovery": "UNKNOWN"
             }
         },
+        "gitlab.com": {
+            "advisories": [
+                {
+                    "affected_range": ">=v2.0.0 <=v2.0.1",
+                    "affected_versions": "All versions starting from 2.0.0 up to 2.0.1",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-400",
+                        "CWE-937"
+                    ],
+                    "date": "2023-08-25",
+                    "description": "### Summary\n\nDue to the misuse of `log.Fatalf`, the application using coraza crashed after receiving crafted requests from attackers.\n\n### Details\n\n https://github.com/corazawaf/coraza/blob/82157f85f24c6107667bf0f686b71a72aafdf8a5/internal/bodyprocessors/multipart.go#L26-L29 \nThe bodyprocessors of multipart uses `log.Fatalf` to handle errors from the `mime.ParseMediaType`, but `log.Fatalf` calls `os.Exit` directly after logging the error.\n https://github.com/golang/go/blob/a031f4ef83edc132d5f49382bfef491161de2476/src/log/log.go#L288-L291\nThis means that the application will immediately crash after receiving a malicious request that triggers an error in `mime.ParseMediaType`.\n\n### PoC\n\nThe server can be demonstrated by https://github.com/corazawaf/coraza/tree/main/examples/http-server\n\nAfter sending this request\n```\nPOST / HTTP/1.1\nHost: 127.0.0.1:8090\n```User-Agent```: curl/8.1.2\nAccept: */*\nContent-Length: 199\nContent-Type: multipart/form-data; boundary=------------------------5fa6351b877326a1; a=1; a=2\nConnection: close\n\n --------------------------5fa6351b877326a1\nContent-Disposition: form-data; name=\"file\"; filename=\"123\"\nContent-Type: application/octet-stream\n\n123 \n\n--------------------------5fa6351b877326a1--\n\n```\nThe server will crash immediately. The `a=1; a=2` in `Content-Type` makes `mime: duplicate parameter name` error.\n\n### Impact\n\nI believe the vulnerability was introduced by the following commit: https://github.com/corazawaf/coraza/commit/24af0c8cf4f10bab558740b595712be3b85493ec. \n\n### Mitigation\n\nThe error from `mime.ParseMediaType` should return directly.",
+                    "fixed_versions": [],
+                    "identifier": "GMS-2023-1811",
+                    "identifiers": [
+                        "GHSA-c2pj-v37r-2p6h",
+                        "CVE-2023-40586",
+                        "GMS-2023-1811"
+                    ],
+                    "not_impacted": "",
+                    "package_slug": "go/github.com/corazawaf/coraza/v2",
+                    "pubdate": "2023-06-26",
+                    "solution": "Unfortunately, there is no solution available yet.",
+                    "title": "Coraza has potential denial of service vulnerability",
+                    "urls": [
+                        "https://github.com/corazawaf/coraza/security/advisories/GHSA-c2pj-v37r-2p6h",
+                        "https://github.com/corazawaf/coraza-caddy/issues/48",
+                        "https://github.com/corazawaf/coraza/commit/24af0c8cf4f10bab558740b595712be3b85493ec",
+                        "https://github.com/corazawaf/coraza/commit/e1b119b83e12c64f0957e00e8cad45a1b5f012f8",
+                        "https://github.com/corazawaf/coraza/blob/82157f85f24c6107667bf0f686b71a72aafdf8a5/internal/bodyprocessors/multipart.go#L26-L29",
+                        "https://github.com/corazawaf/coraza/releases/tag/v3.0.1",
+                        "https://github.com/golang/go/blob/a031f4ef83edc132d5f49382bfef491161de2476/src/log/log.go#L288-L291",
+                        "https://github.com/corazawaf/coraza/commit/a5239ba3ce839e14d9b4f9486e1b4a403dcade8c",
+                        "https://github.com/advisories/GHSA-c2pj-v37r-2p6h"
+                    ],
+                    "uuid": "24fe58e8-33e5-40be-9233-78f7ac86fd99",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "fdad9f5e07fb0c061a55426627afbefcd2b5c657",
+                                "tags": [
+                                    "v2.0.0"
+                                ],
+                                "timestamp": "20220322211430"
+                            },
+                            "number": "v2.0.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "a1529abf4746ab3082eb40622fdbeed2a7777fcb",
+                                "tags": [
+                                    "v2.0.1"
+                                ],
+                                "timestamp": "20220725143314"
+                            },
+                            "number": "v2.0.1"
+                        }
+                    ]
+                },
+                {
+                    "affected_range": ">=v3.0.0 <v3.0.1",
+                    "affected_versions": "All versions starting from 3.0.0 before 3.0.1",
+                    "cwe_ids": [
+                        "CWE-1035",
+                        "CWE-400",
+                        "CWE-937"
+                    ],
+                    "date": "2023-08-25",
+                    "description": "### Summary\n\nDue to the misuse of `log.Fatalf`, the application using coraza crashed after receiving crafted requests from attackers.\n\n### Details\n\n https://github.com/corazawaf/coraza/blob/82157f85f24c6107667bf0f686b71a72aafdf8a5/internal/bodyprocessors/multipart.go#L26-L29\nThe bodyprocessors of multipart uses `log.Fatalf` to handle errors from the `mime.ParseMediaType`, but `log.Fatalf` calls `os.Exit` directly after logging the error.\n https://github.com/golang/go/blob/a031f4ef83edc132d5f49382bfef491161de2476/src/log/log.go#L288-L291\nThis means that the application will immediately crash after receiving a malicious request that triggers an error in `mime.ParseMediaType`.\n\n### PoC\n\nThe server can be demonstrated by https://github.com/corazawaf/coraza/tree/main/examples/http-server\n\nAfter sending this request\n```\nPOST / HTTP/1.1\nHost: 127.0.0.1:8090\n```User-Agent```: curl/8.1.2\nAccept: */*\nContent-Length: 199\nContent-Type: multipart/form-data; boundary=------------------------5fa6351b877326a1; a=1; a=2\nConnection: close\n\n --------------------------5fa6351b877326a1\nContent-Disposition: form-data; name=\"file\"; filename=\"123\"\nContent-Type: application/octet-stream\n\n123 \n\n --------------------------5fa6351b877326a1--\n\n```\nThe server will crash immediately. The `a=1; a=2` in `Content-Type` makes `mime: duplicate parameter name` error.\n\n### Impact\n\nI believe the vulnerability was introduced by the following commit: https://github.com/corazawaf/coraza/commit/24af0c8cf4f10bab558740b595712be3b85493ec.\n\n ### Mitigation\n\nThe error from `mime.ParseMediaType` should return directly.",
+                    "fixed_versions": [
+                        "v3.0.1"
+                    ],
+                    "identifier": "GMS-2023-1812",
+                    "identifiers": [
+                        "GHSA-c2pj-v37r-2p6h",
+                        "CVE-2023-40586",
+                        "GMS-2023-1812"
+                    ],
+                    "not_impacted": "All versions before 3.0.0, all versions starting from 3.0.1",
+                    "package_slug": "go/github.com/corazawaf/coraza/v3",
+                    "pubdate": "2023-06-26",
+                    "solution": "Upgrade to version 3.0.1 or above.",
+                    "title": "Coraza has potential denial of service vulnerability",
+                    "urls": [
+                        "https://github.com/corazawaf/coraza/security/advisories/GHSA-c2pj-v37r-2p6h",
+                        "https://github.com/corazawaf/coraza-caddy/issues/48",
+                        "https://github.com/corazawaf/coraza/commit/24af0c8cf4f10bab558740b595712be3b85493ec",
+                        "https://github.com/corazawaf/coraza/commit/e1b119b83e12c64f0957e00e8cad45a1b5f012f8",
+                        "https://github.com/corazawaf/coraza/blob/82157f85f24c6107667bf0f686b71a72aafdf8a5/internal/bodyprocessors/multipart.go#L26-L29",
+                        "https://github.com/corazawaf/coraza/releases/tag/v3.0.1",
+                        "https://github.com/golang/go/blob/a031f4ef83edc132d5f49382bfef491161de2476/src/log/log.go#L288-L291",
+                        "https://github.com/corazawaf/coraza/commit/a5239ba3ce839e14d9b4f9486e1b4a403dcade8c",
+                        "https://github.com/advisories/GHSA-c2pj-v37r-2p6h"
+                    ],
+                    "uuid": "3e14990f-8245-4ba9-a968-ce0510dde9c9",
+                    "versions": [
+                        {
+                            "commit": {
+                                "sha": "ad50864cfa00f5143fff7f6877847326fdc4b394",
+                                "tags": [
+                                    "v3.0.0"
+                                ],
+                                "timestamp": "20230531073255"
+                            },
+                            "number": "v3.0.0"
+                        },
+                        {
+                            "commit": {
+                                "sha": "a5239ba3ce839e14d9b4f9486e1b4a403dcade8c",
+                                "tags": [
+                                    "v3.0.1"
+                                ],
+                                "timestamp": "20230625161626"
+                            },
+                            "number": "v3.0.1"
+                        }
+                    ]
+                }
+            ]
+        },
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
