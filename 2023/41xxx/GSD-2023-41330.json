@@ -6,9 +6,33 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-41330",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "snappy",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "< 1.4.3"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "KnpLabs"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +41,124 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "knplabs/knp-snappy is a PHP library allowing thumbnail, snapshot or PDF generation from a url or a html page.\n## Issue\n\nOn March 17th the vulnerability CVE-2023-28115 was disclosed, allowing an attacker to gain remote code execution through PHAR deserialization. Version 1.4.2 added a check `if (\\strpos($filename, 'phar://') === 0)` in the `prepareOutput` function to resolve this CVE, however if the user is able to control the second parameter of the `generateFromHtml()` function of Snappy, it will then be passed as the `$filename` parameter in the `prepareOutput()` function. In the original vulnerability, a file name with a `phar://` wrapper could be sent to the `fileExists()` function, equivalent to the `file_exists()` PHP function. This allowed users to trigger a deserialization on arbitrary PHAR files. To fix this issue, the string is now passed to the `strpos()` function and if it starts with `phar://`, an exception is raised. However, PHP wrappers being case insensitive, this patch can be bypassed using `PHAR://` instead of `phar://`. A successful exploitation of this vulnerability allows executing arbitrary code and accessing the underlying filesystem. The attacker must be able to upload a file and the server must be running a PHP version prior to 8. This issue has been addressed in commit `d3b742d61a` which has been included in version 1.4.3. Users are advised to upgrade. Users unable to upgrade should ensure that only trusted users may submit data to the `AbstractGenerator->generate(...)` function.\n"
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 9.8,
+                        "baseSeverity": "CRITICAL",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-502",
+                                "lang": "eng",
+                                "value": "CWE-502: Deserialization of Untrusted Data"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-92rv-4j2h-8mjj",
+                        "refsource": "MISC",
+                        "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-92rv-4j2h-8mjj"
+                    },
+                    {
+                        "name": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-gq6w-q6wh-jggc",
+                        "refsource": "MISC",
+                        "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-gq6w-q6wh-jggc"
+                    },
+                    {
+                        "name": "https://github.com/KnpLabs/snappy/commit/d3b742d61a68bf93866032c2c0a7f1486128b67e",
+                        "refsource": "MISC",
+                        "url": "https://github.com/KnpLabs/snappy/commit/d3b742d61a68bf93866032c2c0a7f1486128b67e"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-92rv-4j2h-8mjj",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-41330"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "knplabs/knp-snappy is a PHP library allowing thumbnail, snapshot or PDF generation from a url or a html page.\n## Issue\n\nOn March 17th the vulnerability CVE-2023-28115 was disclosed, allowing an attacker to gain remote code execution through PHAR deserialization. Version 1.4.2 added a check `if (\\strpos($filename, 'phar://') === 0)` in the `prepareOutput` function to resolve this CVE, however if the user is able to control the second parameter of the `generateFromHtml()` function of Snappy, it will then be passed as the `$filename` parameter in the `prepareOutput()` function. In the original vulnerability, a file name with a `phar://` wrapper could be sent to the `fileExists()` function, equivalent to the `file_exists()` PHP function. This allowed users to trigger a deserialization on arbitrary PHAR files. To fix this issue, the string is now passed to the `strpos()` function and if it starts with `phar://`, an exception is raised. However, PHP wrappers being case insensitive, this patch can be bypassed using `PHAR://` instead of `phar://`. A successful exploitation of this vulnerability allows executing arbitrary code and accessing the underlying filesystem. The attacker must be able to upload a file and the server must be running a PHP version prior to 8. This issue has been addressed in commit `d3b742d61a` which has been included in version 1.4.3. Users are advised to upgrade. Users unable to upgrade should ensure that only trusted users may submit data to the `AbstractGenerator->generate(...)` function.\n"
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-502"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-gq6w-q6wh-jggc",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-gq6w-q6wh-jggc"
+                        },
+                        {
+                            "name": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-92rv-4j2h-8mjj",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-92rv-4j2h-8mjj"
+                        },
+                        {
+                            "name": "https://github.com/KnpLabs/snappy/commit/d3b742d61a68bf93866032c2c0a7f1486128b67e",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/KnpLabs/snappy/commit/d3b742d61a68bf93866032c2c0a7f1486128b67e"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-09-07T01:10Z",
+            "publishedDate": "2023-09-06T18:15Z"
         }
     }
 }

@@ -6,9 +6,41 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-41327",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "wiremock",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " org.wiremock:wiremock-webhooks-extension: >= 2.0.0, < 2.35.1"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " org.wiremock:wiremock-webhooks-extension: >= 3.0.0, < 3.0.3"
+                                                },
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": " wiremock-studio: All versions"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "wiremock"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +49,124 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "WireMock is a tool for mocking HTTP services. WireMock can be configured to only permit proxying (and therefore recording) to certain addresses. This is achieved via a list of allowed address rules and a list of denied address rules, where the allowed list is evaluated first. \n\nUntil WireMock Webhooks Extension 3.0.0-beta-15, the filtering of target addresses from the proxy mode DID NOT work for Webhooks, so the users were potentially vulnerable regardless of the `limitProxyTargets` settings. Via the WireMock webhooks configuration, POST requests from a webhook might be forwarded to an arbitrary service reachable from WireMock\u2019s instance. For example, If someone is running the WireMock docker Container inside a private cluster, they can trigger internal POST requests against unsecured APIs or even against secure ones by passing a token, discovered using another exploit, via authentication headers. This issue has been addressed in versions 2.35.1 and 3.0.3 of wiremock. Wiremock studio has been discontinued and will not see a fix. Users unable to upgrade should use external firewall rules to define the list of permitted destinations."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "ADJACENT_NETWORK",
+                        "availabilityImpact": "LOW",
+                        "baseScore": 4.6,
+                        "baseSeverity": "MEDIUM",
+                        "confidentialityImpact": "NONE",
+                        "integrityImpact": "LOW",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "REQUIRED",
+                        "vectorString": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:L",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-918",
+                                "lang": "eng",
+                                "value": "CWE-918: Server-Side Request Forgery (SSRF)"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/wiremock/wiremock/security/advisories/GHSA-hq8w-9w8w-pmx7",
+                        "refsource": "MISC",
+                        "url": "https://github.com/wiremock/wiremock/security/advisories/GHSA-hq8w-9w8w-pmx7"
+                    },
+                    {
+                        "name": "https://github.com/wiremock/wiremock/releases/tag/3.0.0-beta-15",
+                        "refsource": "MISC",
+                        "url": "https://github.com/wiremock/wiremock/releases/tag/3.0.0-beta-15"
+                    },
+                    {
+                        "name": "https://wiremock.org/docs/configuration/#preventing-proxying-to-and-recording-from-specific-target-addresses",
+                        "refsource": "MISC",
+                        "url": "https://wiremock.org/docs/configuration/#preventing-proxying-to-and-recording-from-specific-target-addresses"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-hq8w-9w8w-pmx7",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-41327"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "WireMock is a tool for mocking HTTP services. WireMock can be configured to only permit proxying (and therefore recording) to certain addresses. This is achieved via a list of allowed address rules and a list of denied address rules, where the allowed list is evaluated first. \n\nUntil WireMock Webhooks Extension 3.0.0-beta-15, the filtering of target addresses from the proxy mode DID NOT work for Webhooks, so the users were potentially vulnerable regardless of the `limitProxyTargets` settings. Via the WireMock webhooks configuration, POST requests from a webhook might be forwarded to an arbitrary service reachable from WireMock\u2019s instance. For example, If someone is running the WireMock docker Container inside a private cluster, they can trigger internal POST requests against unsecured APIs or even against secure ones by passing a token, discovered using another exploit, via authentication headers. This issue has been addressed in versions 2.35.1 and 3.0.3 of wiremock. Wiremock studio has been discontinued and will not see a fix. Users unable to upgrade should use external firewall rules to define the list of permitted destinations."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-918"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/wiremock/wiremock/releases/tag/3.0.0-beta-15",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/wiremock/wiremock/releases/tag/3.0.0-beta-15"
+                        },
+                        {
+                            "name": "https://wiremock.org/docs/configuration/#preventing-proxying-to-and-recording-from-specific-target-addresses",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://wiremock.org/docs/configuration/#preventing-proxying-to-and-recording-from-specific-target-addresses"
+                        },
+                        {
+                            "name": "https://github.com/wiremock/wiremock/security/advisories/GHSA-hq8w-9w8w-pmx7",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/wiremock/wiremock/security/advisories/GHSA-hq8w-9w8w-pmx7"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-09-07T01:10Z",
+            "publishedDate": "2023-09-06T21:15Z"
         }
     }
 }
