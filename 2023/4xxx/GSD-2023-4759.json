@@ -6,10 +6,41 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security@eclipse.org",
                 "ID": "CVE-2023-4759",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
             },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "Eclipse JGit",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<=",
+                                                    "version_name": "0.0.0",
+                                                    "version_value": "6.6.0.202305301015-r"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "Eclipse Foundation"
+                        }
+                    ]
+                }
+            },
+            "credits": [
+                {
+                    "lang": "en",
+                    "value": "RyotaK"
+                }
+            ],
             "data_format": "MITRE",
             "data_type": "CVE",
             "data_version": "4.0",
@@ -17,10 +48,143 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "Arbitrary File Overwrite in Eclipse JGit <= 6.6.0\n\nIn Eclipse JGit, all versions <= 6.6.0.202305301015-r, a symbolic link present in a specially crafted git repository can be used to write a file to locations outside the working tree when this repository is cloned with JGit to a case-insensitive filesystem, or when a checkout from a clone of such a repository is performed on a case-insensitive filesystem.\n\nThis can happen on checkout (DirCacheCheckout), merge (ResolveMerger\u00a0via its WorkingTreeUpdater), pull (PullCommand\u00a0using merge), and when applying a patch (PatchApplier). This can be exploited for remote code execution (RCE), for instance if the file written outside the working tree is a git filter that gets executed on a subsequent git command.\n\nThe issue occurs only on case-insensitive filesystems, like the default filesystems on Windows and macOS. The user performing the clone or checkout must have the rights to create symbolic links for the problem to occur, and symbolic links must be enabled in the git configuration.\n\nSetting git configuration option core.symlinks = false\u00a0before checking out avoids the problem.\n\nThe issue was fixed in Eclipse JGit version 6.6.1.202309021850-r and 6.7.0.202309050840-r, available via  Maven Central https://repo1.maven.org/maven2/org/eclipse/jgit/ \u00a0and  repo.eclipse.org https://repo.eclipse.org/content/repositories/jgit-releases/ .\n\n\nThe JGit maintainers would like to thank RyotaK for finding and reporting this issue.\n\n\n\n"
                     }
                 ]
-            }
+            },
+            "generator": {
+                "engine": "Vulnogram 0.1.0-dev"
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 8.8,
+                        "baseSeverity": "HIGH",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "HIGH",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "REQUIRED",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-59",
+                                "lang": "eng",
+                                "value": "CWE-59 Improper Link Resolution Before File Access ('Link Following')"
+                            }
+                        ]
+                    },
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-178",
+                                "lang": "eng",
+                                "value": "CWE-178 Improper Handling of Case Sensitivity"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://gitlab.eclipse.org/security/vulnerability-reports/-/issues/11",
+                        "refsource": "MISC",
+                        "url": "https://gitlab.eclipse.org/security/vulnerability-reports/-/issues/11"
+                    },
+                    {
+                        "name": "https://projects.eclipse.org/projects/technology.jgit/releases/6.6.1",
+                        "refsource": "MISC",
+                        "url": "https://projects.eclipse.org/projects/technology.jgit/releases/6.6.1"
+                    },
+                    {
+                        "name": "https://git.eclipse.org/c/jgit/jgit.git/commit/?id=9072103f3b3cf64dd12ad2949836ab98f62dabf1",
+                        "refsource": "MISC",
+                        "url": "https://git.eclipse.org/c/jgit/jgit.git/commit/?id=9072103f3b3cf64dd12ad2949836ab98f62dabf1"
+                    }
+                ]
+            },
+            "source": {
+                "discovery": "EXTERNAL"
+            },
+            "work_around": [
+                {
+                    "lang": "en",
+                    "supportingMedia": [
+                        {
+                            "base64": false,
+                            "type": "text/html",
+                            "value": "<p>Setting git configuration option <code>core.symlinks = false</code>&nbsp;before checking out avoids the problem.</p>"
+                        }
+                    ],
+                    "value": "Setting git configuration option core.symlinks = false\u00a0before checking out avoids the problem.\n\n"
+                }
+            ]
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security@eclipse.org",
+                    "ID": "CVE-2023-4759"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "Arbitrary File Overwrite in Eclipse JGit <= 6.6.0\n\nIn Eclipse JGit, all versions <= 6.6.0.202305301015-r, a symbolic link present in a specially crafted git repository can be used to write a file to locations outside the working tree when this repository is cloned with JGit to a case-insensitive filesystem, or when a checkout from a clone of such a repository is performed on a case-insensitive filesystem.\n\nThis can happen on checkout (DirCacheCheckout), merge (ResolveMerger\u00a0via its WorkingTreeUpdater), pull (PullCommand\u00a0using merge), and when applying a patch (PatchApplier). This can be exploited for remote code execution (RCE), for instance if the file written outside the working tree is a git filter that gets executed on a subsequent git command.\n\nThe issue occurs only on case-insensitive filesystems, like the default filesystems on Windows and macOS. The user performing the clone or checkout must have the rights to create symbolic links for the problem to occur, and symbolic links must be enabled in the git configuration.\n\nSetting git configuration option core.symlinks = false\u00a0before checking out avoids the problem.\n\nThe issue was fixed in Eclipse JGit version 6.6.1.202309021850-r and 6.7.0.202309050840-r, available via  Maven Central https://repo1.maven.org/maven2/org/eclipse/jgit/ \u00a0and  repo.eclipse.org https://repo.eclipse.org/content/repositories/jgit-releases/ .\n\n\nThe JGit maintainers would like to thank RyotaK for finding and reporting this issue.\n\n\n\n"
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://projects.eclipse.org/projects/technology.jgit/releases/6.6.1",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://projects.eclipse.org/projects/technology.jgit/releases/6.6.1"
+                        },
+                        {
+                            "name": "https://git.eclipse.org/c/jgit/jgit.git/commit/?id=9072103f3b3cf64dd12ad2949836ab98f62dabf1",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://git.eclipse.org/c/jgit/jgit.git/commit/?id=9072103f3b3cf64dd12ad2949836ab98f62dabf1"
+                        },
+                        {
+                            "name": "https://gitlab.eclipse.org/security/vulnerability-reports/-/issues/11",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://gitlab.eclipse.org/security/vulnerability-reports/-/issues/11"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-09-12T11:51Z",
+            "publishedDate": "2023-09-12T10:15Z"
         }
     }
 }
