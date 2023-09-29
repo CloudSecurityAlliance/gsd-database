@@ -6,9 +6,33 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security-advisories@github.com",
                 "ID": "CVE-2023-43662",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "ShokoServer",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "=",
+                                                    "version_value": "<= 4.2.2"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "ShokoAnime"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +41,113 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "ShokoServer is a media server which specializes in organizing anime. In affected versions the `/api/Image/WithPath` endpoint is accessible without authentication and is supposed to return default server images. The endpoint accepts the parameter `serverImagePath`, which is not sanitized in any way before being passed to `System.IO.File.OpenRead`, which results in an arbitrary file read. This issue may lead to an arbitrary file read which is exacerbated in the windows installer which installs the ShokoServer as administrator. Any unauthenticated attacker may be able to access sensitive information and read files stored on the server. The `/api/Image/WithPath` endpoint has been removed in commit `6c57ba0f0` which will be included in subsequent releases. Users should limit access to the `/api/Image/WithPath` endpoint or manually patch their installations until a patched release is made. This issue was discovered by the GitHub Security lab and is also indexed as GHSL-2023-191."
                     }
                 ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "NONE",
+                        "baseScore": 8.6,
+                        "baseSeverity": "HIGH",
+                        "confidentialityImpact": "HIGH",
+                        "integrityImpact": "NONE",
+                        "privilegesRequired": "NONE",
+                        "scope": "CHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-22",
+                                "lang": "eng",
+                                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://github.com/ShokoAnime/ShokoServer/security/advisories/GHSA-mwcv-ghjq-8f2g",
+                        "refsource": "MISC",
+                        "url": "https://github.com/ShokoAnime/ShokoServer/security/advisories/GHSA-mwcv-ghjq-8f2g"
+                    },
+                    {
+                        "name": "https://github.com/ShokoAnime/ShokoServer/commit/6c57ba0f073d6be5a4f508c46c2ce36727cbce80",
+                        "refsource": "MISC",
+                        "url": "https://github.com/ShokoAnime/ShokoServer/commit/6c57ba0f073d6be5a4f508c46c2ce36727cbce80"
+                    }
+                ]
+            },
+            "source": {
+                "advisory": "GHSA-mwcv-ghjq-8f2g",
+                "discovery": "UNKNOWN"
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security-advisories@github.com",
+                    "ID": "CVE-2023-43662"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "ShokoServer is a media server which specializes in organizing anime. In affected versions the `/api/Image/WithPath` endpoint is accessible without authentication and is supposed to return default server images. The endpoint accepts the parameter `serverImagePath`, which is not sanitized in any way before being passed to `System.IO.File.OpenRead`, which results in an arbitrary file read. This issue may lead to an arbitrary file read which is exacerbated in the windows installer which installs the ShokoServer as administrator. Any unauthenticated attacker may be able to access sensitive information and read files stored on the server. The `/api/Image/WithPath` endpoint has been removed in commit `6c57ba0f0` which will be included in subsequent releases. Users should limit access to the `/api/Image/WithPath` endpoint or manually patch their installations until a patched release is made. This issue was discovered by the GitHub Security lab and is also indexed as GHSL-2023-191."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-22"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://github.com/ShokoAnime/ShokoServer/security/advisories/GHSA-mwcv-ghjq-8f2g",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/ShokoAnime/ShokoServer/security/advisories/GHSA-mwcv-ghjq-8f2g"
+                        },
+                        {
+                            "name": "https://github.com/ShokoAnime/ShokoServer/commit/6c57ba0f073d6be5a4f508c46c2ce36727cbce80",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://github.com/ShokoAnime/ShokoServer/commit/6c57ba0f073d6be5a4f508c46c2ce36727cbce80"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-09-29T04:19Z",
+            "publishedDate": "2023-09-28T22:15Z"
         }
     }
 }
