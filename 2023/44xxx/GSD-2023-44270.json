@@ -40,7 +40,7 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "An issue was discovered in PostCSS before 8.4.31. It affects linters using PostCSS to parse external Cascading Style Sheets (CSS). There may be \\r discrepancies, as demonstrated by @font-face{ font:(\\r/*);} in a rule."
+                        "value": "An issue was discovered in PostCSS before 8.4.31. The vulnerability affects linters using PostCSS to parse external untrusted CSS. An attacker can prepare CSS in such a way that it will contains parts parsed by PostCSS as a CSS comment. After processing by PostCSS, it will be included in the PostCSS output in CSS nodes (rules, properties) despite being included in a comment."
                     }
                 ]
             },
@@ -72,6 +72,11 @@
                         "name": "https://github.com/postcss/postcss/commit/58cc860b4c1707510c9cd1bc1fa30b423a9ad6c5",
                         "refsource": "MISC",
                         "url": "https://github.com/postcss/postcss/commit/58cc860b4c1707510c9cd1bc1fa30b423a9ad6c5"
+                    },
+                    {
+                        "name": "https://github.com/github/advisory-database/issues/2820",
+                        "refsource": "MISC",
+                        "url": "https://github.com/github/advisory-database/issues/2820"
                     }
                 ]
             }
@@ -79,7 +84,20 @@
         "nvd.nist.gov": {
             "configurations": {
                 "CVE_data_version": "4.0",
-                "nodes": []
+                "nodes": [
+                    {
+                        "children": [],
+                        "cpe_match": [
+                            {
+                                "cpe23Uri": "cpe:2.3:a:postcss:postcss:*:*:*:*:*:node.js:*:*",
+                                "cpe_name": [],
+                                "versionEndExcluding": "8.4.31",
+                                "vulnerable": true
+                            }
+                        ],
+                        "operator": "OR"
+                    }
+                ]
             },
             "cve": {
                 "CVE_data_meta": {
@@ -93,14 +111,19 @@
                     "description_data": [
                         {
                             "lang": "en",
-                            "value": "An issue was discovered in PostCSS before 8.4.31. It affects linters using PostCSS to parse external Cascading Style Sheets (CSS). There may be \\r discrepancies, as demonstrated by @font-face{ font:(\\r/*);} in a rule."
+                            "value": "An issue was discovered in PostCSS before 8.4.31. The vulnerability affects linters using PostCSS to parse external untrusted CSS. An attacker can prepare CSS in such a way that it will contains parts parsed by PostCSS as a CSS comment. After processing by PostCSS, it will be included in the PostCSS output in CSS nodes (rules, properties) despite being included in a comment."
                         }
                     ]
                 },
                 "problemtype": {
                     "problemtype_data": [
                         {
-                            "description": []
+                            "description": [
+                                {
+                                    "lang": "en",
+                                    "value": "CWE-74"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -109,26 +132,60 @@
                         {
                             "name": "https://github.com/postcss/postcss/blob/main/lib/tokenize.js#L25",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Issue Tracking"
+                            ],
                             "url": "https://github.com/postcss/postcss/blob/main/lib/tokenize.js#L25"
                         },
                         {
                             "name": "https://github.com/postcss/postcss/commit/58cc860b4c1707510c9cd1bc1fa30b423a9ad6c5",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Patch"
+                            ],
                             "url": "https://github.com/postcss/postcss/commit/58cc860b4c1707510c9cd1bc1fa30b423a9ad6c5"
                         },
                         {
                             "name": "https://github.com/postcss/postcss/releases/tag/8.4.31",
                             "refsource": "MISC",
-                            "tags": [],
+                            "tags": [
+                                "Patch",
+                                "Release Notes"
+                            ],
                             "url": "https://github.com/postcss/postcss/releases/tag/8.4.31"
+                        },
+                        {
+                            "name": "https://github.com/github/advisory-database/issues/2820",
+                            "refsource": "MISC",
+                            "tags": [
+                                "Issue Tracking"
+                            ],
+                            "url": "https://github.com/github/advisory-database/issues/2820"
                         }
                     ]
                 }
             },
-            "impact": {},
-            "lastModifiedDate": "2023-09-30T01:57Z",
+            "impact": {
+                "baseMetricV3": {
+                    "cvssV3": {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "NONE",
+                        "baseScore": 5.3,
+                        "baseSeverity": "MEDIUM",
+                        "confidentialityImpact": "NONE",
+                        "integrityImpact": "LOW",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                        "version": "3.1"
+                    },
+                    "exploitabilityScore": 3.9,
+                    "impactScore": 1.4
+                }
+            },
+            "lastModifiedDate": "2023-10-10T17:19Z",
             "publishedDate": "2023-09-29T22:15Z"
         }
     }
