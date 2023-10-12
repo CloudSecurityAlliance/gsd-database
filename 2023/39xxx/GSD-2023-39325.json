@@ -6,9 +6,58 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security@golang.org",
                 "ID": "CVE-2023-39325",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "net/http",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "0",
+                                                    "version_value": "1.20.10"
+                                                },
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "1.21.0-0",
+                                                    "version_value": "1.21.3"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "Go standard library"
+                        },
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "golang.org/x/net/http2",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "0",
+                                                    "version_value": "0.17.0"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "golang.org/x/net"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +66,118 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "lang": "eng",
+                                "value": "CWE-400: Uncontrolled Resource Consumption"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://go.dev/issue/63417",
+                        "refsource": "MISC",
+                        "url": "https://go.dev/issue/63417"
+                    },
+                    {
+                        "name": "https://go.dev/cl/534215",
+                        "refsource": "MISC",
+                        "url": "https://go.dev/cl/534215"
+                    },
+                    {
+                        "name": "https://go.dev/cl/534235",
+                        "refsource": "MISC",
+                        "url": "https://go.dev/cl/534235"
+                    },
+                    {
+                        "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
+                        "refsource": "MISC",
+                        "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
+                    },
+                    {
+                        "name": "https://pkg.go.dev/vuln/GO-2023-2102",
+                        "refsource": "MISC",
+                        "url": "https://pkg.go.dev/vuln/GO-2023-2102"
                     }
                 ]
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security@golang.org",
+                    "ID": "CVE-2023-39325"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://go.dev/issue/63417",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://go.dev/issue/63417"
+                        },
+                        {
+                            "name": "https://go.dev/cl/534235",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://go.dev/cl/534235"
+                        },
+                        {
+                            "name": "https://go.dev/cl/534215",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://go.dev/cl/534215"
+                        },
+                        {
+                            "name": "https://pkg.go.dev/vuln/GO-2023-2102",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://pkg.go.dev/vuln/GO-2023-2102"
+                        },
+                        {
+                            "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
+                            "refsource": "MISC",
+                            "tags": [],
+                            "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-10-11T22:15Z",
+            "publishedDate": "2023-10-11T22:15Z"
         }
     }
 }
