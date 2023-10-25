@@ -54,4 +54,4 @@ See the [Code of Conduct](CODE_OF_CONDUCT.md) for guidelines on how to participa
 
 ### Identity and attribution for participation
 
-Currently the GSD requires identity/atttribution for participation in GitHub to a GitHub account, this is a technical limitation/feature of the platform. Participation in the public email lists/Twitter/etc. for example does NOT require a GitHub account (or any identity beyond a working email address/Twitter account/etc.). Truly anonymous participation is not explicitly supported, however pseudonymity is supported and welcome.
+Currently the GSD requires identity/attribution for participation in GitHub to a GitHub account, this is a technical limitation/feature of the platform. Participation in the public email lists/Twitter/etc. for example does NOT require a GitHub account (or any identity beyond a working email address/Twitter account/etc.). Truly anonymous participation is not explicitly supported, however pseudonymity is supported and welcome.
