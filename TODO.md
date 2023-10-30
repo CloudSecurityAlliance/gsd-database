@@ -11,7 +11,7 @@ The gsd-database repo is the actual data for identifiers in the Global Security 
 - [ ] DATA - We need a json schema file to validate the data (for example we should validate all pull requests before they can be merged)
 - [ ] DATA - We need to better document expectations around the data being captured. For example some data is more informational than a vulnerability. We need to explain that and have a way to tag it as such
 - [ ] DATA - There are lots of other vulnerability databases out there. We need to decide what to do about them. Should we mirror them like we do with CVE? We mostly did this with CVE because CVE cannot be easily updated, GSD can be.
-- [ ] DATA - We have a concept of an "overlay" that isn't documented in any useful way. What should this do and how should the data be handled
+- [ ] DATA - We have a concept of an "overlay" that isn't documented in any useful way. What should this do and how should the data be handled?
 - [ ] DATA - We have a concept of a namespace. What does that mean? What should it mean?
 
 ### In progress
