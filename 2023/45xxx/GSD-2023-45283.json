@@ -6,9 +6,56 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "security@golang.org",
                 "ID": "CVE-2023-45283",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
+            },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "path/filepath",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "0",
+                                                    "version_value": "1.20.11"
+                                                },
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "1.21.0-0",
+                                                    "version_value": "1.21.4"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "product_name": "internal/safefilepath",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "0",
+                                                    "version_value": "1.20.11"
+                                                },
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "1.21.0-0",
+                                                    "version_value": "1.21.4"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "Go standard library"
+                        }
+                    ]
+                }
             },
             "data_format": "MITRE",
             "data_type": "CVE",
@@ -17,10 +64,107 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "The filepath package does not recognize paths with a \\??\\ prefix as special. On Windows, a path beginning with \\??\\ is a Root Local Device path equivalent to a path beginning with \\\\?\\. Paths with a \\??\\ prefix may be used to access arbitrary locations on the system. For example, the path \\??\\c:\\x is equivalent to the more common path c:\\x. Before fix, Clean could convert a rooted path such as \\a\\..\\??\\b into the root local device path \\??\\b. Clean will now convert this to .\\??\\b. Similarly, Join(\\, ??, b) could convert a seemingly innocent sequence of path elements into the root local device path \\??\\b. Join will now convert this to \\.\\??\\b. In addition, with fix, IsAbs now correctly reports paths beginning with \\??\\ as absolute, and VolumeName correctly reports the \\??\\ prefix as a volume name."
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "lang": "eng",
+                                "value": "CWE-41: Improper Resolution of Path Equivalence"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://go.dev/issue/63713",
+                        "refsource": "MISC",
+                        "url": "https://go.dev/issue/63713"
+                    },
+                    {
+                        "name": "https://go.dev/cl/540277",
+                        "refsource": "MISC",
+                        "url": "https://go.dev/cl/540277"
+                    },
+                    {
+                        "name": "https://groups.google.com/g/golang-announce/c/4tU8LZfBFkY",
+                        "refsource": "MISC",
+                        "url": "https://groups.google.com/g/golang-announce/c/4tU8LZfBFkY"
+                    },
+                    {
+                        "name": "https://pkg.go.dev/vuln/GO-2023-2185",
+                        "refsource": "MISC",
+                        "url": "https://pkg.go.dev/vuln/GO-2023-2185"
                     }
                 ]
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "security@golang.org",
+                    "ID": "CVE-2023-45283"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "The filepath package does not recognize paths with a \\??\\ prefix as special. On Windows, a path beginning with \\??\\ is a Root Local Device path equivalent to a path beginning with \\\\?\\. Paths with a \\??\\ prefix may be used to access arbitrary locations on the system. For example, the path \\??\\c:\\x is equivalent to the more common path c:\\x. Before fix, Clean could convert a rooted path such as \\a\\..\\??\\b into the root local device path \\??\\b. Clean will now convert this to .\\??\\b. Similarly, Join(\\, ??, b) could convert a seemingly innocent sequence of path elements into the root local device path \\??\\b. Join will now convert this to \\.\\??\\b. In addition, with fix, IsAbs now correctly reports paths beginning with \\??\\ as absolute, and VolumeName correctly reports the \\??\\ prefix as a volume name."
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://go.dev/issue/63713",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://go.dev/issue/63713"
+                        },
+                        {
+                            "name": "https://go.dev/cl/540277",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://go.dev/cl/540277"
+                        },
+                        {
+                            "name": "https://groups.google.com/g/golang-announce/c/4tU8LZfBFkY",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://groups.google.com/g/golang-announce/c/4tU8LZfBFkY"
+                        },
+                        {
+                            "name": "https://pkg.go.dev/vuln/GO-2023-2185",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://pkg.go.dev/vuln/GO-2023-2185"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-11-09T19:32Z",
+            "publishedDate": "2023-11-09T17:15Z"
         }
     }
 }
