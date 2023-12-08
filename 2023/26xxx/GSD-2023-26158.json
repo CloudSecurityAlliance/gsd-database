@@ -6,10 +6,41 @@
     "namespaces": {
         "cve.org": {
             "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
+                "ASSIGNER": "report@snyk.io",
                 "ID": "CVE-2023-26158",
-                "STATE": "RESERVED"
+                "STATE": "PUBLIC"
             },
+            "affects": {
+                "vendor": {
+                    "vendor_data": [
+                        {
+                            "product": {
+                                "product_data": [
+                                    {
+                                        "product_name": "mockjs",
+                                        "version": {
+                                            "version_data": [
+                                                {
+                                                    "version_affected": "<",
+                                                    "version_name": "0",
+                                                    "version_value": "*"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "vendor_name": "n/a"
+                        }
+                    ]
+                }
+            },
+            "credits": [
+                {
+                    "lang": "en",
+                    "value": "Timothee Desurmont"
+                }
+            ],
             "data_format": "MITRE",
             "data_type": "CVE",
             "data_version": "4.0",
@@ -17,10 +48,104 @@
                 "description_data": [
                     {
                         "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+                        "value": "All versions of the package mockjs are vulnerable to Prototype Pollution via the Util.extend function due to missing check if the attribute resolves to the object prototype. By adding or modifying attributes of an object prototype, it is possible to create attributes that exist on every object, or replace critical attributes with malicious ones. This can be problematic if the software depends on existence or non-existence of certain attributes, or uses pre-defined attributes of object prototype (such as hasOwnProperty, toString or valueOf).\r\rUser controlled inputs inside the extend() method of the Mock.Handler, Mock.Random, Mock.RE.Handler or Mock.Util, will allow an attacker to exploit this vulnerability.\r\r Workaround\r\rBy using a denylist of dangerous attributes, this weakness can be eliminated.\r\rAdd the following line in the Util.extend function:\r\rjs\rjs if ([\"__proto__\", \"constructor\", \"prototype\"].includes(name)) continue\r\r\rjs\r// src/mock/handler.js\rUtil.extend = function extend() {\r        var target = arguments[0] || {},\r            i = 1,\r            length = arguments.length,\r            options, name, src, copy, clone\r\r        if (length === 1) {\r            target = this\r            i = 0\r        }\r\r        for (; i < length; i++) {\r            options = arguments[i]\r            if (!options) continue\r\r            for (name in options) {\r            if ([\"__proto__\", \"constructor\", \"prototype\"].includes(name)) continue\r                src = target[name]\r                copy = options[name]\r\r                if (target === copy) continue\r                if (copy === undefined) continue\r\r                if (Util.isArray(copy) || Util.isObject(copy)) {\r                    if (Util.isArray(copy)) clone = src && Util.isArray(src) ? src : []\r                    if (Util.isObject(copy)) clone = src && Util.isObject(src) ? src : {}\r\r                    target[name] = Util.extend(clone, copy)\r                } else {\r                    target[name] = copy\r                }\r            }\r        }\r\r        return target\r    }\r"
+                    }
+                ]
+            },
+            "impact": {
+                "cvss": [
+                    {
+                        "attackComplexity": "LOW",
+                        "attackVector": "NETWORK",
+                        "availabilityImpact": "HIGH",
+                        "baseScore": 8.2,
+                        "baseSeverity": "HIGH",
+                        "confidentialityImpact": "NONE",
+                        "integrityImpact": "LOW",
+                        "privilegesRequired": "NONE",
+                        "scope": "UNCHANGED",
+                        "userInteraction": "NONE",
+                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:H/E:P",
+                        "version": "3.1"
+                    }
+                ]
+            },
+            "problemtype": {
+                "problemtype_data": [
+                    {
+                        "description": [
+                            {
+                                "cweId": "CWE-1321",
+                                "lang": "eng",
+                                "value": "Prototype Pollution"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "references": {
+                "reference_data": [
+                    {
+                        "name": "https://security.snyk.io/vuln/SNYK-JS-MOCKJS-6051365",
+                        "refsource": "MISC",
+                        "url": "https://security.snyk.io/vuln/SNYK-JS-MOCKJS-6051365"
+                    },
+                    {
+                        "name": "https://github.com/nuysoft/Mock/blob/00ce04b92eb464e664a4438430903f2de96efb47/dist/mock.js%23L721-L755",
+                        "refsource": "MISC",
+                        "url": "https://github.com/nuysoft/Mock/blob/00ce04b92eb464e664a4438430903f2de96efb47/dist/mock.js%23L721-L755"
                     }
                 ]
             }
+        },
+        "nvd.nist.gov": {
+            "configurations": {
+                "CVE_data_version": "4.0",
+                "nodes": []
+            },
+            "cve": {
+                "CVE_data_meta": {
+                    "ASSIGNER": "report@snyk.io",
+                    "ID": "CVE-2023-26158"
+                },
+                "data_format": "MITRE",
+                "data_type": "CVE",
+                "data_version": "4.0",
+                "description": {
+                    "description_data": [
+                        {
+                            "lang": "en",
+                            "value": "All versions of the package mockjs are vulnerable to Prototype Pollution via the Util.extend function due to missing check if the attribute resolves to the object prototype. By adding or modifying attributes of an object prototype, it is possible to create attributes that exist on every object, or replace critical attributes with malicious ones. This can be problematic if the software depends on existence or non-existence of certain attributes, or uses pre-defined attributes of object prototype (such as hasOwnProperty, toString or valueOf).\r\rUser controlled inputs inside the extend() method of the Mock.Handler, Mock.Random, Mock.RE.Handler or Mock.Util, will allow an attacker to exploit this vulnerability.\r\r Workaround\r\rBy using a denylist of dangerous attributes, this weakness can be eliminated.\r\rAdd the following line in the Util.extend function:\r\rjs\rjs if ([\"__proto__\", \"constructor\", \"prototype\"].includes(name)) continue\r\r\rjs\r// src/mock/handler.js\rUtil.extend = function extend() {\r        var target = arguments[0] || {},\r            i = 1,\r            length = arguments.length,\r            options, name, src, copy, clone\r\r        if (length === 1) {\r            target = this\r            i = 0\r        }\r\r        for (; i < length; i++) {\r            options = arguments[i]\r            if (!options) continue\r\r            for (name in options) {\r            if ([\"__proto__\", \"constructor\", \"prototype\"].includes(name)) continue\r                src = target[name]\r                copy = options[name]\r\r                if (target === copy) continue\r                if (copy === undefined) continue\r\r                if (Util.isArray(copy) || Util.isObject(copy)) {\r                    if (Util.isArray(copy)) clone = src && Util.isArray(src) ? src : []\r                    if (Util.isObject(copy)) clone = src && Util.isObject(src) ? src : {}\r\r                    target[name] = Util.extend(clone, copy)\r                } else {\r                    target[name] = copy\r                }\r            }\r        }\r\r        return target\r    }\r"
+                        }
+                    ]
+                },
+                "problemtype": {
+                    "problemtype_data": [
+                        {
+                            "description": []
+                        }
+                    ]
+                },
+                "references": {
+                    "reference_data": [
+                        {
+                            "name": "https://security.snyk.io/vuln/SNYK-JS-MOCKJS-6051365",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://security.snyk.io/vuln/SNYK-JS-MOCKJS-6051365"
+                        },
+                        {
+                            "name": "https://github.com/nuysoft/Mock/blob/00ce04b92eb464e664a4438430903f2de96efb47/dist/mock.js%23L721-L755",
+                            "refsource": "",
+                            "tags": [],
+                            "url": "https://github.com/nuysoft/Mock/blob/00ce04b92eb464e664a4438430903f2de96efb47/dist/mock.js%23L721-L755"
+                        }
+                    ]
+                }
+            },
+            "impact": {},
+            "lastModifiedDate": "2023-12-08T05:15Z",
+            "publishedDate": "2023-12-08T05:15Z"
         }
     }
 }
