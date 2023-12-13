@@ -1,280 +1,297 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-25809",
-        "id": "GSD-2023-25809"
+  "GSD": {
+    "alias": "CVE-2023-25809",
+    "id": "GSD-2023-25809"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-25809",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "runc",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.1.5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "opencontainers"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other users's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "HIGH",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:L/I:L/A:L",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-281",
-                                "lang": "eng",
-                                "value": "CWE-281: Improper Preservation of Permissions"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
-                        "refsource": "MISC",
-                        "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc"
-                    },
-                    {
-                        "name": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
-                        "refsource": "MISC",
-                        "url": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-m8cg-xc2p-r3fc",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<v1.1.5",
-                    "affected_versions": "All versions before 1.1.5",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-281",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-30",
-                    "description": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other user's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`.",
-                    "fixed_versions": [
-                        "v1.1.5"
-                    ],
-                    "identifier": "CVE-2023-25809",
-                    "identifiers": [
-                        "GHSA-m8cg-xc2p-r3fc",
-                        "CVE-2023-25809"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.5",
-                    "package_slug": "go/github.com/opencontainers/runc",
-                    "pubdate": "2023-03-30",
-                    "solution": "Upgrade to version 1.1.5 or above.",
-                    "title": "Improper Preservation of Permissions",
-                    "urls": [
-                        "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-25809",
-                        "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
-                        "https://github.com/advisories/GHSA-m8cg-xc2p-r3fc"
-                    ],
-                    "uuid": "fa1a6b4a-daa2-4ba8-8377-c97eb38309dc",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "4ef48971e5d827018b74876a06e32ab7636f0a26",
-                                "tags": [
-                                    "v1.1.5"
-                                ],
-                                "timestamp": "20230329064553"
-                            },
-                            "number": "v1.1.5"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v1.1.5",
-                    "affected_versions": "All versions before 1.1.5",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-281",
-                        "CWE-937"
-                    ],
-                    "date": "2023-04-06",
-                    "description": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other user's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`.",
-                    "fixed_versions": [
-                        "v1.1.5"
-                    ],
-                    "identifier": "CVE-2023-25809",
-                    "identifiers": [
-                        "CVE-2023-25809",
-                        "GHSA-m8cg-xc2p-r3fc"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.5",
-                    "package_slug": "go/github.com/opencontainers/runc/libcontainer",
-                    "pubdate": "2023-03-29",
-                    "solution": "Upgrade to version 1.1.5 or above.",
-                    "title": "Improper Preservation of Permissions",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-25809",
-                        "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
-                        "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
-                    ],
-                    "uuid": "b399c461-6282-4e41-b3cc-08d1da066964",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "4ef48971e5d827018b74876a06e32ab7636f0a26",
-                                "tags": [
-                                    "v1.1.5"
-                                ],
-                                "timestamp": "20230329064553"
-                            },
-                            "number": "v1.1.5"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:runc:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.5",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-25809"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other users's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-281"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc"
-                        },
-                        {
-                            "name": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 6.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.0,
-                    "impactScore": 3.7
-                }
-            },
-            "lastModifiedDate": "2023-04-06T17:41Z",
-            "publishedDate": "2023-03-29T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-25809"
+      ],
+      "details": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other users's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`.",
+      "id": "GSD-2023-25809",
+      "modified": "2023-12-13T01:20:41.021661Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-25809",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "runc",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.1.5"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "opencontainers"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other users's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "LOW",
+            "baseScore": 5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "HIGH",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:L/I:L/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-281",
+                "lang": "eng",
+                "value": "CWE-281: Improper Preservation of Permissions"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
+            "refsource": "MISC",
+            "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc"
+          },
+          {
+            "name": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
+            "refsource": "MISC",
+            "url": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-m8cg-xc2p-r3fc",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<v1.1.5",
+          "affected_versions": "All versions before 1.1.5",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-281",
+            "CWE-937"
+          ],
+          "date": "2023-03-30",
+          "description": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other user's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`.",
+          "fixed_versions": [
+            "v1.1.5"
+          ],
+          "identifier": "CVE-2023-25809",
+          "identifiers": [
+            "GHSA-m8cg-xc2p-r3fc",
+            "CVE-2023-25809"
+          ],
+          "not_impacted": "All versions starting from 1.1.5",
+          "package_slug": "go/github.com/opencontainers/runc",
+          "pubdate": "2023-03-30",
+          "solution": "Upgrade to version 1.1.5 or above.",
+          "title": "Improper Preservation of Permissions",
+          "urls": [
+            "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-25809",
+            "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
+            "https://github.com/advisories/GHSA-m8cg-xc2p-r3fc"
+          ],
+          "uuid": "fa1a6b4a-daa2-4ba8-8377-c97eb38309dc",
+          "versions": [
+            {
+              "commit": {
+                "sha": "4ef48971e5d827018b74876a06e32ab7636f0a26",
+                "tags": [
+                  "v1.1.5"
+                ],
+                "timestamp": "20230329064553"
+              },
+              "number": "v1.1.5"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v1.1.5",
+          "affected_versions": "All versions before 1.1.5",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-281",
+            "CWE-937"
+          ],
+          "date": "2023-04-06",
+          "description": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other user's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`.",
+          "fixed_versions": [
+            "v1.1.5"
+          ],
+          "identifier": "CVE-2023-25809",
+          "identifiers": [
+            "CVE-2023-25809",
+            "GHSA-m8cg-xc2p-r3fc"
+          ],
+          "not_impacted": "All versions starting from 1.1.5",
+          "package_slug": "go/github.com/opencontainers/runc/libcontainer",
+          "pubdate": "2023-03-29",
+          "solution": "Upgrade to version 1.1.5 or above.",
+          "title": "Improper Preservation of Permissions",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-25809",
+            "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
+            "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
+          ],
+          "uuid": "b399c461-6282-4e41-b3cc-08d1da066964",
+          "versions": [
+            {
+              "commit": {
+                "sha": "4ef48971e5d827018b74876a06e32ab7636f0a26",
+                "tags": [
+                  "v1.1.5"
+                ],
+                "timestamp": "20230329064553"
+              },
+              "number": "v1.1.5"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:runc:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.5",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-25809"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "runc is a CLI tool for spawning and running containers according to the OCI specification. In affected versions it was found that rootless runc makes `/sys/fs/cgroup` writable in following conditons: 1. when runc is executed inside the user namespace, and the `config.json` does not specify the cgroup namespace to be unshared (e.g.., `(docker|podman|nerdctl) run --cgroupns=host`, with Rootless Docker/Podman/nerdctl) or 2. when runc is executed outside the user namespace, and `/sys` is mounted with `rbind, ro` (e.g., `runc spec --rootless`; this condition is very rare). A container may gain the write access to user-owned cgroup hierarchy `/sys/fs/cgroup/user.slice/...` on the host . Other users's cgroup hierarchies are not affected. Users are advised to upgrade to version 1.1.5. Users unable to upgrade may unshare the cgroup namespace (`(docker|podman|nerdctl) run --cgroupns=private)`. This is the default behavior of Docker/Podman/nerdctl on cgroup v2 hosts. or add `/sys/fs/cgroup` to `maskedPaths`."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-281"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-m8cg-xc2p-r3fc"
+            },
+            {
+              "name": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/opencontainers/runc/commit/0d62b950e60f6980b54fe3bafd9a9c608dc1df17"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "LOW",
+            "baseScore": 6.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.0,
+          "impactScore": 3.7
+        }
+      },
+      "lastModifiedDate": "2023-04-06T17:41Z",
+      "publishedDate": "2023-03-29T19:15Z"
+    }
+  }
 }

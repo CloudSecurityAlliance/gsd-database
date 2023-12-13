@@ -1,323 +1,329 @@
 {
-    "GSD": {
-        "alias": "CVE-2018-16471",
-        "description": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable.",
-        "id": "GSD-2018-16471",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2018-16471.html",
-            "https://ubuntu.com/security/CVE-2018-16471",
-            "https://advisories.mageia.org/CVE-2018-16471.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2018-16471",
+    "description": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable.",
+    "id": "GSD-2018-16471",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2018-16471.html",
+      "https://ubuntu.com/security/CVE-2018-16471",
+      "https://advisories.mageia.org/CVE-2018-16471.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2018-16471",
-            "modified": "2018-11-05T00:00:00.000Z",
-            "published": "2018-11-05T00:00:00.000Z",
-            "aliases": [
-                "CVE-2018-16471",
-                "GHSA-5r2p-j47h-mhpg"
-            ],
-            "summary": "Possible XSS vulnerability in Rack",
-            "details": "There is a possible vulnerability in Rack. This vulnerability has been\nassigned the CVE identifier CVE-2018-16471.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     2.0.6, 1.6.11\n\nImpact\n------\nThere is a possible XSS vulnerability in Rack.  Carefully crafted requests can\nimpact the data returned by the `scheme` method on `Rack::Request`.\nApplications that expect the scheme to be limited to \"http\" or \"https\" and do\nnot escape the return value could be vulnerable to an XSS attack.\n\nVulnerable code looks something like this:\n\n```\n<%= request.scheme.html_safe %>\n```\n\nNote that applications using the normal escaping mechanisms provided by Rails\nmay not impacted, but applications that bypass the escaping mechanisms, or do\nnot use them may be vulnerable.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 and 1.6.11 releases are available at the normal locations.\n\nWorkarounds\n-----------\nThe following monkey patch can be applied to work around this issue:\n\n```\nrequire \"rack\"\nrequire \"rack/request\"\n\nclass Rack::Request\nSCHEME_WHITELIST = %w(https http).freeze\n\ndef scheme\n  if get_header(Rack::HTTPS) == 'on'\n    'https'\n  elsif get_header(HTTP_X_FORWARDED_SSL) == 'on'\n    'https'\n  elsif forwarded_scheme\n    forwarded_scheme\n  else\n    get_header(Rack::RACK_URL_SCHEME)\n  end\nend\n\ndef forwarded_scheme\n  scheme_headers = [\n    get_header(HTTP_X_FORWARDED_SCHEME),\n    get_header(HTTP_X_FORWARDED_PROTO).to_s.split(',')[0]\n  ]\n\n  scheme_headers.each do |header|\n    return header if SCHEME_WHITELIST.include?(header)\n  end\n\n  nil\nend\nend\n```\n",
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "rack",
-                        "purl": "pkg:gem/rack"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/NAalCee8n6o"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "rack",
+            "purl": "pkg:gem/rack"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2018-16471",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Rack",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "2.0.6, 1.6.11"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Rack"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Cross-site Scripting (XSS) - Stored (CWE-79)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20181121 [SECURITY] [DLA 1585-1] ruby-rack security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2018/11/msg00022.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2019:1553",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2019-06/msg00032.html"
-                    },
-                    {
-                        "name": "USN-4089-1",
-                        "refsource": "UBUNTU",
-                        "url": "https://usn.ubuntu.com/4089-1/"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:0214",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-02/msg00016.html"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=1.6.0 <1.6.11||>=2.0.0 <2.0.6",
-                    "affected_versions": "All versions starting from 1.6.0 before 1.6.11, all versions starting from 2.0.0 before 2.0.6",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-79",
-                        "CWE-937"
-                    ],
-                    "date": "2019-06-13",
-                    "description": "There is a possible XSS vulnerability in Rack. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to HTTP or HTTPS and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not be impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable.",
-                    "fixed_versions": [
-                        "1.6.11",
-                        "2.0.6"
-                    ],
-                    "identifier": "CVE-2018-16471",
-                    "identifiers": [
-                        "CVE-2018-16471"
-                    ],
-                    "not_impacted": "All versions before 1.6.0, all versions starting from 1.6.11 before 2.0.0, all versions starting from 2.0.6",
-                    "package_slug": "gem/rack",
-                    "pubdate": "2018-11-13",
-                    "solution": "Upgrade to versions 1.6.11, 2.0.6 or above.",
-                    "title": "Cross-site Scripting",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2018-16471"
-                    ],
-                    "uuid": "effd904a-dbb5-4117-945f-fe7e235d2380"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rack_project:rack:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.6.11",
-                                "versionStartIncluding": "1.6.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rack_project:rack:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.0.6",
-                                "versionStartIncluding": "2.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2018-16471"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-79"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20181121 [SECURITY] [DLA 1585-1] ruby-rack security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2018/11/msg00022.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2019:1553",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2019-06/msg00032.html"
-                        },
-                        {
-                            "name": "USN-4089-1",
-                            "refsource": "UBUNTU",
-                            "tags": [],
-                            "url": "https://usn.ubuntu.com/4089-1/"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:0214",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-02/msg00016.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                        "version": "3.0"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 2.7
-                }
-            },
-            "lastModifiedDate": "2019-06-13T21:29Z",
-            "publishedDate": "2018-11-13T23:29Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "rack",
-            "cve": "2018-16471",
-            "ghsa": "5r2p-j47h-mhpg",
-            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/NAalCee8n6o",
-            "title": "Possible XSS vulnerability in Rack",
-            "date": "2018-11-05",
-            "description": "There is a possible vulnerability in Rack. This vulnerability has been\nassigned the CVE identifier CVE-2018-16471.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     2.0.6, 1.6.11\n\nImpact\n------\nThere is a possible XSS vulnerability in Rack.  Carefully crafted requests can\nimpact the data returned by the `scheme` method on `Rack::Request`.\nApplications that expect the scheme to be limited to \"http\" or \"https\" and do\nnot escape the return value could be vulnerable to an XSS attack.\n\nVulnerable code looks something like this:\n\n```\n<%= request.scheme.html_safe %>\n```\n\nNote that applications using the normal escaping mechanisms provided by Rails\nmay not impacted, but applications that bypass the escaping mechanisms, or do\nnot use them may be vulnerable.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 and 1.6.11 releases are available at the normal locations.\n\nWorkarounds\n-----------\nThe following monkey patch can be applied to work around this issue:\n\n```\nrequire \"rack\"\nrequire \"rack/request\"\n\nclass Rack::Request\nSCHEME_WHITELIST = %w(https http).freeze\n\ndef scheme\n  if get_header(Rack::HTTPS) == 'on'\n    'https'\n  elsif get_header(HTTP_X_FORWARDED_SSL) == 'on'\n    'https'\n  elsif forwarded_scheme\n    forwarded_scheme\n  else\n    get_header(Rack::RACK_URL_SCHEME)\n  end\nend\n\ndef forwarded_scheme\n  scheme_headers = [\n    get_header(HTTP_X_FORWARDED_SCHEME),\n    get_header(HTTP_X_FORWARDED_PROTO).to_s.split(',')[0]\n  ]\n\n  scheme_headers.each do |header|\n    return header if SCHEME_WHITELIST.include?(header)\n  end\n\n  nil\nend\nend\n```\n",
-            "patched_versions": [
-                "~> 1.6.11",
-                ">= 2.0.6"
-            ]
+      ],
+      "aliases": [
+        "CVE-2018-16471",
+        "GHSA-5r2p-j47h-mhpg"
+      ],
+      "details": "There is a possible vulnerability in Rack. This vulnerability has been\nassigned the CVE identifier CVE-2018-16471.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     2.0.6, 1.6.11\n\nImpact\n------\nThere is a possible XSS vulnerability in Rack.  Carefully crafted requests can\nimpact the data returned by the `scheme` method on `Rack::Request`.\nApplications that expect the scheme to be limited to \"http\" or \"https\" and do\nnot escape the return value could be vulnerable to an XSS attack.\n\nVulnerable code looks something like this:\n\n```\n<%= request.scheme.html_safe %>\n```\n\nNote that applications using the normal escaping mechanisms provided by Rails\nmay not impacted, but applications that bypass the escaping mechanisms, or do\nnot use them may be vulnerable.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 and 1.6.11 releases are available at the normal locations.\n\nWorkarounds\n-----------\nThe following monkey patch can be applied to work around this issue:\n\n```\nrequire \"rack\"\nrequire \"rack/request\"\n\nclass Rack::Request\nSCHEME_WHITELIST = %w(https http).freeze\n\ndef scheme\n  if get_header(Rack::HTTPS) == 'on'\n    'https'\n  elsif get_header(HTTP_X_FORWARDED_SSL) == 'on'\n    'https'\n  elsif forwarded_scheme\n    forwarded_scheme\n  else\n    get_header(Rack::RACK_URL_SCHEME)\n  end\nend\n\ndef forwarded_scheme\n  scheme_headers = [\n    get_header(HTTP_X_FORWARDED_SCHEME),\n    get_header(HTTP_X_FORWARDED_PROTO).to_s.split(',')[0]\n  ]\n\n  scheme_headers.each do |header|\n    return header if SCHEME_WHITELIST.include?(header)\n  end\n\n  nil\nend\nend\n```\n",
+      "id": "GSD-2018-16471",
+      "modified": "2018-11-05T00:00:00.000Z",
+      "published": "2018-11-05T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/NAalCee8n6o"
         }
+      ],
+      "schema_version": "1.4.0",
+      "summary": "Possible XSS vulnerability in Rack"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2018-16471",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Rack",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "2.0.6, 1.6.11"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Rack"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Cross-site Scripting (XSS) - Stored (CWE-79)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag"
+          },
+          {
+            "name": "[debian-lts-announce] 20181121 [SECURITY] [DLA 1585-1] ruby-rack security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2018/11/msg00022.html"
+          },
+          {
+            "name": "openSUSE-SU-2019:1553",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2019-06/msg00032.html"
+          },
+          {
+            "name": "USN-4089-1",
+            "refsource": "UBUNTU",
+            "url": "https://usn.ubuntu.com/4089-1/"
+          },
+          {
+            "name": "openSUSE-SU-2020:0214",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-02/msg00016.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2018-16471",
+      "date": "2018-11-05",
+      "description": "There is a possible vulnerability in Rack. This vulnerability has been\nassigned the CVE identifier CVE-2018-16471.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     2.0.6, 1.6.11\n\nImpact\n------\nThere is a possible XSS vulnerability in Rack.  Carefully crafted requests can\nimpact the data returned by the `scheme` method on `Rack::Request`.\nApplications that expect the scheme to be limited to \"http\" or \"https\" and do\nnot escape the return value could be vulnerable to an XSS attack.\n\nVulnerable code looks something like this:\n\n```\n<%= request.scheme.html_safe %>\n```\n\nNote that applications using the normal escaping mechanisms provided by Rails\nmay not impacted, but applications that bypass the escaping mechanisms, or do\nnot use them may be vulnerable.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 2.0.6 and 1.6.11 releases are available at the normal locations.\n\nWorkarounds\n-----------\nThe following monkey patch can be applied to work around this issue:\n\n```\nrequire \"rack\"\nrequire \"rack/request\"\n\nclass Rack::Request\nSCHEME_WHITELIST = %w(https http).freeze\n\ndef scheme\n  if get_header(Rack::HTTPS) == 'on'\n    'https'\n  elsif get_header(HTTP_X_FORWARDED_SSL) == 'on'\n    'https'\n  elsif forwarded_scheme\n    forwarded_scheme\n  else\n    get_header(Rack::RACK_URL_SCHEME)\n  end\nend\n\ndef forwarded_scheme\n  scheme_headers = [\n    get_header(HTTP_X_FORWARDED_SCHEME),\n    get_header(HTTP_X_FORWARDED_PROTO).to_s.split(',')[0]\n  ]\n\n  scheme_headers.each do |header|\n    return header if SCHEME_WHITELIST.include?(header)\n  end\n\n  nil\nend\nend\n```\n",
+      "gem": "rack",
+      "ghsa": "5r2p-j47h-mhpg",
+      "patched_versions": [
+        "~> 1.6.11",
+        ">= 2.0.6"
+      ],
+      "title": "Possible XSS vulnerability in Rack",
+      "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/NAalCee8n6o"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=1.6.0 <1.6.11||>=2.0.0 <2.0.6",
+          "affected_versions": "All versions starting from 1.6.0 before 1.6.11, all versions starting from 2.0.0 before 2.0.6",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-79",
+            "CWE-937"
+          ],
+          "date": "2019-06-13",
+          "description": "There is a possible XSS vulnerability in Rack. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to HTTP or HTTPS and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not be impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable.",
+          "fixed_versions": [
+            "1.6.11",
+            "2.0.6"
+          ],
+          "identifier": "CVE-2018-16471",
+          "identifiers": [
+            "CVE-2018-16471"
+          ],
+          "not_impacted": "All versions before 1.6.0, all versions starting from 1.6.11 before 2.0.0, all versions starting from 2.0.6",
+          "package_slug": "gem/rack",
+          "pubdate": "2018-11-13",
+          "solution": "Upgrade to versions 1.6.11, 2.0.6 or above.",
+          "title": "Cross-site Scripting",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2018-16471"
+          ],
+          "uuid": "effd904a-dbb5-4117-945f-fe7e235d2380"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rack_project:rack:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.6.11",
+                "versionStartIncluding": "1.6.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rack_project:rack:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.0.6",
+                "versionStartIncluding": "2.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2018-16471"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "There is a possible XSS vulnerability in Rack before 2.0.6 and 1.6.11. Carefully crafted requests can impact the data returned by the `scheme` method on `Rack::Request`. Applications that expect the scheme to be limited to 'http' or 'https' and do not escape the return value could be vulnerable to an XSS attack. Note that applications using the normal escaping mechanisms provided by Rails may not impacted, but applications that bypass the escaping mechanisms, or do not use them may be vulnerable."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-79"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/GKsAFT924Ag"
+            },
+            {
+              "name": "[debian-lts-announce] 20181121 [SECURITY] [DLA 1585-1] ruby-rack security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2018/11/msg00022.html"
+            },
+            {
+              "name": "openSUSE-SU-2019:1553",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2019-06/msg00032.html"
+            },
+            {
+              "name": "USN-4089-1",
+              "refsource": "UBUNTU",
+              "tags": [],
+              "url": "https://usn.ubuntu.com/4089-1/"
+            },
+            {
+              "name": "openSUSE-SU-2020:0214",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-02/msg00016.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "version": "3.0"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 2.7
+        }
+      },
+      "lastModifiedDate": "2019-06-13T21:29Z",
+      "publishedDate": "2018-11-13T23:29Z"
+    }
+  }
 }

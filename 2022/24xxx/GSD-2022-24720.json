@@ -1,326 +1,332 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-24720",
-        "description": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations.",
-        "id": "GSD-2022-24720",
-        "references": [
-            "https://www.debian.org/security/2022/dsa-5310"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-24720",
+    "description": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations.",
+    "id": "GSD-2022-24720",
+    "references": [
+      "https://www.debian.org/security/2022/dsa-5310"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "image_processing",
-                        "purl": "pkg:gem/image_processing"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-24720",
-                "GHSA-cxf7-qrc5-9446"
-            ],
-            "details": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
-            "id": "GSD-2022-24720",
-            "modified": "2022-03-01T00:00:00.000Z",
-            "published": "2022-03-01T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 9.8,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Remote shell execution vulnerability when applying commands from user input"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "image_processing",
+            "purl": "pkg:gem/image_processing"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-24720",
-                "STATE": "PUBLIC",
-                "TITLE": "Improper Input Validation in image_processing"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "image_processing",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 1.12.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "janko"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 9.8,
-                    "baseSeverity": "CRITICAL",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-20: Improper Input Validation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
-                    },
-                    {
-                        "name": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada",
-                        "refsource": "MISC",
-                        "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
-                    },
-                    {
-                        "name": "DSA-5310",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2022/dsa-5310"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-cxf7-qrc5-9446",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2022-24720",
+        "GHSA-cxf7-qrc5-9446"
+      ],
+      "details": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
+      "id": "GSD-2022-24720",
+      "modified": "2022-03-01T00:00:00.000Z",
+      "published": "2022-03-01T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
         },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-24720",
-            "cvss_v3": 9.8,
-            "date": "2022-03-01",
-            "description": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
-            "gem": "image_processing",
-            "ghsa": "cxf7-qrc5-9446",
-            "patched_versions": [
-                ">= 1.12.2"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
-                ]
-            },
-            "title": "Remote shell execution vulnerability when applying commands from user input",
-            "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.12.2",
-                    "affected_versions": "All versions before 1.12.2",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-03",
-                    "description": "Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands.",
-                    "fixed_versions": [
-                        "1.12.2"
-                    ],
-                    "identifier": "CVE-2022-24720",
-                    "identifiers": [
-                        "CVE-2022-24720",
-                        "GHSA-cxf7-qrc5-9446"
-                    ],
-                    "not_impacted": "All versions starting from 1.12.2",
-                    "package_slug": "gem/image_processing",
-                    "pubdate": "2022-03-01",
-                    "solution": "Upgrade to version 1.12.2 or above.",
-                    "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-                    "urls": [
-                        "https://github.com/advisories/GHSA-cxf7-qrc5-9446"
-                    ],
-                    "uuid": "c1fd138b-39a7-4682-b1cb-421e7d1566eb"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:image_processing_project:image_processing:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.12.2",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-24720"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "NVD-CWE-Other"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
-                        },
-                        {
-                            "name": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
-                        },
-                        {
-                            "name": "DSA-5310",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2022/dsa-5310"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "COMPLETE",
-                        "baseScore": 10.0,
-                        "confidentialityImpact": "COMPLETE",
-                        "integrityImpact": "COMPLETE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 10.0,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "HIGH",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-07-03T20:35Z",
-            "publishedDate": "2022-03-01T23:15Z"
+        {
+          "type": "WEB",
+          "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Remote shell execution vulnerability when applying commands from user input"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-24720",
+        "STATE": "PUBLIC",
+        "TITLE": "Improper Input Validation in image_processing"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "image_processing",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 1.12.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "janko"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 9.8,
+          "baseSeverity": "CRITICAL",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-20: Improper Input Validation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
+          },
+          {
+            "name": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada",
+            "refsource": "MISC",
+            "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
+          },
+          {
+            "name": "DSA-5310",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2022/dsa-5310"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-cxf7-qrc5-9446",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-24720",
+      "cvss_v3": 9.8,
+      "date": "2022-03-01",
+      "description": "### Impact\n\nWhen using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input, this allows the attacker to execute shell commands:\n\n```rb\nImageProcessing::Vips.apply({ system: \"echo EXECUTED\" })\n#>> EXECUTED\n```\n\nThis method is called internally by Active Storage variants, so Active Storage is vulnerable as well.\n\n### Patches\n\nThe vulnerability has been fixed in version 1.12.2 of image_processing.\n\n### Workarounds\n\nIf you're processing based on user input, it's highly recommended that you always sanitize the user input, by allowing only a constrained set of operations. For example:\n\n```rb\noperations = params[:operations]\n  .map { |operation| [operation[:name], *operation[:value]] }\n  .select { |name, *| name.to_s.include? %w[resize_to_limit strip ...] } # sanitization\n\nImageProcessing::Vips.apply(operations)\n```",
+      "gem": "image_processing",
+      "ghsa": "cxf7-qrc5-9446",
+      "patched_versions": [
+        ">= 1.12.2"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
+        ]
+      },
+      "title": "Remote shell execution vulnerability when applying commands from user input",
+      "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.12.2",
+          "affected_versions": "All versions before 1.12.2",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-07-03",
+          "description": "Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands.",
+          "fixed_versions": [
+            "1.12.2"
+          ],
+          "identifier": "CVE-2022-24720",
+          "identifiers": [
+            "CVE-2022-24720",
+            "GHSA-cxf7-qrc5-9446"
+          ],
+          "not_impacted": "All versions starting from 1.12.2",
+          "package_slug": "gem/image_processing",
+          "pubdate": "2022-03-01",
+          "solution": "Upgrade to version 1.12.2 or above.",
+          "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+          "urls": [
+            "https://github.com/advisories/GHSA-cxf7-qrc5-9446"
+          ],
+          "uuid": "c1fd138b-39a7-4682-b1cb-421e7d1566eb"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:image_processing_project:image_processing:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.12.2",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-24720"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "image_processing is an image processing wrapper for libvips and ImageMagick/GraphicsMagick. Prior to version 1.12.2, using the `#apply` method from image_processing to apply a series of operations that are coming from unsanitized user input allows the attacker to execute shell commands. This method is called internally by Active Storage variants, so Active Storage is vulnerable as well. The vulnerability has been fixed in version 1.12.2 of image_processing. As a workaround, users who process based on user input should always sanitize the user input by allowing only a constrained set of operations."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "NVD-CWE-Other"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/janko/image_processing/commit/038e4574e8f4f4b636a62394e09983c71980dada"
+            },
+            {
+              "name": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/janko/image_processing/security/advisories/GHSA-cxf7-qrc5-9446"
+            },
+            {
+              "name": "DSA-5310",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2022/dsa-5310"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "COMPLETE",
+            "baseScore": 10.0,
+            "confidentialityImpact": "COMPLETE",
+            "integrityImpact": "COMPLETE",
+            "vectorString": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 10.0,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "HIGH",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-07-03T20:35Z",
+      "publishedDate": "2022-03-01T23:15Z"
+    }
+  }
 }

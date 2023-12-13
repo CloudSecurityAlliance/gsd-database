@@ -1,374 +1,380 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-11020",
-        "description": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5.",
-        "id": "GSD-2020-11020"
+  "GSD": {
+    "alias": "CVE-2020-11020",
+    "description": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5.",
+    "id": "GSD-2020-11020"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-11020",
-            "modified": "2020-04-29T00:00:00.000Z",
-            "published": "2020-04-29T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-11020",
-                "GHSA-qpg4-4w7w-2mq5"
-            ],
-            "summary": "Authentication and extension bypass in Faye",
-            "details": "On 20 April 2020 it was reported to me that the potential for authentication\nbypass exists in [Faye][1]'s extension system. This vulnerability has existed in\nthe Node.js and Ruby versions of the server since version 0.5.0, when extensions\nwere first introduced, in July 2010. It is patched in versions 1.0.4, 1.1.3 and\n1.2.5, which we are releasing today.\n\nThe vulnerability allows any client to bypass checks put in place by server-side\nextensions, by appending extra segments to the message channel. For example, the\nFaye [extension docs][2] suggest that users implement access control for\nsubscriptions by checking incoming messages for the `/meta/subscribe` channel,\nfor example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel === '/meta/subscribe') {\n      if (message.ext.authToken !== 'my super secret password') {\n        message.error = 'Invalid auth token';\n      }\n    }\n    callback(message);\n  }\n});\n```\n\nA bug in the server's code for recognising the special `/meta/*` channels, which\ntrigger connection and subscription events, means that a client can bypass this\ncheck by sending a message to `/meta/subscribe/x` rather than `/meta/subscribe`:\n\n```json\n{\n  \"channel\": \"/meta/subscribe/x\",\n  \"clientId\": \"3jrc6602npj4gyp6bn5ap2wqzjtb2q3\",\n  \"subscription\": \"/foo\"\n}\n```\n\nThis message will not be checked by the above extension, as it checks the\nmessage's channel is exactly equal to `/meta/subscribe`. But it will still be\nprocessed as a subscription request by the server, so the client becomes\nsubscribed to the channel `/foo` without supplying the necessary credentials.\n\nThe vulnerability is caused by the way the Faye server recognises meta channels.\nIt will treat a message to any channel that's a prefix-match for one of the\nspecial channels `/meta/handshake`, `/meta/connect`, `/meta/subscribe`,\n`/meta/unsubscribe` or `/meta/disconnect`, as though it were an exact match for\nthat channel. So, a message to `/meta/subscribe/x` is still processed as a\nsubscription request, for example.\n\nAn authentication bypass for subscription requests is the most serious effect of\nthis but all other meta channels are susceptible to similar manipulation.\n\nThis parsing bug in the server is fixed in versions 1.0.4, 1.1.3 and 1.2.5.\nThese should be drop-in replacements for prior versions and you should upgrade\nimmediately if you are running any prior version.\n\nIf you are unable to install one of these versions, you can make your extensions\ncatch all messages the server would process by checking the channel _begins_\nwith the expected channel name, for example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel.startsWith('/meta/subscribe')) {\n      // authentication logic\n    }\n    callback(message);\n  }\n});\n```\n\n[1]: https://faye.jcoglan.com/\n[2]: https://faye.jcoglan.com/node/extensions.html",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 8.5
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "faye",
-                        "purl": "pkg:gem/faye"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "faye",
+            "purl": "pkg:gem/faye"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-11020",
-                "STATE": "PUBLIC",
-                "TITLE": "Authentication and extension bypass in Faye"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+      ],
+      "aliases": [
+        "CVE-2020-11020",
+        "GHSA-qpg4-4w7w-2mq5"
+      ],
+      "details": "On 20 April 2020 it was reported to me that the potential for authentication\nbypass exists in [Faye][1]'s extension system. This vulnerability has existed in\nthe Node.js and Ruby versions of the server since version 0.5.0, when extensions\nwere first introduced, in July 2010. It is patched in versions 1.0.4, 1.1.3 and\n1.2.5, which we are releasing today.\n\nThe vulnerability allows any client to bypass checks put in place by server-side\nextensions, by appending extra segments to the message channel. For example, the\nFaye [extension docs][2] suggest that users implement access control for\nsubscriptions by checking incoming messages for the `/meta/subscribe` channel,\nfor example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel === '/meta/subscribe') {\n      if (message.ext.authToken !== 'my super secret password') {\n        message.error = 'Invalid auth token';\n      }\n    }\n    callback(message);\n  }\n});\n```\n\nA bug in the server's code for recognising the special `/meta/*` channels, which\ntrigger connection and subscription events, means that a client can bypass this\ncheck by sending a message to `/meta/subscribe/x` rather than `/meta/subscribe`:\n\n```json\n{\n  \"channel\": \"/meta/subscribe/x\",\n  \"clientId\": \"3jrc6602npj4gyp6bn5ap2wqzjtb2q3\",\n  \"subscription\": \"/foo\"\n}\n```\n\nThis message will not be checked by the above extension, as it checks the\nmessage's channel is exactly equal to `/meta/subscribe`. But it will still be\nprocessed as a subscription request by the server, so the client becomes\nsubscribed to the channel `/foo` without supplying the necessary credentials.\n\nThe vulnerability is caused by the way the Faye server recognises meta channels.\nIt will treat a message to any channel that's a prefix-match for one of the\nspecial channels `/meta/handshake`, `/meta/connect`, `/meta/subscribe`,\n`/meta/unsubscribe` or `/meta/disconnect`, as though it were an exact match for\nthat channel. So, a message to `/meta/subscribe/x` is still processed as a\nsubscription request, for example.\n\nAn authentication bypass for subscription requests is the most serious effect of\nthis but all other meta channels are susceptible to similar manipulation.\n\nThis parsing bug in the server is fixed in versions 1.0.4, 1.1.3 and 1.2.5.\nThese should be drop-in replacements for prior versions and you should upgrade\nimmediately if you are running any prior version.\n\nIf you are unable to install one of these versions, you can make your extensions\ncatch all messages the server would process by checking the channel _begins_\nwith the expected channel name, for example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel.startsWith('/meta/subscribe')) {\n      // authentication logic\n    }\n    callback(message);\n  }\n});\n```\n\n[1]: https://faye.jcoglan.com/\n[2]: https://faye.jcoglan.com/node/extensions.html",
+      "id": "GSD-2020-11020",
+      "modified": "2020-04-29T00:00:00.000Z",
+      "published": "2020-04-29T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
+        }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 8.5,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Authentication and extension bypass in Faye"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-11020",
+        "STATE": "PUBLIC",
+        "TITLE": "Authentication and extension bypass in Faye"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Faye",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Faye",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 0.5.0, < 1.0.4"
-                                                },
-                                                {
-                                                    "version_value": ">= 1.1.0, < 1.1.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 1.2.0, < 1.2.5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "faye"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 8.5,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "LOW",
-                    "scope": "CHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-287: Improper Authentication"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
-                    },
-                    {
-                        "name": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e",
-                        "refsource": "MISC",
-                        "url": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-qpg4-4w7w-2mq5",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">0.5.0 <1.0.4||>=1.1.0 <1.1.3||>=1.2.0 <1.2.5",
-                    "affected_versions": "All versions after 0.5.0 before 1.0.4, all versions starting from 1.1.0 before 1.1.3, all versions starting from 1.2.0 before 1.2.5",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-287",
-                        "CWE-937"
-                    ],
-                    "date": "2020-05-06",
-                    "description": "Faye is vulnerable to an authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel.",
-                    "fixed_versions": [
-                        "1.0.4",
-                        "1.1.3",
-                        "1.2.5"
-                    ],
-                    "identifier": "CVE-2020-11020",
-                    "identifiers": [
-                        "CVE-2020-11020",
-                        "GHSA-qpg4-4w7w-2mq5"
-                    ],
-                    "not_impacted": "All versions up to 0.5.0, all versions starting from 1.0.4 before 1.1.0, all versions starting from 1.1.3 before 1.2.0, all versions starting from 1.2.5",
-                    "package_slug": "gem/faye",
-                    "pubdate": "2020-04-29",
-                    "solution": "Upgrade to versions 1.0.4, 1.1.3, 1.2.5 or above.",
-                    "title": "Improper Authentication",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-11020"
-                    ],
-                    "uuid": "520be041-d9a4-467d-b94a-fa186e7de844"
-                },
-                {
-                    "affected_range": ">0.5.0 <1.0.4||>=1.1.0 <1.1.3||>=1.2.0 <1.2.5",
-                    "affected_versions": "All versions after 0.5.0 before 1.0.4, all versions starting from 1.1.0 before 1.1.3, all versions starting from 1.2.0 before 1.2.5",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-287",
-                        "CWE-937"
-                    ],
-                    "date": "2020-05-06",
-                    "description": "Faye is vulnerable to an authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel.",
-                    "fixed_versions": [
-                        "1.0.4",
-                        "1.1.3",
-                        "1.2.5"
-                    ],
-                    "identifier": "CVE-2020-11020",
-                    "identifiers": [
-                        "CVE-2020-11020",
-                        "GHSA-qpg4-4w7w-2mq5"
-                    ],
-                    "not_impacted": "All versions up to 0.5.0, all versions starting from 1.0.4 before 1.1.0, all versions starting from 1.1.3 before 1.2.0, all versions starting from 1.2.5",
-                    "package_slug": "npm/faye",
-                    "pubdate": "2020-04-29",
-                    "solution": "Upgrade to versions 1.0.4, 1.1.3, 1.2.5 or above.",
-                    "title": "Improper Authentication",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-11020"
-                    ],
-                    "uuid": "251662bb-f6bf-4afe-b991-7bda2fc18210"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.4",
-                                "versionStartExcluding": "0.5.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.4",
-                                "versionStartExcluding": "0.5.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.3",
-                                "versionStartIncluding": "1.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.3",
-                                "versionStartIncluding": "1.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.2.5",
-                                "versionStartIncluding": "1.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.2.5",
-                                "versionStartIncluding": "1.2.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-11020"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-287"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e"
+                          "version_value": ">= 0.5.0, < 1.0.4"
                         },
                         {
-                            "name": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
+                          "version_value": ">= 1.1.0, < 1.1.3"
+                        },
+                        {
+                          "version_value": ">= 1.2.0, < 1.2.5"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 7.5,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "HIGH",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2020-05-06T18:21Z",
-            "publishedDate": "2020-04-29T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "faye",
-            "cve": "2020-11020",
-            "ghsa": "qpg4-4w7w-2mq5",
-            "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5",
-            "title": "Authentication and extension bypass in Faye",
-            "date": "2020-04-29",
-            "description": "On 20 April 2020 it was reported to me that the potential for authentication\nbypass exists in [Faye][1]'s extension system. This vulnerability has existed in\nthe Node.js and Ruby versions of the server since version 0.5.0, when extensions\nwere first introduced, in July 2010. It is patched in versions 1.0.4, 1.1.3 and\n1.2.5, which we are releasing today.\n\nThe vulnerability allows any client to bypass checks put in place by server-side\nextensions, by appending extra segments to the message channel. For example, the\nFaye [extension docs][2] suggest that users implement access control for\nsubscriptions by checking incoming messages for the `/meta/subscribe` channel,\nfor example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel === '/meta/subscribe') {\n      if (message.ext.authToken !== 'my super secret password') {\n        message.error = 'Invalid auth token';\n      }\n    }\n    callback(message);\n  }\n});\n```\n\nA bug in the server's code for recognising the special `/meta/*` channels, which\ntrigger connection and subscription events, means that a client can bypass this\ncheck by sending a message to `/meta/subscribe/x` rather than `/meta/subscribe`:\n\n```json\n{\n  \"channel\": \"/meta/subscribe/x\",\n  \"clientId\": \"3jrc6602npj4gyp6bn5ap2wqzjtb2q3\",\n  \"subscription\": \"/foo\"\n}\n```\n\nThis message will not be checked by the above extension, as it checks the\nmessage's channel is exactly equal to `/meta/subscribe`. But it will still be\nprocessed as a subscription request by the server, so the client becomes\nsubscribed to the channel `/foo` without supplying the necessary credentials.\n\nThe vulnerability is caused by the way the Faye server recognises meta channels.\nIt will treat a message to any channel that's a prefix-match for one of the\nspecial channels `/meta/handshake`, `/meta/connect`, `/meta/subscribe`,\n`/meta/unsubscribe` or `/meta/disconnect`, as though it were an exact match for\nthat channel. So, a message to `/meta/subscribe/x` is still processed as a\nsubscription request, for example.\n\nAn authentication bypass for subscription requests is the most serious effect of\nthis but all other meta channels are susceptible to similar manipulation.\n\nThis parsing bug in the server is fixed in versions 1.0.4, 1.1.3 and 1.2.5.\nThese should be drop-in replacements for prior versions and you should upgrade\nimmediately if you are running any prior version.\n\nIf you are unable to install one of these versions, you can make your extensions\ncatch all messages the server would process by checking the channel _begins_\nwith the expected channel name, for example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel.startsWith('/meta/subscribe')) {\n      // authentication logic\n    }\n    callback(message);\n  }\n});\n```\n\n[1]: https://faye.jcoglan.com/\n[2]: https://faye.jcoglan.com/node/extensions.html",
-            "cvss_v3": 8.5,
-            "unaffected_versions": [
-                "< 0.5.0"
-            ],
-            "patched_versions": [
-                "~> 1.0.4",
-                "~> 1.1.3",
-                ">= 1.2.5"
-            ]
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "faye"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 8.5,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "LOW",
+          "scope": "CHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-287: Improper Authentication"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
+          },
+          {
+            "name": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e",
+            "refsource": "MISC",
+            "url": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qpg4-4w7w-2mq5",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-11020",
+      "cvss_v3": 8.5,
+      "date": "2020-04-29",
+      "description": "On 20 April 2020 it was reported to me that the potential for authentication\nbypass exists in [Faye][1]'s extension system. This vulnerability has existed in\nthe Node.js and Ruby versions of the server since version 0.5.0, when extensions\nwere first introduced, in July 2010. It is patched in versions 1.0.4, 1.1.3 and\n1.2.5, which we are releasing today.\n\nThe vulnerability allows any client to bypass checks put in place by server-side\nextensions, by appending extra segments to the message channel. For example, the\nFaye [extension docs][2] suggest that users implement access control for\nsubscriptions by checking incoming messages for the `/meta/subscribe` channel,\nfor example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel === '/meta/subscribe') {\n      if (message.ext.authToken !== 'my super secret password') {\n        message.error = 'Invalid auth token';\n      }\n    }\n    callback(message);\n  }\n});\n```\n\nA bug in the server's code for recognising the special `/meta/*` channels, which\ntrigger connection and subscription events, means that a client can bypass this\ncheck by sending a message to `/meta/subscribe/x` rather than `/meta/subscribe`:\n\n```json\n{\n  \"channel\": \"/meta/subscribe/x\",\n  \"clientId\": \"3jrc6602npj4gyp6bn5ap2wqzjtb2q3\",\n  \"subscription\": \"/foo\"\n}\n```\n\nThis message will not be checked by the above extension, as it checks the\nmessage's channel is exactly equal to `/meta/subscribe`. But it will still be\nprocessed as a subscription request by the server, so the client becomes\nsubscribed to the channel `/foo` without supplying the necessary credentials.\n\nThe vulnerability is caused by the way the Faye server recognises meta channels.\nIt will treat a message to any channel that's a prefix-match for one of the\nspecial channels `/meta/handshake`, `/meta/connect`, `/meta/subscribe`,\n`/meta/unsubscribe` or `/meta/disconnect`, as though it were an exact match for\nthat channel. So, a message to `/meta/subscribe/x` is still processed as a\nsubscription request, for example.\n\nAn authentication bypass for subscription requests is the most serious effect of\nthis but all other meta channels are susceptible to similar manipulation.\n\nThis parsing bug in the server is fixed in versions 1.0.4, 1.1.3 and 1.2.5.\nThese should be drop-in replacements for prior versions and you should upgrade\nimmediately if you are running any prior version.\n\nIf you are unable to install one of these versions, you can make your extensions\ncatch all messages the server would process by checking the channel _begins_\nwith the expected channel name, for example:\n\n```js\nserver.addExtension({\n  incoming: function(message, callback) {\n    if (message.channel.startsWith('/meta/subscribe')) {\n      // authentication logic\n    }\n    callback(message);\n  }\n});\n```\n\n[1]: https://faye.jcoglan.com/\n[2]: https://faye.jcoglan.com/node/extensions.html",
+      "gem": "faye",
+      "ghsa": "qpg4-4w7w-2mq5",
+      "patched_versions": [
+        "~> 1.0.4",
+        "~> 1.1.3",
+        ">= 1.2.5"
+      ],
+      "title": "Authentication and extension bypass in Faye",
+      "unaffected_versions": [
+        "< 0.5.0"
+      ],
+      "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">0.5.0 <1.0.4||>=1.1.0 <1.1.3||>=1.2.0 <1.2.5",
+          "affected_versions": "All versions after 0.5.0 before 1.0.4, all versions starting from 1.1.0 before 1.1.3, all versions starting from 1.2.0 before 1.2.5",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-287",
+            "CWE-937"
+          ],
+          "date": "2020-05-06",
+          "description": "Faye is vulnerable to an authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel.",
+          "fixed_versions": [
+            "1.0.4",
+            "1.1.3",
+            "1.2.5"
+          ],
+          "identifier": "CVE-2020-11020",
+          "identifiers": [
+            "CVE-2020-11020",
+            "GHSA-qpg4-4w7w-2mq5"
+          ],
+          "not_impacted": "All versions up to 0.5.0, all versions starting from 1.0.4 before 1.1.0, all versions starting from 1.1.3 before 1.2.0, all versions starting from 1.2.5",
+          "package_slug": "gem/faye",
+          "pubdate": "2020-04-29",
+          "solution": "Upgrade to versions 1.0.4, 1.1.3, 1.2.5 or above.",
+          "title": "Improper Authentication",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-11020"
+          ],
+          "uuid": "520be041-d9a4-467d-b94a-fa186e7de844"
+        },
+        {
+          "affected_range": ">0.5.0 <1.0.4||>=1.1.0 <1.1.3||>=1.2.0 <1.2.5",
+          "affected_versions": "All versions after 0.5.0 before 1.0.4, all versions starting from 1.1.0 before 1.1.3, all versions starting from 1.2.0 before 1.2.5",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-287",
+            "CWE-937"
+          ],
+          "date": "2020-05-06",
+          "description": "Faye is vulnerable to an authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel.",
+          "fixed_versions": [
+            "1.0.4",
+            "1.1.3",
+            "1.2.5"
+          ],
+          "identifier": "CVE-2020-11020",
+          "identifiers": [
+            "CVE-2020-11020",
+            "GHSA-qpg4-4w7w-2mq5"
+          ],
+          "not_impacted": "All versions up to 0.5.0, all versions starting from 1.0.4 before 1.1.0, all versions starting from 1.1.3 before 1.2.0, all versions starting from 1.2.5",
+          "package_slug": "npm/faye",
+          "pubdate": "2020-04-29",
+          "solution": "Upgrade to versions 1.0.4, 1.1.3, 1.2.5 or above.",
+          "title": "Improper Authentication",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-11020"
+          ],
+          "uuid": "251662bb-f6bf-4afe-b991-7bda2fc18210"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.4",
+                "versionStartExcluding": "0.5.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.4",
+                "versionStartExcluding": "0.5.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.3",
+                "versionStartIncluding": "1.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.3",
+                "versionStartIncluding": "1.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:node.js:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.2.5",
+                "versionStartIncluding": "1.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:faye_project:faye:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.2.5",
+                "versionStartIncluding": "1.2.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-11020"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Faye (NPM, RubyGem) versions greater than 0.5.0 and before 1.0.4, 1.1.3 and 1.2.5, has the potential for authentication bypass in the extension system. The vulnerability allows any client to bypass checks put in place by server-side extensions, by appending extra segments to the message channel. It is patched in versions 1.0.4, 1.1.3 and 1.2.5."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-287"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/faye/faye/commit/65d297d341b607f3cb0b5fa6021a625a991cc30e"
+            },
+            {
+              "name": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/faye/faye/security/advisories/GHSA-qpg4-4w7w-2mq5"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 7.5,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "HIGH",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2020-05-06T18:21Z",
+      "publishedDate": "2020-04-29T18:15Z"
     }
+  }
 }

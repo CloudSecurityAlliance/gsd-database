@@ -1,355 +1,361 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-30560",
-        "description": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.",
-        "id": "GSD-2021-30560",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-30560.html",
-            "https://security.archlinux.org/CVE-2021-30560",
-            "https://ubuntu.com/security/CVE-2021-30560",
-            "https://www.debian.org/security/2022/dsa-5216",
-            "https://advisories.mageia.org/CVE-2021-30560.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-30560",
+    "description": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.",
+    "id": "GSD-2021-30560",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-30560.html",
+      "https://security.archlinux.org/CVE-2021-30560",
+      "https://ubuntu.com/security/CVE-2021-30560",
+      "https://www.debian.org/security/2022/dsa-5216",
+      "https://advisories.mageia.org/CVE-2021-30560.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "nokogiri",
-                        "purl": "pkg:gem/nokogiri"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2021-30560",
-                "GHSA-fq42-c5rg-92c2"
-            ],
-            "details": "## Summary\n\nNokogiri v1.13.2 upgrades two of its packaged dependencies:\n\n* vendored libxml2 from v2.9.12 to v2.9.13\n* vendored libxslt from v1.1.34 to v1.1.35\n\nThose library versions address the following upstream CVEs:\n\n* libxslt: CVE-2021-30560 (CVSS 8.8, High severity)\n* libxml2: CVE-2022-23308 (Unspecified severity, see more information below)\n\nThose library versions also address numerous other issues including performance\nimprovements, regression fixes, and bug fixes, as well as memory leaks and other\nuse-after-free issues that were not assigned CVEs.\n\nPlease note that this advisory only applies to the CRuby implementation of\nNokogiri < 1.13.2, and only if the packaged libraries are being used. If you've\noverridden defaults at installation time to use system libraries instead of\npackaged libraries, you should instead pay attention to your distro's `libxml2`\nand `libxslt` release announcements.\n\n## Mitigation\n\nUpgrade to Nokogiri >= 1.13.2.\n\nUsers who are unable to upgrade Nokogiri may also choose a more complicated\nmitigation: compile and link an older version Nokogiri against external libraries\nlibxml2 >= 2.9.13 and libxslt >= 1.1.35, which will also address these same CVEs.\n\n## Impact\n\n* libxslt CVE-2021-30560\n* CVSS3 score: 8.8 (High)\n\nFixed by https://gitlab.gnome.org/GNOME/libxslt/-/commit/50f9c9c\n\nAll versions of libxslt prior to v1.1.35 are affected.\n\nApplications using untrusted XSL stylesheets to transform XML are vulnerable to\na denial-of-service attack and should be upgraded immediately.\n\nlibxml2 CVE-2022-23308\n* As of the time this security advisory was published, there is no officially\npublished information available about this CVE's severity. The above NIST link\ndoes not yet have a published record, and the libxml2 maintainer has declined\nto provide a severity score.\n* Fixed by https://gitlab.gnome.org/GNOME/libxml2/-/commit/652dd12\n* Further explanation is at https://mail.gnome.org/archives/xml/2022-February/msg00015.html\n\nThe upstream commit and the explanation linked above indicate that an application\nmay be vulnerable to a denial of service, memory disclosure, or code execution if\nit parses an untrusted document with parse options `DTDVALID` set to true, and `NOENT`\nset to false.\n\nAn analysis of these parse options:\n\n* While `NOENT` is off by default for Document, DocumentFragment, Reader, and\nSchema parsing, it is on by default for XSLT (stylesheet) parsing in Nokogiri\nv1.12.0 and later.\n* `DTDVALID` is an option that Nokogiri does not set for any operations, and so\nthis CVE applies only to applications setting this option explicitly.\n\nIt seems reasonable to assume that any application explicitly setting the parse\noption `DTDVALID` when parsing untrusted documents is vulnerable and should be\nupgraded immediately.\n",
-            "id": "GSD-2021-30560",
-            "modified": "2022-02-21T00:00:00.000Z",
-            "published": "2022-02-21T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-fq42-c5rg-92c2"
-                }
-            ],
-            "related": [
-                "CVE-2022-23308"
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 8.8,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Update packaged libxml2 (2.9.12 \u2192 2.9.13) and libxslt (1.1.34 \u2192 1.1.35)"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "nokogiri",
+            "purl": "pkg:gem/nokogiri"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "chrome-cve-admin@google.com",
-                "ID": "CVE-2021-30560",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Chrome",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_value": "91.0.4472.164"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Google"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Use after free"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
-                        "refsource": "MISC",
-                        "url": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html"
-                    },
-                    {
-                        "name": "https://crbug.com/1219209",
-                        "refsource": "MISC",
-                        "url": "https://crbug.com/1219209"
-                    },
-                    {
-                        "name": "DSA-5216",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2022/dsa-5216"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20220909 [SECURITY] [DLA 3101-1] libxslt security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00010.html"
-                    },
-                    {
-                        "name": "GLSA-202310-23",
-                        "refsource": "GENTOO",
-                        "url": "https://security.gentoo.org/glsa/202310-23"
-                    }
-                ]
-            }
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2021-30560",
-            "cvss_v3": 8.8,
-            "date": "2022-02-21",
-            "description": "## Summary\n\nNokogiri v1.13.2 upgrades two of its packaged dependencies:\n\n* vendored libxml2 from v2.9.12 to v2.9.13\n* vendored libxslt from v1.1.34 to v1.1.35\n\nThose library versions address the following upstream CVEs:\n\n* libxslt: CVE-2021-30560 (CVSS 8.8, High severity)\n* libxml2: CVE-2022-23308 (Unspecified severity, see more information below)\n\nThose library versions also address numerous other issues including performance\nimprovements, regression fixes, and bug fixes, as well as memory leaks and other\nuse-after-free issues that were not assigned CVEs.\n\nPlease note that this advisory only applies to the CRuby implementation of\nNokogiri < 1.13.2, and only if the packaged libraries are being used. If you've\noverridden defaults at installation time to use system libraries instead of\npackaged libraries, you should instead pay attention to your distro's `libxml2`\nand `libxslt` release announcements.\n\n## Mitigation\n\nUpgrade to Nokogiri >= 1.13.2.\n\nUsers who are unable to upgrade Nokogiri may also choose a more complicated\nmitigation: compile and link an older version Nokogiri against external libraries\nlibxml2 >= 2.9.13 and libxslt >= 1.1.35, which will also address these same CVEs.\n\n## Impact\n\n* libxslt CVE-2021-30560\n* CVSS3 score: 8.8 (High)\n\nFixed by https://gitlab.gnome.org/GNOME/libxslt/-/commit/50f9c9c\n\nAll versions of libxslt prior to v1.1.35 are affected.\n\nApplications using untrusted XSL stylesheets to transform XML are vulnerable to\na denial-of-service attack and should be upgraded immediately.\n\nlibxml2 CVE-2022-23308\n* As of the time this security advisory was published, there is no officially\npublished information available about this CVE's severity. The above NIST link\ndoes not yet have a published record, and the libxml2 maintainer has declined\nto provide a severity score.\n* Fixed by https://gitlab.gnome.org/GNOME/libxml2/-/commit/652dd12\n* Further explanation is at https://mail.gnome.org/archives/xml/2022-February/msg00015.html\n\nThe upstream commit and the explanation linked above indicate that an application\nmay be vulnerable to a denial of service, memory disclosure, or code execution if\nit parses an untrusted document with parse options `DTDVALID` set to true, and `NOENT`\nset to false.\n\nAn analysis of these parse options:\n\n* While `NOENT` is off by default for Document, DocumentFragment, Reader, and\nSchema parsing, it is on by default for XSLT (stylesheet) parsing in Nokogiri\nv1.12.0 and later.\n* `DTDVALID` is an option that Nokogiri does not set for any operations, and so\nthis CVE applies only to applications setting this option explicitly.\n\nIt seems reasonable to assume that any application explicitly setting the parse\noption `DTDVALID` when parsing untrusted documents is vulnerable and should be\nupgraded immediately.\n",
-            "gem": "nokogiri",
-            "ghsa": "fq42-c5rg-92c2",
-            "patched_versions": [
-                ">= 1.13.2"
-            ],
-            "related": {
-                "cve": [
-                    "2022-23308"
-                ]
-            },
-            "title": "Update packaged libxml2 (2.9.12 \u2192 2.9.13) and libxslt (1.1.34 \u2192 1.1.35)",
-            "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-fq42-c5rg-92c2"
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.1.35",
-                    "affected_versions": "All versions before 1.1.35",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-27",
-                    "description": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.",
-                    "fixed_versions": [
-                        "1.1.35"
-                    ],
-                    "identifier": "CVE-2021-30560",
-                    "identifiers": [
-                        "CVE-2021-30560"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.35",
-                    "package_slug": "conan/libxslt",
-                    "pubdate": "2021-08-03",
-                    "solution": "Upgrade to version 1.1.35 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-30560",
-                        "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
-                        "https://crbug.com/1219209"
-                    ],
-                    "uuid": "4efa16aa-d829-4b6c-b073-d2d001f854df"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "91.0.4472.164",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:xmlsoft:libxslt:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.35",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "chrome-cve-admin@google.com",
-                    "ID": "CVE-2021-30560"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-416"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html"
-                        },
-                        {
-                            "name": "https://crbug.com/1219209",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://crbug.com/1219209"
-                        },
-                        {
-                            "name": "DSA-5216",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2022/dsa-5216"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20220909 [SECURITY] [DLA 3101-1] libxslt security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00010.html"
-                        },
-                        {
-                            "name": "GLSA-202310-23",
-                            "refsource": "GENTOO",
-                            "tags": [],
-                            "url": "https://security.gentoo.org/glsa/202310-23"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-10-31T15:15Z",
-            "publishedDate": "2021-08-03T19:15Z"
+      ],
+      "aliases": [
+        "CVE-2021-30560",
+        "GHSA-fq42-c5rg-92c2"
+      ],
+      "details": "## Summary\n\nNokogiri v1.13.2 upgrades two of its packaged dependencies:\n\n* vendored libxml2 from v2.9.12 to v2.9.13\n* vendored libxslt from v1.1.34 to v1.1.35\n\nThose library versions address the following upstream CVEs:\n\n* libxslt: CVE-2021-30560 (CVSS 8.8, High severity)\n* libxml2: CVE-2022-23308 (Unspecified severity, see more information below)\n\nThose library versions also address numerous other issues including performance\nimprovements, regression fixes, and bug fixes, as well as memory leaks and other\nuse-after-free issues that were not assigned CVEs.\n\nPlease note that this advisory only applies to the CRuby implementation of\nNokogiri < 1.13.2, and only if the packaged libraries are being used. If you've\noverridden defaults at installation time to use system libraries instead of\npackaged libraries, you should instead pay attention to your distro's `libxml2`\nand `libxslt` release announcements.\n\n## Mitigation\n\nUpgrade to Nokogiri >= 1.13.2.\n\nUsers who are unable to upgrade Nokogiri may also choose a more complicated\nmitigation: compile and link an older version Nokogiri against external libraries\nlibxml2 >= 2.9.13 and libxslt >= 1.1.35, which will also address these same CVEs.\n\n## Impact\n\n* libxslt CVE-2021-30560\n* CVSS3 score: 8.8 (High)\n\nFixed by https://gitlab.gnome.org/GNOME/libxslt/-/commit/50f9c9c\n\nAll versions of libxslt prior to v1.1.35 are affected.\n\nApplications using untrusted XSL stylesheets to transform XML are vulnerable to\na denial-of-service attack and should be upgraded immediately.\n\nlibxml2 CVE-2022-23308\n* As of the time this security advisory was published, there is no officially\npublished information available about this CVE's severity. The above NIST link\ndoes not yet have a published record, and the libxml2 maintainer has declined\nto provide a severity score.\n* Fixed by https://gitlab.gnome.org/GNOME/libxml2/-/commit/652dd12\n* Further explanation is at https://mail.gnome.org/archives/xml/2022-February/msg00015.html\n\nThe upstream commit and the explanation linked above indicate that an application\nmay be vulnerable to a denial of service, memory disclosure, or code execution if\nit parses an untrusted document with parse options `DTDVALID` set to true, and `NOENT`\nset to false.\n\nAn analysis of these parse options:\n\n* While `NOENT` is off by default for Document, DocumentFragment, Reader, and\nSchema parsing, it is on by default for XSLT (stylesheet) parsing in Nokogiri\nv1.12.0 and later.\n* `DTDVALID` is an option that Nokogiri does not set for any operations, and so\nthis CVE applies only to applications setting this option explicitly.\n\nIt seems reasonable to assume that any application explicitly setting the parse\noption `DTDVALID` when parsing untrusted documents is vulnerable and should be\nupgraded immediately.\n",
+      "id": "GSD-2021-30560",
+      "modified": "2022-02-21T00:00:00.000Z",
+      "published": "2022-02-21T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-fq42-c5rg-92c2"
         }
+      ],
+      "related": [
+        "CVE-2022-23308"
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 8.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Update packaged libxml2 (2.9.12 \u2192 2.9.13) and libxslt (1.1.34 \u2192 1.1.35)"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "chrome-cve-admin@google.com",
+        "ID": "CVE-2021-30560",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Chrome",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_value": "91.0.4472.164"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Google"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Use after free"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
+            "refsource": "MISC",
+            "url": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html"
+          },
+          {
+            "name": "https://crbug.com/1219209",
+            "refsource": "MISC",
+            "url": "https://crbug.com/1219209"
+          },
+          {
+            "name": "DSA-5216",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2022/dsa-5216"
+          },
+          {
+            "name": "[debian-lts-announce] 20220909 [SECURITY] [DLA 3101-1] libxslt security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00010.html"
+          },
+          {
+            "name": "GLSA-202310-23",
+            "refsource": "GENTOO",
+            "url": "https://security.gentoo.org/glsa/202310-23"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-30560",
+      "cvss_v3": 8.8,
+      "date": "2022-02-21",
+      "description": "## Summary\n\nNokogiri v1.13.2 upgrades two of its packaged dependencies:\n\n* vendored libxml2 from v2.9.12 to v2.9.13\n* vendored libxslt from v1.1.34 to v1.1.35\n\nThose library versions address the following upstream CVEs:\n\n* libxslt: CVE-2021-30560 (CVSS 8.8, High severity)\n* libxml2: CVE-2022-23308 (Unspecified severity, see more information below)\n\nThose library versions also address numerous other issues including performance\nimprovements, regression fixes, and bug fixes, as well as memory leaks and other\nuse-after-free issues that were not assigned CVEs.\n\nPlease note that this advisory only applies to the CRuby implementation of\nNokogiri < 1.13.2, and only if the packaged libraries are being used. If you've\noverridden defaults at installation time to use system libraries instead of\npackaged libraries, you should instead pay attention to your distro's `libxml2`\nand `libxslt` release announcements.\n\n## Mitigation\n\nUpgrade to Nokogiri >= 1.13.2.\n\nUsers who are unable to upgrade Nokogiri may also choose a more complicated\nmitigation: compile and link an older version Nokogiri against external libraries\nlibxml2 >= 2.9.13 and libxslt >= 1.1.35, which will also address these same CVEs.\n\n## Impact\n\n* libxslt CVE-2021-30560\n* CVSS3 score: 8.8 (High)\n\nFixed by https://gitlab.gnome.org/GNOME/libxslt/-/commit/50f9c9c\n\nAll versions of libxslt prior to v1.1.35 are affected.\n\nApplications using untrusted XSL stylesheets to transform XML are vulnerable to\na denial-of-service attack and should be upgraded immediately.\n\nlibxml2 CVE-2022-23308\n* As of the time this security advisory was published, there is no officially\npublished information available about this CVE's severity. The above NIST link\ndoes not yet have a published record, and the libxml2 maintainer has declined\nto provide a severity score.\n* Fixed by https://gitlab.gnome.org/GNOME/libxml2/-/commit/652dd12\n* Further explanation is at https://mail.gnome.org/archives/xml/2022-February/msg00015.html\n\nThe upstream commit and the explanation linked above indicate that an application\nmay be vulnerable to a denial of service, memory disclosure, or code execution if\nit parses an untrusted document with parse options `DTDVALID` set to true, and `NOENT`\nset to false.\n\nAn analysis of these parse options:\n\n* While `NOENT` is off by default for Document, DocumentFragment, Reader, and\nSchema parsing, it is on by default for XSLT (stylesheet) parsing in Nokogiri\nv1.12.0 and later.\n* `DTDVALID` is an option that Nokogiri does not set for any operations, and so\nthis CVE applies only to applications setting this option explicitly.\n\nIt seems reasonable to assume that any application explicitly setting the parse\noption `DTDVALID` when parsing untrusted documents is vulnerable and should be\nupgraded immediately.\n",
+      "gem": "nokogiri",
+      "ghsa": "fq42-c5rg-92c2",
+      "patched_versions": [
+        ">= 1.13.2"
+      ],
+      "related": {
+        "cve": [
+          "2022-23308"
+        ]
+      },
+      "title": "Update packaged libxml2 (2.9.12 \u2192 2.9.13) and libxslt (1.1.34 \u2192 1.1.35)",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-fq42-c5rg-92c2"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.1.35",
+          "affected_versions": "All versions before 1.1.35",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2022-10-27",
+          "description": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.",
+          "fixed_versions": [
+            "1.1.35"
+          ],
+          "identifier": "CVE-2021-30560",
+          "identifiers": [
+            "CVE-2021-30560"
+          ],
+          "not_impacted": "All versions starting from 1.1.35",
+          "package_slug": "conan/libxslt",
+          "pubdate": "2021-08-03",
+          "solution": "Upgrade to version 1.1.35 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-30560",
+            "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
+            "https://crbug.com/1219209"
+          ],
+          "uuid": "4efa16aa-d829-4b6c-b073-d2d001f854df"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "91.0.4472.164",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:xmlsoft:libxslt:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.35",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "chrome-cve-admin@google.com",
+          "ID": "CVE-2021-30560"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Use after free in Blink XSLT in Google Chrome prior to 91.0.4472.164 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-416"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes",
+                "Vendor Advisory"
+              ],
+              "url": "https://chromereleases.googleblog.com/2021/07/stable-channel-update-for-desktop.html"
+            },
+            {
+              "name": "https://crbug.com/1219209",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://crbug.com/1219209"
+            },
+            {
+              "name": "DSA-5216",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2022/dsa-5216"
+            },
+            {
+              "name": "[debian-lts-announce] 20220909 [SECURITY] [DLA 3101-1] libxslt security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00010.html"
+            },
+            {
+              "name": "GLSA-202310-23",
+              "refsource": "GENTOO",
+              "tags": [],
+              "url": "https://security.gentoo.org/glsa/202310-23"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-10-31T15:15Z",
+      "publishedDate": "2021-08-03T19:15Z"
+    }
+  }
 }

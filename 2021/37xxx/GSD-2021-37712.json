@@ -1,412 +1,429 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-37712",
-        "description": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p.",
-        "id": "GSD-2021-37712",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-37712.html",
-            "https://www.debian.org/security/2021/dsa-5008",
-            "https://access.redhat.com/errata/RHSA-2022:0350",
-            "https://access.redhat.com/errata/RHSA-2022:0246",
-            "https://access.redhat.com/errata/RHSA-2022:0041",
-            "https://access.redhat.com/errata/RHSA-2021:5086",
-            "https://advisories.mageia.org/CVE-2021-37712.html",
-            "https://security.archlinux.org/CVE-2021-37712",
-            "https://linux.oracle.com/cve/CVE-2021-37712.html",
-            "https://access.redhat.com/errata/RHSA-2022:4914",
-            "https://access.redhat.com/errata/RHEA-2022:4925",
-            "https://access.redhat.com/errata/RHEA-2022:5139",
-            "https://access.redhat.com/errata/RHEA-2022:5221",
-            "https://access.redhat.com/errata/RHEA-2022:5615"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-37712",
+    "description": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p.",
+    "id": "GSD-2021-37712",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-37712.html",
+      "https://www.debian.org/security/2021/dsa-5008",
+      "https://access.redhat.com/errata/RHSA-2022:0350",
+      "https://access.redhat.com/errata/RHSA-2022:0246",
+      "https://access.redhat.com/errata/RHSA-2022:0041",
+      "https://access.redhat.com/errata/RHSA-2021:5086",
+      "https://advisories.mageia.org/CVE-2021-37712.html",
+      "https://security.archlinux.org/CVE-2021-37712",
+      "https://linux.oracle.com/cve/CVE-2021-37712.html",
+      "https://access.redhat.com/errata/RHSA-2022:4914",
+      "https://access.redhat.com/errata/RHEA-2022:4925",
+      "https://access.redhat.com/errata/RHEA-2022:5139",
+      "https://access.redhat.com/errata/RHEA-2022:5221",
+      "https://access.redhat.com/errata/RHEA-2022:5615"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-37712",
-                "STATE": "PUBLIC",
-                "TITLE": "Arbitrary File Creation/Overwrite via insufficient symlink protection due to directory cache poisoning using symbolic links"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "node-tar",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 4.4.18"
-                                                },
-                                                {
-                                                    "version_value": ">= 5.0.0, < 5.0.10"
-                                                },
-                                                {
-                                                    "version_value": ">= 6.0.0, < 6.1.9"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "npm"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 8.2,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "CHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://www.npmjs.com/package/tar",
-                        "refsource": "MISC",
-                        "url": "https://www.npmjs.com/package/tar"
-                    },
-                    {
-                        "name": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p"
-                    },
-                    {
-                        "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
-                        "refsource": "MISC",
-                        "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                    },
-                    {
-                        "name": "DSA-5008",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2021/dsa-5008"
-                    },
-                    {
-                        "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
-                        "refsource": "CONFIRM",
-                        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20221212 [SECURITY] [DLA 3237-1] node-tar security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00023.html"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-qq89-hq3f-393p",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<=4.4.17||>=5.0.0 <=5.0.9||>=6.0.0 <=6.1.8",
-                    "affected_versions": "All versions up to 4.4.17, all versions starting from 5.0.0 up to 5.0.9, all versions starting from 6.0.0 up to 6.1.8",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-23",
-                    "description": "The npm package \"tar\" (aka node-tar) has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created.",
-                    "fixed_versions": [
-                        "4.4.18",
-                        "5.0.10",
-                        "6.1.9"
-                    ],
-                    "identifier": "CVE-2021-37712",
-                    "identifiers": [
-                        "CVE-2021-37712",
-                        "GHSA-qq89-hq3f-393p"
-                    ],
-                    "not_impacted": "All versions after 4.4.17 before 5.0.0, all versions after 5.0.9 before 6.0.0, all versions after 6.1.8",
-                    "package_slug": "npm/tar",
-                    "pubdate": "2021-08-31",
-                    "solution": "Upgrade to versions 4.4.18, 5.0.10, 6.1.9 or above.",
-                    "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37712",
-                        "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
-                        "https://www.npmjs.com/package/tar",
-                        "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                    ],
-                    "uuid": "129fddb5-3f53-4889-872b-7b0a95f8e3e8"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
-                                        "cpe_name": [],
-                                        "versionEndIncluding": "4.4.17",
-                                        "vulnerable": true
-                                    },
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
-                                        "cpe_name": [],
-                                        "versionEndIncluding": "5.0.9",
-                                        "versionStartIncluding": "5.0.0",
-                                        "vulnerable": true
-                                    },
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
-                                        "cpe_name": [],
-                                        "versionEndIncluding": "6.1.8",
-                                        "versionStartIncluding": "6.0.0",
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:20.3.3:*:*:*:enterprise:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:21.2.0:*:*:*:enterprise:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.1.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-37712"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-22"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-59"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p"
-                        },
-                        {
-                            "name": "https://www.npmjs.com/package/tar",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://www.npmjs.com/package/tar"
-                        },
-                        {
-                            "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                        },
-                        {
-                            "name": "DSA-5008",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2021/dsa-5008"
-                        },
-                        {
-                            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20221212 [SECURITY] [DLA 3237-1] node-tar security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00023.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.4,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.4,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.6,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 6.0
-                }
-            },
-            "lastModifiedDate": "2023-02-23T02:28Z",
-            "publishedDate": "2021-08-31T17:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-37712"
+      ],
+      "details": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p.",
+      "id": "GSD-2021-37712",
+      "modified": "2023-12-13T01:23:10.075566Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-37712",
+        "STATE": "PUBLIC",
+        "TITLE": "Arbitrary File Creation/Overwrite via insufficient symlink protection due to directory cache poisoning using symbolic links"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "node-tar",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 4.4.18"
+                        },
+                        {
+                          "version_value": ">= 5.0.0, < 5.0.10"
+                        },
+                        {
+                          "version_value": ">= 6.0.0, < 6.1.9"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "npm"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "NONE",
+          "baseScore": 8.2,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "CHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.npmjs.com/package/tar",
+            "refsource": "MISC",
+            "url": "https://www.npmjs.com/package/tar"
+          },
+          {
+            "name": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p"
+          },
+          {
+            "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
+            "refsource": "MISC",
+            "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+          },
+          {
+            "name": "DSA-5008",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2021/dsa-5008"
+          },
+          {
+            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+            "refsource": "CONFIRM",
+            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
+          },
+          {
+            "name": "[debian-lts-announce] 20221212 [SECURITY] [DLA 3237-1] node-tar security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00023.html"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qq89-hq3f-393p",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<=4.4.17||>=5.0.0 <=5.0.9||>=6.0.0 <=6.1.8",
+          "affected_versions": "All versions up to 4.4.17, all versions starting from 5.0.0 up to 5.0.9, all versions starting from 6.0.0 up to 6.1.8",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-937"
+          ],
+          "date": "2023-02-23",
+          "description": "The npm package \"tar\" (aka node-tar) has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created.",
+          "fixed_versions": [
+            "4.4.18",
+            "5.0.10",
+            "6.1.9"
+          ],
+          "identifier": "CVE-2021-37712",
+          "identifiers": [
+            "CVE-2021-37712",
+            "GHSA-qq89-hq3f-393p"
+          ],
+          "not_impacted": "All versions after 4.4.17 before 5.0.0, all versions after 5.0.9 before 6.0.0, all versions after 6.1.8",
+          "package_slug": "npm/tar",
+          "pubdate": "2021-08-31",
+          "solution": "Upgrade to versions 4.4.18, 5.0.10, 6.1.9 or above.",
+          "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37712",
+            "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
+            "https://www.npmjs.com/package/tar",
+            "https://www.oracle.com/security-alerts/cpuoct2021.html"
+          ],
+          "uuid": "129fddb5-3f53-4889-872b-7b0a95f8e3e8"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
+                    "cpe_name": [],
+                    "versionEndIncluding": "4.4.17",
+                    "vulnerable": true
+                  },
+                  {
+                    "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
+                    "cpe_name": [],
+                    "versionEndIncluding": "5.0.9",
+                    "versionStartIncluding": "5.0.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "cpe23Uri": "cpe:2.3:a:npmjs:tar:*:*:*:*:*:node.js:*:*",
+                    "cpe_name": [],
+                    "versionEndIncluding": "6.1.8",
+                    "versionStartIncluding": "6.0.0",
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:20.3.3:*:*:*:enterprise:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:21.2.0:*:*:*:enterprise:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.1.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-37712"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "The npm package \"tar\" (aka node-tar) before versions 4.4.18, 5.0.10, and 6.1.9 has an arbitrary file creation/overwrite and arbitrary code execution vulnerability. node-tar aims to guarantee that any file whose location would be modified by a symbolic link is not extracted. This is, in part, achieved by ensuring that extracted directories are not symlinks. Additionally, in order to prevent unnecessary stat calls to determine whether a given path is a directory, paths are cached when directories are created. This logic was insufficient when extracting tar files that contained both a directory and a symlink with names containing unicode values that normalized to the same value. Additionally, on Windows systems, long path portions would resolve to the same file system entities as their 8.3 \"short path\" counterparts. A specially crafted tar archive could thus include a directory with one form of the path, followed by a symbolic link with a different string that resolves to the same file system entity, followed by a file using the first form. By first creating a directory, and then replacing that directory with a symlink that had a different apparent name that resolved to the same entry in the filesystem, it was thus possible to bypass node-tar symlink checks on directories, essentially allowing an untrusted tar file to symlink into an arbitrary location and subsequently extracting arbitrary files into that location, thus allowing arbitrary file creation and overwrite. These issues were addressed in releases 4.4.18, 5.0.10 and 6.1.9. The v3 branch of node-tar has been deprecated and did not receive patches for these issues. If you are still using a v3 release we recommend you update to a more recent version of node-tar. If this is not possible, a workaround is available in the referenced GHSA-qq89-hq3f-393p."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-22"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-59"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/npm/node-tar/security/advisories/GHSA-qq89-hq3f-393p"
+            },
+            {
+              "name": "https://www.npmjs.com/package/tar",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://www.npmjs.com/package/tar"
+            },
+            {
+              "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+            },
+            {
+              "name": "DSA-5008",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2021/dsa-5008"
+            },
+            {
+              "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
+            },
+            {
+              "name": "[debian-lts-announce] 20221212 [SECURITY] [DLA 3237-1] node-tar security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00023.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.4,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.4,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.6,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 6.0
+        }
+      },
+      "lastModifiedDate": "2023-02-23T02:28Z",
+      "publishedDate": "2021-08-31T17:15Z"
+    }
+  }
 }

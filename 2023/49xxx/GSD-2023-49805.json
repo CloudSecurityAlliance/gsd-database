@@ -1,153 +1,170 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-49805",
-        "id": "GSD-2023-49805"
+  "GSD": {
+    "alias": "CVE-2023-49805",
+    "id": "GSD-2023-49805"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-49805",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "uptime-kuma",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "<  1.23.9"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "louislam"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Uptime Kuma is an easy-to-use self-hosted monitoring tool. Prior to version 1.23.9, the application uses WebSocket (with Socket.io), but it does not verify that the source of communication is valid. This allows third-party website to access the application on behalf of their client. When connecting to the server using Socket.IO, the server does not validate the `Origin` header leading to other site being able to open connections to the server and communicate with it. Other websites still need to authenticate to access most features, however this can be used to circumvent firewall protections made in place by people deploying the application.\n\nWithout origin validation, Javascript executed from another origin would be allowed to connect to the application without any user interaction. Without login credentials, such a connection is unable to access protected endpoints containing sensitive data of the application. However, such a connection may allow attacker to further exploit unseen vulnerabilities of the application. Users with \"No-auth\" mode configured who are relying on a reverse proxy or firewall to provide protection to the application would be especially vulnerable as it would grant the attacker full access to the application.\n\nIn version 1.23.9, additional verification of the HTTP Origin header has been added to the socket.io connection handler. By default, if the `Origin` header is present, it would be checked against the Host header. Connection would be denied if the hostnames do not match, which would indicate that the request is cross-origin. Connection would be allowed if the `Origin` header is not present. Users can override this behavior by setting environment variable `UPTIME_KUMA_WS_ORIGIN_CHECK=bypass`."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 6,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "HIGH",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:L",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-1385",
-                                "lang": "eng",
-                                "value": "CWE-1385: Missing Origin Validation in WebSockets"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr",
-                        "refsource": "MISC",
-                        "url": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr"
-                    },
-                    {
-                        "name": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f",
-                        "refsource": "MISC",
-                        "url": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-mj22-23ff-2hrr",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": []
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-49805"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Uptime Kuma is an easy-to-use self-hosted monitoring tool. Prior to version 1.23.9, the application uses WebSocket (with Socket.io), but it does not verify that the source of communication is valid. This allows third-party website to access the application on behalf of their client. When connecting to the server using Socket.IO, the server does not validate the `Origin` header leading to other site being able to open connections to the server and communicate with it. Other websites still need to authenticate to access most features, however this can be used to circumvent firewall protections made in place by people deploying the application.\n\nWithout origin validation, Javascript executed from another origin would be allowed to connect to the application without any user interaction. Without login credentials, such a connection is unable to access protected endpoints containing sensitive data of the application. However, such a connection may allow attacker to further exploit unseen vulnerabilities of the application. Users with \"No-auth\" mode configured who are relying on a reverse proxy or firewall to provide protection to the application would be especially vulnerable as it would grant the attacker full access to the application.\n\nIn version 1.23.9, additional verification of the HTTP Origin header has been added to the socket.io connection handler. By default, if the `Origin` header is present, it would be checked against the Host header. Connection would be denied if the hostnames do not match, which would indicate that the request is cross-origin. Connection would be allowed if the `Origin` header is not present. Users can override this behavior by setting environment variable `UPTIME_KUMA_WS_ORIGIN_CHECK=bypass`."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-1385"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr"
-                        },
-                        {
-                            "name": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f"
-                        }
-                    ]
-                }
-            },
-            "impact": {},
-            "lastModifiedDate": "2023-12-11T23:15Z",
-            "publishedDate": "2023-12-11T23:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-49805"
+      ],
+      "details": "Uptime Kuma is an easy-to-use self-hosted monitoring tool. Prior to version 1.23.9, the application uses WebSocket (with Socket.io), but it does not verify that the source of communication is valid. This allows third-party website to access the application on behalf of their client. When connecting to the server using Socket.IO, the server does not validate the `Origin` header leading to other site being able to open connections to the server and communicate with it. Other websites still need to authenticate to access most features, however this can be used to circumvent firewall protections made in place by people deploying the application.\n\nWithout origin validation, Javascript executed from another origin would be allowed to connect to the application without any user interaction. Without login credentials, such a connection is unable to access protected endpoints containing sensitive data of the application. However, such a connection may allow attacker to further exploit unseen vulnerabilities of the application. Users with \"No-auth\" mode configured who are relying on a reverse proxy or firewall to provide protection to the application would be especially vulnerable as it would grant the attacker full access to the application.\n\nIn version 1.23.9, additional verification of the HTTP Origin header has been added to the socket.io connection handler. By default, if the `Origin` header is present, it would be checked against the Host header. Connection would be denied if the hostnames do not match, which would indicate that the request is cross-origin. Connection would be allowed if the `Origin` header is not present. Users can override this behavior by setting environment variable `UPTIME_KUMA_WS_ORIGIN_CHECK=bypass`.",
+      "id": "GSD-2023-49805",
+      "modified": "2023-12-13T01:20:34.865599Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-49805",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "uptime-kuma",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "<  1.23.9"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "louislam"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Uptime Kuma is an easy-to-use self-hosted monitoring tool. Prior to version 1.23.9, the application uses WebSocket (with Socket.io), but it does not verify that the source of communication is valid. This allows third-party website to access the application on behalf of their client. When connecting to the server using Socket.IO, the server does not validate the `Origin` header leading to other site being able to open connections to the server and communicate with it. Other websites still need to authenticate to access most features, however this can be used to circumvent firewall protections made in place by people deploying the application.\n\nWithout origin validation, Javascript executed from another origin would be allowed to connect to the application without any user interaction. Without login credentials, such a connection is unable to access protected endpoints containing sensitive data of the application. However, such a connection may allow attacker to further exploit unseen vulnerabilities of the application. Users with \"No-auth\" mode configured who are relying on a reverse proxy or firewall to provide protection to the application would be especially vulnerable as it would grant the attacker full access to the application.\n\nIn version 1.23.9, additional verification of the HTTP Origin header has been added to the socket.io connection handler. By default, if the `Origin` header is present, it would be checked against the Host header. Connection would be denied if the hostnames do not match, which would indicate that the request is cross-origin. Connection would be allowed if the `Origin` header is not present. Users can override this behavior by setting environment variable `UPTIME_KUMA_WS_ORIGIN_CHECK=bypass`."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 6,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "HIGH",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-1385",
+                "lang": "eng",
+                "value": "CWE-1385: Missing Origin Validation in WebSockets"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr",
+            "refsource": "MISC",
+            "url": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr"
+          },
+          {
+            "name": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f",
+            "refsource": "MISC",
+            "url": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-mj22-23ff-2hrr",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": []
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-49805"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Uptime Kuma is an easy-to-use self-hosted monitoring tool. Prior to version 1.23.9, the application uses WebSocket (with Socket.io), but it does not verify that the source of communication is valid. This allows third-party website to access the application on behalf of their client. When connecting to the server using Socket.IO, the server does not validate the `Origin` header leading to other site being able to open connections to the server and communicate with it. Other websites still need to authenticate to access most features, however this can be used to circumvent firewall protections made in place by people deploying the application.\n\nWithout origin validation, Javascript executed from another origin would be allowed to connect to the application without any user interaction. Without login credentials, such a connection is unable to access protected endpoints containing sensitive data of the application. However, such a connection may allow attacker to further exploit unseen vulnerabilities of the application. Users with \"No-auth\" mode configured who are relying on a reverse proxy or firewall to provide protection to the application would be especially vulnerable as it would grant the attacker full access to the application.\n\nIn version 1.23.9, additional verification of the HTTP Origin header has been added to the socket.io connection handler. By default, if the `Origin` header is present, it would be checked against the Host header. Connection would be denied if the hostnames do not match, which would indicate that the request is cross-origin. Connection would be allowed if the `Origin` header is not present. Users can override this behavior by setting environment variable `UPTIME_KUMA_WS_ORIGIN_CHECK=bypass`."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-1385"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr",
+              "refsource": "",
+              "tags": [],
+              "url": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr"
+            },
+            {
+              "name": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f",
+              "refsource": "",
+              "tags": [],
+              "url": "https://github.com/louislam/uptime-kuma/commit/2815cc73cfd9d8ced889e00e72899708220d184f"
+            }
+          ]
+        }
+      },
+      "impact": {},
+      "lastModifiedDate": "2023-12-12T13:43Z",
+      "publishedDate": "2023-12-11T23:15Z"
+    }
+  }
 }

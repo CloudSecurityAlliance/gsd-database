@@ -1,518 +1,535 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-39325",
-        "id": "GSD-2023-39325"
+  "GSD": {
+    "alias": "CVE-2023-39325",
+    "id": "GSD-2023-39325"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security@golang.org",
-                "ID": "CVE-2023-39325",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "net/http",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "0",
-                                                    "version_value": "1.20.10"
-                                                },
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "1.21.0-0",
-                                                    "version_value": "1.21.3"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Go standard library"
-                        },
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "golang.org/x/net/http2",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "0",
-                                                    "version_value": "0.17.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "golang.org/x/net"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-400: Uncontrolled Resource Consumption"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://go.dev/issue/63417",
-                        "refsource": "MISC",
-                        "url": "https://go.dev/issue/63417"
-                    },
-                    {
-                        "name": "https://go.dev/cl/534215",
-                        "refsource": "MISC",
-                        "url": "https://go.dev/cl/534215"
-                    },
-                    {
-                        "name": "https://go.dev/cl/534235",
-                        "refsource": "MISC",
-                        "url": "https://go.dev/cl/534235"
-                    },
-                    {
-                        "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
-                    },
-                    {
-                        "name": "https://pkg.go.dev/vuln/GO-2023-2102",
-                        "refsource": "MISC",
-                        "url": "https://pkg.go.dev/vuln/GO-2023-2102"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20231110-0008/",
-                        "refsource": "MISC",
-                        "url": "https://security.netapp.com/advisory/ntap-20231110-0008/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/"
-                    },
-                    {
-                        "name": "https://security.gentoo.org/glsa/202311-09",
-                        "refsource": "MISC",
-                        "url": "https://security.gentoo.org/glsa/202311-09"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/"
-                    }
-                ]
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:golang:http2:*:*:*:*:*:go:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.17.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:golang:go:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.21.3",
-                                "versionStartIncluding": "1.21.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:golang:go:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.20.10",
-                                "versionStartIncluding": "1.20.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:38:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security@golang.org",
-                    "ID": "CVE-2023-39325"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-400"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://go.dev/issue/63417",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://go.dev/issue/63417"
-                        },
-                        {
-                            "name": "https://go.dev/cl/534235",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://go.dev/cl/534235"
-                        },
-                        {
-                            "name": "https://go.dev/cl/534215",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://go.dev/cl/534215"
-                        },
-                        {
-                            "name": "https://pkg.go.dev/vuln/GO-2023-2102",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://pkg.go.dev/vuln/GO-2023-2102"
-                        },
-                        {
-                            "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20231110-0008/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://security.netapp.com/advisory/ntap-20231110-0008/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/"
-                        },
-                        {
-                            "name": "https://security.gentoo.org/glsa/202311-09",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://security.gentoo.org/glsa/202311-09"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-12-07T03:15Z",
-            "publishedDate": "2023-10-11T22:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-39325"
+      ],
+      "details": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function.",
+      "id": "GSD-2023-39325",
+      "modified": "2023-12-13T01:20:33.115870Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security@golang.org",
+        "ID": "CVE-2023-39325",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "net/http",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0",
+                          "version_value": "1.20.10"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "1.21.0-0",
+                          "version_value": "1.21.3"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Go standard library"
+            },
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "golang.org/x/net/http2",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0",
+                          "version_value": "0.17.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "golang.org/x/net"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-400: Uncontrolled Resource Consumption"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://go.dev/issue/63417",
+            "refsource": "MISC",
+            "url": "https://go.dev/issue/63417"
+          },
+          {
+            "name": "https://go.dev/cl/534215",
+            "refsource": "MISC",
+            "url": "https://go.dev/cl/534215"
+          },
+          {
+            "name": "https://go.dev/cl/534235",
+            "refsource": "MISC",
+            "url": "https://go.dev/cl/534235"
+          },
+          {
+            "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
+          },
+          {
+            "name": "https://pkg.go.dev/vuln/GO-2023-2102",
+            "refsource": "MISC",
+            "url": "https://pkg.go.dev/vuln/GO-2023-2102"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20231110-0008/",
+            "refsource": "MISC",
+            "url": "https://security.netapp.com/advisory/ntap-20231110-0008/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/"
+          },
+          {
+            "name": "https://security.gentoo.org/glsa/202311-09",
+            "refsource": "MISC",
+            "url": "https://security.gentoo.org/glsa/202311-09"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:golang:http2:*:*:*:*:*:go:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.17.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:golang:go:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.21.3",
+                "versionStartIncluding": "1.21.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:golang:go:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.20.10",
+                "versionStartIncluding": "1.20.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:38:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security@golang.org",
+          "ID": "CVE-2023-39325"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "A malicious HTTP/2 client which rapidly creates requests and immediately resets them can cause excessive server resource consumption. While the total number of requests is bounded by the http2.Server.MaxConcurrentStreams setting, resetting an in-progress request allows the attacker to create a new request while the existing one is still executing. With the fix applied, HTTP/2 servers now bound the number of simultaneously executing handler goroutines to the stream concurrency limit (MaxConcurrentStreams). New requests arriving when at the limit (which can only happen after the client has reset an existing, in-flight request) will be queued until a handler exits. If the request queue grows too large, the server will terminate the connection. This issue is also fixed in golang.org/x/net/http2 for users manually configuring HTTP/2. The default stream concurrency limit is 250 streams (requests) per HTTP/2 connection. This value may be adjusted using the golang.org/x/net/http2 package; see the Server.MaxConcurrentStreams setting and the ConfigureServer function."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-400"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://go.dev/issue/63417",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Vendor Advisory"
+              ],
+              "url": "https://go.dev/issue/63417"
+            },
+            {
+              "name": "https://go.dev/cl/534235",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://go.dev/cl/534235"
+            },
+            {
+              "name": "https://go.dev/cl/534215",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://go.dev/cl/534215"
+            },
+            {
+              "name": "https://pkg.go.dev/vuln/GO-2023-2102",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://pkg.go.dev/vuln/GO-2023-2102"
+            },
+            {
+              "name": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20231110-0008/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://security.netapp.com/advisory/ntap-20231110-0008/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/"
+            },
+            {
+              "name": "https://security.gentoo.org/glsa/202311-09",
+              "refsource": "",
+              "tags": [],
+              "url": "https://security.gentoo.org/glsa/202311-09"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/",
+              "refsource": "",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-12-07T03:15Z",
+      "publishedDate": "2023-10-11T22:15Z"
+    }
+  }
 }

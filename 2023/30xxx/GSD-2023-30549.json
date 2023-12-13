@@ -1,432 +1,449 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-30549",
-        "id": "GSD-2023-30549"
+  "GSD": {
+    "alias": "CVE-2023-30549",
+    "id": "GSD-2023-30549"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-30549",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "apptainer",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.1.8"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "apptainer"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0 and installations that include apptainer-suid < 1.1.8 on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf.  This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts.  (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files.  The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.1,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-416",
-                                "lang": "eng",
-                                "value": "CWE-416: Use After Free"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
-                        "refsource": "MISC",
-                        "url": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg"
-                    },
-                    {
-                        "name": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
-                        "refsource": "MISC",
-                        "url": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7"
-                    },
-                    {
-                        "name": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303",
-                        "refsource": "MISC",
-                        "url": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303"
-                    },
-                    {
-                        "name": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f",
-                        "refsource": "MISC",
-                        "url": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f"
-                    },
-                    {
-                        "name": "https://access.redhat.com/security/cve/cve-2022-1184",
-                        "refsource": "MISC",
-                        "url": "https://access.redhat.com/security/cve/cve-2022-1184"
-                    },
-                    {
-                        "name": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
-                        "refsource": "MISC",
-                        "url": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
-                    },
-                    {
-                        "name": "https://lwn.net/Articles/932136/",
-                        "refsource": "MISC",
-                        "url": "https://lwn.net/Articles/932136/"
-                    },
-                    {
-                        "name": "https://lwn.net/Articles/932137/",
-                        "refsource": "MISC",
-                        "url": "https://lwn.net/Articles/932137/"
-                    },
-                    {
-                        "name": "https://security-tracker.debian.org/tracker/CVE-2022-1184",
-                        "refsource": "MISC",
-                        "url": "https://security-tracker.debian.org/tracker/CVE-2022-1184"
-                    },
-                    {
-                        "name": "https://sylabs.io/2023/04/response-to-cve-2023-30549/",
-                        "refsource": "MISC",
-                        "url": "https://sylabs.io/2023/04/response-to-cve-2023-30549/"
-                    },
-                    {
-                        "name": "https://ubuntu.com/security/CVE-2022-1184",
-                        "refsource": "MISC",
-                        "url": "https://ubuntu.com/security/CVE-2022-1184"
-                    },
-                    {
-                        "name": "https://www.suse.com/security/cve/CVE-2022-1184.html",
-                        "refsource": "MISC",
-                        "url": "https://www.suse.com/security/cve/CVE-2022-1184.html"
-                    },
-                    {
-                        "name": "https://security.gentoo.org/glsa/202311-13",
-                        "refsource": "MISC",
-                        "url": "https://security.gentoo.org/glsa/202311-13"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-j4rf-7357-f4cg",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<v1.1.8",
-                    "affected_versions": "All versions before 1.1.8",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2023-04-25",
-                    "description": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0, installations that include apptainer-suid < 1.1.8, and all versions of Singularity in their default configurations on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf (or singularity.conf for singularity versions). This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts. (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files. The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed.",
-                    "fixed_versions": [
-                        "v1.1.8"
-                    ],
-                    "identifier": "CVE-2023-30549",
-                    "identifiers": [
-                        "GHSA-j4rf-7357-f4cg",
-                        "CVE-2023-30549"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.8",
-                    "package_slug": "go/github.com/apptainer/apptainer",
-                    "pubdate": "2023-04-25",
-                    "solution": "Upgrade to version 1.1.8 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-1184",
-                        "https://github.com/torvalds/linux/commit/61a1d87a324ad5e3ed27c6699dfc93218fcf3201",
-                        "https://github.com/torvalds/linux/commit/65f8ea4cd57dbd46ea13b41dc8bac03176b04233",
-                        "https://access.redhat.com/security/cve/cve-2022-1184",
-                        "https://security-tracker.debian.org/tracker/CVE-2022-1184",
-                        "https://ubuntu.com/security/CVE-2022-1184",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-30549",
-                        "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
-                        "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
-                        "https://www.suse.com/security/cve/CVE-2022-1184.html",
-                        "https://github.com/advisories/GHSA-j4rf-7357-f4cg"
-                    ],
-                    "uuid": "aee7507c-677c-4711-915b-abbfc1d6aa7b",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "fe827632cb36e122810466ea5c77dba39713ead1",
-                                "tags": [
-                                    "v1.1.8"
-                                ],
-                                "timestamp": "20230425155020"
-                            },
-                            "number": "v1.1.8"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "",
-                    "affected_versions": "All versions",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-08",
-                    "description": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0, installations that include apptainer-suid < 1.1.8, and all versions of Singularity in their default configurations on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf (or singularity.conf for singularity versions). This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts. (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files. The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2023-30549",
-                    "identifiers": [
-                        "CVE-2023-30549",
-                        "GHSA-j4rf-7357-f4cg"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "go/github.com/sylabs/singularity/internal/pkg/runtime/engines/singularity",
-                    "pubdate": "2023-04-25",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-30549",
-                        "https://access.redhat.com/security/cve/cve-2022-1184",
-                        "https://www.suse.com/security/cve/CVE-2022-1184.html",
-                        "https://ubuntu.com/security/CVE-2022-1184",
-                        "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
-                        "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
-                        "https://security-tracker.debian.org/tracker/CVE-2022-1184",
-                        "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
-                    ],
-                    "uuid": "ad8f3f2f-3cbe-4f0e-b244-a0c53465c4b1"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:lfprojects:apptainer:*:*:*:*:*:go:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.8",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:sylabs:singularity:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:redhat:enterprise_linux:7.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-30549"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0 and installations that include apptainer-suid < 1.1.8 on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf.  This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts.  (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files.  The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-416"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://access.redhat.com/security/cve/cve-2022-1184",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Not Applicable"
-                            ],
-                            "url": "https://access.redhat.com/security/cve/cve-2022-1184"
-                        },
-                        {
-                            "name": "https://www.suse.com/security/cve/CVE-2022-1184.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Not Applicable"
-                            ],
-                            "url": "https://www.suse.com/security/cve/CVE-2022-1184.html"
-                        },
-                        {
-                            "name": "https://ubuntu.com/security/CVE-2022-1184",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Not Applicable"
-                            ],
-                            "url": "https://ubuntu.com/security/CVE-2022-1184"
-                        },
-                        {
-                            "name": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg"
-                        },
-                        {
-                            "name": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7"
-                        },
-                        {
-                            "name": "https://security-tracker.debian.org/tracker/CVE-2022-1184",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Not Applicable"
-                            ],
-                            "url": "https://security-tracker.debian.org/tracker/CVE-2022-1184"
-                        },
-                        {
-                            "name": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
-                        },
-                        {
-                            "name": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f"
-                        },
-                        {
-                            "name": "https://lwn.net/Articles/932136/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lwn.net/Articles/932136/"
-                        },
-                        {
-                            "name": "https://lwn.net/Articles/932137/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lwn.net/Articles/932137/"
-                        },
-                        {
-                            "name": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303"
-                        },
-                        {
-                            "name": "https://sylabs.io/2023/04/response-to-cve-2023-30549/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://sylabs.io/2023/04/response-to-cve-2023-30549/"
-                        },
-                        {
-                            "name": "https://security.gentoo.org/glsa/202311-13",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://security.gentoo.org/glsa/202311-13"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-11-25T12:15Z",
-            "publishedDate": "2023-04-25T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-30549"
+      ],
+      "details": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0 and installations that include apptainer-suid < 1.1.8 on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf.  This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts.  (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files.  The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed.",
+      "id": "GSD-2023-30549",
+      "modified": "2023-12-13T01:20:52.303809Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-30549",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "apptainer",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.1.8"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "apptainer"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0 and installations that include apptainer-suid < 1.1.8 on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf.  This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts.  (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files.  The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.1,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-416",
+                "lang": "eng",
+                "value": "CWE-416: Use After Free"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
+            "refsource": "MISC",
+            "url": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg"
+          },
+          {
+            "name": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
+            "refsource": "MISC",
+            "url": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7"
+          },
+          {
+            "name": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303",
+            "refsource": "MISC",
+            "url": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303"
+          },
+          {
+            "name": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f",
+            "refsource": "MISC",
+            "url": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f"
+          },
+          {
+            "name": "https://access.redhat.com/security/cve/cve-2022-1184",
+            "refsource": "MISC",
+            "url": "https://access.redhat.com/security/cve/cve-2022-1184"
+          },
+          {
+            "name": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
+            "refsource": "MISC",
+            "url": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
+          },
+          {
+            "name": "https://lwn.net/Articles/932136/",
+            "refsource": "MISC",
+            "url": "https://lwn.net/Articles/932136/"
+          },
+          {
+            "name": "https://lwn.net/Articles/932137/",
+            "refsource": "MISC",
+            "url": "https://lwn.net/Articles/932137/"
+          },
+          {
+            "name": "https://security-tracker.debian.org/tracker/CVE-2022-1184",
+            "refsource": "MISC",
+            "url": "https://security-tracker.debian.org/tracker/CVE-2022-1184"
+          },
+          {
+            "name": "https://sylabs.io/2023/04/response-to-cve-2023-30549/",
+            "refsource": "MISC",
+            "url": "https://sylabs.io/2023/04/response-to-cve-2023-30549/"
+          },
+          {
+            "name": "https://ubuntu.com/security/CVE-2022-1184",
+            "refsource": "MISC",
+            "url": "https://ubuntu.com/security/CVE-2022-1184"
+          },
+          {
+            "name": "https://www.suse.com/security/cve/CVE-2022-1184.html",
+            "refsource": "MISC",
+            "url": "https://www.suse.com/security/cve/CVE-2022-1184.html"
+          },
+          {
+            "name": "https://security.gentoo.org/glsa/202311-13",
+            "refsource": "MISC",
+            "url": "https://security.gentoo.org/glsa/202311-13"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-j4rf-7357-f4cg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<v1.1.8",
+          "affected_versions": "All versions before 1.1.8",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2023-04-25",
+          "description": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0, installations that include apptainer-suid < 1.1.8, and all versions of Singularity in their default configurations on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf (or singularity.conf for singularity versions). This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts. (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files. The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed.",
+          "fixed_versions": [
+            "v1.1.8"
+          ],
+          "identifier": "CVE-2023-30549",
+          "identifiers": [
+            "GHSA-j4rf-7357-f4cg",
+            "CVE-2023-30549"
+          ],
+          "not_impacted": "All versions starting from 1.1.8",
+          "package_slug": "go/github.com/apptainer/apptainer",
+          "pubdate": "2023-04-25",
+          "solution": "Upgrade to version 1.1.8 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-1184",
+            "https://github.com/torvalds/linux/commit/61a1d87a324ad5e3ed27c6699dfc93218fcf3201",
+            "https://github.com/torvalds/linux/commit/65f8ea4cd57dbd46ea13b41dc8bac03176b04233",
+            "https://access.redhat.com/security/cve/cve-2022-1184",
+            "https://security-tracker.debian.org/tracker/CVE-2022-1184",
+            "https://ubuntu.com/security/CVE-2022-1184",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-30549",
+            "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
+            "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
+            "https://www.suse.com/security/cve/CVE-2022-1184.html",
+            "https://github.com/advisories/GHSA-j4rf-7357-f4cg"
+          ],
+          "uuid": "aee7507c-677c-4711-915b-abbfc1d6aa7b",
+          "versions": [
+            {
+              "commit": {
+                "sha": "fe827632cb36e122810466ea5c77dba39713ead1",
+                "tags": [
+                  "v1.1.8"
+                ],
+                "timestamp": "20230425155020"
+              },
+              "number": "v1.1.8"
+            }
+          ]
+        },
+        {
+          "affected_range": "",
+          "affected_versions": "All versions",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2023-07-08",
+          "description": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0, installations that include apptainer-suid < 1.1.8, and all versions of Singularity in their default configurations on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf (or singularity.conf for singularity versions). This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts. (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files. The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed.",
+          "fixed_versions": [],
+          "identifier": "CVE-2023-30549",
+          "identifiers": [
+            "CVE-2023-30549",
+            "GHSA-j4rf-7357-f4cg"
+          ],
+          "not_impacted": "",
+          "package_slug": "go/github.com/sylabs/singularity/internal/pkg/runtime/engines/singularity",
+          "pubdate": "2023-04-25",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "Use After Free",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-30549",
+            "https://access.redhat.com/security/cve/cve-2022-1184",
+            "https://www.suse.com/security/cve/CVE-2022-1184.html",
+            "https://ubuntu.com/security/CVE-2022-1184",
+            "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
+            "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
+            "https://security-tracker.debian.org/tracker/CVE-2022-1184",
+            "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
+          ],
+          "uuid": "ad8f3f2f-3cbe-4f0e-b244-a0c53465c4b1"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:lfprojects:apptainer:*:*:*:*:*:go:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.8",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:sylabs:singularity:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:redhat:enterprise_linux:7.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-30549"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Apptainer is an open source container platform for Linux. There is an ext4 use-after-free flaw that is exploitable through versions of Apptainer < 1.1.0 and installations that include apptainer-suid < 1.1.8 on older operating systems where that CVE has not been patched. That includes Red Hat Enterprise Linux 7, Debian 10 buster (unless the linux-5.10 package is installed), Ubuntu 18.04 bionic and Ubuntu 20.04 focal. Use-after-free flaws in the kernel can be used to attack the kernel for denial of service and potentially for privilege escalation.\n\nApptainer 1.1.8 includes a patch that by default disables mounting of extfs filesystem types in setuid-root mode, while continuing to allow mounting of extfs filesystems in non-setuid \"rootless\" mode using fuse2fs.\n\nSome workarounds are possible. Either do not install apptainer-suid (for versions 1.1.0 through 1.1.7) or set `allow setuid = no` in apptainer.conf.  This requires having unprivileged user namespaces enabled and except for apptainer 1.1.x versions will disallow mounting of sif files, extfs files, and squashfs files in addition to other, less significant impacts.  (Encrypted sif files are also not supported unprivileged in apptainer 1.1.x.). Alternatively, use the `limit containers` options in apptainer.conf/singularity.conf to limit sif files to trusted users, groups, and/or paths, and set `allow container extfs = no` to disallow mounting of extfs overlay files.  The latter option by itself does not disallow mounting of extfs overlay partitions inside SIF files, so that's why the former options are also needed."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-416"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://access.redhat.com/security/cve/cve-2022-1184",
+              "refsource": "MISC",
+              "tags": [
+                "Not Applicable"
+              ],
+              "url": "https://access.redhat.com/security/cve/cve-2022-1184"
+            },
+            {
+              "name": "https://www.suse.com/security/cve/CVE-2022-1184.html",
+              "refsource": "MISC",
+              "tags": [
+                "Not Applicable"
+              ],
+              "url": "https://www.suse.com/security/cve/CVE-2022-1184.html"
+            },
+            {
+              "name": "https://ubuntu.com/security/CVE-2022-1184",
+              "refsource": "MISC",
+              "tags": [
+                "Not Applicable"
+              ],
+              "url": "https://ubuntu.com/security/CVE-2022-1184"
+            },
+            {
+              "name": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/apptainer/apptainer/security/advisories/GHSA-j4rf-7357-f4cg"
+            },
+            {
+              "name": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/apptainer/apptainer/commit/5a4964f5ba9c8d89a0e353b97f51fd607670a9f7"
+            },
+            {
+              "name": "https://security-tracker.debian.org/tracker/CVE-2022-1184",
+              "refsource": "MISC",
+              "tags": [
+                "Not Applicable"
+              ],
+              "url": "https://security-tracker.debian.org/tracker/CVE-2022-1184"
+            },
+            {
+              "name": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://github.com/apptainer/apptainer/releases/tag/v1.1.8"
+            },
+            {
+              "name": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://github.com/torvalds/linux/commit/4f04351888a83e595571de672e0a4a8b74f"
+            },
+            {
+              "name": "https://lwn.net/Articles/932136/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lwn.net/Articles/932136/"
+            },
+            {
+              "name": "https://lwn.net/Articles/932137/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lwn.net/Articles/932137/"
+            },
+            {
+              "name": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://github.com/torvalds/linux/commit/2220eaf90992c11d888fe771055d4de3303"
+            },
+            {
+              "name": "https://sylabs.io/2023/04/response-to-cve-2023-30549/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://sylabs.io/2023/04/response-to-cve-2023-30549/"
+            },
+            {
+              "name": "https://security.gentoo.org/glsa/202311-13",
+              "refsource": "",
+              "tags": [],
+              "url": "https://security.gentoo.org/glsa/202311-13"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-11-25T12:15Z",
+      "publishedDate": "2023-04-25T21:15Z"
+    }
+  }
 }

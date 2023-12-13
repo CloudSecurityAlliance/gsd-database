@@ -1,239 +1,256 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-25657",
-        "id": "GSD-2023-25657"
+  "GSD": {
+    "alias": "CVE-2023-25657",
+    "id": "GSD-2023-25657"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-25657",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "nautobot",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.5.7"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "nautobot"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot did not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*"
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-94",
-                                "lang": "eng",
-                                "value": "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
-                        "refsource": "MISC",
-                        "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m"
-                    },
-                    {
-                        "name": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
-                        "refsource": "MISC",
-                        "url": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0"
-                    },
-                    {
-                        "name": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
-                        "refsource": "MISC",
-                        "url": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-8mfq-f5wj-vw5m",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.5.7",
-                    "affected_versions": "All versions before 1.5.7",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-02",
-                    "description": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot does not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*",
-                    "fixed_versions": [
-                        "1.5.7"
-                    ],
-                    "identifier": "CVE-2023-25657",
-                    "identifiers": [
-                        "CVE-2023-25657",
-                        "GHSA-8mfq-f5wj-vw5m"
-                    ],
-                    "not_impacted": "All versions starting from 1.5.7",
-                    "package_slug": "pypi/nautobot",
-                    "pubdate": "2023-02-21",
-                    "solution": "Upgrade to version 1.5.7 or above.",
-                    "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-                    "urls": [
-                        "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-25657",
-                        "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
-                        "https://docs.nautobot.com/projects/core/en/stable/release-notes/version-1.5/#v157-2023-01-04",
-                        "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
-                        "https://github.com/advisories/GHSA-8mfq-f5wj-vw5m"
-                    ],
-                    "uuid": "073cb815-000a-4514-842e-84d7819b11ad"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:networktocode:nautobot:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.5.7",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-25657"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot did not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "NVD-CWE-noinfo"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox"
-                        },
-                        {
-                            "name": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0"
-                        },
-                        {
-                            "name": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-03-02T22:35Z",
-            "publishedDate": "2023-02-21T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-25657"
+      ],
+      "details": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot did not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*",
+      "id": "GSD-2023-25657",
+      "modified": "2023-12-13T01:20:39.997776Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-25657",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "nautobot",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.5.7"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "nautobot"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot did not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-94",
+                "lang": "eng",
+                "value": "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m"
+          },
+          {
+            "name": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0"
+          },
+          {
+            "name": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
+            "refsource": "MISC",
+            "url": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-8mfq-f5wj-vw5m",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.5.7",
+          "affected_versions": "All versions before 1.5.7",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-03-02",
+          "description": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot does not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*",
+          "fixed_versions": [
+            "1.5.7"
+          ],
+          "identifier": "CVE-2023-25657",
+          "identifiers": [
+            "CVE-2023-25657",
+            "GHSA-8mfq-f5wj-vw5m"
+          ],
+          "not_impacted": "All versions starting from 1.5.7",
+          "package_slug": "pypi/nautobot",
+          "pubdate": "2023-02-21",
+          "solution": "Upgrade to version 1.5.7 or above.",
+          "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+          "urls": [
+            "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-25657",
+            "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
+            "https://docs.nautobot.com/projects/core/en/stable/release-notes/version-1.5/#v157-2023-01-04",
+            "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
+            "https://github.com/advisories/GHSA-8mfq-f5wj-vw5m"
+          ],
+          "uuid": "073cb815-000a-4514-842e-84d7819b11ad"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:networktocode:nautobot:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.5.7",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-25657"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Nautobot is a Network Source of Truth and Network Automation Platform. All users of Nautobot versions earlier than 1.5.7 are impacted by a remote code execution vulnerability. Nautobot did not properly sandbox Jinja2 template rendering. In Nautobot 1.5.7 has enabled sandboxed environments for the Jinja2 template engine used internally for template rendering for the following objects: `extras.ComputedField`, `extras.CustomLink`, `extras.ExportTemplate`, `extras.Secret`, `extras.Webhook`. While no active exploits of this vulnerability are known this change has been made as a preventative measure to protect against any potential remote code execution attacks utilizing maliciously crafted template code. This change forces the Jinja2 template engine to use a `SandboxedEnvironment` on all new installations of Nautobot. This addresses any potential unsafe code execution everywhere the helper function `nautobot.utilities.utils.render_jinja2` is called. Additionally, the documentation that had previously suggesting the direct use of `jinja2.Template` has been revised to suggest `render_jinja2`. Users are advised to upgrade to Nautobot 1.5.7 or newer. For users that are unable to upgrade to the latest release of Nautobot, you may add the following setting to your `nautobot_config.py` to apply the sandbox environment enforcement: `TEMPLATES[1][\"OPTIONS\"][\"environment\"] = \"jinja2.sandbox.SandboxedEnvironment\"` After applying this change, you must restart all Nautobot services, including any Celery worker processes. **Note:** *Nautobot specifies two template engines by default, the first being \u201cdjango\u201d for the Django built-in template engine, and the second being \u201cjinja\u201d for the Jinja2 template engine. This recommended setting will update the second item in the list of template engines, which is the Jinja2 engine.* For users that are unable to immediately update their configuration such as if a Nautobot service restart is too disruptive to operations, access to provide custom Jinja2 template values may be mitigated using permissions to restrict \u201cchange\u201d (write) actions to the affected object types listed in the first section. **Note:** *This solution is intended to be stopgap until you can successfully update your `nautobot_config.py` or upgrade your Nautobot instance to apply the sandboxed environment enforcement.*"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "NVD-CWE-noinfo"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://jinja.palletsprojects.com/en/3.0.x/sandbox/#sandbox"
+            },
+            {
+              "name": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/nautobot/nautobot/commit/d47f157e83b0c353bb2b697f911882c71cf90ca0"
+            },
+            {
+              "name": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-8mfq-f5wj-vw5m"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-03-02T22:35Z",
+      "publishedDate": "2023-02-21T21:15Z"
+    }
+  }
 }

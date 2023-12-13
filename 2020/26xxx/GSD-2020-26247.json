@@ -1,424 +1,430 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-26247",
-        "description": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4.",
-        "id": "GSD-2020-26247",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2020-26247.html",
-            "https://access.redhat.com/errata/RHSA-2021:5191",
-            "https://access.redhat.com/errata/RHSA-2021:4702",
-            "https://advisories.mageia.org/CVE-2020-26247.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-26247",
+    "description": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4.",
+    "id": "GSD-2020-26247",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2020-26247.html",
+      "https://access.redhat.com/errata/RHSA-2021:5191",
+      "https://access.redhat.com/errata/RHSA-2021:4702",
+      "https://advisories.mageia.org/CVE-2020-26247.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-26247",
-            "modified": "2020-12-30T00:00:00.000Z",
-            "published": "2020-12-30T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-26247",
-                "GHSA-vr8q-g5c7-m54m"
-            ],
-            "summary": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability",
-            "details": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 2.6
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "nokogiri",
-                        "purl": "pkg:gem/nokogiri"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://hackerone.com/reports/747489"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "nokogiri",
+            "purl": "pkg:gem/nokogiri"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-26247",
-                "STATE": "PUBLIC",
-                "TITLE": "XXE in Nokogiri"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "nokogiri",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 1.11.0.rc4"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "sparklemotion"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 2.6,
-                    "baseSeverity": "LOW",
-                    "confidentialityImpact": "LOW",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:N/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-611: Improper Restriction of XML External Entity Reference"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
-                    },
-                    {
-                        "name": "https://rubygems.org/gems/nokogiri",
-                        "refsource": "MISC",
-                        "url": "https://rubygems.org/gems/nokogiri"
-                    },
-                    {
-                        "name": "https://hackerone.com/reports/747489",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/747489"
-                    },
-                    {
-                        "name": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4",
-                        "refsource": "MISC",
-                        "url": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4"
-                    },
-                    {
-                        "name": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b",
-                        "refsource": "MISC",
-                        "url": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20210606 [SECURITY] [DLA 2678-1] ruby-nokogiri security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2021/06/msg00007.html"
-                    },
-                    {
-                        "name": "GLSA-202208-29",
-                        "refsource": "GENTOO",
-                        "url": "https://security.gentoo.org/glsa/202208-29"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20221012 [SECURITY] [DLA 3149-1] ruby-nokogiri security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/10/msg00018.html"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-vr8q-g5c7-m54m",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2020-26247",
+        "GHSA-vr8q-g5c7-m54m"
+      ],
+      "details": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
+      "id": "GSD-2020-26247",
+      "modified": "2020-12-30T00:00:00.000Z",
+      "published": "2020-12-30T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.11.0",
-                    "affected_versions": "All versions before 1.11.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-611",
-                        "CWE-937"
-                    ],
-                    "date": "2021-06-06",
-                    "description": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. XML Schemas parsed by `Nokogiri::XML::Schema` are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible.",
-                    "fixed_versions": [
-                        "1.11.0"
-                    ],
-                    "identifier": "CVE-2020-26247",
-                    "identifiers": [
-                        "CVE-2020-26247",
-                        "GHSA-vr8q-g5c7-m54m"
-                    ],
-                    "not_impacted": "All versions starting from 1.11.0",
-                    "package_slug": "gem/nokogiri",
-                    "pubdate": "2020-12-30",
-                    "solution": "Upgrade to version 1.11.0 or above.",
-                    "title": "Improper Restriction of XML External Entity Reference",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-26247"
-                    ],
-                    "uuid": "2685fb42-70eb-4e48-9b3a-4a4da34b1df2"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.11.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc1:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc2:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc3:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-26247"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-611"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-611"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://rubygems.org/gems/nokogiri",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://rubygems.org/gems/nokogiri"
-                        },
-                        {
-                            "name": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4"
-                        },
-                        {
-                            "name": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
-                        },
-                        {
-                            "name": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b"
-                        },
-                        {
-                            "name": "https://hackerone.com/reports/747489",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Permissions Required"
-                            ],
-                            "url": "https://hackerone.com/reports/747489"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20210606 [SECURITY] [DLA 2678-1] ruby-nokogiri security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2021/06/msg00007.html"
-                        },
-                        {
-                            "name": "GLSA-202208-29",
-                            "refsource": "GENTOO",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://security.gentoo.org/glsa/202208-29"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20221012 [SECURITY] [DLA 3149-1] ruby-nokogiri security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/10/msg00018.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.0,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2022-10-19T18:53Z",
-            "publishedDate": "2020-12-30T19:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "nokogiri",
-            "cve": "2020-26247",
-            "ghsa": "vr8q-g5c7-m54m",
-            "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
-            "title": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability",
-            "date": "2020-12-30",
-            "description": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
-            "cvss_v3": 2.6,
-            "patched_versions": [
-                ">= 1.11.0.rc4"
-            ],
-            "related": {
-                "url": [
-                    "https://hackerone.com/reports/747489"
-                ]
-            }
+        {
+          "type": "WEB",
+          "url": "https://hackerone.com/reports/747489"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 2.6,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-26247",
+        "STATE": "PUBLIC",
+        "TITLE": "XXE in Nokogiri"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "nokogiri",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 1.11.0.rc4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "sparklemotion"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 2.6,
+          "baseSeverity": "LOW",
+          "confidentialityImpact": "LOW",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:N/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-611: Improper Restriction of XML External Entity Reference"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
+          },
+          {
+            "name": "https://rubygems.org/gems/nokogiri",
+            "refsource": "MISC",
+            "url": "https://rubygems.org/gems/nokogiri"
+          },
+          {
+            "name": "https://hackerone.com/reports/747489",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/747489"
+          },
+          {
+            "name": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4",
+            "refsource": "MISC",
+            "url": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4"
+          },
+          {
+            "name": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b",
+            "refsource": "MISC",
+            "url": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b"
+          },
+          {
+            "name": "[debian-lts-announce] 20210606 [SECURITY] [DLA 2678-1] ruby-nokogiri security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2021/06/msg00007.html"
+          },
+          {
+            "name": "GLSA-202208-29",
+            "refsource": "GENTOO",
+            "url": "https://security.gentoo.org/glsa/202208-29"
+          },
+          {
+            "name": "[debian-lts-announce] 20221012 [SECURITY] [DLA 3149-1] ruby-nokogiri security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/10/msg00018.html"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-vr8q-g5c7-m54m",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-26247",
+      "cvss_v3": 2.6,
+      "date": "2020-12-30",
+      "description": "### Description\n\nIn Nokogiri versions <= 1.11.0.rc3, XML Schemas parsed by `Nokogiri::XML::Schema`\nare **trusted** by default, allowing external resources to be accessed over the\nnetwork, potentially enabling XXE or SSRF attacks.\n\nThis behavior is counter to\nthe security policy followed by Nokogiri maintainers, which is to treat all input\nas **untrusted** by default whenever possible.\n\nPlease note that this security\nfix was pushed into a new minor version, 1.11.x, rather than a patch release to\nthe 1.10.x branch, because it is a breaking change for some schemas and the risk\nwas assessed to be \"Low Severity\".\n\n### Affected Versions\n\nNokogiri `<= 1.10.10` as well as prereleases `1.11.0.rc1`, `1.11.0.rc2`, and `1.11.0.rc3`\n\n### Mitigation\n\nThere are no known workarounds for affected versions. Upgrade to Nokogiri\n`1.11.0.rc4` or later.\n\nIf, after upgrading to `1.11.0.rc4` or later, you wish\nto re-enable network access for resolution of external resources (i.e., return to\nthe previous behavior):\n\n1. Ensure the input is trusted. Do not enable this option\nfor untrusted input.\n2. When invoking the `Nokogiri::XML::Schema` constructor,\npass as the second parameter an instance of `Nokogiri::XML::ParseOptions` with the\n`NONET` flag turned off.\n\nSo if your previous code was:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this call allows resources to be accessed over the network\n# but in v1.11.0.rc4 and later, this call will disallow network access for external resources\nschema = Nokogiri::XML::Schema.new(schema)\n\n# in v1.11.0.rc4 and later, the following is equivalent to the code above\n# (the second parameter is optional, and this demonstrates its default value)\nschema = Nokogiri::XML::Schema.new(schema, Nokogiri::XML::ParseOptions::DEFAULT_SCHEMA)\n```\n\nThen you can add the second parameter to indicate that the input is trusted by changing it to:\n\n``` ruby\n# in v1.11.0.rc3 and earlier, this would raise an ArgumentError\n# but in v1.11.0.rc4 and later, this allows resources to be accessed over the network\nschema = Nokogiri::XML::Schema.new(trusted_schema, Nokogiri::XML::ParseOptions.new.nononet)\n```",
+      "gem": "nokogiri",
+      "ghsa": "vr8q-g5c7-m54m",
+      "patched_versions": [
+        ">= 1.11.0.rc4"
+      ],
+      "related": {
+        "url": [
+          "https://hackerone.com/reports/747489"
+        ]
+      },
+      "title": "Nokogiri::XML::Schema trusts input by default, exposing risk of an XXE vulnerability",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.11.0",
+          "affected_versions": "All versions before 1.11.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-611",
+            "CWE-937"
+          ],
+          "date": "2021-06-06",
+          "description": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. XML Schemas parsed by `Nokogiri::XML::Schema` are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible.",
+          "fixed_versions": [
+            "1.11.0"
+          ],
+          "identifier": "CVE-2020-26247",
+          "identifiers": [
+            "CVE-2020-26247",
+            "GHSA-vr8q-g5c7-m54m"
+          ],
+          "not_impacted": "All versions starting from 1.11.0",
+          "package_slug": "gem/nokogiri",
+          "pubdate": "2020-12-30",
+          "solution": "Upgrade to version 1.11.0 or above.",
+          "title": "Improper Restriction of XML External Entity Reference",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-26247"
+          ],
+          "uuid": "2685fb42-70eb-4e48-9b3a-4a4da34b1df2"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.11.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc1:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc2:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nokogiri:nokogiri:1.11.0:rc3:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-26247"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Nokogiri is a Rubygem providing HTML, XML, SAX, and Reader parsers with XPath and CSS selector support. In Nokogiri before version 1.11.0.rc4 there is an XXE vulnerability. XML Schemas parsed by Nokogiri::XML::Schema are trusted by default, allowing external resources to be accessed over the network, potentially enabling XXE or SSRF attacks. This behavior is counter to the security policy followed by Nokogiri maintainers, which is to treat all input as untrusted by default whenever possible. This is fixed in Nokogiri version 1.11.0.rc4."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-611"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-611"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://rubygems.org/gems/nokogiri",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Third Party Advisory"
+              ],
+              "url": "https://rubygems.org/gems/nokogiri"
+            },
+            {
+              "name": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/sparklemotion/nokogiri/releases/tag/v1.11.0.rc4"
+            },
+            {
+              "name": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m"
+            },
+            {
+              "name": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/sparklemotion/nokogiri/commit/9c87439d9afa14a365ff13e73adc809cb2c3d97b"
+            },
+            {
+              "name": "https://hackerone.com/reports/747489",
+              "refsource": "MISC",
+              "tags": [
+                "Permissions Required"
+              ],
+              "url": "https://hackerone.com/reports/747489"
+            },
+            {
+              "name": "[debian-lts-announce] 20210606 [SECURITY] [DLA 2678-1] ruby-nokogiri security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2021/06/msg00007.html"
+            },
+            {
+              "name": "GLSA-202208-29",
+              "refsource": "GENTOO",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://security.gentoo.org/glsa/202208-29"
+            },
+            {
+              "name": "[debian-lts-announce] 20221012 [SECURITY] [DLA 3149-1] ruby-nokogiri security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/10/msg00018.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.0,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2022-10-19T18:53Z",
+      "publishedDate": "2020-12-30T19:15Z"
+    }
+  }
 }

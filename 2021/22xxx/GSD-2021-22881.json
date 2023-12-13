@@ -1,404 +1,410 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-22881",
-        "description": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
-        "id": "GSD-2021-22881",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-22881.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-22881",
+    "description": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
+    "id": "GSD-2021-22881",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-22881.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-22881",
-            "modified": "2021-02-10T00:00:00.000Z",
-            "published": "2021-02-10T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-22881",
-                "GHSA-8877-prq4-9xfw"
-            ],
-            "summary": "Possible Open Redirect in Host Authorization Middleware",
-            "details": "There is a possible open redirect vulnerability in the Host Authorization\nmiddleware in Action Pack. This vulnerability has been assigned the CVE\nidentifier CVE-2021-22881.\n\nVersions Affected:  >= 6.0.0\nNot affected:       < 6.0.0\nFixed Versions:     6.1.2.1, 6.0.3.5\n\nImpact\n------\nSpecially crafted \"Host\" headers in combination with certain \"allowed host\"\nformats can cause the Host Authorization middleware in Action Pack to redirect\nusers to a malicious website.\n\nImpacted applications will have allowed hosts with a leading dot.  For\nexample, configuration files that look like this:\n\n```\nconfig.hosts <<  '.tkte.ch'\n```\n\nWhen an allowed host contains a leading dot, a specially crafted Host header\ncan be used to redirect to a malicious website.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```ruby\nmodule ActionDispatch\n  class HostAuthorization\n    private\n      def authorized?(request)\n        valid_host = /\n          \\A\n          (?<host>[a-z0-9.-]+|\\[[a-f0-9]*:[a-f0-9\\.:]+\\])\n          (:\\d+)?\n          \\z\n        /x\n\n        origin_host = valid_host.match(\n          request.get_header(\"HTTP_HOST\").to_s.downcase)\n        forwarded_host = valid_host.match(\n          request.x_forwarded_host.to_s.split(/,\\s?/).last)\n\n        origin_host && @permissions.allows?(origin_host[:host]) && (\n          forwarded_host.nil? || @permissions.allows?(forwarded_host[:host]))\n      end\n  end\nend\n```\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 6.1
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionpack",
-                        "purl": "pkg:gem/actionpack"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/rubyonrails-security/c/zN_3qA26l6E"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionpack",
+            "purl": "pkg:gem/actionpack"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2021-22881",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "Fixed in 6.1.2.1, 6.0.3.5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Open Redirect (CWE-601)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://hackerone.com/reports/1047447",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/1047447"
-                    },
-                    {
-                        "name": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130",
-                        "refsource": "MISC",
-                        "url": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
-                    },
-                    {
-                        "name": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/",
-                        "refsource": "MISC",
-                        "url": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/"
-                    },
-                    {
-                        "name": "FEDORA-2021-b571fca1b8",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
-                    },
-                    {
-                        "name": "[oss-security] 20210505 [CVE-2021-22903] Possible Open Redirect Vulnerability in Action Pack",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2021/05/05/2"
-                    },
-                    {
-                        "name": "[oss-security] 20210819 [CVE-2021-22942] Possible Open Redirect in Host Authorization Middleware",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2021/08/20/1"
-                    },
-                    {
-                        "name": "[oss-security] 20211214 [CVE-2021-44528] Possible Open Redirect in Host Authorization Middleware",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2021/12/14/5"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1||=33",
-                    "affected_versions": "All versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1, version 33",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-601",
-                        "CWE-937"
-                    ],
-                    "date": "2021-09-21",
-                    "description": "The Host Authorization middleware in Action Pack suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
-                    "fixed_versions": [
-                        "6.0.3.5",
-                        "6.1.2.1"
-                    ],
-                    "identifier": "CVE-2021-22881",
-                    "identifiers": [
-                        "CVE-2021-22881"
-                    ],
-                    "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1 before 33, all versions after 33",
-                    "package_slug": "gem/actionpack",
-                    "pubdate": "2021-02-11",
-                    "solution": "Upgrade to versions 6.0.3.5, 6.1.2.1 or above.",
-                    "title": "URL Redirection to Untrusted Site ('Open Redirect')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-22881"
-                    ],
-                    "uuid": "b6b7cac1-ed1c-448d-921f-79262ac7d9e4"
-                },
-                {
-                    "affected_range": ">=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
-                    "affected_versions": "All versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-601",
-                        "CWE-937"
-                    ],
-                    "date": "2022-01-04",
-                    "description": "The Host Authorization middleware in Action Pack suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
-                    "fixed_versions": [
-                        "6.0.3.5",
-                        "6.1.2.1"
-                    ],
-                    "identifier": "CVE-2021-22881",
-                    "identifiers": [
-                        "CVE-2021-22881"
-                    ],
-                    "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2021-02-11",
-                    "solution": "Upgrade to versions 6.0.3.5, 6.1.2.1 or above.",
-                    "title": "URL Redirection to Untrusted Site (Open Redirect)",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-22881",
-                        "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
-                    ],
-                    "uuid": "155d2c71-7cce-497d-97e0-82f2c90e1e54"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.3.5",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.1.2.1",
-                                "versionStartIncluding": "6.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2021-22881"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-601"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://hackerone.com/reports/1047447",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/1047447"
-                        },
-                        {
-                            "name": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
-                        },
-                        {
-                            "name": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/"
-                        },
-                        {
-                            "name": "FEDORA-2021-b571fca1b8",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
-                        },
-                        {
-                            "name": "[oss-security] 20210505 [CVE-2021-22903] Possible Open Redirect Vulnerability in Action Pack",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2021/05/05/2"
-                        },
-                        {
-                            "name": "[oss-security] 20210819 [CVE-2021-22942] Possible Open Redirect in Host Authorization Middleware",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2021/08/20/1"
-                        },
-                        {
-                            "name": "[oss-security] 20211214 [CVE-2021-44528] Possible Open Redirect in Host Authorization Middleware",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Exploit",
-                                "Mailing List",
-                                "Patch"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2021/12/14/5"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 4.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 2.7
-                }
-            },
-            "lastModifiedDate": "2022-01-04T16:38Z",
-            "publishedDate": "2021-02-11T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionpack",
-            "framework": "rails",
-            "cve": "2021-22881",
-            "ghsa": "8877-prq4-9xfw",
-            "url": "https://groups.google.com/g/rubyonrails-security/c/zN_3qA26l6E",
-            "title": "Possible Open Redirect in Host Authorization Middleware",
-            "date": "2021-02-10",
-            "description": "There is a possible open redirect vulnerability in the Host Authorization\nmiddleware in Action Pack. This vulnerability has been assigned the CVE\nidentifier CVE-2021-22881.\n\nVersions Affected:  >= 6.0.0\nNot affected:       < 6.0.0\nFixed Versions:     6.1.2.1, 6.0.3.5\n\nImpact\n------\nSpecially crafted \"Host\" headers in combination with certain \"allowed host\"\nformats can cause the Host Authorization middleware in Action Pack to redirect\nusers to a malicious website.\n\nImpacted applications will have allowed hosts with a leading dot.  For\nexample, configuration files that look like this:\n\n```\nconfig.hosts <<  '.tkte.ch'\n```\n\nWhen an allowed host contains a leading dot, a specially crafted Host header\ncan be used to redirect to a malicious website.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```ruby\nmodule ActionDispatch\n  class HostAuthorization\n    private\n      def authorized?(request)\n        valid_host = /\n          \\A\n          (?<host>[a-z0-9.-]+|\\[[a-f0-9]*:[a-f0-9\\.:]+\\])\n          (:\\d+)?\n          \\z\n        /x\n\n        origin_host = valid_host.match(\n          request.get_header(\"HTTP_HOST\").to_s.downcase)\n        forwarded_host = valid_host.match(\n          request.x_forwarded_host.to_s.split(/,\\s?/).last)\n\n        origin_host && @permissions.allows?(origin_host[:host]) && (\n          forwarded_host.nil? || @permissions.allows?(forwarded_host[:host]))\n      end\n  end\nend\n```\n",
-            "cvss_v3": 6.1,
-            "unaffected_versions": [
-                "< 6.0.0"
-            ],
-            "patched_versions": [
-                "~> 6.0.3, >= 6.0.3.5",
-                ">= 6.1.2.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2021-22881",
+        "GHSA-8877-prq4-9xfw"
+      ],
+      "details": "There is a possible open redirect vulnerability in the Host Authorization\nmiddleware in Action Pack. This vulnerability has been assigned the CVE\nidentifier CVE-2021-22881.\n\nVersions Affected:  >= 6.0.0\nNot affected:       < 6.0.0\nFixed Versions:     6.1.2.1, 6.0.3.5\n\nImpact\n------\nSpecially crafted \"Host\" headers in combination with certain \"allowed host\"\nformats can cause the Host Authorization middleware in Action Pack to redirect\nusers to a malicious website.\n\nImpacted applications will have allowed hosts with a leading dot.  For\nexample, configuration files that look like this:\n\n```\nconfig.hosts <<  '.tkte.ch'\n```\n\nWhen an allowed host contains a leading dot, a specially crafted Host header\ncan be used to redirect to a malicious website.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```ruby\nmodule ActionDispatch\n  class HostAuthorization\n    private\n      def authorized?(request)\n        valid_host = /\n          \\A\n          (?<host>[a-z0-9.-]+|\\[[a-f0-9]*:[a-f0-9\\.:]+\\])\n          (:\\d+)?\n          \\z\n        /x\n\n        origin_host = valid_host.match(\n          request.get_header(\"HTTP_HOST\").to_s.downcase)\n        forwarded_host = valid_host.match(\n          request.x_forwarded_host.to_s.split(/,\\s?/).last)\n\n        origin_host && @permissions.allows?(origin_host[:host]) && (\n          forwarded_host.nil? || @permissions.allows?(forwarded_host[:host]))\n      end\n  end\nend\n```\n",
+      "id": "GSD-2021-22881",
+      "modified": "2021-02-10T00:00:00.000Z",
+      "published": "2021-02-10T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/rubyonrails-security/c/zN_3qA26l6E"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 6.1,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible Open Redirect in Host Authorization Middleware"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2021-22881",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "Fixed in 6.1.2.1, 6.0.3.5"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Open Redirect (CWE-601)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://hackerone.com/reports/1047447",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/1047447"
+          },
+          {
+            "name": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130",
+            "refsource": "MISC",
+            "url": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
+          },
+          {
+            "name": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/",
+            "refsource": "MISC",
+            "url": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/"
+          },
+          {
+            "name": "FEDORA-2021-b571fca1b8",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
+          },
+          {
+            "name": "[oss-security] 20210505 [CVE-2021-22903] Possible Open Redirect Vulnerability in Action Pack",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2021/05/05/2"
+          },
+          {
+            "name": "[oss-security] 20210819 [CVE-2021-22942] Possible Open Redirect in Host Authorization Middleware",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2021/08/20/1"
+          },
+          {
+            "name": "[oss-security] 20211214 [CVE-2021-44528] Possible Open Redirect in Host Authorization Middleware",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2021/12/14/5"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-22881",
+      "cvss_v3": 6.1,
+      "date": "2021-02-10",
+      "description": "There is a possible open redirect vulnerability in the Host Authorization\nmiddleware in Action Pack. This vulnerability has been assigned the CVE\nidentifier CVE-2021-22881.\n\nVersions Affected:  >= 6.0.0\nNot affected:       < 6.0.0\nFixed Versions:     6.1.2.1, 6.0.3.5\n\nImpact\n------\nSpecially crafted \"Host\" headers in combination with certain \"allowed host\"\nformats can cause the Host Authorization middleware in Action Pack to redirect\nusers to a malicious website.\n\nImpacted applications will have allowed hosts with a leading dot.  For\nexample, configuration files that look like this:\n\n```\nconfig.hosts <<  '.tkte.ch'\n```\n\nWhen an allowed host contains a leading dot, a specially crafted Host header\ncan be used to redirect to a malicious website.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```ruby\nmodule ActionDispatch\n  class HostAuthorization\n    private\n      def authorized?(request)\n        valid_host = /\n          \\A\n          (?<host>[a-z0-9.-]+|\\[[a-f0-9]*:[a-f0-9\\.:]+\\])\n          (:\\d+)?\n          \\z\n        /x\n\n        origin_host = valid_host.match(\n          request.get_header(\"HTTP_HOST\").to_s.downcase)\n        forwarded_host = valid_host.match(\n          request.x_forwarded_host.to_s.split(/,\\s?/).last)\n\n        origin_host && @permissions.allows?(origin_host[:host]) && (\n          forwarded_host.nil? || @permissions.allows?(forwarded_host[:host]))\n      end\n  end\nend\n```\n",
+      "framework": "rails",
+      "gem": "actionpack",
+      "ghsa": "8877-prq4-9xfw",
+      "patched_versions": [
+        "~> 6.0.3, >= 6.0.3.5",
+        ">= 6.1.2.1"
+      ],
+      "title": "Possible Open Redirect in Host Authorization Middleware",
+      "unaffected_versions": [
+        "< 6.0.0"
+      ],
+      "url": "https://groups.google.com/g/rubyonrails-security/c/zN_3qA26l6E"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1||=33",
+          "affected_versions": "All versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1, version 33",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-601",
+            "CWE-937"
+          ],
+          "date": "2021-09-21",
+          "description": "The Host Authorization middleware in Action Pack suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
+          "fixed_versions": [
+            "6.0.3.5",
+            "6.1.2.1"
+          ],
+          "identifier": "CVE-2021-22881",
+          "identifiers": [
+            "CVE-2021-22881"
+          ],
+          "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1 before 33, all versions after 33",
+          "package_slug": "gem/actionpack",
+          "pubdate": "2021-02-11",
+          "solution": "Upgrade to versions 6.0.3.5, 6.1.2.1 or above.",
+          "title": "URL Redirection to Untrusted Site ('Open Redirect')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-22881"
+          ],
+          "uuid": "b6b7cac1-ed1c-448d-921f-79262ac7d9e4"
+        },
+        {
+          "affected_range": ">=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
+          "affected_versions": "All versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-601",
+            "CWE-937"
+          ],
+          "date": "2022-01-04",
+          "description": "The Host Authorization middleware in Action Pack suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website.",
+          "fixed_versions": [
+            "6.0.3.5",
+            "6.1.2.1"
+          ],
+          "identifier": "CVE-2021-22881",
+          "identifiers": [
+            "CVE-2021-22881"
+          ],
+          "not_impacted": "All versions before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1",
+          "package_slug": "gem/rails",
+          "pubdate": "2021-02-11",
+          "solution": "Upgrade to versions 6.0.3.5, 6.1.2.1 or above.",
+          "title": "URL Redirection to Untrusted Site (Open Redirect)",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-22881",
+            "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
+          ],
+          "uuid": "155d2c71-7cce-497d-97e0-82f2c90e1e54"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.3.5",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.1.2.1",
+                "versionStartIncluding": "6.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2021-22881"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "The Host Authorization middleware in Action Pack before 6.1.2.1, 6.0.3.5 suffers from an open redirect vulnerability. Specially crafted `Host` headers in combination with certain \"allowed host\" formats can cause the Host Authorization middleware in Action Pack to redirect users to a malicious website. Impacted applications will have allowed hosts with a leading dot. When an allowed host contains a leading dot, a specially crafted `Host` header can be used to redirect to a malicious website."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-601"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://hackerone.com/reports/1047447",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/1047447"
+            },
+            {
+              "name": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://discuss.rubyonrails.org/t/cve-2021-22881-possible-open-redirect-in-host-authorization-middleware/77130"
+            },
+            {
+              "name": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://benjamin-bouchet.com/cve-2021-22881-faille-de-securite-dans-le-middleware-hostauthorization/"
+            },
+            {
+              "name": "FEDORA-2021-b571fca1b8",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
+            },
+            {
+              "name": "[oss-security] 20210505 [CVE-2021-22903] Possible Open Redirect Vulnerability in Action Pack",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2021/05/05/2"
+            },
+            {
+              "name": "[oss-security] 20210819 [CVE-2021-22942] Possible Open Redirect in Host Authorization Middleware",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2021/08/20/1"
+            },
+            {
+              "name": "[oss-security] 20211214 [CVE-2021-44528] Possible Open Redirect in Host Authorization Middleware",
+              "refsource": "MLIST",
+              "tags": [
+                "Exploit",
+                "Mailing List",
+                "Patch"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2021/12/14/5"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 4.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 2.7
+        }
+      },
+      "lastModifiedDate": "2022-01-04T16:38Z",
+      "publishedDate": "2021-02-11T18:15Z"
+    }
+  }
 }

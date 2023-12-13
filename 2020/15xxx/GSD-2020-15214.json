@@ -1,331 +1,348 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-15214",
-        "description": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code.",
-        "id": "GSD-2020-15214"
+  "GSD": {
+    "alias": "CVE-2020-15214",
+    "description": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code.",
+    "id": "GSD-2020-15214"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-15214",
-                "STATE": "PUBLIC",
-                "TITLE": "Out of bounds write in tensorflow-lite"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 2.2.0, < 2.2.1"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.3.0, < 2.3.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 8.1,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "LOW",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "NONE",
-                    "scope": "CHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "{\"CWE-787\":\"Out-of-bounds Write\"}"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-p2cq-cprg-frvm",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
-                    "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-787",
-                        "CWE-937"
-                    ],
-                    "date": "2020-10-01",
-                    "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
-                    "fixed_versions": [
-                        "2.2.1",
-                        "2.3.1"
-                    ],
-                    "identifier": "CVE-2020-15214",
-                    "identifiers": [
-                        "CVE-2020-15214",
-                        "GHSA-p2cq-cprg-frvm"
-                    ],
-                    "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2020-09-25",
-                    "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
-                    "title": "Out-of-bounds Write",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
-                    ],
-                    "uuid": "f864d88e-964b-49b6-8ec2-dd3a3ccb3338"
-                },
-                {
-                    "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
-                    "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-787",
-                        "CWE-937"
-                    ],
-                    "date": "2020-10-01",
-                    "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
-                    "fixed_versions": [
-                        "2.2.1",
-                        "2.3.1"
-                    ],
-                    "identifier": "CVE-2020-15214",
-                    "identifiers": [
-                        "CVE-2020-15214",
-                        "GHSA-p2cq-cprg-frvm"
-                    ],
-                    "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2020-09-25",
-                    "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
-                    "title": "Out-of-bounds Write",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
-                    ],
-                    "uuid": "de332cdf-26b7-4dee-86db-28e693701c71"
-                },
-                {
-                    "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
-                    "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-787",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-17",
-                    "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
-                    "fixed_versions": [
-                        "2.2.1",
-                        "2.3.1"
-                    ],
-                    "identifier": "CVE-2020-15214",
-                    "identifiers": [
-                        "CVE-2020-15214",
-                        "GHSA-p2cq-cprg-frvm"
-                    ],
-                    "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2020-09-25",
-                    "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
-                    "title": "Out-of-bounds Write",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
-                    ],
-                    "uuid": "30c100c5-ddad-4b53-a7d4-90acf154610d"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:lite:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.2.1",
-                                "versionStartIncluding": "2.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:lite:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.3.1",
-                                "versionStartIncluding": "2.3.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-15214"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-787"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.1,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 5.3
-                }
-            },
-            "lastModifiedDate": "2021-08-17T13:21Z",
-            "publishedDate": "2020-09-25T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2020-15214"
+      ],
+      "details": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code.",
+      "id": "GSD-2020-15214",
+      "modified": "2023-12-13T01:21:44.038250Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-15214",
+        "STATE": "PUBLIC",
+        "TITLE": "Out of bounds write in tensorflow-lite"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 2.2.0, < 2.2.1"
+                        },
+                        {
+                          "version_value": ">= 2.3.0, < 2.3.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 8.1,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "LOW",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "NONE",
+          "scope": "CHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "{\"CWE-787\":\"Out-of-bounds Write\"}"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p2cq-cprg-frvm",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
+          "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-787",
+            "CWE-937"
+          ],
+          "date": "2020-10-01",
+          "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
+          "fixed_versions": [
+            "2.2.1",
+            "2.3.1"
+          ],
+          "identifier": "CVE-2020-15214",
+          "identifiers": [
+            "CVE-2020-15214",
+            "GHSA-p2cq-cprg-frvm"
+          ],
+          "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2020-09-25",
+          "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
+          "title": "Out-of-bounds Write",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
+          ],
+          "uuid": "f864d88e-964b-49b6-8ec2-dd3a3ccb3338"
+        },
+        {
+          "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
+          "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-787",
+            "CWE-937"
+          ],
+          "date": "2020-10-01",
+          "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
+          "fixed_versions": [
+            "2.2.1",
+            "2.3.1"
+          ],
+          "identifier": "CVE-2020-15214",
+          "identifiers": [
+            "CVE-2020-15214",
+            "GHSA-p2cq-cprg-frvm"
+          ],
+          "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2020-09-25",
+          "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
+          "title": "Out-of-bounds Write",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
+          ],
+          "uuid": "de332cdf-26b7-4dee-86db-28e693701c71"
+        },
+        {
+          "affected_range": ">=2.2.0,<2.2.1||>=2.3.0,<2.3.1",
+          "affected_versions": "All versions starting from 2.2.0 before 2.2.1, all versions starting from 2.3.0 before 2.3.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-787",
+            "CWE-937"
+          ],
+          "date": "2021-08-17",
+          "description": "In TensorFlow Lite, models using segment sum can trigger a segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in an out-of-bounds-write to the output array.",
+          "fixed_versions": [
+            "2.2.1",
+            "2.3.1"
+          ],
+          "identifier": "CVE-2020-15214",
+          "identifiers": [
+            "CVE-2020-15214",
+            "GHSA-p2cq-cprg-frvm"
+          ],
+          "not_impacted": "All versions before 2.2.0, all versions starting from 2.2.1 before 2.3.0, all versions starting from 2.3.1",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2020-09-25",
+          "solution": "Upgrade to versions 2.2.1, 2.3.1 or above.",
+          "title": "Out-of-bounds Write",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-15214"
+          ],
+          "uuid": "30c100c5-ddad-4b53-a7d4-90acf154610d"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:lite:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.2.1",
+                "versionStartIncluding": "2.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:lite:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.3.1",
+                "versionStartIncluding": "2.3.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-15214"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "In TensorFlow Lite before versions 2.2.1 and 2.3.1, models using segment sum can trigger a write out bounds / segmentation fault if the segment ids are not sorted. Code assumes that the segment ids are in increasing order, using the last element of the tensor holding them to determine the dimensionality of output tensor. This results in allocating insufficient memory for the output tensor and in a write outside the bounds of the output array. This usually results in a segmentation fault, but depending on runtime conditions it can provide for a write gadget to be used in future memory corruption-based exploits. The issue is patched in commit 204945b19e44b57906c9344c0d00120eeeae178a and is released in TensorFlow versions 2.2.1, or 2.3.1. A potential workaround would be to add a custom `Verifier` to the model loading code to ensure that the segment ids are sorted, although this only handles the case when the segment ids are stored statically in the model. A similar validation could be done if the segment ids are generated at runtime between inference steps. If the segment ids are generated as outputs of a tensor during inference steps, then there are no possible workaround and users are advised to upgrade to patched code."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-787"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-p2cq-cprg-frvm"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/releases/tag/v2.3.1"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/204945b19e44b57906c9344c0d00120eeeae178a"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.1,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 5.3
+        }
+      },
+      "lastModifiedDate": "2021-08-17T13:21Z",
+      "publishedDate": "2020-09-25T19:15Z"
+    }
+  }
 }

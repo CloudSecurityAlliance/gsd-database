@@ -1,275 +1,292 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-28114",
-        "id": "GSD-2023-28114"
+  "GSD": {
+    "alias": "CVE-2023-28114",
+    "id": "GSD-2023-28114"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-28114",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "cilium-cli",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 0.13.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "cilium"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "`cilium-cli` is the command line interface to install, manage, and troubleshoot Kubernetes clusters running Cilium. Prior to version 0.13.2,`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. Users who have set up cluster meshes using the Cilium Helm chart are not affected by this issue. Due to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster. This issue is patched in `cilium-cli` 0.13.2. As a workaround, one may use Cilium's Helm charts to create their cluster."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "ADJACENT_NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.8,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "HIGH",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:A/AC:L/PR:H/UI:N/S:C/C:L/I:L/A:N",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-280",
-                                "lang": "eng",
-                                "value": "CWE-280: Improper Handling of Insufficient Permissions or Privileges "
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-755",
-                                "lang": "eng",
-                                "value": "CWE-755: Improper Handling of Exceptional Conditions"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
-                        "refsource": "MISC",
-                        "url": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc"
-                    },
-                    {
-                        "name": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
-                        "refsource": "MISC",
-                        "url": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610"
-                    },
-                    {
-                        "name": "https://artifacthub.io/packages/helm/cilium/cilium",
-                        "refsource": "MISC",
-                        "url": "https://artifacthub.io/packages/helm/cilium/cilium"
-                    },
-                    {
-                        "name": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
-                        "refsource": "MISC",
-                        "url": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-6f27-3p6c-p5jc",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<v0.13.2",
-                    "affected_versions": "All versions before 0.13.2",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-21",
-                    "description": "### Impact\n\n`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. \n\nDue to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster.\n\n### Patches\n\nThis issue is patched in `cilium-cli` 0.13.2\n\nAll previous versions of `cilium-cli` are affected. Users who have set up cluster meshes using the Cilium Helm chart are not affected.\n\n### Workarounds\n\nUse Cilium's [Helm charts](https://artifacthub.io/packages/helm/cilium/cilium) to create your cluster instead.\n\n### Acknowledgements\n\nThe Cilium community has worked together with members of Isovalent to prepare these mitigations. Special thanks to Marco Iorio for investigating and fixing the issue.\n\n### For more information\nIf you have any questions or comments about this advisory, please reach out on [Slack](https://docs.cilium.io/en/latest/community/community/#slack).\n\nAs usual, if you think you found a related vulnerability, we strongly encourage you to report security vulnerabilities to our private security mailing list: [security@cilium.io](mailto:security@cilium.io) - first, before disclosing them in any public forums. This is a private mailing list where only members of the Cilium internal security team are subscribed to, and is treated as top priority.",
-                    "fixed_versions": [
-                        "v0.13.2"
-                    ],
-                    "identifier": "GMS-2023-799",
-                    "identifiers": [
-                        "GHSA-6f27-3p6c-p5jc",
-                        "GMS-2023-799",
-                        "CVE-2023-28114"
-                    ],
-                    "not_impacted": "All versions starting from 0.13.2",
-                    "package_slug": "go/github.com/cilium/cilium-cli",
-                    "pubdate": "2023-03-21",
-                    "solution": "Upgrade to version 0.13.2 or above.",
-                    "title": "`cilium-cli` disables etcd authorization for clustermesh clusters",
-                    "urls": [
-                        "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
-                        "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
-                        "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
-                        "https://github.com/advisories/GHSA-6f27-3p6c-p5jc"
-                    ],
-                    "uuid": "7f9e0885-1027-4af8-8655-68047cf21e8e",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "dd7037bbe0d4ee73effcdee1e7253294d609d150",
-                                "tags": [
-                                    "v0.13.2"
-                                ],
-                                "timestamp": "20230321043716"
-                            },
-                            "number": "v0.13.2"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:cilium:cilium-cli:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.13.2",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-28114"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "`cilium-cli` is the command line interface to install, manage, and troubleshoot Kubernetes clusters running Cilium. Prior to version 0.13.2,`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. Users who have set up cluster meshes using the Cilium Helm chart are not affected by this issue. Due to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster. This issue is patched in `cilium-cli` 0.13.2. As a workaround, one may use Cilium's Helm charts to create their cluster."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-280"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-755"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://artifacthub.io/packages/helm/cilium/cilium",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://artifacthub.io/packages/helm/cilium/cilium"
-                        },
-                        {
-                            "name": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc"
-                        },
-                        {
-                            "name": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2"
-                        },
-                        {
-                            "name": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "ADJACENT_NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:N/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.3,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2023-03-29T19:40Z",
-            "publishedDate": "2023-03-22T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-28114"
+      ],
+      "details": "`cilium-cli` is the command line interface to install, manage, and troubleshoot Kubernetes clusters running Cilium. Prior to version 0.13.2,`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. Users who have set up cluster meshes using the Cilium Helm chart are not affected by this issue. Due to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster. This issue is patched in `cilium-cli` 0.13.2. As a workaround, one may use Cilium's Helm charts to create their cluster.",
+      "id": "GSD-2023-28114",
+      "modified": "2023-12-13T01:20:48.926816Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-28114",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "cilium-cli",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 0.13.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "cilium"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "`cilium-cli` is the command line interface to install, manage, and troubleshoot Kubernetes clusters running Cilium. Prior to version 0.13.2,`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. Users who have set up cluster meshes using the Cilium Helm chart are not affected by this issue. Due to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster. This issue is patched in `cilium-cli` 0.13.2. As a workaround, one may use Cilium's Helm charts to create their cluster."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "ADJACENT_NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.8,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "HIGH",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:A/AC:L/PR:H/UI:N/S:C/C:L/I:L/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-280",
+                "lang": "eng",
+                "value": "CWE-280: Improper Handling of Insufficient Permissions or Privileges "
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-755",
+                "lang": "eng",
+                "value": "CWE-755: Improper Handling of Exceptional Conditions"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
+            "refsource": "MISC",
+            "url": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc"
+          },
+          {
+            "name": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
+            "refsource": "MISC",
+            "url": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610"
+          },
+          {
+            "name": "https://artifacthub.io/packages/helm/cilium/cilium",
+            "refsource": "MISC",
+            "url": "https://artifacthub.io/packages/helm/cilium/cilium"
+          },
+          {
+            "name": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
+            "refsource": "MISC",
+            "url": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-6f27-3p6c-p5jc",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<v0.13.2",
+          "affected_versions": "All versions before 0.13.2",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-03-21",
+          "description": "### Impact\n\n`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. \n\nDue to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster.\n\n### Patches\n\nThis issue is patched in `cilium-cli` 0.13.2\n\nAll previous versions of `cilium-cli` are affected. Users who have set up cluster meshes using the Cilium Helm chart are not affected.\n\n### Workarounds\n\nUse Cilium's [Helm charts](https://artifacthub.io/packages/helm/cilium/cilium) to create your cluster instead.\n\n### Acknowledgements\n\nThe Cilium community has worked together with members of Isovalent to prepare these mitigations. Special thanks to Marco Iorio for investigating and fixing the issue.\n\n### For more information\nIf you have any questions or comments about this advisory, please reach out on [Slack](https://docs.cilium.io/en/latest/community/community/#slack).\n\nAs usual, if you think you found a related vulnerability, we strongly encourage you to report security vulnerabilities to our private security mailing list: [security@cilium.io](mailto:security@cilium.io) - first, before disclosing them in any public forums. This is a private mailing list where only members of the Cilium internal security team are subscribed to, and is treated as top priority.",
+          "fixed_versions": [
+            "v0.13.2"
+          ],
+          "identifier": "GMS-2023-799",
+          "identifiers": [
+            "GHSA-6f27-3p6c-p5jc",
+            "GMS-2023-799",
+            "CVE-2023-28114"
+          ],
+          "not_impacted": "All versions starting from 0.13.2",
+          "package_slug": "go/github.com/cilium/cilium-cli",
+          "pubdate": "2023-03-21",
+          "solution": "Upgrade to version 0.13.2 or above.",
+          "title": "`cilium-cli` disables etcd authorization for clustermesh clusters",
+          "urls": [
+            "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
+            "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
+            "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
+            "https://github.com/advisories/GHSA-6f27-3p6c-p5jc"
+          ],
+          "uuid": "7f9e0885-1027-4af8-8655-68047cf21e8e",
+          "versions": [
+            {
+              "commit": {
+                "sha": "dd7037bbe0d4ee73effcdee1e7253294d609d150",
+                "tags": [
+                  "v0.13.2"
+                ],
+                "timestamp": "20230321043716"
+              },
+              "number": "v0.13.2"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:cilium:cilium-cli:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.13.2",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-28114"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "`cilium-cli` is the command line interface to install, manage, and troubleshoot Kubernetes clusters running Cilium. Prior to version 0.13.2,`cilium-cli`, when used to configure cluster mesh functionality, can remove the enforcement of user permissions on the `etcd` store used to mirror local cluster information to remote clusters. Users who have set up cluster meshes using the Cilium Helm chart are not affected by this issue. Due to an incorrect mount point specification, the settings specified by the `initContainer` that configures `etcd` users and their permissions are overwritten when using `cilium-cli` to configure a cluster mesh. An attacker who has already gained access to a valid key and certificate for an `etcd` cluster compromised in this manner could then modify state in that `etcd` cluster. This issue is patched in `cilium-cli` 0.13.2. As a workaround, one may use Cilium's Helm charts to create their cluster."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-280"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-755"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://artifacthub.io/packages/helm/cilium/cilium",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://artifacthub.io/packages/helm/cilium/cilium"
+            },
+            {
+              "name": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/cilium/cilium-cli/security/advisories/GHSA-6f27-3p6c-p5jc"
+            },
+            {
+              "name": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://github.com/cilium/cilium-cli/releases/tag/v0.13.2"
+            },
+            {
+              "name": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/cilium/cilium-cli/commit/fb1427025764e1eebc4a7710d902c4f22cae2610"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "ADJACENT_NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:N/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.3,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2023-03-29T19:40Z",
+      "publishedDate": "2023-03-22T19:15Z"
+    }
+  }
 }

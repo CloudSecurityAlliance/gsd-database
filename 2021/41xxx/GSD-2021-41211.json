@@ -1,315 +1,332 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-41211",
-        "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
-        "id": "GSD-2021-41211",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-41211.html",
-            "https://security.archlinux.org/CVE-2021-41211"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-41211",
+    "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
+    "id": "GSD-2021-41211",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-41211.html",
+      "https://security.archlinux.org/CVE-2021-41211"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-41211",
-                "STATE": "PUBLIC",
-                "TITLE": "Heap OOB read in shape inference for `QuantizeV2`"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 2.6.0, < 2.6.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 7.1,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-125: Out-of-bounds Read"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-cvgx-3v3q-m36c",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "==2.6.0",
-                    "affected_versions": "Version 2.6.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-11-10",
-                    "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
-                    "fixed_versions": [
-                        "2.6.1"
-                    ],
-                    "identifier": "CVE-2021-41211",
-                    "identifiers": [
-                        "GHSA-cvgx-3v3q-m36c",
-                        "CVE-2021-41211"
-                    ],
-                    "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2021-11-10",
-                    "solution": "Upgrade to version 2.6.1 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
-                        "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
-                        "https://github.com/advisories/GHSA-cvgx-3v3q-m36c"
-                    ],
-                    "uuid": "4ce60500-e36d-4ee4-844a-e25c68eccf34"
-                },
-                {
-                    "affected_range": "==2.6.0",
-                    "affected_versions": "Version 2.6.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-11-10",
-                    "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
-                    "fixed_versions": [
-                        "2.6.1"
-                    ],
-                    "identifier": "CVE-2021-41211",
-                    "identifiers": [
-                        "GHSA-cvgx-3v3q-m36c",
-                        "CVE-2021-41211"
-                    ],
-                    "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2021-11-10",
-                    "solution": "Upgrade to version 2.6.1 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
-                        "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
-                        "https://github.com/advisories/GHSA-cvgx-3v3q-m36c"
-                    ],
-                    "uuid": "093093e4-d90c-447e-b6e5-1f14413723c0"
-                },
-                {
-                    "affected_range": "==2.6.0",
-                    "affected_versions": "Version 2.6.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-11-09",
-                    "description": "TensorFlow is an open source platform for machine learning.This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read.",
-                    "fixed_versions": [
-                        "2.6.1"
-                    ],
-                    "identifier": "CVE-2021-41211",
-                    "identifiers": [
-                        "CVE-2021-41211",
-                        "GHSA-cvgx-3v3q-m36c"
-                    ],
-                    "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2021-11-05",
-                    "solution": "Upgrade to version 2.6.1 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
-                        "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
-                    ],
-                    "uuid": "edc8aa66-c9c2-4b90-92b5-1a308adbabdb"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-41211"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-125"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 3.6,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 4.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "LOW",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.1,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.2
-                }
-            },
-            "lastModifiedDate": "2021-11-09T15:14Z",
-            "publishedDate": "2021-11-05T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-41211"
+      ],
+      "details": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
+      "id": "GSD-2021-41211",
+      "modified": "2023-12-13T01:23:27.368544Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-41211",
+        "STATE": "PUBLIC",
+        "TITLE": "Heap OOB read in shape inference for `QuantizeV2`"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 2.6.0, < 2.6.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "HIGH",
+          "baseScore": 7.1,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-125: Out-of-bounds Read"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-cvgx-3v3q-m36c",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "==2.6.0",
+          "affected_versions": "Version 2.6.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-11-10",
+          "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
+          "fixed_versions": [
+            "2.6.1"
+          ],
+          "identifier": "CVE-2021-41211",
+          "identifiers": [
+            "GHSA-cvgx-3v3q-m36c",
+            "CVE-2021-41211"
+          ],
+          "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2021-11-10",
+          "solution": "Upgrade to version 2.6.1 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
+            "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
+            "https://github.com/advisories/GHSA-cvgx-3v3q-m36c"
+          ],
+          "uuid": "4ce60500-e36d-4ee4-844a-e25c68eccf34"
+        },
+        {
+          "affected_range": "==2.6.0",
+          "affected_versions": "Version 2.6.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-11-10",
+          "description": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected.",
+          "fixed_versions": [
+            "2.6.1"
+          ],
+          "identifier": "CVE-2021-41211",
+          "identifiers": [
+            "GHSA-cvgx-3v3q-m36c",
+            "CVE-2021-41211"
+          ],
+          "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2021-11-10",
+          "solution": "Upgrade to version 2.6.1 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
+            "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
+            "https://github.com/advisories/GHSA-cvgx-3v3q-m36c"
+          ],
+          "uuid": "093093e4-d90c-447e-b6e5-1f14413723c0"
+        },
+        {
+          "affected_range": "==2.6.0",
+          "affected_versions": "Version 2.6.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-11-09",
+          "description": "TensorFlow is an open source platform for machine learning.This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read.",
+          "fixed_versions": [
+            "2.6.1"
+          ],
+          "identifier": "CVE-2021-41211",
+          "identifiers": [
+            "CVE-2021-41211",
+            "GHSA-cvgx-3v3q-m36c"
+          ],
+          "not_impacted": "All versions before 2.6.0, all versions after 2.6.0",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2021-11-05",
+          "solution": "Upgrade to version 2.6.1 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-41211",
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
+            "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
+          ],
+          "uuid": "edc8aa66-c9c2-4b90-92b5-1a308adbabdb"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-41211"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "TensorFlow is an open source platform for machine learning. In affected versions the shape inference code for `QuantizeV2` can trigger a read outside of bounds of heap allocated array. This occurs whenever `axis` is a negative value less than `-1`. In this case, we are accessing data before the start of a heap buffer. The code allows `axis` to be an optional argument (`s` would contain an `error::NOT_FOUND` error code). Otherwise, it assumes that `axis` is a valid index into the dimensions of the `input` tensor. If `axis` is less than `-1` then this results in a heap OOB read. The fix will be included in TensorFlow 2.7.0. We will also cherrypick this commit on TensorFlow 2.6.1, as this version is the only one that is also affected."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-125"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cvgx-3v3q-m36c"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/a0d64445116c43cf46a5666bd4eee28e7a82f244"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 3.6,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:L/AC:L/Au:N/C:P/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 4.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "LOW",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.1,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.2
+        }
+      },
+      "lastModifiedDate": "2021-11-09T15:14Z",
+      "publishedDate": "2021-11-05T21:15Z"
+    }
+  }
 }

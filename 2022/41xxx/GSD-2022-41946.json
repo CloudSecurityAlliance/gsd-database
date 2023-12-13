@@ -1,316 +1,333 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-41946",
-        "id": "GSD-2022-41946",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-41946.html",
-            "https://access.redhat.com/errata/RHSA-2023:0758",
-            "https://access.redhat.com/errata/RHSA-2023:0759",
-            "https://access.redhat.com/errata/RHSA-2023:0888",
-            "https://access.redhat.com/errata/RHSA-2023:1006",
-            "https://access.redhat.com/errata/RHSA-2023:1177"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-41946",
+    "id": "GSD-2022-41946",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-41946.html",
+      "https://access.redhat.com/errata/RHSA-2023:0758",
+      "https://access.redhat.com/errata/RHSA-2023:0759",
+      "https://access.redhat.com/errata/RHSA-2023:0888",
+      "https://access.redhat.com/errata/RHSA-2023:1006",
+      "https://access.redhat.com/errata/RHSA-2023:1177"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-41946",
-                "STATE": "PUBLIC",
-                "TITLE": "TemporaryFolder on unix-like systems does not limit access to created files in pgjdbc"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "pgjdbc",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 42.2.0, < 42.2.27"
-                                                },
-                                                {
-                                                    "version_value": "> 42.3.0, < 42.3.8"
-                                                },
-                                                {
-                                                    "version_value": ">= 42.4.0, < 42.4.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 42.5.0, < 42.5.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "pgjdbc"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 4.7,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-377: Insecure Temporary File"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h"
-                    },
-                    {
-                        "name": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
-                        "refsource": "MISC",
-                        "url": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20221202 [SECURITY] [DLA 3218-1] libpgjava security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00003.html"
-                    },
-                    {
-                        "name": "FEDORA-2023-42d6ba9bd6",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/25TY2L3RMVNOC7VAHJEAO7PTT6M6JJAD/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-562r-vg33-8x8h",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "[42.2.0,42.2.27),[42.3.0,42.3.8),[42.4.0,42.4.3),[42.5.0,42.5.1)",
-                    "affected_versions": "All versions starting from 42.2.0 before 42.2.27, all versions after 42.3.0 before 42.3.8, all versions starting from 42.4.0 before 42.4.3, all versions starting from 42.5.0 before 42.5.1",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-200",
-                        "CWE-377",
-                        "CWE-78",
-                        "CWE-937"
-                    ],
-                    "date": "2022-11-23",
-                    "description": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability.",
-                    "fixed_versions": [
-                        "42.2.27",
-                        "42.3.8",
-                        "42.4.3",
-                        "42.5.1"
-                    ],
-                    "identifier": "CVE-2022-41946",
-                    "identifiers": [
-                        "GHSA-562r-vg33-8x8h",
-                        "CVE-2022-41946"
-                    ],
-                    "not_impacted": "All versions before 42.2.0, all versions starting from 42.2.27 up to 42.3.0, all versions starting from 42.3.8 before 42.4.0, all versions starting from 42.4.3 before 42.5.0, all versions starting from 42.5.1",
-                    "package_slug": "maven/org.postgresql/postgresql",
-                    "pubdate": "2022-11-23",
-                    "solution": "Upgrade to versions 42.2.27, 42.3.8, 42.4.3, 42.5.1 or above.",
-                    "title": "Insecure Temporary File",
-                    "urls": [
-                        "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-41946",
-                        "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
-                        "https://github.com/advisories/GHSA-562r-vg33-8x8h"
-                    ],
-                    "uuid": "3ae06f89-3844-47c5-bf07-f1cbc82c6f97"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:42.5.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:42.5.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "42.2.27",
-                                "versionStartIncluding": "42.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "42.4.3",
-                                "versionStartIncluding": "42.4.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "42.3.8",
-                                "versionStartIncluding": "42.3.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-41946"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-668"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5"
-                        },
-                        {
-                            "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20221202 [SECURITY] [DLA 3218-1] libpgjava security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00003.html"
-                        },
-                        {
-                            "name": "FEDORA-2023-42d6ba9bd6",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/25TY2L3RMVNOC7VAHJEAO7PTT6M6JJAD/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-07-06T13:37Z",
-            "publishedDate": "2022-11-23T20:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-41946"
+      ],
+      "details": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability.",
+      "id": "GSD-2022-41946",
+      "modified": "2023-12-13T01:19:32.499116Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-41946",
+        "STATE": "PUBLIC",
+        "TITLE": "TemporaryFolder on unix-like systems does not limit access to created files in pgjdbc"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "pgjdbc",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 42.2.0, < 42.2.27"
+                        },
+                        {
+                          "version_value": "> 42.3.0, < 42.3.8"
+                        },
+                        {
+                          "version_value": ">= 42.4.0, < 42.4.3"
+                        },
+                        {
+                          "version_value": ">= 42.5.0, < 42.5.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "pgjdbc"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "NONE",
+          "baseScore": 4.7,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-377: Insecure Temporary File"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h"
+          },
+          {
+            "name": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
+            "refsource": "MISC",
+            "url": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5"
+          },
+          {
+            "name": "[debian-lts-announce] 20221202 [SECURITY] [DLA 3218-1] libpgjava security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00003.html"
+          },
+          {
+            "name": "FEDORA-2023-42d6ba9bd6",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/25TY2L3RMVNOC7VAHJEAO7PTT6M6JJAD/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-562r-vg33-8x8h",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "[42.2.0,42.2.27),[42.3.0,42.3.8),[42.4.0,42.4.3),[42.5.0,42.5.1)",
+          "affected_versions": "All versions starting from 42.2.0 before 42.2.27, all versions after 42.3.0 before 42.3.8, all versions starting from 42.4.0 before 42.4.3, all versions starting from 42.5.0 before 42.5.1",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-200",
+            "CWE-377",
+            "CWE-78",
+            "CWE-937"
+          ],
+          "date": "2022-11-23",
+          "description": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability.",
+          "fixed_versions": [
+            "42.2.27",
+            "42.3.8",
+            "42.4.3",
+            "42.5.1"
+          ],
+          "identifier": "CVE-2022-41946",
+          "identifiers": [
+            "GHSA-562r-vg33-8x8h",
+            "CVE-2022-41946"
+          ],
+          "not_impacted": "All versions before 42.2.0, all versions starting from 42.2.27 up to 42.3.0, all versions starting from 42.3.8 before 42.4.0, all versions starting from 42.4.3 before 42.5.0, all versions starting from 42.5.1",
+          "package_slug": "maven/org.postgresql/postgresql",
+          "pubdate": "2022-11-23",
+          "solution": "Upgrade to versions 42.2.27, 42.3.8, 42.4.3, 42.5.1 or above.",
+          "title": "Insecure Temporary File",
+          "urls": [
+            "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-41946",
+            "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
+            "https://github.com/advisories/GHSA-562r-vg33-8x8h"
+          ],
+          "uuid": "3ae06f89-3844-47c5-bf07-f1cbc82c6f97"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:42.5.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:42.5.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "42.2.27",
+                "versionStartIncluding": "42.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "42.4.3",
+                "versionStartIncluding": "42.4.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:postgresql:postgresql_jdbc_driver:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "42.3.8",
+                "versionStartIncluding": "42.3.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-41946"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "pgjdbc is an open source postgresql JDBC Driver. In affected versions a prepared statement using either `PreparedStatement.setText(int, InputStream)` or `PreparedStatemet.setBytea(int, InputStream)` will create a temporary file if the InputStream is larger than 2k. This will create a temporary file which is readable by other users on Unix like systems, but not MacOS. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. Java 1.7 and higher users: this vulnerability is fixed in 4.5.0. Java 1.6 and lower users: no patch is available. If you are unable to patch, or are stuck running on Java 1.6, specifying the java.io.tmpdir system environment variable to a directory that is exclusively owned by the executing user will mitigate this vulnerability."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-668"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/pgjdbc/pgjdbc/commit/9008dc9aade6dbfe4efafcd6872ebc55f4699cf5"
+            },
+            {
+              "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-562r-vg33-8x8h"
+            },
+            {
+              "name": "[debian-lts-announce] 20221202 [SECURITY] [DLA 3218-1] libpgjava security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00003.html"
+            },
+            {
+              "name": "FEDORA-2023-42d6ba9bd6",
+              "refsource": "FEDORA",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/25TY2L3RMVNOC7VAHJEAO7PTT6M6JJAD/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-07-06T13:37Z",
+      "publishedDate": "2022-11-23T20:15Z"
+    }
+  }
 }

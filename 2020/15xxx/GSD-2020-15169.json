@@ -1,359 +1,365 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-15169",
-        "description": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory.",
-        "id": "GSD-2020-15169",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2020-15169.html",
-            "https://www.debian.org/security/2020/dsa-4766",
-            "https://access.redhat.com/errata/RHSA-2021:1313"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-15169",
+    "description": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory.",
+    "id": "GSD-2020-15169",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2020-15169.html",
+      "https://www.debian.org/security/2020/dsa-4766",
+      "https://access.redhat.com/errata/RHSA-2021:1313"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-15169",
-            "modified": "2020-09-09T00:00:00.000Z",
-            "published": "2020-09-09T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-15169",
-                "GHSA-cfjv-5498-mph5"
-            ],
-            "summary": "Potential XSS vulnerability in Action View",
-            "details": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can’t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.4
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionview",
-                        "purl": "pkg:gem/actionview"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionview",
+            "purl": "pkg:gem/actionview"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-15169",
-                "STATE": "PUBLIC",
-                "TITLE": "XSS in Action View"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "actionview",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 5.2.4.4"
-                                                },
-                                                {
-                                                    "version_value": ">= 6.0.0.0, < 6.0.3.3"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "rails"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 5.4,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "LOW",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "NONE",
-                    "scope": "CHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-79 Cross-site Scripting (XSS)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5"
-                    },
-                    {
-                        "name": "DSA-4766",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2020/dsa-4766"
-                    },
-                    {
-                        "name": "FEDORA-2020-4dd34860a3",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XJ7NUWXAEVRQCROIIBV4C6WXO6IR3KSB/"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20201009 [SECURITY] [DLA 2403-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2020/10/msg00015.html"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-cfjv-5498-mph5",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<5.2.4.4||>=6.0.0.0 <6.0.3.3",
-                    "affected_versions": "All versions before 5.2.4.4, all versions starting from 6.0.0.0 before 6.0.3.3",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-79",
-                        "CWE-937"
-                    ],
-                    "date": "2020-12-08",
-                    "description": "In Action View there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in `_html`, the default string is incorrectly marked as HTML-safe and not escaped.",
-                    "fixed_versions": [
-                        "5.2.4.4",
-                        "6.0.3.3"
-                    ],
-                    "identifier": "CVE-2020-15169",
-                    "identifiers": [
-                        "CVE-2020-15169",
-                        "GHSA-cfjv-5498-mph5"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.4.4 before 6.0.0.0, all versions starting from 6.0.3.3",
-                    "package_slug": "gem/actionview",
-                    "pubdate": "2020-09-11",
-                    "solution": "Upgrade to versions 5.2.4.4, 6.0.3.3 or above.",
-                    "title": "Cross-site Scripting",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-15169"
-                    ],
-                    "uuid": "743b5195-4f16-40eb-8347-9faa07c0d4f1"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:action_view_project:action_view:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.4.4",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:action_view_project:action_view:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.3.3",
-                                "versionStartIncluding": "6.0.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-15169"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-79"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5"
-                        },
-                        {
-                            "name": "DSA-4766",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2020/dsa-4766"
-                        },
-                        {
-                            "name": "FEDORA-2020-4dd34860a3",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XJ7NUWXAEVRQCROIIBV4C6WXO6IR3KSB/"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20201009 [SECURITY] [DLA 2403-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2020/10/msg00015.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 2.7
-                }
-            },
-            "lastModifiedDate": "2020-12-08T18:58Z",
-            "publishedDate": "2020-09-11T16:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionview",
-            "framework": "rails",
-            "cve": "2020-15169",
-            "ghsa": "cfjv-5498-mph5",
-            "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc",
-            "title": "Potential XSS vulnerability in Action View",
-            "date": "2020-09-09",
-            "description": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can’t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
-            "cvss_v3": 5.4,
-            "patched_versions": [
-                "~> 5.2.4, >= 5.2.4.4",
-                ">= 6.0.3.3"
-            ]
+      ],
+      "aliases": [
+        "CVE-2020-15169",
+        "GHSA-cfjv-5498-mph5"
+      ],
+      "details": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can\u2019t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
+      "id": "GSD-2020-15169",
+      "modified": "2020-09-09T00:00:00.000Z",
+      "published": "2020-09-09T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 5.4,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Potential XSS vulnerability in Action View"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-15169",
+        "STATE": "PUBLIC",
+        "TITLE": "XSS in Action View"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "actionview",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 5.2.4.4"
+                        },
+                        {
+                          "version_value": ">= 6.0.0.0, < 6.0.3.3"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "rails"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 5.4,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "LOW",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "NONE",
+          "scope": "CHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:L/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-79 Cross-site Scripting (XSS)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5"
+          },
+          {
+            "name": "DSA-4766",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2020/dsa-4766"
+          },
+          {
+            "name": "FEDORA-2020-4dd34860a3",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XJ7NUWXAEVRQCROIIBV4C6WXO6IR3KSB/"
+          },
+          {
+            "name": "[debian-lts-announce] 20201009 [SECURITY] [DLA 2403-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2020/10/msg00015.html"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-cfjv-5498-mph5",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-15169",
+      "cvss_v3": 5.4,
+      "date": "2020-09-09",
+      "description": "There is a potential Cross-Site Scripting (XSS) vulnerability in Action\nView's translation helpers. Views that allow the user to control the\ndefault (not found) value of the `t` and `translate` helpers could be\nsusceptible to XSS attacks.\n\nImpact\n------\n\nWhen an HTML-unsafe string is passed as the default for a missing\ntranslation key [named `html` or ending in `_html`](https://guides.rubyonrails.org/i18n.html#using-safe-html-translations),\nthe default string is incorrectly marked as HTML-safe and not escaped.\nVulnerable code may look like the following examples:\n\n```erb\n<%# The welcome_html translation is not defined for the current locale: %>\n<%= t(\"welcome_html\", default: untrusted_user_controlled_string) %>\n\n<%# Neither the title.html translation nor the missing.html translation is defined for the current locale: %>\n<%= t(\"title.html\", default: [:\"missing.html\", untrusted_user_controlled_string]) %>\n```\n\nWorkarounds\n-----------\nImpacted users who can\u2019t upgrade to a patched Rails version can avoid\nthis issue by manually escaping default translations with the\n`html_escape` helper (aliased as `h`):\n\n```erb\n<%= t(\"welcome_html\", default: h(untrusted_user_controlled_string)) %>\n```\n",
+      "framework": "rails",
+      "gem": "actionview",
+      "ghsa": "cfjv-5498-mph5",
+      "patched_versions": [
+        "~> 5.2.4, >= 5.2.4.4",
+        ">= 6.0.3.3"
+      ],
+      "title": "Potential XSS vulnerability in Action View",
+      "url": "https://groups.google.com/g/rubyonrails-security/c/b-C9kSGXYrc"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<5.2.4.4||>=6.0.0.0 <6.0.3.3",
+          "affected_versions": "All versions before 5.2.4.4, all versions starting from 6.0.0.0 before 6.0.3.3",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-79",
+            "CWE-937"
+          ],
+          "date": "2020-12-08",
+          "description": "In Action View there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in `_html`, the default string is incorrectly marked as HTML-safe and not escaped.",
+          "fixed_versions": [
+            "5.2.4.4",
+            "6.0.3.3"
+          ],
+          "identifier": "CVE-2020-15169",
+          "identifiers": [
+            "CVE-2020-15169",
+            "GHSA-cfjv-5498-mph5"
+          ],
+          "not_impacted": "All versions starting from 5.2.4.4 before 6.0.0.0, all versions starting from 6.0.3.3",
+          "package_slug": "gem/actionview",
+          "pubdate": "2020-09-11",
+          "solution": "Upgrade to versions 5.2.4.4, 6.0.3.3 or above.",
+          "title": "Cross-site Scripting",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-15169"
+          ],
+          "uuid": "743b5195-4f16-40eb-8347-9faa07c0d4f1"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:action_view_project:action_view:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.4.4",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:action_view_project:action_view:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.3.3",
+                "versionStartIncluding": "6.0.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-15169"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "In Action View before versions 5.2.4.4 and 6.0.3.3 there is a potential Cross-Site Scripting (XSS) vulnerability in Action View's translation helpers. Views that allow the user to control the default (not found) value of the `t` and `translate` helpers could be susceptible to XSS attacks. When an HTML-unsafe string is passed as the default for a missing translation key named html or ending in _html, the default string is incorrectly marked as HTML-safe and not escaped. This is patched in versions 6.0.3.3 and 5.2.4.4. A workaround without upgrading is proposed in the source advisory."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-79"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rails/rails/security/advisories/GHSA-cfjv-5498-mph5"
+            },
+            {
+              "name": "DSA-4766",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2020/dsa-4766"
+            },
+            {
+              "name": "FEDORA-2020-4dd34860a3",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XJ7NUWXAEVRQCROIIBV4C6WXO6IR3KSB/"
+            },
+            {
+              "name": "[debian-lts-announce] 20201009 [SECURITY] [DLA 2403-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2020/10/msg00015.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 2.7
+        }
+      },
+      "lastModifiedDate": "2020-12-08T18:58Z",
+      "publishedDate": "2020-09-11T16:15Z"
+    }
+  }
 }

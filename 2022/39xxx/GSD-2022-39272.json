@@ -1,1067 +1,1084 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-39272",
-        "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-        "id": "GSD-2022-39272"
+  "GSD": {
+    "alias": "CVE-2022-39272",
+    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+    "id": "GSD-2022-39272"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-39272",
-                "STATE": "PUBLIC",
-                "TITLE": "Flux2 vulnerable to Denial of Service due to Improper use of metav1.Duration"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "flux2",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 0.35.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "fluxcd"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 5.0,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "CHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-1284: Improper Validation of Specified Quantity in Input"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v"
-                    },
-                    {
-                        "name": "https://github.com/kubernetes/apimachinery/issues/131",
-                        "refsource": "MISC",
-                        "url": "https://github.com/kubernetes/apimachinery/issues/131"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-f4p5-x4vc-mh4v",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=v0.1.0 <v0.35.0",
-                    "affected_versions": "All versions starting from 0.1.0 before 0.35.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.35.0"
-                    ],
-                    "identifier": "GMS-2022-5611",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5611",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.1.0, all versions starting from 0.35.0",
-                    "package_slug": "go/github.com/fluxcd/flux2",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.35.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "3e62ddbd-b31c-406b-bd87-1d1459c3aec7",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "70d0bfce15a916b73b060af53142ff342051f920",
-                                "tags": [
-                                    "v0.1.0"
-                                ],
-                                "timestamp": "20201001123100"
-                            },
-                            "number": "v0.1.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "eb1ecd17065ecb1281b9ccbd202ea1c2a1c359f7",
-                                "tags": [
-                                    "v0.35.0"
-                                ],
-                                "timestamp": "20220929182756"
-                            },
-                            "number": "v0.35.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.0.1-alpha-1 <v0.24.0",
-                    "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.24.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.24.0"
-                    ],
-                    "identifier": "GMS-2022-5612",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5612",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.24.0",
-                    "package_slug": "go/github.com/fluxcd/helm-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.24.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "cd51f374-7e5a-49da-897a-1f33b9b8e285",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "46c6d6903ec04be90574191b58a195ee5cce648a",
-                                "tags": [
-                                    "v0.24.0"
-                                ],
-                                "timestamp": "20220912092036"
-                            },
-                            "number": "v0.24.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.26.0",
-                    "affected_versions": "All versions before 0.26.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.26.0"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.26.0",
-                    "package_slug": "go/github.com/fluxcd/helm-controller/api/v2beta1",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.26.0 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "55e01a22-3fa4-4ab8-9bdb-0ca93c62a33b",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "04e237dda9ff474c00a38058bf4d35681537d4a9",
-                                "tags": [
-                                    "v0.26.0"
-                                ],
-                                "timestamp": "20221021162419"
-                            },
-                            "number": "v0.26.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.1.0 <v0.26.0",
-                    "affected_versions": "All versions starting from 0.1.0 before 0.26.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.26.0"
-                    ],
-                    "identifier": "GMS-2022-5613",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5613",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.1.0, all versions starting from 0.26.0",
-                    "package_slug": "go/github.com/fluxcd/image-automation-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.26.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "2c2f6f0e-4ee2-4954-9c27-dfa63f804e4a",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "23c501695c1a6db7232957920e4462162cb0961a",
-                                "tags": [
-                                    "v0.1.0"
-                                ],
-                                "timestamp": "20201210135937"
-                            },
-                            "number": "v0.1.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "0082af7b652211f3f465b748e59975b38e63a44c",
-                                "tags": [
-                                    "v0.26.0"
-                                ],
-                                "timestamp": "20220929163308"
-                            },
-                            "number": "v0.26.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.26.1",
-                    "affected_versions": "All versions before 0.26.1",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.26.1"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.26.1",
-                    "package_slug": "go/github.com/fluxcd/image-automation-controller/api/v1beta1",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.26.1 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "fe2b12dc-78f5-4d7e-8bcf-b39b3fd6fb0d",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "a7dba5331b0fee37d60cffba9dc749e7c013898b",
-                                "tags": [
-                                    "v0.26.1"
-                                ],
-                                "timestamp": "20221021153545"
-                            },
-                            "number": "v0.26.1"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.1.0 <v0.22.0",
-                    "affected_versions": "All versions starting from 0.1.0 before 0.22.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.22.0"
-                    ],
-                    "identifier": "GMS-2022-5614",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5614",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.1.0, all versions starting from 0.22.0",
-                    "package_slug": "go/github.com/fluxcd/image-reflector-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.22.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "c6779cc7-e2b7-4726-beb9-b845ceed9da1",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "95fb45a9c0e83c534a528b10b76e4d448483b210",
-                                "tags": [
-                                    "v0.1.0"
-                                ],
-                                "timestamp": "20201210132430"
-                            },
-                            "number": "v0.1.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "6e5c6b25845709469abf74565382c72639de28db",
-                                "tags": [
-                                    "v0.22.0"
-                                ],
-                                "timestamp": "20220927145948"
-                            },
-                            "number": "v0.22.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.22.1",
-                    "affected_versions": "All versions before 0.22.1",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.22.1"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.22.1",
-                    "package_slug": "go/github.com/fluxcd/image-reflector-controller/api/v1beta1",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.22.1 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "75061907-0cfe-4fc2-a918-16d77d1723b9",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "e83f96e5f1c548df77efc6af1f4c57f105620860",
-                                "tags": [
-                                    "v0.22.1"
-                                ],
-                                "timestamp": "20221020124318"
-                            },
-                            "number": "v0.22.1"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.0.1 <v0.29.0",
-                    "affected_versions": "All versions starting from v0.0.1 before v0.29.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-1284",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-14",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.29.0"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "CVE-2022-39272",
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5615"
-                    ],
-                    "not_impacted": "All versions before v0.0.1, all versions starting from v0.29.0",
-                    "package_slug": "go/github.com/fluxcd/kustomize-controller",
-                    "pubdate": "2022-10-22",
-                    "solution": "Upgrade to version 0.29.0 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "a5cf3241-ec69-4fe8-a060-b9a8e0353c8b",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "7e080f14a9bdc42d238cbafbafbb79dc3b9ec2da",
-                                "tags": [
-                                    "v0.0.1"
-                                ],
-                                "timestamp": "20200624155513"
-                            },
-                            "number": "v0.0.1"
-                        },
-                        {
-                            "commit": {
-                                "sha": "105c8bcbaa9a1677eed4fc7468afa3e341a56cdd",
-                                "tags": [
-                                    "v0.29.0"
-                                ],
-                                "timestamp": "20220929170034"
-                            },
-                            "number": "v0.29.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<0",
-                    "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.29.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.29.0"
-                    ],
-                    "identifier": "GMS-2022-5615",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5615",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.29.0",
-                    "package_slug": "go/github.com/fluxcd/kustomize-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.29.0 or above.",
-                    "title": "Duplicate of ./go/github.com/fluxcd/kustomize-controller/CVE-2022-39272.yml",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "d72dda85-032a-498e-b471-241d1bf29c46",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "105c8bcbaa9a1677eed4fc7468afa3e341a56cdd",
-                                "tags": [
-                                    "v0.29.0"
-                                ],
-                                "timestamp": "20220929170034"
-                            },
-                            "number": "v0.29.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.30.0",
-                    "affected_versions": "All versions before 0.30.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.30.0"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.30.0",
-                    "package_slug": "go/github.com/fluxcd/kustomize-controller/api/v1beta2",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "98ca97d2-b48c-4905-8e6f-6353b464d6cd",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "c72676157e9a4cec17a0d25d6bf75899954f0d78",
-                                "tags": [
-                                    "v0.30.0"
-                                ],
-                                "timestamp": "20221021163708"
-                            },
-                            "number": "v0.30.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.0.1-alpha-1 <v0.27.0",
-                    "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.27.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.27.0"
-                    ],
-                    "identifier": "GMS-2022-5616",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5616",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.27.0",
-                    "package_slug": "go/github.com/fluxcd/notification-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.27.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "242d5907-4034-449a-8195-d01e9d254534",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "8a68db784534942de1ddecad5184c8176c769445",
-                                "tags": [
-                                    "v0.27.0"
-                                ],
-                                "timestamp": "20220927150100"
-                            },
-                            "number": "v0.27.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.28.0",
-                    "affected_versions": "All versions before 0.28.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.28.0"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.28.0",
-                    "package_slug": "go/github.com/fluxcd/notification-controller/api/v1beta1",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.28.0 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "adf90aab-d0d0-452f-bb12-79062cd10dc6",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "75a35109ff05b916f29db0b993dc34175b2abb95",
-                                "tags": [
-                                    "v0.28.0"
-                                ],
-                                "timestamp": "20221020124242"
-                            },
-                            "number": "v0.28.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": ">=v0.0.1-alpha-1 <v0.30.0",
-                    "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.30.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-19",
-                    "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
-                    "fixed_versions": [
-                        "v0.30.0"
-                    ],
-                    "identifier": "GMS-2022-5617",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "GMS-2022-5617",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.30.0",
-                    "package_slug": "go/github.com/fluxcd/source-controller",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Improper use of metav1.Duration allows for Denial of Service",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "46c77378-7223-4780-8d89-664515a804f1",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "872e545dcb3dfec072c6e687e46bf35aaab23580",
-                                "tags": [
-                                    "v0.30.0"
-                                ],
-                                "timestamp": "20220929155200"
-                            },
-                            "number": "v0.30.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<v0.30.0",
-                    "affected_versions": "All versions before 0.30.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-09",
-                    "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
-                    "fixed_versions": [
-                        "v0.30.0"
-                    ],
-                    "identifier": "CVE-2022-39272",
-                    "identifiers": [
-                        "GHSA-f4p5-x4vc-mh4v",
-                        "CVE-2022-39272"
-                    ],
-                    "not_impacted": "All versions starting from 0.30.0",
-                    "package_slug": "go/github.com/fluxcd/source-controller/api/v1beta2",
-                    "pubdate": "2022-10-19",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                        "https://github.com/kubernetes/apimachinery/issues/131",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
-                        "https://github.com/fluxcd/helm-controller/pull/533",
-                        "https://github.com/fluxcd/image-automation-controller/pull/439",
-                        "https://github.com/fluxcd/image-reflector-controller/pull/314",
-                        "https://github.com/fluxcd/kustomize-controller/pull/731",
-                        "https://github.com/fluxcd/notification-controller/pull/420",
-                        "https://github.com/fluxcd/source-controller/pull/903",
-                        "https://github.com/kubernetes/apimachinery#131",
-                        "https://pkg.go.dev/vuln/GO-2022-1071",
-                        "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
-                    ],
-                    "uuid": "d5b04eb8-2c15-4d1c-bf69-9cfae269a28c",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "872e545dcb3dfec072c6e687e46bf35aaab23580",
-                                "tags": [
-                                    "v0.30.0"
-                                ],
-                                "timestamp": "20220929155200"
-                            },
-                            "number": "v0.30.0"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.30.0",
-                                "versionStartIncluding": "0.0.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha5:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha6:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:alpha2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:alpha1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.27.0",
-                                "versionStartIncluding": "0.0.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.29.0",
-                                "versionStartIncluding": "0.0.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha5:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha6:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha7:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha8:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha9:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:image-reflector-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.22.0",
-                                "versionStartIncluding": "0.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:image-automation-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.26.0",
-                                "versionStartIncluding": "0.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.24.0",
-                                "versionStartIncluding": "0.0.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:alpha1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:alpha2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fluxcd:flux2:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.35.0",
-                                "versionStartIncluding": "0.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-39272"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-1284"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v"
-                        },
-                        {
-                            "name": "https://github.com/kubernetes/apimachinery/issues/131",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/kubernetes/apimachinery/issues/131"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 4.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2023-07-14T18:17Z",
-            "publishedDate": "2022-10-22T00:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-39272"
+      ],
+      "details": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+      "id": "GSD-2022-39272",
+      "modified": "2023-12-13T01:19:20.675081Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-39272",
+        "STATE": "PUBLIC",
+        "TITLE": "Flux2 vulnerable to Denial of Service due to Improper use of metav1.Duration"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "flux2",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 0.35.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "fluxcd"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "LOW",
+          "baseScore": 5.0,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "CHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-1284: Improper Validation of Specified Quantity in Input"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v"
+          },
+          {
+            "name": "https://github.com/kubernetes/apimachinery/issues/131",
+            "refsource": "MISC",
+            "url": "https://github.com/kubernetes/apimachinery/issues/131"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-f4p5-x4vc-mh4v",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=v0.1.0 <v0.35.0",
+          "affected_versions": "All versions starting from 0.1.0 before 0.35.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.35.0"
+          ],
+          "identifier": "GMS-2022-5611",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5611",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.1.0, all versions starting from 0.35.0",
+          "package_slug": "go/github.com/fluxcd/flux2",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.35.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "3e62ddbd-b31c-406b-bd87-1d1459c3aec7",
+          "versions": [
+            {
+              "commit": {
+                "sha": "70d0bfce15a916b73b060af53142ff342051f920",
+                "tags": [
+                  "v0.1.0"
+                ],
+                "timestamp": "20201001123100"
+              },
+              "number": "v0.1.0"
+            },
+            {
+              "commit": {
+                "sha": "eb1ecd17065ecb1281b9ccbd202ea1c2a1c359f7",
+                "tags": [
+                  "v0.35.0"
+                ],
+                "timestamp": "20220929182756"
+              },
+              "number": "v0.35.0"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.0.1-alpha-1 <v0.24.0",
+          "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.24.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.24.0"
+          ],
+          "identifier": "GMS-2022-5612",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5612",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.24.0",
+          "package_slug": "go/github.com/fluxcd/helm-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.24.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "cd51f374-7e5a-49da-897a-1f33b9b8e285",
+          "versions": [
+            {
+              "commit": {
+                "sha": "46c6d6903ec04be90574191b58a195ee5cce648a",
+                "tags": [
+                  "v0.24.0"
+                ],
+                "timestamp": "20220912092036"
+              },
+              "number": "v0.24.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.26.0",
+          "affected_versions": "All versions before 0.26.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.26.0"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.26.0",
+          "package_slug": "go/github.com/fluxcd/helm-controller/api/v2beta1",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.26.0 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "55e01a22-3fa4-4ab8-9bdb-0ca93c62a33b",
+          "versions": [
+            {
+              "commit": {
+                "sha": "04e237dda9ff474c00a38058bf4d35681537d4a9",
+                "tags": [
+                  "v0.26.0"
+                ],
+                "timestamp": "20221021162419"
+              },
+              "number": "v0.26.0"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.1.0 <v0.26.0",
+          "affected_versions": "All versions starting from 0.1.0 before 0.26.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.26.0"
+          ],
+          "identifier": "GMS-2022-5613",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5613",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.1.0, all versions starting from 0.26.0",
+          "package_slug": "go/github.com/fluxcd/image-automation-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.26.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "2c2f6f0e-4ee2-4954-9c27-dfa63f804e4a",
+          "versions": [
+            {
+              "commit": {
+                "sha": "23c501695c1a6db7232957920e4462162cb0961a",
+                "tags": [
+                  "v0.1.0"
+                ],
+                "timestamp": "20201210135937"
+              },
+              "number": "v0.1.0"
+            },
+            {
+              "commit": {
+                "sha": "0082af7b652211f3f465b748e59975b38e63a44c",
+                "tags": [
+                  "v0.26.0"
+                ],
+                "timestamp": "20220929163308"
+              },
+              "number": "v0.26.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.26.1",
+          "affected_versions": "All versions before 0.26.1",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.26.1"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.26.1",
+          "package_slug": "go/github.com/fluxcd/image-automation-controller/api/v1beta1",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.26.1 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "fe2b12dc-78f5-4d7e-8bcf-b39b3fd6fb0d",
+          "versions": [
+            {
+              "commit": {
+                "sha": "a7dba5331b0fee37d60cffba9dc749e7c013898b",
+                "tags": [
+                  "v0.26.1"
+                ],
+                "timestamp": "20221021153545"
+              },
+              "number": "v0.26.1"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.1.0 <v0.22.0",
+          "affected_versions": "All versions starting from 0.1.0 before 0.22.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.22.0"
+          ],
+          "identifier": "GMS-2022-5614",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5614",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.1.0, all versions starting from 0.22.0",
+          "package_slug": "go/github.com/fluxcd/image-reflector-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.22.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "c6779cc7-e2b7-4726-beb9-b845ceed9da1",
+          "versions": [
+            {
+              "commit": {
+                "sha": "95fb45a9c0e83c534a528b10b76e4d448483b210",
+                "tags": [
+                  "v0.1.0"
+                ],
+                "timestamp": "20201210132430"
+              },
+              "number": "v0.1.0"
+            },
+            {
+              "commit": {
+                "sha": "6e5c6b25845709469abf74565382c72639de28db",
+                "tags": [
+                  "v0.22.0"
+                ],
+                "timestamp": "20220927145948"
+              },
+              "number": "v0.22.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.22.1",
+          "affected_versions": "All versions before 0.22.1",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.22.1"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.22.1",
+          "package_slug": "go/github.com/fluxcd/image-reflector-controller/api/v1beta1",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.22.1 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "75061907-0cfe-4fc2-a918-16d77d1723b9",
+          "versions": [
+            {
+              "commit": {
+                "sha": "e83f96e5f1c548df77efc6af1f4c57f105620860",
+                "tags": [
+                  "v0.22.1"
+                ],
+                "timestamp": "20221020124318"
+              },
+              "number": "v0.22.1"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.0.1 <v0.29.0",
+          "affected_versions": "All versions starting from v0.0.1 before v0.29.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-1284",
+            "CWE-937"
+          ],
+          "date": "2023-07-14",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.29.0"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "CVE-2022-39272",
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5615"
+          ],
+          "not_impacted": "All versions before v0.0.1, all versions starting from v0.29.0",
+          "package_slug": "go/github.com/fluxcd/kustomize-controller",
+          "pubdate": "2022-10-22",
+          "solution": "Upgrade to version 0.29.0 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "a5cf3241-ec69-4fe8-a060-b9a8e0353c8b",
+          "versions": [
+            {
+              "commit": {
+                "sha": "7e080f14a9bdc42d238cbafbafbb79dc3b9ec2da",
+                "tags": [
+                  "v0.0.1"
+                ],
+                "timestamp": "20200624155513"
+              },
+              "number": "v0.0.1"
+            },
+            {
+              "commit": {
+                "sha": "105c8bcbaa9a1677eed4fc7468afa3e341a56cdd",
+                "tags": [
+                  "v0.29.0"
+                ],
+                "timestamp": "20220929170034"
+              },
+              "number": "v0.29.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<0",
+          "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.29.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.29.0"
+          ],
+          "identifier": "GMS-2022-5615",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5615",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.29.0",
+          "package_slug": "go/github.com/fluxcd/kustomize-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.29.0 or above.",
+          "title": "Duplicate of ./go/github.com/fluxcd/kustomize-controller/CVE-2022-39272.yml",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "d72dda85-032a-498e-b471-241d1bf29c46",
+          "versions": [
+            {
+              "commit": {
+                "sha": "105c8bcbaa9a1677eed4fc7468afa3e341a56cdd",
+                "tags": [
+                  "v0.29.0"
+                ],
+                "timestamp": "20220929170034"
+              },
+              "number": "v0.29.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.30.0",
+          "affected_versions": "All versions before 0.30.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.30.0"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.30.0",
+          "package_slug": "go/github.com/fluxcd/kustomize-controller/api/v1beta2",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "98ca97d2-b48c-4905-8e6f-6353b464d6cd",
+          "versions": [
+            {
+              "commit": {
+                "sha": "c72676157e9a4cec17a0d25d6bf75899954f0d78",
+                "tags": [
+                  "v0.30.0"
+                ],
+                "timestamp": "20221021163708"
+              },
+              "number": "v0.30.0"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.0.1-alpha-1 <v0.27.0",
+          "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.27.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.27.0"
+          ],
+          "identifier": "GMS-2022-5616",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5616",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.27.0",
+          "package_slug": "go/github.com/fluxcd/notification-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.27.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "242d5907-4034-449a-8195-d01e9d254534",
+          "versions": [
+            {
+              "commit": {
+                "sha": "8a68db784534942de1ddecad5184c8176c769445",
+                "tags": [
+                  "v0.27.0"
+                ],
+                "timestamp": "20220927150100"
+              },
+              "number": "v0.27.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.28.0",
+          "affected_versions": "All versions before 0.28.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.28.0"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.28.0",
+          "package_slug": "go/github.com/fluxcd/notification-controller/api/v1beta1",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.28.0 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "adf90aab-d0d0-452f-bb12-79062cd10dc6",
+          "versions": [
+            {
+              "commit": {
+                "sha": "75a35109ff05b916f29db0b993dc34175b2abb95",
+                "tags": [
+                  "v0.28.0"
+                ],
+                "timestamp": "20221020124242"
+              },
+              "number": "v0.28.0"
+            }
+          ]
+        },
+        {
+          "affected_range": ">=v0.0.1-alpha-1 <v0.30.0",
+          "affected_versions": "All versions starting from 0.0.1-alpha-1 before 0.30.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-19",
+          "description": "Flux controllers within the affected versions range is vulnerable to a denial of service attack. Users that have permissions to change Flux\u2019s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed.\nThe issue has two root causes a) the Kubernetes type `metav1.Duration` not being fully compatible with the Go type `time.Duration` as explained on [upstream report](https://github.com/kubernetes/apimachinery/issues/131); b) lack of validation within Flux to restrict allowed values.",
+          "fixed_versions": [
+            "v0.30.0"
+          ],
+          "identifier": "GMS-2022-5617",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "GMS-2022-5617",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions before 0.0.1-alpha-1, all versions starting from 0.30.0",
+          "package_slug": "go/github.com/fluxcd/source-controller",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Improper use of metav1.Duration allows for Denial of Service",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "46c77378-7223-4780-8d89-664515a804f1",
+          "versions": [
+            {
+              "commit": {
+                "sha": "872e545dcb3dfec072c6e687e46bf35aaab23580",
+                "tags": [
+                  "v0.30.0"
+                ],
+                "timestamp": "20220929155200"
+              },
+              "number": "v0.30.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "<v0.30.0",
+          "affected_versions": "All versions before 0.30.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-02-09",
+          "description": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation.",
+          "fixed_versions": [
+            "v0.30.0"
+          ],
+          "identifier": "CVE-2022-39272",
+          "identifiers": [
+            "GHSA-f4p5-x4vc-mh4v",
+            "CVE-2022-39272"
+          ],
+          "not_impacted": "All versions starting from 0.30.0",
+          "package_slug": "go/github.com/fluxcd/source-controller/api/v1beta2",
+          "pubdate": "2022-10-19",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+            "https://github.com/kubernetes/apimachinery/issues/131",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-39272",
+            "https://github.com/fluxcd/helm-controller/pull/533",
+            "https://github.com/fluxcd/image-automation-controller/pull/439",
+            "https://github.com/fluxcd/image-reflector-controller/pull/314",
+            "https://github.com/fluxcd/kustomize-controller/pull/731",
+            "https://github.com/fluxcd/notification-controller/pull/420",
+            "https://github.com/fluxcd/source-controller/pull/903",
+            "https://github.com/kubernetes/apimachinery#131",
+            "https://pkg.go.dev/vuln/GO-2022-1071",
+            "https://github.com/advisories/GHSA-f4p5-x4vc-mh4v"
+          ],
+          "uuid": "d5b04eb8-2c15-4d1c-bf69-9cfae269a28c",
+          "versions": [
+            {
+              "commit": {
+                "sha": "872e545dcb3dfec072c6e687e46bf35aaab23580",
+                "tags": [
+                  "v0.30.0"
+                ],
+                "timestamp": "20220929155200"
+              },
+              "number": "v0.30.0"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.30.0",
+                "versionStartIncluding": "0.0.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha5:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:alpha6:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:source-controller:0.0.1:beta2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:alpha2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:0.0.1:alpha1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:notification-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.27.0",
+                "versionStartIncluding": "0.0.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.29.0",
+                "versionStartIncluding": "0.0.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha5:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha6:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha7:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha8:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:alpha9:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:kustomize-controller:0.0.1:beta2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:image-reflector-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.22.0",
+                "versionStartIncluding": "0.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:image-automation-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.26.0",
+                "versionStartIncluding": "0.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.24.0",
+                "versionStartIncluding": "0.0.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:alpha1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:alpha2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:helm-controller:0.0.1:beta4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fluxcd:flux2:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.35.0",
+                "versionStartIncluding": "0.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-39272"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Flux is an open and extensible continuous delivery solution for Kubernetes. Versions prior to 0.35.0 are subject to a Denial of Service. Users that have permissions to change Flux\u00e2\u20ac\u2122s objects, either through a Flux source or directly within a cluster, can provide invalid data to fields `.spec.interval` or `.spec.timeout` (and structured variations of these fields), causing the entire object type to stop being processed. This issue is patched in version 0.35.0. As a workaround, Admission controllers can be employed to restrict the values that can be used for fields `.spec.interval` and `.spec.timeout`, however upgrading to the latest versions is still the recommended mitigation."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-1284"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/fluxcd/flux2/security/advisories/GHSA-f4p5-x4vc-mh4v"
+            },
+            {
+              "name": "https://github.com/kubernetes/apimachinery/issues/131",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/kubernetes/apimachinery/issues/131"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 4.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2023-07-14T18:17Z",
+      "publishedDate": "2022-10-22T00:15Z"
+    }
+  }
 }

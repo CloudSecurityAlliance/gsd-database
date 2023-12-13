@@ -1,336 +1,353 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-31183",
-        "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
-        "id": "GSD-2022-31183"
+  "GSD": {
+    "alias": "CVE-2022-31183",
+    "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
+    "id": "GSD-2022-31183"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-31183",
-                "STATE": "PUBLIC",
-                "TITLE": "mTLS client verification is skipped in fs2 on Node.js"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "fs2",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 3.1.0, < 3.2.11"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "typelevel"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 9.1,
-                    "baseSeverity": "CRITICAL",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-295: Improper Certificate Validation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35"
-                    },
-                    {
-                        "name": "https://github.com/nodejs/node/issues/43994",
-                        "refsource": "MISC",
-                        "url": "https://github.com/nodejs/node/issues/43994"
-                    },
-                    {
-                        "name": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207",
-                        "refsource": "MISC",
-                        "url": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-2cpx-6pqp-wf35",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "[3.1.0,3.2.11)",
-                    "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-29",
-                    "description": "### Impact\n\nWhen establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds.\n\nThe vulnerability is limited to:\n1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent.\n2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API.\n3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s.\n\nIt was introduced with the initial Node.js implementation of fs2-io in v3.1.0.\n\n### Patches\n\nA patch is released in v3.2.11. The `requestCert = true` parameter is respected and the peer certificate is verified. If verification fails, a `SSLException` is raised.\n\n### Workarounds\n\nIf using an unpatched version on Node.js, do not use a server-mode `TLSSocket` with `requestCert = true` to establish a mTLS connection.\n\n### References\n- https://github.com/nodejs/node/issues/43994\n- https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/\n\n### For more information\nIf you have any questions or comments about this advisory:\n* [Open an issue.](https://github.com/typelevel/fs2/issues/new/choose)\n* Contact the [Typelevel Security Team](https://github.com/typelevel/.github/blob/main/SECURITY.md).\n",
-                    "fixed_versions": [
-                        "3.2.11"
-                    ],
-                    "identifier": "GMS-2022-3308",
-                    "identifiers": [
-                        "GHSA-2cpx-6pqp-wf35",
-                        "GMS-2022-3308",
-                        "CVE-2022-31183"
-                    ],
-                    "not_impacted": "All versions before 3.1.0, all versions starting from 3.2.11",
-                    "package_slug": "maven/co.fs2/fs2-io",
-                    "pubdate": "2022-07-29",
-                    "solution": "Upgrade to version 3.2.11 or above.",
-                    "title": "fs2-io skips mTLS client verification",
-                    "urls": [
-                        "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                        "https://github.com/nodejs/node/issues/43994",
-                        "https://github.com/typelevel/fs2/commit/19ce392e8093d9571387dbd78e159e655a85aeea",
-                        "https://github.com/typelevel/fs2/releases/tag/v3.2.11",
-                        "https://github.com/advisories/GHSA-2cpx-6pqp-wf35"
-                    ],
-                    "uuid": "551fe5df-73b9-49ff-93e4-d626e271e2c1"
-                },
-                {
-                    "affected_range": "[3.1.0,3.2.11)",
-                    "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-295",
-                        "CWE-937"
-                    ],
-                    "date": "2022-08-09",
-                    "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
-                    "fixed_versions": [
-                        "3.2.11"
-                    ],
-                    "identifier": "CVE-2022-31183",
-                    "identifiers": [
-                        "CVE-2022-31183",
-                        "GHSA-2cpx-6pqp-wf35"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "maven/co.fs2/fs2-io_sjs1_2.12",
-                    "pubdate": "2022-08-01",
-                    "solution": "Upgrade to version 3.2.11 or above.",
-                    "title": "Improper Certificate Validation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
-                        "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                        "https://github.com/nodejs/node/issues/43994",
-                        "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
-                    ],
-                    "uuid": "b661eb01-534b-4a2a-8858-4a319bd33f43"
-                },
-                {
-                    "affected_range": "[3.1.0,3.2.11)",
-                    "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-295",
-                        "CWE-937"
-                    ],
-                    "date": "2022-08-09",
-                    "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
-                    "fixed_versions": [
-                        "3.2.11"
-                    ],
-                    "identifier": "CVE-2022-31183",
-                    "identifiers": [
-                        "CVE-2022-31183",
-                        "GHSA-2cpx-6pqp-wf35"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "maven/co.fs2/fs2-io_sjs1_2.13",
-                    "pubdate": "2022-08-01",
-                    "solution": "Upgrade to version 3.2.11 or above.",
-                    "title": "Improper Certificate Validation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
-                        "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                        "https://github.com/nodejs/node/issues/43994",
-                        "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
-                    ],
-                    "uuid": "6ae012e9-98d7-4563-bc7a-8ef13efa337a"
-                },
-                {
-                    "affected_range": "[3.1.0,3.2.11)",
-                    "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-295",
-                        "CWE-937"
-                    ],
-                    "date": "2022-08-09",
-                    "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
-                    "fixed_versions": [
-                        "3.2.11"
-                    ],
-                    "identifier": "CVE-2022-31183",
-                    "identifiers": [
-                        "CVE-2022-31183",
-                        "GHSA-2cpx-6pqp-wf35"
-                    ],
-                    "not_impacted": "All versions before 3.1.0, all versions starting from 3.2.11",
-                    "package_slug": "maven/co.fs2/fs2-io_sjs1_3",
-                    "pubdate": "2022-08-01",
-                    "solution": "Upgrade to version 3.2.11 or above.",
-                    "title": "Improper Certificate Validation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
-                        "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                        "https://github.com/nodejs/node/issues/43994",
-                        "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
-                    ],
-                    "uuid": "8f3d6993-c8e3-46fb-b91d-8a09253b94ac"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:typelevel:fs2:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.2.11",
-                                "versionStartIncluding": "3.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-31183"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-295"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35"
-                        },
-                        {
-                            "name": "https://github.com/nodejs/node/issues/43994",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Issue Tracking",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/nodejs/node/issues/43994"
-                        },
-                        {
-                            "name": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-08-09T19:38Z",
-            "publishedDate": "2022-08-01T20:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-31183"
+      ],
+      "details": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
+      "id": "GSD-2022-31183",
+      "modified": "2023-12-13T01:19:17.982562Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-31183",
+        "STATE": "PUBLIC",
+        "TITLE": "mTLS client verification is skipped in fs2 on Node.js"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "fs2",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 3.1.0, < 3.2.11"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "typelevel"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 9.1,
+          "baseSeverity": "CRITICAL",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-295: Improper Certificate Validation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35"
+          },
+          {
+            "name": "https://github.com/nodejs/node/issues/43994",
+            "refsource": "MISC",
+            "url": "https://github.com/nodejs/node/issues/43994"
+          },
+          {
+            "name": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207",
+            "refsource": "MISC",
+            "url": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-2cpx-6pqp-wf35",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "[3.1.0,3.2.11)",
+          "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-07-29",
+          "description": "### Impact\n\nWhen establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds.\n\nThe vulnerability is limited to:\n1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent.\n2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API.\n3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s.\n\nIt was introduced with the initial Node.js implementation of fs2-io in v3.1.0.\n\n### Patches\n\nA patch is released in v3.2.11. The `requestCert = true` parameter is respected and the peer certificate is verified. If verification fails, a `SSLException` is raised.\n\n### Workarounds\n\nIf using an unpatched version on Node.js, do not use a server-mode `TLSSocket` with `requestCert = true` to establish a mTLS connection.\n\n### References\n- https://github.com/nodejs/node/issues/43994\n- https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/\n\n### For more information\nIf you have any questions or comments about this advisory:\n* [Open an issue.](https://github.com/typelevel/fs2/issues/new/choose)\n* Contact the [Typelevel Security Team](https://github.com/typelevel/.github/blob/main/SECURITY.md).\n",
+          "fixed_versions": [
+            "3.2.11"
+          ],
+          "identifier": "GMS-2022-3308",
+          "identifiers": [
+            "GHSA-2cpx-6pqp-wf35",
+            "GMS-2022-3308",
+            "CVE-2022-31183"
+          ],
+          "not_impacted": "All versions before 3.1.0, all versions starting from 3.2.11",
+          "package_slug": "maven/co.fs2/fs2-io",
+          "pubdate": "2022-07-29",
+          "solution": "Upgrade to version 3.2.11 or above.",
+          "title": "fs2-io skips mTLS client verification",
+          "urls": [
+            "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+            "https://github.com/nodejs/node/issues/43994",
+            "https://github.com/typelevel/fs2/commit/19ce392e8093d9571387dbd78e159e655a85aeea",
+            "https://github.com/typelevel/fs2/releases/tag/v3.2.11",
+            "https://github.com/advisories/GHSA-2cpx-6pqp-wf35"
+          ],
+          "uuid": "551fe5df-73b9-49ff-93e4-d626e271e2c1"
+        },
+        {
+          "affected_range": "[3.1.0,3.2.11)",
+          "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-295",
+            "CWE-937"
+          ],
+          "date": "2022-08-09",
+          "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
+          "fixed_versions": [
+            "3.2.11"
+          ],
+          "identifier": "CVE-2022-31183",
+          "identifiers": [
+            "CVE-2022-31183",
+            "GHSA-2cpx-6pqp-wf35"
+          ],
+          "not_impacted": "",
+          "package_slug": "maven/co.fs2/fs2-io_sjs1_2.12",
+          "pubdate": "2022-08-01",
+          "solution": "Upgrade to version 3.2.11 or above.",
+          "title": "Improper Certificate Validation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
+            "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+            "https://github.com/nodejs/node/issues/43994",
+            "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
+          ],
+          "uuid": "b661eb01-534b-4a2a-8858-4a319bd33f43"
+        },
+        {
+          "affected_range": "[3.1.0,3.2.11)",
+          "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-295",
+            "CWE-937"
+          ],
+          "date": "2022-08-09",
+          "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
+          "fixed_versions": [
+            "3.2.11"
+          ],
+          "identifier": "CVE-2022-31183",
+          "identifiers": [
+            "CVE-2022-31183",
+            "GHSA-2cpx-6pqp-wf35"
+          ],
+          "not_impacted": "",
+          "package_slug": "maven/co.fs2/fs2-io_sjs1_2.13",
+          "pubdate": "2022-08-01",
+          "solution": "Upgrade to version 3.2.11 or above.",
+          "title": "Improper Certificate Validation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
+            "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+            "https://github.com/nodejs/node/issues/43994",
+            "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
+          ],
+          "uuid": "6ae012e9-98d7-4563-bc7a-8ef13efa337a"
+        },
+        {
+          "affected_range": "[3.1.0,3.2.11)",
+          "affected_versions": "All versions starting from 3.1.0 before 3.2.11",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-295",
+            "CWE-937"
+          ],
+          "date": "2022-08-09",
+          "description": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection.",
+          "fixed_versions": [
+            "3.2.11"
+          ],
+          "identifier": "CVE-2022-31183",
+          "identifiers": [
+            "CVE-2022-31183",
+            "GHSA-2cpx-6pqp-wf35"
+          ],
+          "not_impacted": "All versions before 3.1.0, all versions starting from 3.2.11",
+          "package_slug": "maven/co.fs2/fs2-io_sjs1_3",
+          "pubdate": "2022-08-01",
+          "solution": "Upgrade to version 3.2.11 or above.",
+          "title": "Improper Certificate Validation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31183",
+            "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+            "https://github.com/nodejs/node/issues/43994",
+            "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
+          ],
+          "uuid": "8f3d6993-c8e3-46fb-b91d-8a09253b94ac"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:typelevel:fs2:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.2.11",
+                "versionStartIncluding": "3.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-31183"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "fs2 is a compositional, streaming I/O library for Scala. When establishing a server-mode `TLSSocket` using `fs2-io` on Node.js, the parameter `requestCert = true` is ignored, peer certificate verification is skipped, and the connection proceeds. The vulnerability is limited to: 1. `fs2-io` running on Node.js. The JVM TLS implementation is completely independent. 2. `TLSSocket`s in server-mode. Client-mode `TLSSocket`s are implemented via a different API. 3. mTLS as enabled via `requestCert = true` in `TLSParameters`. The default setting is `false` for server-mode `TLSSocket`s. It was introduced with the initial Node.js implementation of fs2-io in 3.1.0. A patch is released in v3.2.11. The requestCert = true parameter is respected and the peer certificate is verified. If verification fails, a SSLException is raised. If using an unpatched version on Node.js, do not use a server-mode TLSSocket with requestCert = true to establish a mTLS connection."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-295"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/typelevel/fs2/security/advisories/GHSA-2cpx-6pqp-wf35"
+            },
+            {
+              "name": "https://github.com/nodejs/node/issues/43994",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Issue Tracking",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/nodejs/node/issues/43994"
+            },
+            {
+              "name": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/typelevel/fs2/commit/659824395826a314e0a4331535dbf1ef8bef8207"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-08-09T19:38Z",
+      "publishedDate": "2022-08-01T20:15Z"
+    }
+  }
 }

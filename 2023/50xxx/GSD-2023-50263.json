@@ -1,26 +1,217 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-50263",
-        "id": "GSD-2023-50263"
+  "GSD": {
+    "alias": "CVE-2023-50263",
+    "id": "GSD-2023-50263"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
-                "ID": "CVE-2023-50263",
-                "STATE": "RESERVED"
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
-                    }
-                ]
-            }
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-50263"
+      ],
+      "details": "Nautobot is a Network Source of Truth and Network Automation Platform built as a web application atop the Django Python framework with a PostgreSQL or MySQL database. In Nautobot 1.x and 2.0.x prior to 1.6.7 and 2.0.6, the URLs `/files/get/?name=...` and `/files/download/?name=...` are used to provide admin access to files that have been uploaded as part of a run request for a Job that has FileVar inputs. Under normal operation these files are ephemeral and are deleted once the Job in question runs. \n\nIn the default implementation used in Nautobot, as provided by `django-db-file-storage`, these URLs do not by default require any user authentication to access; they should instead be restricted to only users who have permissions to view Nautobot's `FileProxy` model instances.\n\nNote that no URL mechanism is provided for listing or traversal of the available file `name` values, so in practice an unauthenticated user would have to guess names to discover arbitrary files for download, but if a user knows the file name/path value, they can access it without authenticating, so we are considering this a vulnerability.\n\nFixes are included in Nautobot 1.6.7 and Nautobot 2.0.6. No known workarounds are available other than applying the patches included in those versions.",
+      "id": "GSD-2023-50263",
+      "modified": "2023-12-13T01:20:31.271632Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-50263",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "nautobot",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 1.1.0, < 1.6.7"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.0.0, < 2.0.6"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "nautobot"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Nautobot is a Network Source of Truth and Network Automation Platform built as a web application atop the Django Python framework with a PostgreSQL or MySQL database. In Nautobot 1.x and 2.0.x prior to 1.6.7 and 2.0.6, the URLs `/files/get/?name=...` and `/files/download/?name=...` are used to provide admin access to files that have been uploaded as part of a run request for a Job that has FileVar inputs. Under normal operation these files are ephemeral and are deleted once the Job in question runs. \n\nIn the default implementation used in Nautobot, as provided by `django-db-file-storage`, these URLs do not by default require any user authentication to access; they should instead be restricted to only users who have permissions to view Nautobot's `FileProxy` model instances.\n\nNote that no URL mechanism is provided for listing or traversal of the available file `name` values, so in practice an unauthenticated user would have to guess names to discover arbitrary files for download, but if a user knows the file name/path value, they can access it without authenticating, so we are considering this a vulnerability.\n\nFixes are included in Nautobot 1.6.7 and Nautobot 2.0.6. No known workarounds are available other than applying the patches included in those versions."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 3.7,
+            "baseSeverity": "LOW",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-200",
+                "lang": "eng",
+                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/nautobot/nautobot/security/advisories/GHSA-75mc-3pjc-727q",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-75mc-3pjc-727q"
+          },
+          {
+            "name": "https://github.com/nautobot/nautobot/pull/4959",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/pull/4959"
+          },
+          {
+            "name": "https://github.com/nautobot/nautobot/pull/4964",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/pull/4964"
+          },
+          {
+            "name": "https://github.com/nautobot/nautobot/commit/458280c359a4833a20da294eaf4b8d55edc91cee",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/commit/458280c359a4833a20da294eaf4b8d55edc91cee"
+          },
+          {
+            "name": "https://github.com/nautobot/nautobot/commit/7c4cf3137f45f1541f09f2f6a7f8850cd3a2eaee",
+            "refsource": "MISC",
+            "url": "https://github.com/nautobot/nautobot/commit/7c4cf3137f45f1541f09f2f6a7f8850cd3a2eaee"
+          },
+          {
+            "name": "https://github.com/victor-o-silva/db_file_storage/blob/master/db_file_storage/views.py",
+            "refsource": "MISC",
+            "url": "https://github.com/victor-o-silva/db_file_storage/blob/master/db_file_storage/views.py"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-75mc-3pjc-727q",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Nautobot is a Network Source of Truth and Network Automation Platform built as a web application atop the Django Python framework with a PostgreSQL or MySQL database. In Nautobot 1.x and 2.0.x prior to 1.6.7 and 2.0.6, the URLs `/files/get/?name=...` and `/files/download/?name=...` are used to provide admin access to files that have been uploaded as part of a run request for a Job that has FileVar inputs. Under normal operation these files are ephemeral and are deleted once the Job in question runs. \n\nIn the default implementation used in Nautobot, as provided by `django-db-file-storage`, these URLs do not by default require any user authentication to access; they should instead be restricted to only users who have permissions to view Nautobot's `FileProxy` model instances.\n\nNote that no URL mechanism is provided for listing or traversal of the available file `name` values, so in practice an unauthenticated user would have to guess names to discover arbitrary files for download, but if a user knows the file name/path value, they can access it without authenticating, so we are considering this a vulnerability.\n\nFixes are included in Nautobot 1.6.7 and Nautobot 2.0.6. No known workarounds are available other than applying the patches included in those versions."
+          }
+        ],
+        "id": "CVE-2023-50263",
+        "lastModified": "2023-12-13T01:50:36.127",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 3.7,
+                "baseSeverity": "LOW",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.2,
+              "impactScore": 1.4,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-12-12T23:15:07.270",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/nautobot/nautobot/commit/458280c359a4833a20da294eaf4b8d55edc91cee"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/nautobot/nautobot/commit/7c4cf3137f45f1541f09f2f6a7f8850cd3a2eaee"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/nautobot/nautobot/pull/4959"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/nautobot/nautobot/pull/4964"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/nautobot/nautobot/security/advisories/GHSA-75mc-3pjc-727q"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/victor-o-silva/db_file_storage/blob/master/db_file_storage/views.py"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-200"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
+          }
+        ]
+      }
+    }
+  }
 }

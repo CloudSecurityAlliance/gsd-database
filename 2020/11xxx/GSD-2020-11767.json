@@ -1,277 +1,294 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-11767",
-        "description": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains.",
-        "id": "GSD-2020-11767"
+  "GSD": {
+    "alias": "CVE-2020-11767",
+    "description": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains.",
+    "id": "GSD-2020-11767"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
-                "ID": "CVE-2020-11767",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5",
-                        "refsource": "MISC",
-                        "url": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
-                    },
-                    {
-                        "name": "https://github.com/envoyproxy/envoy/issues/6767",
-                        "refsource": "MISC",
-                        "url": "https://github.com/envoyproxy/envoy/issues/6767"
-                    },
-                    {
-                        "name": "https://github.com/istio/istio/issues/9429",
-                        "refsource": "MISC",
-                        "url": "https://github.com/istio/istio/issues/9429"
-                    },
-                    {
-                        "name": "https://github.com/istio/istio/issues/13589",
-                        "refsource": "MISC",
-                        "url": "https://github.com/istio/istio/issues/13589"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<=v1.5.1",
-                    "affected_versions": "All versions up to 1.5.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-200",
-                        "CWE-937"
-                    ],
-                    "date": "2021-07-21",
-                    "description": "Istio has a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to `*.example.com`, a request for a domain concurrently configured explicitly (e.g., `abc.example.com`) is sent to the server(s) listening behind `*.example.com`. The outcome should instead be Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users.",
-                    "fixed_versions": [
-                        "v1.5.2"
-                    ],
-                    "identifier": "CVE-2020-11767",
-                    "identifiers": [
-                        "CVE-2020-11767"
-                    ],
-                    "not_impacted": "All versions starting from 1.5.1",
-                    "package_slug": "go/github.com/istio/istio",
-                    "pubdate": "2020-04-15",
-                    "solution": "Upgrade to version 1.5.2 or above.",
-                    "title": "Information Exposure",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-11767",
-                        "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
-                    ],
-                    "uuid": "adcf760f-666e-41b8-9721-4802ee5e0be0",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "ba37acf65d6ff64fe96f5e4acf559f5c45961688",
-                                "tags": [
-                                    "1.5.1"
-                                ],
-                                "timestamp": "20200323211801"
-                            },
-                            "number": "v1.5.1"
-                        },
-                        {
-                            "commit": {
-                                "sha": "3d78b915dea653bc76685c4583db1fde6b087095",
-                                "tags": [
-                                    "1.5.2"
-                                ],
-                                "timestamp": "20200421001938"
-                            },
-                            "number": "v1.5.2"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:envoyproxy:envoy:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "1.14.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:istio:istio:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "1.5.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve@mitre.org",
-                    "ID": "CVE-2020-11767"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "NVD-CWE-noinfo"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/istio/istio/issues/9429",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/istio/istio/issues/9429"
-                        },
-                        {
-                            "name": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
-                        },
-                        {
-                            "name": "https://github.com/istio/istio/issues/13589",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/istio/istio/issues/13589"
-                        },
-                        {
-                            "name": "https://github.com/envoyproxy/envoy/issues/6767",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/envoyproxy/envoy/issues/6767"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "HIGH",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 2.6,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:H/Au:N/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 4.9,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "LOW",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 3.1,
-                        "baseSeverity": "LOW",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.6,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2021-07-21T11:39Z",
-            "publishedDate": "2020-04-15T02:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2020-11767"
+      ],
+      "details": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains.",
+      "id": "GSD-2020-11767",
+      "modified": "2023-12-13T01:22:05.612774Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@mitre.org",
+        "ID": "CVE-2020-11767",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5",
+            "refsource": "MISC",
+            "url": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
+          },
+          {
+            "name": "https://github.com/envoyproxy/envoy/issues/6767",
+            "refsource": "MISC",
+            "url": "https://github.com/envoyproxy/envoy/issues/6767"
+          },
+          {
+            "name": "https://github.com/istio/istio/issues/9429",
+            "refsource": "MISC",
+            "url": "https://github.com/istio/istio/issues/9429"
+          },
+          {
+            "name": "https://github.com/istio/istio/issues/13589",
+            "refsource": "MISC",
+            "url": "https://github.com/istio/istio/issues/13589"
+          }
+        ]
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<=v1.5.1",
+          "affected_versions": "All versions up to 1.5.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-200",
+            "CWE-937"
+          ],
+          "date": "2021-07-21",
+          "description": "Istio has a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to `*.example.com`, a request for a domain concurrently configured explicitly (e.g., `abc.example.com`) is sent to the server(s) listening behind `*.example.com`. The outcome should instead be Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users.",
+          "fixed_versions": [
+            "v1.5.2"
+          ],
+          "identifier": "CVE-2020-11767",
+          "identifiers": [
+            "CVE-2020-11767"
+          ],
+          "not_impacted": "All versions starting from 1.5.1",
+          "package_slug": "go/github.com/istio/istio",
+          "pubdate": "2020-04-15",
+          "solution": "Upgrade to version 1.5.2 or above.",
+          "title": "Information Exposure",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-11767",
+            "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
+          ],
+          "uuid": "adcf760f-666e-41b8-9721-4802ee5e0be0",
+          "versions": [
+            {
+              "commit": {
+                "sha": "ba37acf65d6ff64fe96f5e4acf559f5c45961688",
+                "tags": [
+                  "1.5.1"
+                ],
+                "timestamp": "20200323211801"
+              },
+              "number": "v1.5.1"
+            },
+            {
+              "commit": {
+                "sha": "3d78b915dea653bc76685c4583db1fde6b087095",
+                "tags": [
+                  "1.5.2"
+                ],
+                "timestamp": "20200421001938"
+              },
+              "number": "v1.5.2"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:envoyproxy:envoy:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "1.14.1",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:istio:istio:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "1.5.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve@mitre.org",
+          "ID": "CVE-2020-11767"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Istio through 1.5.1 and Envoy through 1.14.1 have a data-leak issue. If there is a TCP connection (negotiated with SNI over HTTPS) to *.example.com, a request for a domain concurrently configured explicitly (e.g., abc.example.com) is sent to the server(s) listening behind *.example.com. The outcome should instead be 421 Misdirected Request. Imagine a shared caching forward proxy re-using an HTTP/2 connection for a large subnet with many users. If a victim is interacting with abc.example.com, and a server (for abc.example.com) recycles the TCP connection to the forward proxy, the victim's browser may suddenly start sending sensitive data to a *.example.com server. This occurs because the forward proxy between the victim and the origin server reuses connections (which obeys the specification), but neither Istio nor Envoy corrects this by sending a 421 error. Similarly, this behavior voids the security model browsers have put in place between domains."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "NVD-CWE-noinfo"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/istio/istio/issues/9429",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/istio/istio/issues/9429"
+            },
+            {
+              "name": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Third Party Advisory"
+              ],
+              "url": "https://bugs.chromium.org/p/chromium/issues/detail?id=954160#c5"
+            },
+            {
+              "name": "https://github.com/istio/istio/issues/13589",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/istio/istio/issues/13589"
+            },
+            {
+              "name": "https://github.com/envoyproxy/envoy/issues/6767",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/envoyproxy/envoy/issues/6767"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "HIGH",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 2.6,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:H/Au:N/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 4.9,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "LOW",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 3.1,
+            "baseSeverity": "LOW",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.6,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2021-07-21T11:39Z",
+      "publishedDate": "2020-04-15T02:15Z"
+    }
+  }
 }

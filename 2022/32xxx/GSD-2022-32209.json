@@ -1,332 +1,338 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-32209",
-        "description": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user).",
-        "id": "GSD-2022-32209",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-32209.html",
-            "https://access.redhat.com/errata/RHSA-2022:8506"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-32209",
+    "description": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user).",
+    "id": "GSD-2022-32209",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-32209.html",
+      "https://access.redhat.com/errata/RHSA-2022:8506"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "rails-html-sanitizer",
-                        "purl": "pkg:gem/rails-html-sanitizer"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-32209",
-                "GHSA-pg8v-g4xq-hww9"
-            ],
-            "details": "There is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\nThis vulnerability has been assigned the CVE identifier CVE-2022-32209.\n\nVersions Affected: ALL\nNot affected: NONE\nFixed Versions: v1.4.3\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer\nmay allow an attacker to inject content if the application developer has overridden\nthe sanitizer's allowed tags to allow both `select` and `style` elements.\n\nCode is only impacted if allowed tags are being overridden. This may be done via\napplication configuration:\n\n```ruby\n# In config/application.rb\nconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]\n```\n\nsee https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\nOr it may be done with a `:tags` option to the Action View helper `sanitize`:\n\n```\n<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>\n```\n\nsee https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\nOr it may be done with Rails::Html::SafeListSanitizer directly:\n\n```ruby\n# class-level option\nRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]\n```\n\nor\n\n```ruby\n# instance-level option\nRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])\n```\n\nAll users overriding the allowed tags by any of the above mechanisms to include\nboth \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove either `select` or `style` from the overridden allowed tags.\n",
-            "id": "GSD-2022-32209",
-            "modified": "2022-06-09T00:00:00.000Z",
-            "published": "2022-06-09T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 6.1,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "rails-html-sanitizer",
+            "purl": "pkg:gem/rails-html-sanitizer"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2022-32209",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails-html-sanitizer",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "v1.4.3"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Cross-site Scripting (XSS) - Generic (CWE-79)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://hackerone.com/reports/1530898",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/1530898"
-                    },
-                    {
-                        "name": "FEDORA-2022-ce4719993c",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
-                    },
-                    {
-                        "name": "FEDORA-2022-974fffb418",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20221206 [SECURITY] [DLA 3227-1] ruby-rails-html-sanitizer security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
-                    }
-                ]
-            }
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-32209",
-            "cvss_v3": 6.1,
-            "date": "2022-06-09",
-            "description": "There is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\nThis vulnerability has been assigned the CVE identifier CVE-2022-32209.\n\nVersions Affected: ALL\nNot affected: NONE\nFixed Versions: v1.4.3\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer\nmay allow an attacker to inject content if the application developer has overridden\nthe sanitizer's allowed tags to allow both `select` and `style` elements.\n\nCode is only impacted if allowed tags are being overridden. This may be done via\napplication configuration:\n\n```ruby\n# In config/application.rb\nconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]\n```\n\nsee https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\nOr it may be done with a `:tags` option to the Action View helper `sanitize`:\n\n```\n<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>\n```\n\nsee https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\nOr it may be done with Rails::Html::SafeListSanitizer directly:\n\n```ruby\n# class-level option\nRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]\n```\n\nor\n\n```ruby\n# instance-level option\nRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])\n```\n\nAll users overriding the allowed tags by any of the above mechanisms to include\nboth \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove either `select` or `style` from the overridden allowed tags.\n",
-            "gem": "rails-html-sanitizer",
-            "ghsa": "pg8v-g4xq-hww9",
-            "patched_versions": [
-                ">= 1.4.3"
-            ],
-            "title": "Possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer",
-            "url": "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s"
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.4.3",
-                    "affected_versions": "All versions before 1.4.3",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-79",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-05",
-                    "description": "There is a possible XSS vulnerability with certain configurations of `Rails::Html::Sanitizer`. `Rails::Html::Sanitizer` may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements. Code is only impacted if allowed tags are being overridden.",
-                    "fixed_versions": [
-                        "1.4.3"
-                    ],
-                    "identifier": "CVE-2022-32209",
-                    "identifiers": [
-                        "GHSA-pg8v-g4xq-hww9",
-                        "CVE-2022-32209"
-                    ],
-                    "not_impacted": "All versions starting from 1.4.3",
-                    "package_slug": "gem/rails-html-sanitizer",
-                    "pubdate": "2022-06-25",
-                    "solution": "Upgrade to version 1.4.3 or above.",
-                    "title": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-32209",
-                        "https://hackerone.com/reports/1530898",
-                        "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/rails-html-sanitizer/CVE-2022-32209.yml",
-                        "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s",
-                        "https://github.com/advisories/GHSA-pg8v-g4xq-hww9"
-                    ],
-                    "uuid": "76a61117-7f4a-4cf0-8092-dbf024394bfb"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails_html_sanitizers:*:*:*:*:*:rails:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.4.3",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2022-32209"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-79"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://hackerone.com/reports/1530898",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/1530898"
-                        },
-                        {
-                            "name": "FEDORA-2022-974fffb418",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
-                        },
-                        {
-                            "name": "FEDORA-2022-ce4719993c",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20221206 [SECURITY] [DLA 3227-1] ruby-rails-html-sanitizer security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 2.7
-                }
-            },
-            "lastModifiedDate": "2023-02-03T19:14Z",
-            "publishedDate": "2022-06-24T15:15Z"
+      ],
+      "aliases": [
+        "CVE-2022-32209",
+        "GHSA-pg8v-g4xq-hww9"
+      ],
+      "details": "There is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\nThis vulnerability has been assigned the CVE identifier CVE-2022-32209.\n\nVersions Affected: ALL\nNot affected: NONE\nFixed Versions: v1.4.3\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer\nmay allow an attacker to inject content if the application developer has overridden\nthe sanitizer's allowed tags to allow both `select` and `style` elements.\n\nCode is only impacted if allowed tags are being overridden. This may be done via\napplication configuration:\n\n```ruby\n# In config/application.rb\nconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]\n```\n\nsee https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\nOr it may be done with a `:tags` option to the Action View helper `sanitize`:\n\n```\n<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>\n```\n\nsee https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\nOr it may be done with Rails::Html::SafeListSanitizer directly:\n\n```ruby\n# class-level option\nRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]\n```\n\nor\n\n```ruby\n# instance-level option\nRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])\n```\n\nAll users overriding the allowed tags by any of the above mechanisms to include\nboth \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove either `select` or `style` from the overridden allowed tags.\n",
+      "id": "GSD-2022-32209",
+      "modified": "2022-06-09T00:00:00.000Z",
+      "published": "2022-06-09T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 6.1,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2022-32209",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails-html-sanitizer",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "v1.4.3"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Cross-site Scripting (XSS) - Generic (CWE-79)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://hackerone.com/reports/1530898",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/1530898"
+          },
+          {
+            "name": "FEDORA-2022-ce4719993c",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
+          },
+          {
+            "name": "FEDORA-2022-974fffb418",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
+          },
+          {
+            "name": "[debian-lts-announce] 20221206 [SECURITY] [DLA 3227-1] ruby-rails-html-sanitizer security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-32209",
+      "cvss_v3": 6.1,
+      "date": "2022-06-09",
+      "description": "There is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.\nThis vulnerability has been assigned the CVE identifier CVE-2022-32209.\n\nVersions Affected: ALL\nNot affected: NONE\nFixed Versions: v1.4.3\n\n## Impact\n\nA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer\nmay allow an attacker to inject content if the application developer has overridden\nthe sanitizer's allowed tags to allow both `select` and `style` elements.\n\nCode is only impacted if allowed tags are being overridden. This may be done via\napplication configuration:\n\n```ruby\n# In config/application.rb\nconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]\n```\n\nsee https://guides.rubyonrails.org/configuring.html#configuring-action-view\n\nOr it may be done with a `:tags` option to the Action View helper `sanitize`:\n\n```\n<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>\n```\n\nsee https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitize\n\nOr it may be done with Rails::Html::SafeListSanitizer directly:\n\n```ruby\n# class-level option\nRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]\n```\n\nor\n\n```ruby\n# instance-level option\nRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])\n```\n\nAll users overriding the allowed tags by any of the above mechanisms to include\nboth \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.\n\n## Workarounds\n\nRemove either `select` or `style` from the overridden allowed tags.\n",
+      "gem": "rails-html-sanitizer",
+      "ghsa": "pg8v-g4xq-hww9",
+      "patched_versions": [
+        ">= 1.4.3"
+      ],
+      "title": "Possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer",
+      "url": "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.4.3",
+          "affected_versions": "All versions before 1.4.3",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-79",
+            "CWE-937"
+          ],
+          "date": "2022-07-05",
+          "description": "There is a possible XSS vulnerability with certain configurations of `Rails::Html::Sanitizer`. `Rails::Html::Sanitizer` may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements. Code is only impacted if allowed tags are being overridden.",
+          "fixed_versions": [
+            "1.4.3"
+          ],
+          "identifier": "CVE-2022-32209",
+          "identifiers": [
+            "GHSA-pg8v-g4xq-hww9",
+            "CVE-2022-32209"
+          ],
+          "not_impacted": "All versions starting from 1.4.3",
+          "package_slug": "gem/rails-html-sanitizer",
+          "pubdate": "2022-06-25",
+          "solution": "Upgrade to version 1.4.3 or above.",
+          "title": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-32209",
+            "https://hackerone.com/reports/1530898",
+            "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/rails-html-sanitizer/CVE-2022-32209.yml",
+            "https://groups.google.com/g/rubyonrails-security/c/ce9PhUANQ6s",
+            "https://github.com/advisories/GHSA-pg8v-g4xq-hww9"
+          ],
+          "uuid": "76a61117-7f4a-4cf0-8092-dbf024394bfb"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails_html_sanitizers:*:*:*:*:*:rails:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.4.3",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2022-32209"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-79"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://hackerone.com/reports/1530898",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/1530898"
+            },
+            {
+              "name": "FEDORA-2022-974fffb418",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
+            },
+            {
+              "name": "FEDORA-2022-ce4719993c",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
+            },
+            {
+              "name": "[debian-lts-announce] 20221206 [SECURITY] [DLA 3227-1] ruby-rails-html-sanitizer security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 2.7
+        }
+      },
+      "lastModifiedDate": "2023-02-03T19:14Z",
+      "publishedDate": "2022-06-24T15:15Z"
+    }
+  }
 }

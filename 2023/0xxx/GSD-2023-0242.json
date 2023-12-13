@@ -1,243 +1,260 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-0242",
-        "id": "GSD-2023-0242",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2023-0242.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2023-0242",
+    "id": "GSD-2023-0242",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2023-0242.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@rapid7.com",
-                "ID": "CVE-2023-0242",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Velociraptor",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Rapid7"
-                        }
-                    ]
-                }
-            },
-            "configuration": [
-                {
-                    "lang": "en",
-                    "supportingMedia": [
-                        {
-                            "base64": false,
-                            "type": "text/html",
-                            "value": "Velociraptor deployment with multiple users at lower roles than administrators, such as \"investigator\" and above."
-                        }
-                    ],
-                    "value": "Velociraptor deployment with multiple users at lower roles than administrators, such as \"investigator\" and above."
-                }
-            ],
-            "credits": [
-                {
-                    "lang": "en",
-                    "value": "Paul Alkemade from Telstra"
-                }
-            ],
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue."
-                    }
-                ]
-            },
-            "generator": {
-                "engine": "Vulnogram 0.1.0-dev"
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-269",
-                                "lang": "eng",
-                                "value": "CWE-269 Improper Privilege Management"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
-                        "refsource": "MISC",
-                        "url": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check"
-                    }
-                ]
-            },
-            "solution": [
-                {
-                    "lang": "en",
-                    "supportingMedia": [
-                        {
-                            "base64": false,
-                            "type": "text/html",
-                            "value": "Upgrade to 0.6.7-5"
-                        }
-                    ],
-                    "value": "Upgrade to 0.6.7-5"
-                }
-            ],
-            "source": {
-                "discovery": "EXTERNAL"
-            },
-            "work_around": [
-                {
-                    "lang": "en",
-                    "supportingMedia": [
-                        {
-                            "base64": false,
-                            "type": "text/html",
-                            "value": "A valid workaround is to prevent the copy function in the Velociraptor allow list:<br><br>1. In the configuration wizard answer yes to the question \"Do you want to restrict VQL functionality on the server?\"<br>2. This will add a default allow list to the configuration file.<br>3. Copy this allow list to your existing server.config.yaml<br>4. Ensure the \"copy\" function is removed from the default allow list."
-                        }
-                    ],
-                    "value": "A valid workaround is to prevent the copy function in the Velociraptor allow list:\n\n1. In the configuration wizard answer yes to the question \"Do you want to restrict VQL functionality on the server?\"\n2. This will add a default allow list to the configuration file.\n3. Copy this allow list to your existing server.config.yaml\n4. Ensure the \"copy\" function is removed from the default allow list."
-                }
-            ]
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<0.6.7-5",
-                    "affected_versions": "All versions before 0.6.7-5",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-862",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-01",
-                    "description": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue.",
-                    "fixed_versions": [
-                        "0.6.7-5"
-                    ],
-                    "identifier": "CVE-2023-0242",
-                    "identifiers": [
-                        "GHSA-g5vm-525q-r66c",
-                        "CVE-2023-0242"
-                    ],
-                    "not_impacted": "All versions starting from 0.6.7-5",
-                    "package_slug": "go/www.velocidex.com/golang/velociraptor",
-                    "pubdate": "2023-01-18",
-                    "solution": "Upgrade to version 0.6.7-5 or above.",
-                    "title": "Missing Authorization",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-0242",
-                        "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
-                        "https://github.com/advisories/GHSA-g5vm-525q-r66c"
-                    ],
-                    "uuid": "03aca03d-ad22-4ac4-af6c-bcfdb27176fd"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rapid7:velociraptor:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.6.7-5",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve@rapid7.com",
-                    "ID": "CVE-2023-0242"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-862"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-01-30T13:54Z",
-            "publishedDate": "2023-01-18T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-0242"
+      ],
+      "details": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue.",
+      "id": "GSD-2023-0242",
+      "modified": "2023-12-13T01:20:22.323022Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@rapid7.com",
+        "ID": "CVE-2023-0242",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Velociraptor",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Rapid7"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "Velociraptor deployment with multiple users at lower roles than administrators, such as \"investigator\" and above."
+            }
+          ],
+          "value": "Velociraptor deployment with multiple users at lower roles than administrators, such as \"investigator\" and above."
+        }
+      ],
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Paul Alkemade from Telstra"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-269",
+                "lang": "eng",
+                "value": "CWE-269 Improper Privilege Management"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
+            "refsource": "MISC",
+            "url": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check"
+          }
+        ]
+      },
+      "solution": [
+        {
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "Upgrade to 0.6.7-5"
+            }
+          ],
+          "value": "Upgrade to 0.6.7-5"
+        }
+      ],
+      "source": {
+        "discovery": "EXTERNAL"
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "A valid workaround is to prevent the copy function in the Velociraptor allow list:<br><br>1. In the configuration wizard answer yes to the question \"Do you want to restrict VQL functionality on the server?\"<br>2. This will add a default allow list to the configuration file.<br>3. Copy this allow list to your existing server.config.yaml<br>4. Ensure the \"copy\" function is removed from the default allow list."
+            }
+          ],
+          "value": "A valid workaround is to prevent the copy function in the Velociraptor allow list:\n\n1. In the configuration wizard answer yes to the question \"Do you want to restrict VQL functionality on the server?\"\n2. This will add a default allow list to the configuration file.\n3. Copy this allow list to your existing server.config.yaml\n4. Ensure the \"copy\" function is removed from the default allow list."
+        }
+      ]
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<0.6.7-5",
+          "affected_versions": "All versions before 0.6.7-5",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-862",
+            "CWE-937"
+          ],
+          "date": "2023-02-01",
+          "description": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue.",
+          "fixed_versions": [
+            "0.6.7-5"
+          ],
+          "identifier": "CVE-2023-0242",
+          "identifiers": [
+            "GHSA-g5vm-525q-r66c",
+            "CVE-2023-0242"
+          ],
+          "not_impacted": "All versions starting from 0.6.7-5",
+          "package_slug": "go/www.velocidex.com/golang/velociraptor",
+          "pubdate": "2023-01-18",
+          "solution": "Upgrade to version 0.6.7-5 or above.",
+          "title": "Missing Authorization",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-0242",
+            "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
+            "https://github.com/advisories/GHSA-g5vm-525q-r66c"
+          ],
+          "uuid": "03aca03d-ad22-4ac4-af6c-bcfdb27176fd"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rapid7:velociraptor:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.6.7-5",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve@rapid7.com",
+          "ID": "CVE-2023-0242"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Rapid7 Velociraptor allows users to be created with different privileges on the server. Administrators are generally allowed to run any command on the server including writing arbitrary files. However, lower privilege users are generally forbidden from writing or modifying files on the server. The VQL copy() function applies permission checks for reading files but does not check for permission to write files. This allows a low privilege user (usually, users with the Velociraptor \"investigator\" role) to overwrite files on the server, including Velociraptor configuration files. To exploit this vulnerability, the attacker must already have a Velociraptor user account at a low privilege level (at least \"analyst\") and be able to log into the GUI and create a notebook where they can run the VQL query invoking the copy() VQL function. Typically, most users deploy Velociraptor with limited access to a trusted group (most users will be administrators within the GUI). This vulnerability is associated with program files https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go https://github.Com/Velocidex/velociraptor/blob/master/vql/filesystem/copy.go and program routines copy(). This issue affects Velociraptor versions before 0.6.7-5. Version 0.6.7-5, released January 16, 2023, fixes the issue."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-862"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://docs.velociraptor.app/announcements/2023-cves/#:~:text=to%20upgrade%20clients.-,CVE%2D2023%2D0242,-Insufficient%20Permission%20Check"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-01-30T13:54Z",
+      "publishedDate": "2023-01-18T21:15Z"
+    }
+  }
 }

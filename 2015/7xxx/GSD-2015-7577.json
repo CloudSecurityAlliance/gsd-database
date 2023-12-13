@@ -1,810 +1,816 @@
 {
-    "GSD": {
-        "alias": "CVE-2015-7577",
-        "description": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature.",
-        "id": "GSD-2015-7577",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2015-7577.html",
-            "https://www.debian.org/security/2016/dsa-3464",
-            "https://access.redhat.com/errata/RHSA-2016:0455",
-            "https://access.redhat.com/errata/RHSA-2016:0454",
-            "https://access.redhat.com/errata/RHSA-2016:0296"
-        ]
+  "GSD": {
+    "alias": "CVE-2015-7577",
+    "description": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature.",
+    "id": "GSD-2015-7577",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2015-7577.html",
+      "https://www.debian.org/security/2016/dsa-3464",
+      "https://access.redhat.com/errata/RHSA-2016:0455",
+      "https://access.redhat.com/errata/RHSA-2016:0454",
+      "https://access.redhat.com/errata/RHSA-2016:0296"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2015-7577",
-            "modified": "2016-01-25T00:00:00.000Z",
-            "published": "2016-01-25T00:00:00.000Z",
-            "aliases": [
-                "CVE-2015-7577",
-                "GHSA-xrr6-3pc4-m447"
-            ],
-            "summary": "Nested attributes rejection proc bypass in Active Record",
-            "details": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
-            "severity": [
-                {
-                    "type": "CVSS_V2",
-                    "score": 5.0
-                },
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.3
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "activerecord",
-                        "purl": "pkg:gem/activerecord"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "activerecord",
+            "purl": "pkg:gem/activerecord"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "secalert@redhat.com",
-                "ID": "CVE-2015-7577",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "openSUSE-SU-2016:0372",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2016:0363",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
-                    },
-                    {
-                        "name": "FEDORA-2016-73fe05d878",
-                        "refsource": "FEDORA",
-                        "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178041.html"
-                    },
-                    {
-                        "name": "FEDORA-2016-cc465a34df",
-                        "refsource": "FEDORA",
-                        "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178065.html"
-                    },
-                    {
-                        "name": "SUSE-SU-2016:1146",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
-                    },
-                    {
-                        "name": "[ruby-security-ann] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
-                        "refsource": "MLIST",
-                        "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/cawsWcQ6c8g/LATIsglZEgAJ"
-                    },
-                    {
-                        "name": "1034816",
-                        "refsource": "SECTRACK",
-                        "url": "http://www.securitytracker.com/id/1034816"
-                    },
-                    {
-                        "name": "81806",
-                        "refsource": "BID",
-                        "url": "http://www.securityfocus.com/bid/81806"
-                    },
-                    {
-                        "name": "DSA-3464",
-                        "refsource": "DEBIAN",
-                        "url": "http://www.debian.org/security/2016/dsa-3464"
-                    },
-                    {
-                        "name": "RHSA-2016:0296",
-                        "refsource": "REDHAT",
-                        "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
-                    },
-                    {
-                        "name": "[oss-security] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2016/01/25/10"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=5.0.0.alpha <5.0.0.beta1.1||>=4.2.0.alpha <4.2.5.1||>=4.0.0.alpha <4.1.14.1||>=3.1.0.alpha <3.2.22.1",
-                    "affected_versions": "All versions starting from 5.0.0.alpha before 5.0.0.beta1.1, all versions starting from 4.2.0.alpha before 4.2.5.1, all versions starting from 4.0.0.alpha before 4.1.14.1, all versions starting from 3.1.0.alpha before 3.2.22.1",
-                    "credit": "Justin Coyne",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-284",
-                        "CWE-937"
-                    ],
-                    "date": "2019-08-08",
-                    "description": "When using the nested attributes feature in Active Record you can prevent the destruction of associated records by passing the `allow_destroy: false` option to the `accepts_nested_attributes_for` method. The `allow_destroy` flag prevents the `:reject_if` proc from being called because it assumes that the record will be destroyed anyway. However, this is not true if `:allow_destroy` is false so this leads to changes that would have been rejected being applied to the record. Attackers could set attributes to invalid values or clear all the attributes.",
-                    "fixed_versions": [
-                        "3.2.22.1",
-                        "4.1.14.1",
-                        "4.2.5.1",
-                        "5.0.0.beta1.1"
-                    ],
-                    "identifier": "CVE-2015-7577",
-                    "identifiers": [
-                        "CVE-2015-7577"
-                    ],
-                    "not_impacted": "3.0.x and older",
-                    "package_slug": "gem/activerecord",
-                    "pubdate": "2016-02-15",
-                    "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
-                    "title": "Nested attributes rejection proc bypass",
-                    "urls": [
-                        "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
-                    ],
-                    "uuid": "b8dc5acf-2082-4d2a-bcb7-2da555724b59"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.1.11:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:5.0.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.12:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.11.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:beta:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "3.2.22",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.11:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.10:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.13:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.13:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "secalert@redhat.com",
-                    "ID": "CVE-2015-7577"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-284"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "[oss-security] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
-                            "refsource": "MLIST",
-                            "tags": [],
-                            "url": "http://www.openwall.com/lists/oss-security/2016/01/25/10"
-                        },
-                        {
-                            "name": "[ruby-security-ann] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
-                            "refsource": "MLIST",
-                            "tags": [],
-                            "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/cawsWcQ6c8g/LATIsglZEgAJ"
-                        },
-                        {
-                            "name": "81806",
-                            "refsource": "BID",
-                            "tags": [],
-                            "url": "http://www.securityfocus.com/bid/81806"
-                        },
-                        {
-                            "name": "FEDORA-2016-73fe05d878",
-                            "refsource": "FEDORA",
-                            "tags": [],
-                            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178041.html"
-                        },
-                        {
-                            "name": "SUSE-SU-2016:1146",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
-                        },
-                        {
-                            "name": "RHSA-2016:0296",
-                            "refsource": "REDHAT",
-                            "tags": [],
-                            "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
-                        },
-                        {
-                            "name": "FEDORA-2016-cc465a34df",
-                            "refsource": "FEDORA",
-                            "tags": [],
-                            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178065.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2016:0372",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2016:0363",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
-                        },
-                        {
-                            "name": "DSA-3464",
-                            "refsource": "DEBIAN",
-                            "tags": [],
-                            "url": "http://www.debian.org/security/2016/dsa-3464"
-                        },
-                        {
-                            "name": "1034816",
-                            "refsource": "SECTRACK",
-                            "tags": [],
-                            "url": "http://www.securitytracker.com/id/1034816"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM"
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-                        "version": "3.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2019-08-08T15:43Z",
-            "publishedDate": "2016-02-16T02:59Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activerecord",
-            "framework": "rails",
-            "cve": "2015-7577",
-            "ghsa": "xrr6-3pc4-m447",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g",
-            "title": "Nested attributes rejection proc bypass in Active Record",
-            "date": "2016-01-25",
-            "description": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
-            "cvss_v2": 5.0,
-            "cvss_v3": 5.3,
-            "unaffected_versions": [
-                "~> 3.0.0",
-                "< 3.0.0"
-            ],
-            "patched_versions": [
-                ">= 5.0.0.beta1.1",
-                "~> 4.2.5, >= 4.2.5.1",
-                "~> 4.1.14, >= 4.1.14.1",
-                "~> 3.2.22.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2015-7577",
+        "GHSA-xrr6-3pc4-m447"
+      ],
+      "details": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
+      "id": "GSD-2015-7577",
+      "modified": "2016-01-25T00:00:00.000Z",
+      "published": "2016-01-25T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 5.0,
+          "type": "CVSS_V2"
+        },
+        {
+          "score": 5.3,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Nested attributes rejection proc bypass in Active Record"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "secalert@redhat.com",
+        "ID": "CVE-2015-7577",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "openSUSE-SU-2016:0372",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
+          },
+          {
+            "name": "openSUSE-SU-2016:0363",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
+          },
+          {
+            "name": "FEDORA-2016-73fe05d878",
+            "refsource": "FEDORA",
+            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178041.html"
+          },
+          {
+            "name": "FEDORA-2016-cc465a34df",
+            "refsource": "FEDORA",
+            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178065.html"
+          },
+          {
+            "name": "SUSE-SU-2016:1146",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
+          },
+          {
+            "name": "[ruby-security-ann] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
+            "refsource": "MLIST",
+            "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/cawsWcQ6c8g/LATIsglZEgAJ"
+          },
+          {
+            "name": "1034816",
+            "refsource": "SECTRACK",
+            "url": "http://www.securitytracker.com/id/1034816"
+          },
+          {
+            "name": "81806",
+            "refsource": "BID",
+            "url": "http://www.securityfocus.com/bid/81806"
+          },
+          {
+            "name": "DSA-3464",
+            "refsource": "DEBIAN",
+            "url": "http://www.debian.org/security/2016/dsa-3464"
+          },
+          {
+            "name": "RHSA-2016:0296",
+            "refsource": "REDHAT",
+            "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
+          },
+          {
+            "name": "[oss-security] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2016/01/25/10"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2015-7577",
+      "cvss_v2": 5.0,
+      "cvss_v3": 5.3,
+      "date": "2016-01-25",
+      "description": "There is a vulnerability in how the nested attributes feature in Active Record\nhandles updates in combination with destroy flags when destroying records is\ndisabled. This vulnerability has been assigned the CVE identifier CVE-2015-7577.\n\nVersions Affected:  3.1.0 and newer\nNot affected:       3.0.x and older\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nWhen using the nested attributes feature in Active Record you can prevent the\ndestruction of associated records by passing the `allow_destroy: false` option\nto the `accepts_nested_attributes_for` method. However due to a change in the\ncommit [a9b4b5d][1] the `_destroy` flag prevents the `:reject_if` proc from\nbeing called because it assumes that the record will be destroyed anyway.\n\nHowever this isn't true if `:allow_destroy` is false so this leads to changes\nthat would have been rejected being applied to the record. Attackers could use\nthis do things like set attributes to invalid values and to clear all of the\nattributes amongst other things. The severity will be dependent on how the\napplication has used this feature.\n\nAll users running an affected release should either upgrade or use one of\nthe workarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nIf you can't upgrade, please use the following monkey patch in an initializer\nthat is loaded before your application:\n\n```\n$ cat config/initializers/nested_attributes_bypass_fix.rb\nmodule ActiveRecord\n  module NestedAttributes\n    private\n\n    def reject_new_record?(association_name, attributes)\n      will_be_destroyed?(association_name, attributes) || call_reject_if(association_name, attributes)\n    end\n\n    def call_reject_if(association_name, attributes)\n      return false if will_be_destroyed?(association_name, attributes)\n\n      case callback = self.nested_attributes_options[association_name][:reject_if]\n      when Symbol\n        method(callback).arity == 0 ? send(callback) : send(callback, attributes)\n      when Proc\n        callback.call(attributes)\n      end\n    end\n\n    def will_be_destroyed?(association_name, attributes)\n      allow_destroy?(association_name) && has_destroy_flag?(attributes)\n    end\n\n    def allow_destroy?(association_name)\n      self.nested_attributes_options[association_name][:allow_destroy]\n    end\n  end\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-nested-attributes-reject-if-bypass.patch - Patch for 3.2 series\n* 4-1-nested-attributes-reject-if-bypass.patch - Patch for 4.1 series\n* 4-2-nested-attributes-reject-if-bypass.patch - Patch for 4.2 series\n* 5-0-nested-attributes-reject-if-bypass.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThank you to Justin Coyne for reporting the problem and working with us to fix it.\n\n[1]: https://github.com/rails/rails/commit/a9b4b5da7c216e4464eeb9dbd0a39ea258d64325\n",
+      "framework": "rails",
+      "gem": "activerecord",
+      "ghsa": "xrr6-3pc4-m447",
+      "patched_versions": [
+        ">= 5.0.0.beta1.1",
+        "~> 4.2.5, >= 4.2.5.1",
+        "~> 4.1.14, >= 4.1.14.1",
+        "~> 3.2.22.1"
+      ],
+      "title": "Nested attributes rejection proc bypass in Active Record",
+      "unaffected_versions": [
+        "~> 3.0.0",
+        "< 3.0.0"
+      ],
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=5.0.0.alpha <5.0.0.beta1.1||>=4.2.0.alpha <4.2.5.1||>=4.0.0.alpha <4.1.14.1||>=3.1.0.alpha <3.2.22.1",
+          "affected_versions": "All versions starting from 5.0.0.alpha before 5.0.0.beta1.1, all versions starting from 4.2.0.alpha before 4.2.5.1, all versions starting from 4.0.0.alpha before 4.1.14.1, all versions starting from 3.1.0.alpha before 3.2.22.1",
+          "credit": "Justin Coyne",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-284",
+            "CWE-937"
+          ],
+          "date": "2019-08-08",
+          "description": "When using the nested attributes feature in Active Record you can prevent the destruction of associated records by passing the `allow_destroy: false` option to the `accepts_nested_attributes_for` method. The `allow_destroy` flag prevents the `:reject_if` proc from being called because it assumes that the record will be destroyed anyway. However, this is not true if `:allow_destroy` is false so this leads to changes that would have been rejected being applied to the record. Attackers could set attributes to invalid values or clear all the attributes.",
+          "fixed_versions": [
+            "3.2.22.1",
+            "4.1.14.1",
+            "4.2.5.1",
+            "5.0.0.beta1.1"
+          ],
+          "identifier": "CVE-2015-7577",
+          "identifiers": [
+            "CVE-2015-7577"
+          ],
+          "not_impacted": "3.0.x and older",
+          "package_slug": "gem/activerecord",
+          "pubdate": "2016-02-15",
+          "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
+          "title": "Nested attributes rejection proc bypass",
+          "urls": [
+            "https://groups.google.com/forum/#!topic/rubyonrails-security/cawsWcQ6c8g"
+          ],
+          "uuid": "b8dc5acf-2082-4d2a-bcb7-2da555724b59"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.1.11:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.9:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:5.0.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.12:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.11.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:beta:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "3.2.22",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.11:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.10:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.13:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.0.13:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "secalert@redhat.com",
+          "ID": "CVE-2015-7577"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "activerecord/lib/active_record/nested_attributes.rb in Active Record in Ruby on Rails 3.1.x and 3.2.x before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 does not properly implement a certain destroy option, which allows remote attackers to bypass intended change restrictions by leveraging use of the nested attributes feature."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-284"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "[oss-security] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
+              "refsource": "MLIST",
+              "tags": [],
+              "url": "http://www.openwall.com/lists/oss-security/2016/01/25/10"
+            },
+            {
+              "name": "[ruby-security-ann] 20160125 [CVE-2015-7577] Nested attributes rejection proc bypass in Active Record.",
+              "refsource": "MLIST",
+              "tags": [],
+              "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/cawsWcQ6c8g/LATIsglZEgAJ"
+            },
+            {
+              "name": "81806",
+              "refsource": "BID",
+              "tags": [],
+              "url": "http://www.securityfocus.com/bid/81806"
+            },
+            {
+              "name": "FEDORA-2016-73fe05d878",
+              "refsource": "FEDORA",
+              "tags": [],
+              "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178041.html"
+            },
+            {
+              "name": "SUSE-SU-2016:1146",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
+            },
+            {
+              "name": "RHSA-2016:0296",
+              "refsource": "REDHAT",
+              "tags": [],
+              "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
+            },
+            {
+              "name": "FEDORA-2016-cc465a34df",
+              "refsource": "FEDORA",
+              "tags": [],
+              "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178065.html"
+            },
+            {
+              "name": "openSUSE-SU-2016:0372",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
+            },
+            {
+              "name": "openSUSE-SU-2016:0363",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
+            },
+            {
+              "name": "DSA-3464",
+              "refsource": "DEBIAN",
+              "tags": [],
+              "url": "http://www.debian.org/security/2016/dsa-3464"
+            },
+            {
+              "name": "1034816",
+              "refsource": "SECTRACK",
+              "tags": [],
+              "url": "http://www.securitytracker.com/id/1034816"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM"
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+            "version": "3.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2019-08-08T15:43Z",
+      "publishedDate": "2016-02-16T02:59Z"
+    }
+  }
 }

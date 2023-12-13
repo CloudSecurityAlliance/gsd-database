@@ -1,351 +1,368 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-37647",
-        "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-        "id": "GSD-2021-37647",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-37647.html",
-            "https://security.archlinux.org/CVE-2021-37647"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-37647",
+    "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+    "id": "GSD-2021-37647",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-37647.html",
+      "https://security.archlinux.org/CVE-2021-37647"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-37647",
-                "STATE": "PUBLIC",
-                "TITLE": "Null pointer dereference in `SparseTensorSliceDataset` in TensorFlow"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-37647"
+      ],
+      "details": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+      "id": "GSD-2021-37647",
+      "modified": "2023-12-13T01:23:09.806052Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-37647",
+        "STATE": "PUBLIC",
+        "TITLE": "Null pointer dereference in `SparseTensorSliceDataset` in TensorFlow"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 2.5.0, < 2.5.1"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.4.0, < 2.4.3"
-                                                },
-                                                {
-                                                    "version_value": "< 2.3.4"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 7.7,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-476: NULL Pointer Dereference"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-c5x2-p679-95wc",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
-                    "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-476",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-25",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size` results in null pointer dereferencing ` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3",
-                        "2.5.1"
-                    ],
-                    "identifier": "CVE-2021-37647",
-                    "identifiers": [
-                        "GHSA-c5x2-p679-95wc",
-                        "CVE-2021-37647"
-                    ],
-                    "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2021-08-25",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
-                    "title": "NULL Pointer Dereference",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37647",
-                        "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
-                        "https://github.com/advisories/GHSA-c5x2-p679-95wc"
-                    ],
-                    "uuid": "a5b2a0fc-07fc-4344-bff6-10a949340ebe"
-                },
-                {
-                    "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
-                    "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-476",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-25",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size` results in null pointer dereferencing ` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3",
-                        "2.5.1"
-                    ],
-                    "identifier": "CVE-2021-37647",
-                    "identifiers": [
-                        "GHSA-c5x2-p679-95wc",
-                        "CVE-2021-37647"
-                    ],
-                    "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2021-08-25",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
-                    "title": "NULL Pointer Dereference",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37647",
-                        "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
-                        "https://github.com/advisories/GHSA-c5x2-p679-95wc"
-                    ],
-                    "uuid": "f7015f1e-38b6-4581-8fe7-e9c105b325ff"
-                },
-                {
-                    "affected_range": ">=2.3.0,<2.3.4||>=2.4.0,<2.4.3||>=2.5.0,<=2.6.0",
-                    "affected_versions": "All versions starting from 2.3.0 before 2.3.4, all versions starting from 2.4.0 before 2.4.3, all versions starting from 2.5.0 up to 2.6.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-18",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector).",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3"
-                    ],
-                    "identifier": "CVE-2021-37647",
-                    "identifiers": [
-                        "CVE-2021-37647",
-                        "GHSA-c5x2-p679-95wc"
-                    ],
-                    "not_impacted": "All versions before 2.3.0, all versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.6.0",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2021-08-12",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3 or above.",
-                    "title": "NULL Pointer Dereference",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37647"
-                    ],
-                    "uuid": "e45d7ed3-52f2-4b28-ac65-c82b20c5a56f"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.3.4",
-                                "versionStartIncluding": "2.3.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.4.3",
-                                "versionStartIncluding": "2.4.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.5.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc0:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-37647"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-476"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc"
+                          "version_value": ">= 2.5.0, < 2.5.1"
                         },
                         {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7"
+                          "version_value": ">= 2.4.0, < 2.4.3"
+                        },
+                        {
+                          "version_value": "< 2.3.4"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 2.1,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "LOW",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 5.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2021-08-18T16:25Z",
-            "publishedDate": "2021-08-12T19:15Z"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "HIGH",
+          "baseScore": 7.7,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-476: NULL Pointer Dereference"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-c5x2-p679-95wc",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
+          "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-476",
+            "CWE-937"
+          ],
+          "date": "2021-08-25",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size` results in null pointer dereferencing ` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3",
+            "2.5.1"
+          ],
+          "identifier": "CVE-2021-37647",
+          "identifiers": [
+            "GHSA-c5x2-p679-95wc",
+            "CVE-2021-37647"
+          ],
+          "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2021-08-25",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
+          "title": "NULL Pointer Dereference",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37647",
+            "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
+            "https://github.com/advisories/GHSA-c5x2-p679-95wc"
+          ],
+          "uuid": "a5b2a0fc-07fc-4344-bff6-10a949340ebe"
+        },
+        {
+          "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
+          "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-476",
+            "CWE-937"
+          ],
+          "date": "2021-08-25",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size` results in null pointer dereferencing ` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3",
+            "2.5.1"
+          ],
+          "identifier": "CVE-2021-37647",
+          "identifiers": [
+            "GHSA-c5x2-p679-95wc",
+            "CVE-2021-37647"
+          ],
+          "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2021-08-25",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
+          "title": "NULL Pointer Dereference",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37647",
+            "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
+            "https://github.com/advisories/GHSA-c5x2-p679-95wc"
+          ],
+          "uuid": "f7015f1e-38b6-4581-8fe7-e9c105b325ff"
+        },
+        {
+          "affected_range": ">=2.3.0,<2.3.4||>=2.4.0,<2.4.3||>=2.5.0,<=2.6.0",
+          "affected_versions": "All versions starting from 2.3.0 before 2.3.4, all versions starting from 2.4.0 before 2.4.3, all versions starting from 2.5.0 up to 2.6.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2021-08-18",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The implementation has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then code that performs validation (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector).",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3"
+          ],
+          "identifier": "CVE-2021-37647",
+          "identifiers": [
+            "CVE-2021-37647",
+            "GHSA-c5x2-p679-95wc"
+          ],
+          "not_impacted": "All versions before 2.3.0, all versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.6.0",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2021-08-12",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3 or above.",
+          "title": "NULL Pointer Dereference",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37647"
+          ],
+          "uuid": "e45d7ed3-52f2-4b28-ac65-c82b20c5a56f"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.3.4",
+                "versionStartIncluding": "2.3.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.4.3",
+                "versionStartIncluding": "2.4.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.5.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc0:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-37647"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "TensorFlow is an end-to-end open source platform for machine learning. When a user does not supply arguments that determine a valid sparse tensor, `tf.raw_ops.SparseTensorSliceDataset` implementation can be made to dereference a null pointer. The [implementation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L240-L251) has some argument validation but fails to consider the case when either `indices` or `values` are provided for an empty sparse tensor when the other is not. If `indices` is empty, then [code that performs validation](https://github.com/tensorflow/tensorflow/blob/8d72537c6abf5a44103b57b9c2e22c14f5f49698/tensorflow/core/kernels/data/sparse_tensor_slice_dataset_op.cc#L260-L261) (i.e., checking that the indices are monotonically increasing) results in a null pointer dereference. If `indices` as provided by the user is empty, then `indices` in the C++ code above is backed by an empty `std::vector`, hence calling `indices->dim_size(0)` results in null pointer dereferencing (same as calling `std::vector::at()` on an empty vector). We have patched the issue in GitHub commit 02cc160e29d20631de3859c6653184e3f876b9d7. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-476"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-c5x2-p679-95wc"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/02cc160e29d20631de3859c6653184e3f876b9d7"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 2.1,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "LOW",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2021-08-18T16:25Z",
+      "publishedDate": "2021-08-12T19:15Z"
     }
+  }
 }

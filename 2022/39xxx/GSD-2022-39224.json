@@ -1,301 +1,307 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-39224",
-        "description": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool.",
-        "id": "GSD-2022-39224"
+  "GSD": {
+    "alias": "CVE-2022-39224",
+    "description": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool.",
+    "id": "GSD-2022-39224"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "arr-pm",
-                        "purl": "pkg:gem/arr-pm"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-39224",
-                "GHSA-88cv-mj24-8w3q"
-            ],
-            "details": "### Impact\n\nArbitrary shell execution is possible when using RPM::File#files and\nRPM::File#extract if the RPM contains a malicious \"payload compressor\" field.\n\nThis vulnerability impacts the `extract` and `files` methods of the\n`RPM::File` class in the affected versions of this library.\n\n### Patches\n\nVersion 0.0.12 is available with a fix for these issues.\n\n### Workarounds\n\nWhen using an affected version of this library (arr-pm), ensure any RPMs\nbeing processed contain valid/known payload compressor values. Such values\ninclude: gzip, bzip2, xz, zstd, and lzma.\n\nYou can check the payload compressor field in an rpm by using the rpm command\nline tool. For example:\n\n```\n% rpm -qp example-1.0-1.x86_64.rpm --qf \"%{PAYLOADCOMPRESSOR}\\n\"\ngzip\n```\n\n### Impact on known dependent projects\n\nThis library is used by [fpm](https://github.com/jordansissel/fpm). The\nvulnerability may impact fpm only when using the flag `-s rpm` or\n`--input-type rpm` to convert a malicious rpm to another format. It does\nnot impact creating rpms.\n",
-            "id": "GSD-2022-39224",
-            "modified": "2022-09-21T00:00:00.000Z",
-            "published": "2022-09-21T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 7.0,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "arr-pm vulnerable to arbitrary shell execution when extracting or listing files contained in a malicious rpm"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "arr-pm",
+            "purl": "pkg:gem/arr-pm"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-39224",
-                "STATE": "PUBLIC",
-                "TITLE": "Arbitrary shell execution when extracting or listing files contained in a malicious rpm."
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "ruby-arr-pm",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 0.0.12"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "jordansissel"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 7.0,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:L/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
-                    },
-                    {
-                        "name": "https://github.com/jordansissel/ruby-arr-pm/pull/15",
-                        "refsource": "MISC",
-                        "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
-                    },
-                    {
-                        "name": "https://github.com/jordansissel/ruby-arr-pm/pull/14",
-                        "refsource": "MISC",
-                        "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-88cv-mj24-8w3q",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2022-39224",
+        "GHSA-88cv-mj24-8w3q"
+      ],
+      "details": "### Impact\n\nArbitrary shell execution is possible when using RPM::File#files and\nRPM::File#extract if the RPM contains a malicious \"payload compressor\" field.\n\nThis vulnerability impacts the `extract` and `files` methods of the\n`RPM::File` class in the affected versions of this library.\n\n### Patches\n\nVersion 0.0.12 is available with a fix for these issues.\n\n### Workarounds\n\nWhen using an affected version of this library (arr-pm), ensure any RPMs\nbeing processed contain valid/known payload compressor values. Such values\ninclude: gzip, bzip2, xz, zstd, and lzma.\n\nYou can check the payload compressor field in an rpm by using the rpm command\nline tool. For example:\n\n```\n% rpm -qp example-1.0-1.x86_64.rpm --qf \"%{PAYLOADCOMPRESSOR}\\n\"\ngzip\n```\n\n### Impact on known dependent projects\n\nThis library is used by [fpm](https://github.com/jordansissel/fpm). The\nvulnerability may impact fpm only when using the flag `-s rpm` or\n`--input-type rpm` to convert a malicious rpm to another format. It does\nnot impact creating rpms.\n",
+      "id": "GSD-2022-39224",
+      "modified": "2022-09-21T00:00:00.000Z",
+      "published": "2022-09-21T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
         },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-39224",
-            "cvss_v3": 7.0,
-            "date": "2022-09-21",
-            "description": "### Impact\n\nArbitrary shell execution is possible when using RPM::File#files and\nRPM::File#extract if the RPM contains a malicious \"payload compressor\" field.\n\nThis vulnerability impacts the `extract` and `files` methods of the\n`RPM::File` class in the affected versions of this library.\n\n### Patches\n\nVersion 0.0.12 is available with a fix for these issues.\n\n### Workarounds\n\nWhen using an affected version of this library (arr-pm), ensure any RPMs\nbeing processed contain valid/known payload compressor values. Such values\ninclude: gzip, bzip2, xz, zstd, and lzma.\n\nYou can check the payload compressor field in an rpm by using the rpm command\nline tool. For example:\n\n```\n% rpm -qp example-1.0-1.x86_64.rpm --qf \"%{PAYLOADCOMPRESSOR}\\n\"\ngzip\n```\n\n### Impact on known dependent projects\n\nThis library is used by [fpm](https://github.com/jordansissel/fpm). The\nvulnerability may impact fpm only when using the flag `-s rpm` or\n`--input-type rpm` to convert a malicious rpm to another format. It does\nnot impact creating rpms.\n",
-            "gem": "arr-pm",
-            "ghsa": "88cv-mj24-8w3q",
-            "patched_versions": [
-                ">= 0.0.12"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/jordansissel/ruby-arr-pm/pull/14",
-                    "https://github.com/jordansissel/ruby-arr-pm/pull/15"
-                ]
-            },
-            "title": "arr-pm vulnerable to arbitrary shell execution when extracting or listing files contained in a malicious rpm",
-            "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
+        {
+          "type": "WEB",
+          "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<0.0.12",
-                    "affected_versions": "All versions before 0.0.12",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-78",
-                        "CWE-937"
-                    ],
-                    "date": "2022-09-26",
-                    "description": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool. ",
-                    "fixed_versions": [
-                        "0.0.12"
-                    ],
-                    "identifier": "CVE-2022-39224",
-                    "identifiers": [
-                        "CVE-2022-39224",
-                        "GHSA-88cv-mj24-8w3q"
-                    ],
-                    "not_impacted": "All versions starting from 0.0.12",
-                    "package_slug": "gem/arr-pm",
-                    "pubdate": "2022-09-21",
-                    "solution": "Upgrade to version 0.0.12 or above.",
-                    "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-                    "urls": [
-                        "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
-                        "https://github.com/jordansissel/ruby-arr-pm/pull/14",
-                        "https://github.com/jordansissel/ruby-arr-pm/pull/15",
-                        "https://github.com/advisories/GHSA-88cv-mj24-8w3q"
-                    ],
-                    "uuid": "636e29c1-b85e-4ce3-9dea-eddc4a2c9488"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:ruby-arr-pm_project:ruby-arr-pm:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.0.12",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-39224"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-78"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/jordansissel/ruby-arr-pm/pull/15",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
-                        },
-                        {
-                            "name": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
-                        },
-                        {
-                            "name": "https://github.com/jordansissel/ruby-arr-pm/pull/14",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-09-26T13:41Z",
-            "publishedDate": "2022-09-21T23:15Z"
+        {
+          "type": "WEB",
+          "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.0,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "arr-pm vulnerable to arbitrary shell execution when extracting or listing files contained in a malicious rpm"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-39224",
+        "STATE": "PUBLIC",
+        "TITLE": "Arbitrary shell execution when extracting or listing files contained in a malicious rpm."
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "ruby-arr-pm",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 0.0.12"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "jordansissel"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "HIGH",
+          "baseScore": 7.0,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:L/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
+          },
+          {
+            "name": "https://github.com/jordansissel/ruby-arr-pm/pull/15",
+            "refsource": "MISC",
+            "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
+          },
+          {
+            "name": "https://github.com/jordansissel/ruby-arr-pm/pull/14",
+            "refsource": "MISC",
+            "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-88cv-mj24-8w3q",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-39224",
+      "cvss_v3": 7.0,
+      "date": "2022-09-21",
+      "description": "### Impact\n\nArbitrary shell execution is possible when using RPM::File#files and\nRPM::File#extract if the RPM contains a malicious \"payload compressor\" field.\n\nThis vulnerability impacts the `extract` and `files` methods of the\n`RPM::File` class in the affected versions of this library.\n\n### Patches\n\nVersion 0.0.12 is available with a fix for these issues.\n\n### Workarounds\n\nWhen using an affected version of this library (arr-pm), ensure any RPMs\nbeing processed contain valid/known payload compressor values. Such values\ninclude: gzip, bzip2, xz, zstd, and lzma.\n\nYou can check the payload compressor field in an rpm by using the rpm command\nline tool. For example:\n\n```\n% rpm -qp example-1.0-1.x86_64.rpm --qf \"%{PAYLOADCOMPRESSOR}\\n\"\ngzip\n```\n\n### Impact on known dependent projects\n\nThis library is used by [fpm](https://github.com/jordansissel/fpm). The\nvulnerability may impact fpm only when using the flag `-s rpm` or\n`--input-type rpm` to convert a malicious rpm to another format. It does\nnot impact creating rpms.\n",
+      "gem": "arr-pm",
+      "ghsa": "88cv-mj24-8w3q",
+      "patched_versions": [
+        ">= 0.0.12"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/jordansissel/ruby-arr-pm/pull/14",
+          "https://github.com/jordansissel/ruby-arr-pm/pull/15"
+        ]
+      },
+      "title": "arr-pm vulnerable to arbitrary shell execution when extracting or listing files contained in a malicious rpm",
+      "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<0.0.12",
+          "affected_versions": "All versions before 0.0.12",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-78",
+            "CWE-937"
+          ],
+          "date": "2022-09-26",
+          "description": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool. ",
+          "fixed_versions": [
+            "0.0.12"
+          ],
+          "identifier": "CVE-2022-39224",
+          "identifiers": [
+            "CVE-2022-39224",
+            "GHSA-88cv-mj24-8w3q"
+          ],
+          "not_impacted": "All versions starting from 0.0.12",
+          "package_slug": "gem/arr-pm",
+          "pubdate": "2022-09-21",
+          "solution": "Upgrade to version 0.0.12 or above.",
+          "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+          "urls": [
+            "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
+            "https://github.com/jordansissel/ruby-arr-pm/pull/14",
+            "https://github.com/jordansissel/ruby-arr-pm/pull/15",
+            "https://github.com/advisories/GHSA-88cv-mj24-8w3q"
+          ],
+          "uuid": "636e29c1-b85e-4ce3-9dea-eddc4a2c9488"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:ruby-arr-pm_project:ruby-arr-pm:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.0.12",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-39224"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Arr-pm is an RPM reader/writer library written in Ruby. Versions prior to 0.0.12 are subject to OS command injection resulting in shell execution if the RPM contains a malicious \"payload compressor\" field. This vulnerability impacts the `extract` and `files` methods of the `RPM::File` class of this library. Version 0.0.12 patches these issues. A workaround for this issue is to ensure any RPMs being processed contain valid/known payload compressor values such as gzip, bzip2, xz, zstd, and lzma. The payload compressor field in an rpm can be checked by using the rpm command line tool."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-78"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/jordansissel/ruby-arr-pm/pull/15",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/jordansissel/ruby-arr-pm/pull/15"
+            },
+            {
+              "name": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/jordansissel/ruby-arr-pm/security/advisories/GHSA-88cv-mj24-8w3q"
+            },
+            {
+              "name": "https://github.com/jordansissel/ruby-arr-pm/pull/14",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/jordansissel/ruby-arr-pm/pull/14"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-09-26T13:41Z",
+      "publishedDate": "2022-09-21T23:15Z"
+    }
+  }
 }

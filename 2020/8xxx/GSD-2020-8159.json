@@ -1,283 +1,289 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-8159",
-        "description": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view.",
-        "id": "GSD-2020-8159"
+  "GSD": {
+    "alias": "CVE-2020-8159",
+    "description": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view.",
+    "id": "GSD-2020-8159"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-8159",
-            "modified": "2020-05-06T00:00:00.000Z",
-            "published": "2020-05-06T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-8159",
-                "GHSA-mg5p-95m9-rmfp"
-            ],
-            "summary": "Arbitrary file write/potential remote code execution in actionpack-page_caching",
-            "details": "There is a vulnerability in the actionpack-page_caching gem that allows an attacker\nto write arbitrary files to a web server, potentially resulting in remote code execution\nif the attacker can write unescaped ERB to a view.\n\nVersions Affected:  All versions of actionpack-page_caching (part of Rails prior to Rails 4.0)\nNot affected:       Applications not using actionpack-page_caching\nFixed Versions:     actionpack-page_caching >= 1.2.1\n\nImpact\n------\n\nThe Action Pack Page Caching gem writes cache files to the file system in\norder for the front end webserver (nginx, Apache, etc) to serve the cached\nfile without making a request to the application server.  Paths contain what\nis effectively user input can be used to manipulate the location of the cache\nfile.\n\nFor example \"/users/123\" could be changed to \"/users/../../../foo\" and this\nwill escape the cache directory.  Attackers can use this technique to\nspringboard to an RCE if they can write arbitrary ERb to a view folder.\n\nImpacted code looks like this:\n\n```\nclass BooksController < ApplicationController\n  caches_page :show\nend\n```\n\nWhere the `show` action of the `BooksController` may be vulnerable.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.8
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionpack-page_caching",
-                        "purl": "pkg:gem/actionpack-page_caching"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionpack-page_caching",
+            "purl": "pkg:gem/actionpack-page_caching"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2020-8159",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/actionpack-page_caching",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "v1.2.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Path Traversal (CWE-22)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20210723 [SECURITY] [DLA 2719-1] ruby-actionpack-page-caching security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2021/07/msg00019.html"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.2.1",
-                    "affected_versions": "All versions before 1.2.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-937"
-                    ],
-                    "date": "2021-07-23",
-                    "description": "There is a vulnerability in actionpack_page-caching that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view.",
-                    "fixed_versions": [
-                        "1.2.1"
-                    ],
-                    "identifier": "CVE-2020-8159",
-                    "identifiers": [
-                        "CVE-2020-8159"
-                    ],
-                    "not_impacted": "All versions starting from 1.2.1",
-                    "package_slug": "gem/actionpack-page_caching",
-                    "pubdate": "2020-05-12",
-                    "solution": "Upgrade to version 1.2.1 or above.",
-                    "title": "Path Traversal",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-8159"
-                    ],
-                    "uuid": "721e3de6-414e-4f1c-8920-570c8102ca29"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:actionpack_page-caching:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.2.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2020-8159"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-22"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Mailing List",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20210723 [SECURITY] [DLA 2719-1] ruby-actionpack-page-caching security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2021/07/msg00019.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 7.5,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "HIGH",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-04-05T15:02Z",
-            "publishedDate": "2020-05-12T13:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionpack-page_caching",
-            "cve": "2020-8159",
-            "ghsa": "mg5p-95m9-rmfp",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8",
-            "title": "Arbitrary file write/potential remote code execution in actionpack-page_caching",
-            "date": "2020-05-06",
-            "description": "There is a vulnerability in the actionpack-page_caching gem that allows an attacker\nto write arbitrary files to a web server, potentially resulting in remote code execution\nif the attacker can write unescaped ERB to a view.\n\nVersions Affected:  All versions of actionpack-page_caching (part of Rails prior to Rails 4.0)\nNot affected:       Applications not using actionpack-page_caching\nFixed Versions:     actionpack-page_caching >= 1.2.1\n\nImpact\n------\n\nThe Action Pack Page Caching gem writes cache files to the file system in\norder for the front end webserver (nginx, Apache, etc) to serve the cached\nfile without making a request to the application server.  Paths contain what\nis effectively user input can be used to manipulate the location of the cache\nfile.\n\nFor example \"/users/123\" could be changed to \"/users/../../../foo\" and this\nwill escape the cache directory.  Attackers can use this technique to\nspringboard to an RCE if they can write arbitrary ERb to a view folder.\n\nImpacted code looks like this:\n\n```\nclass BooksController < ApplicationController\n  caches_page :show\nend\n```\n\nWhere the `show` action of the `BooksController` may be vulnerable.\n",
-            "cvss_v3": 9.8,
-            "patched_versions": [
-                ">= 1.2.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2020-8159",
+        "GHSA-mg5p-95m9-rmfp"
+      ],
+      "details": "There is a vulnerability in the actionpack-page_caching gem that allows an attacker\nto write arbitrary files to a web server, potentially resulting in remote code execution\nif the attacker can write unescaped ERB to a view.\n\nVersions Affected:  All versions of actionpack-page_caching (part of Rails prior to Rails 4.0)\nNot affected:       Applications not using actionpack-page_caching\nFixed Versions:     actionpack-page_caching >= 1.2.1\n\nImpact\n------\n\nThe Action Pack Page Caching gem writes cache files to the file system in\norder for the front end webserver (nginx, Apache, etc) to serve the cached\nfile without making a request to the application server.  Paths contain what\nis effectively user input can be used to manipulate the location of the cache\nfile.\n\nFor example \"/users/123\" could be changed to \"/users/../../../foo\" and this\nwill escape the cache directory.  Attackers can use this technique to\nspringboard to an RCE if they can write arbitrary ERb to a view folder.\n\nImpacted code looks like this:\n\n```\nclass BooksController < ApplicationController\n  caches_page :show\nend\n```\n\nWhere the `show` action of the `BooksController` may be vulnerable.\n",
+      "id": "GSD-2020-8159",
+      "modified": "2020-05-06T00:00:00.000Z",
+      "published": "2020-05-06T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Arbitrary file write/potential remote code execution in actionpack-page_caching"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2020-8159",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/actionpack-page_caching",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "v1.2.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Path Traversal (CWE-22)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
+          },
+          {
+            "name": "[debian-lts-announce] 20210723 [SECURITY] [DLA 2719-1] ruby-actionpack-page-caching security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2021/07/msg00019.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-8159",
+      "cvss_v3": 9.8,
+      "date": "2020-05-06",
+      "description": "There is a vulnerability in the actionpack-page_caching gem that allows an attacker\nto write arbitrary files to a web server, potentially resulting in remote code execution\nif the attacker can write unescaped ERB to a view.\n\nVersions Affected:  All versions of actionpack-page_caching (part of Rails prior to Rails 4.0)\nNot affected:       Applications not using actionpack-page_caching\nFixed Versions:     actionpack-page_caching >= 1.2.1\n\nImpact\n------\n\nThe Action Pack Page Caching gem writes cache files to the file system in\norder for the front end webserver (nginx, Apache, etc) to serve the cached\nfile without making a request to the application server.  Paths contain what\nis effectively user input can be used to manipulate the location of the cache\nfile.\n\nFor example \"/users/123\" could be changed to \"/users/../../../foo\" and this\nwill escape the cache directory.  Attackers can use this technique to\nspringboard to an RCE if they can write arbitrary ERb to a view folder.\n\nImpacted code looks like this:\n\n```\nclass BooksController < ApplicationController\n  caches_page :show\nend\n```\n\nWhere the `show` action of the `BooksController` may be vulnerable.\n",
+      "gem": "actionpack-page_caching",
+      "ghsa": "mg5p-95m9-rmfp",
+      "patched_versions": [
+        ">= 1.2.1"
+      ],
+      "title": "Arbitrary file write/potential remote code execution in actionpack-page_caching",
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.2.1",
+          "affected_versions": "All versions before 1.2.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-937"
+          ],
+          "date": "2021-07-23",
+          "description": "There is a vulnerability in actionpack_page-caching that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view.",
+          "fixed_versions": [
+            "1.2.1"
+          ],
+          "identifier": "CVE-2020-8159",
+          "identifiers": [
+            "CVE-2020-8159"
+          ],
+          "not_impacted": "All versions starting from 1.2.1",
+          "package_slug": "gem/actionpack-page_caching",
+          "pubdate": "2020-05-12",
+          "solution": "Upgrade to version 1.2.1 or above.",
+          "title": "Path Traversal",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-8159"
+          ],
+          "uuid": "721e3de6-414e-4f1c-8920-570c8102ca29"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:actionpack_page-caching:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.2.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2020-8159"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "There is a vulnerability in actionpack_page-caching gem < v1.2.1 that allows an attacker to write arbitrary files to a web server, potentially resulting in remote code execution if the attacker can write unescaped ERB to a view."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-22"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Mailing List",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/CFRVkEytdP8"
+            },
+            {
+              "name": "[debian-lts-announce] 20210723 [SECURITY] [DLA 2719-1] ruby-actionpack-page-caching security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2021/07/msg00019.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 7.5,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "HIGH",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-04-05T15:02Z",
+      "publishedDate": "2020-05-12T13:15Z"
+    }
+  }
 }

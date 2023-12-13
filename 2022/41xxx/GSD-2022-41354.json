@@ -1,283 +1,300 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-41354",
-        "id": "GSD-2022-41354"
+  "GSD": {
+    "alias": "CVE-2022-41354",
+    "id": "GSD-2022-41354"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
-                "ID": "CVE-2022-41354",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "An access control issue in Argo CD v2.4.12 and below allows unauthenticated attackers to enumerate existing applications."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "http://argo.com",
-                        "refsource": "MISC",
-                        "url": "http://argo.com"
-                    },
-                    {
-                        "name": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md",
-                        "refsource": "MISC",
-                        "url": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md"
-                    },
-                    {
-                        "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
-                        "refsource": "MISC",
-                        "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=v0.5.0 <=v1.8.7",
-                    "affected_versions": "All versions starting from 0.5.0 up to 1.8.7",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-23",
-                    "description": "### Impact\n\nAll versions of Argo CD starting with v0.5.0 is vulnerable to an information disclosure bug allowing unauthorized users to enumerate application names by inspecting API error messages. An attacker could use the discovered application names as the starting point of another attack. For example, the attacker might use their knowledge of an application name to convince an administrator to grant higher privileges (social engineering).\n\nMany Argo CD API endpoints accept an application name as the only parameter. Since Argo CD RBAC requires both the application name and its configured project name (and, if apps-in-any-namespace is enabled, the application's namespace), Argo CD fetches the requested application before performing the RBAC check. If the application does not exist, the API returns a \"not found\". If the application does exist, and the user does not have access, the API returns an \"unauthorized\" error. By trial and error, an attacker can infer which applications exist and which do not.\n\nNote that application resources are not fetched for API calls from _unauthenticated_ users. If your Argo CD instance is accessible from the public internet, unauthenticated users will not be able to cause Argo CD to make Kubernetes API calls.\n\nThe patch changes API behavior to return \"unauthorized\" both when the application is missing and when the user is not authorized to access it. **This change in API behavior may impact API clients.** Check your code to make sure it will handle the new API behavior properly.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.6.7\n* v2.5.16\n* v2.4.28\n\n### Workarounds\n\nThere are no workarounds besides upgrading.\n\n### Credits\n\nThank you to bean.zhang of HIT-IDS ChunkL Team who discovered the issue and reported it confidentially according to our [guidelines](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md#reporting-a-vulnerability).\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2022-41354",
-                    "identifiers": [
-                        "GHSA-2q5c-qw9c-fmvq",
-                        "CVE-2022-41354"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "go/github.com/argoproj/argo-cd",
-                    "pubdate": "2023-03-23",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "Argo CD authenticated but unauthorized users may enumerate Application names via the API",
-                    "urls": [
-                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
-                        "https://github.com/argoproj/argo-cd/commit/3a28c8a18cc2aa84fe81492625545d25c7a90bc3",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.4.28",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.5.16",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.6.7",
-                        "https://github.com/advisories/GHSA-2q5c-qw9c-fmvq"
-                    ],
-                    "uuid": "0c346401-3cc1-46a7-b6b4-7646ed781099",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "df0e2e4015c4cff4e16c8743df9d62f5ca1bdc24",
-                                "tags": [
-                                    "v0.5.0"
-                                ],
-                                "timestamp": "20180612175411"
-                            },
-                            "number": "v0.5.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "eb3d1fb84b9b77cdffd70b14c4f949f1c64a9416",
-                                "tags": [
-                                    "v1.8.7"
-                                ],
-                                "timestamp": "20210303070237"
-                            },
-                            "number": "v1.8.7"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "<2.4.28||>=2.5.0 <2.5.16||>=2.6.0 <2.6.7",
-                    "affected_versions": "All versions before 2.4.28, all versions starting from 2.5.0 before 2.5.16, all versions starting from 2.6.0 before 2.6.7",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-23",
-                    "description": "### Impact\n\nAll versions of Argo CD starting with v0.5.0 is vulnerable to an information disclosure bug allowing unauthorized users to enumerate application names by inspecting API error messages. An attacker could use the discovered application names as the starting point of another attack. For example, the attacker might use their knowledge of an application name to convince an administrator to grant higher privileges (social engineering).\n\nMany Argo CD API endpoints accept an application name as the only parameter. Since Argo CD RBAC requires both the application name and its configured project name (and, if apps-in-any-namespace is enabled, the application's namespace), Argo CD fetches the requested application before performing the RBAC check. If the application does not exist, the API returns a \"not found\". If the application does exist, and the user does not have access, the API returns an \"unauthorized\" error. By trial and error, an attacker can infer which applications exist and which do not.\n\nNote that application resources are not fetched for API calls from _unauthenticated_ users. If your Argo CD instance is accessible from the public internet, unauthenticated users will not be able to cause Argo CD to make Kubernetes API calls.\n\nThe patch changes API behavior to return \"unauthorized\" both when the application is missing and when the user is not authorized to access it. **This change in API behavior may impact API clients.** Check your code to make sure it will handle the new API behavior properly.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.6.7\n* v2.5.16\n* v2.4.28\n\n### Workarounds\n\nThere are no workarounds besides upgrading.\n\n### Credits\n\nThank you to bean.zhang of HIT-IDS ChunkL Team who discovered the issue and reported it confidentially according to our [guidelines](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md#reporting-a-vulnerability).\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
-                    "fixed_versions": [
-                        "2.5.16",
-                        "2.6.7",
-                        "2.4.28"
-                    ],
-                    "identifier": "CVE-2022-41354",
-                    "identifiers": [
-                        "GHSA-2q5c-qw9c-fmvq",
-                        "CVE-2022-41354"
-                    ],
-                    "not_impacted": "All versions starting from 2.4.28 before 2.5.0, all versions starting from 2.5.16 before 2.6.0, all versions starting from 2.6.7",
-                    "package_slug": "go/github.com/argoproj/argo-cd/v2",
-                    "pubdate": "2023-03-23",
-                    "solution": "Upgrade to versions 2.5.16, 2.6.7, 2.4.28 or above.",
-                    "title": "Argo CD authenticated but unauthorized users may enumerate Application names via the API",
-                    "urls": [
-                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
-                        "https://github.com/argoproj/argo-cd/commit/3a28c8a18cc2aa84fe81492625545d25c7a90bc3",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.4.28",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.5.16",
-                        "https://github.com/argoproj/argo-cd/releases/tag/v2.6.7",
-                        "https://github.com/advisories/GHSA-2q5c-qw9c-fmvq"
-                    ],
-                    "uuid": "17692847-29b4-4e17-9256-36bf73b47a6d"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.6.7",
-                                "versionStartIncluding": "2.6.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.4.28",
-                                "versionStartIncluding": "0.5.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.5.16",
-                                "versionStartIncluding": "2.5.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve@mitre.org",
-                    "ID": "CVE-2022-41354"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "An access control issue in Argo CD v2.4.12 and below allows unauthenticated attackers to enumerate existing applications."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-203"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "http://argo.com",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "http://argo.com"
-                        },
-                        {
-                            "name": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Broken Link"
-                            ],
-                            "url": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md"
-                        },
-                        {
-                            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2023-04-03T17:02Z",
-            "publishedDate": "2023-03-27T14:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-41354"
+      ],
+      "details": "An access control issue in Argo CD v2.4.12 and below allows unauthenticated attackers to enumerate existing applications.",
+      "id": "GSD-2022-41354",
+      "modified": "2023-12-13T01:19:32.604368Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@mitre.org",
+        "ID": "CVE-2022-41354",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "An access control issue in Argo CD v2.4.12 and below allows unauthenticated attackers to enumerate existing applications."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "http://argo.com",
+            "refsource": "MISC",
+            "url": "http://argo.com"
+          },
+          {
+            "name": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md",
+            "refsource": "MISC",
+            "url": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md"
+          },
+          {
+            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
+            "refsource": "MISC",
+            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq"
+          }
+        ]
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=v0.5.0 <=v1.8.7",
+          "affected_versions": "All versions starting from 0.5.0 up to 1.8.7",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-03-23",
+          "description": "### Impact\n\nAll versions of Argo CD starting with v0.5.0 is vulnerable to an information disclosure bug allowing unauthorized users to enumerate application names by inspecting API error messages. An attacker could use the discovered application names as the starting point of another attack. For example, the attacker might use their knowledge of an application name to convince an administrator to grant higher privileges (social engineering).\n\nMany Argo CD API endpoints accept an application name as the only parameter. Since Argo CD RBAC requires both the application name and its configured project name (and, if apps-in-any-namespace is enabled, the application's namespace), Argo CD fetches the requested application before performing the RBAC check. If the application does not exist, the API returns a \"not found\". If the application does exist, and the user does not have access, the API returns an \"unauthorized\" error. By trial and error, an attacker can infer which applications exist and which do not.\n\nNote that application resources are not fetched for API calls from _unauthenticated_ users. If your Argo CD instance is accessible from the public internet, unauthenticated users will not be able to cause Argo CD to make Kubernetes API calls.\n\nThe patch changes API behavior to return \"unauthorized\" both when the application is missing and when the user is not authorized to access it. **This change in API behavior may impact API clients.** Check your code to make sure it will handle the new API behavior properly.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.6.7\n* v2.5.16\n* v2.4.28\n\n### Workarounds\n\nThere are no workarounds besides upgrading.\n\n### Credits\n\nThank you to bean.zhang of HIT-IDS ChunkL Team who discovered the issue and reported it confidentially according to our [guidelines](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md#reporting-a-vulnerability).\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
+          "fixed_versions": [],
+          "identifier": "CVE-2022-41354",
+          "identifiers": [
+            "GHSA-2q5c-qw9c-fmvq",
+            "CVE-2022-41354"
+          ],
+          "not_impacted": "",
+          "package_slug": "go/github.com/argoproj/argo-cd",
+          "pubdate": "2023-03-23",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "Argo CD authenticated but unauthorized users may enumerate Application names via the API",
+          "urls": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
+            "https://github.com/argoproj/argo-cd/commit/3a28c8a18cc2aa84fe81492625545d25c7a90bc3",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.4.28",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.5.16",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.6.7",
+            "https://github.com/advisories/GHSA-2q5c-qw9c-fmvq"
+          ],
+          "uuid": "0c346401-3cc1-46a7-b6b4-7646ed781099",
+          "versions": [
+            {
+              "commit": {
+                "sha": "df0e2e4015c4cff4e16c8743df9d62f5ca1bdc24",
+                "tags": [
+                  "v0.5.0"
+                ],
+                "timestamp": "20180612175411"
+              },
+              "number": "v0.5.0"
+            },
+            {
+              "commit": {
+                "sha": "eb3d1fb84b9b77cdffd70b14c4f949f1c64a9416",
+                "tags": [
+                  "v1.8.7"
+                ],
+                "timestamp": "20210303070237"
+              },
+              "number": "v1.8.7"
+            }
+          ]
+        },
+        {
+          "affected_range": "<2.4.28||>=2.5.0 <2.5.16||>=2.6.0 <2.6.7",
+          "affected_versions": "All versions before 2.4.28, all versions starting from 2.5.0 before 2.5.16, all versions starting from 2.6.0 before 2.6.7",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-03-23",
+          "description": "### Impact\n\nAll versions of Argo CD starting with v0.5.0 is vulnerable to an information disclosure bug allowing unauthorized users to enumerate application names by inspecting API error messages. An attacker could use the discovered application names as the starting point of another attack. For example, the attacker might use their knowledge of an application name to convince an administrator to grant higher privileges (social engineering).\n\nMany Argo CD API endpoints accept an application name as the only parameter. Since Argo CD RBAC requires both the application name and its configured project name (and, if apps-in-any-namespace is enabled, the application's namespace), Argo CD fetches the requested application before performing the RBAC check. If the application does not exist, the API returns a \"not found\". If the application does exist, and the user does not have access, the API returns an \"unauthorized\" error. By trial and error, an attacker can infer which applications exist and which do not.\n\nNote that application resources are not fetched for API calls from _unauthenticated_ users. If your Argo CD instance is accessible from the public internet, unauthenticated users will not be able to cause Argo CD to make Kubernetes API calls.\n\nThe patch changes API behavior to return \"unauthorized\" both when the application is missing and when the user is not authorized to access it. **This change in API behavior may impact API clients.** Check your code to make sure it will handle the new API behavior properly.\n\n### Patches\n\nA patch for this vulnerability has been released in the following Argo CD versions:\n\n* v2.6.7\n* v2.5.16\n* v2.4.28\n\n### Workarounds\n\nThere are no workarounds besides upgrading.\n\n### Credits\n\nThank you to bean.zhang of HIT-IDS ChunkL Team who discovered the issue and reported it confidentially according to our [guidelines](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md#reporting-a-vulnerability).\n\n### For more information\n\n* Open an issue in [the Argo CD issue tracker](https://github.com/argoproj/argo-cd/issues) or [discussions](https://github.com/argoproj/argo-cd/discussions)\n* Join us on [Slack](https://argoproj.github.io/community/join-slack) in channel #argo-cd\n",
+          "fixed_versions": [
+            "2.5.16",
+            "2.6.7",
+            "2.4.28"
+          ],
+          "identifier": "CVE-2022-41354",
+          "identifiers": [
+            "GHSA-2q5c-qw9c-fmvq",
+            "CVE-2022-41354"
+          ],
+          "not_impacted": "All versions starting from 2.4.28 before 2.5.0, all versions starting from 2.5.16 before 2.6.0, all versions starting from 2.6.7",
+          "package_slug": "go/github.com/argoproj/argo-cd/v2",
+          "pubdate": "2023-03-23",
+          "solution": "Upgrade to versions 2.5.16, 2.6.7, 2.4.28 or above.",
+          "title": "Argo CD authenticated but unauthorized users may enumerate Application names via the API",
+          "urls": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
+            "https://github.com/argoproj/argo-cd/commit/3a28c8a18cc2aa84fe81492625545d25c7a90bc3",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.4.28",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.5.16",
+            "https://github.com/argoproj/argo-cd/releases/tag/v2.6.7",
+            "https://github.com/advisories/GHSA-2q5c-qw9c-fmvq"
+          ],
+          "uuid": "17692847-29b4-4e17-9256-36bf73b47a6d"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.6.7",
+                "versionStartIncluding": "2.6.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.4.28",
+                "versionStartIncluding": "0.5.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.5.16",
+                "versionStartIncluding": "2.5.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve@mitre.org",
+          "ID": "CVE-2022-41354"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "An access control issue in Argo CD v2.4.12 and below allows unauthenticated attackers to enumerate existing applications."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-203"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "http://argo.com",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "http://argo.com"
+            },
+            {
+              "name": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md",
+              "refsource": "MISC",
+              "tags": [
+                "Broken Link"
+              ],
+              "url": "https://github.com/chunklhit/cve/blob/master/argo/argo-cd/application_enumeration.md"
+            },
+            {
+              "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2q5c-qw9c-fmvq"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2023-04-03T17:02Z",
+      "publishedDate": "2023-03-27T14:15Z"
+    }
+  }
 }

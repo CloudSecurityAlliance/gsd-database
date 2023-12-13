@@ -1,436 +1,442 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-8165",
-        "description": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.",
-        "id": "GSD-2020-8165",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2020-8165.html",
-            "https://www.debian.org/security/2020/dsa-4766",
-            "https://access.redhat.com/errata/RHSA-2021:1313"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-8165",
+    "description": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.",
+    "id": "GSD-2020-8165",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2020-8165.html",
+      "https://www.debian.org/security/2020/dsa-4766",
+      "https://access.redhat.com/errata/RHSA-2021:1313"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-8165",
-            "modified": "2020-05-18T00:00:00.000Z",
-            "published": "2020-05-18T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-8165",
-                "GHSA-2p68-f74v-9wc6"
-            ],
-            "summary": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore",
-            "details": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.8
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "activesupport",
-                        "purl": "pkg:gem/activesupport"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "activesupport",
+            "purl": "pkg:gem/activesupport"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2020-8165",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "Fixed in 5.2.4.3, 6.0.3.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Deserialization of Untrusted Data (CWE-502)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://hackerone.com/reports/413388",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/413388"
-                    },
-                    {
-                        "name": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
-                    },
-                    {
-                        "name": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/",
-                        "refsource": "CONFIRM",
-                        "url": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
-                    },
-                    {
-                        "name": "DSA-4766",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2020/dsa-4766"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:1677",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00031.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:1679",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00034.html"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
-                    "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2020-10-17",
-                    "description": "A deserialization of untrusted data vulnernerability exists in rails, rails that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.",
-                    "fixed_versions": [
-                        "5.2.4.3",
-                        "6.0.3.1"
-                    ],
-                    "identifier": "CVE-2020-8165",
-                    "identifiers": [
-                        "CVE-2020-8165"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
-                    "package_slug": "gem/activesupport",
-                    "pubdate": "2020-06-19",
-                    "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-8165"
-                    ],
-                    "uuid": "0bd86a75-852d-40b6-93a4-adbdeeca6f04"
-                },
-                {
-                    "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
-                    "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2020-10-17",
-                    "description": "A deserialization of untrusted data vulnernerability exists in rails that can allow an attacker to unmarshal user-provided objects in `MemCacheStore` and `RedisCacheStore` potentially resulting in an RCE.",
-                    "fixed_versions": [
-                        "5.2.4.3",
-                        "6.0.3.1"
-                    ],
-                    "identifier": "CVE-2020-8165",
-                    "identifiers": [
-                        "CVE-2020-8165"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2020-06-19",
-                    "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-8165"
-                    ],
-                    "uuid": "b2dd3d82-1177-482e-8103-e75e76cb819a"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.3.1",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.4.3",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2020-8165"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-502"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c"
-                        },
-                        {
-                            "name": "https://hackerone.com/reports/413388",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/413388"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
-                        },
-                        {
-                            "name": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
-                        },
-                        {
-                            "name": "DSA-4766",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2020/dsa-4766"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:1677",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00031.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:1679",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00034.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 7.5,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "HIGH",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-05-24T16:45Z",
-            "publishedDate": "2020-06-19T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activesupport",
-            "framework": "rails",
-            "cve": "2020-8165",
-            "ghsa": "2p68-f74v-9wc6",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c",
-            "title": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore",
-            "date": "2020-05-18",
-            "description": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
-            "cvss_v3": 9.8,
-            "patched_versions": [
-                "~> 5.2.4, >= 5.2.4.3",
-                ">= 6.0.3.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2020-8165",
+        "GHSA-2p68-f74v-9wc6"
+      ],
+      "details": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
+      "id": "GSD-2020-8165",
+      "modified": "2020-05-18T00:00:00.000Z",
+      "published": "2020-05-18T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2020-8165",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "Fixed in 5.2.4.3, 6.0.3.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Deserialization of Untrusted Data (CWE-502)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://hackerone.com/reports/413388",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/413388"
+          },
+          {
+            "name": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c"
+          },
+          {
+            "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
+          },
+          {
+            "name": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/",
+            "refsource": "CONFIRM",
+            "url": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/"
+          },
+          {
+            "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
+          },
+          {
+            "name": "DSA-4766",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2020/dsa-4766"
+          },
+          {
+            "name": "openSUSE-SU-2020:1677",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00031.html"
+          },
+          {
+            "name": "openSUSE-SU-2020:1679",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00034.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-8165",
+      "cvss_v3": 9.8,
+      "date": "2020-05-18",
+      "description": "There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when\nuntrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result\nfrom the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:\n\n```\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\n```\n\nVersions Affected:  rails < 5.2.5, rails < 6.0.4\nNot affected:       Applications not using MemCacheStore or RedisCacheStore. Applications that do not use the `raw` option when storing untrusted user input.\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\n\nUnmarshalling of untrusted user input can have impact up to and including RCE. At a minimum,\nthis vulnerability allows an attacker to inject untrusted Ruby objects into a web application.\n\nIn addition to upgrading to the latest versions of Rails, developers should ensure that whenever\nthey are calling `Rails.cache.fetch` they are using consistent values of the `raw` parameter for both\nreading and writing, especially in the case of the RedisCacheStore which does not, prior to these changes,\ndetect if data was serialized using the raw option upon deserialization.\n\nWorkarounds\n-----------\n\nIt is recommended that application developers apply the suggested patch or upgrade to the latest release as\nsoon as possible. If this is not possible, we recommend ensuring that all user-provided strings cached using\nthe `raw` argument should be double-checked to ensure that they conform to the expected format.\n",
+      "framework": "rails",
+      "gem": "activesupport",
+      "ghsa": "2p68-f74v-9wc6",
+      "patched_versions": [
+        "~> 5.2.4, >= 5.2.4.3",
+        ">= 6.0.3.1"
+      ],
+      "title": "Potentially unintended unmarshalling of user-provided objects in MemCacheStore and RedisCacheStore",
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/bv6fW4S0Y1c"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
+          "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-502",
+            "CWE-937"
+          ],
+          "date": "2020-10-17",
+          "description": "A deserialization of untrusted data vulnernerability exists in rails, rails that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.",
+          "fixed_versions": [
+            "5.2.4.3",
+            "6.0.3.1"
+          ],
+          "identifier": "CVE-2020-8165",
+          "identifiers": [
+            "CVE-2020-8165"
+          ],
+          "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
+          "package_slug": "gem/activesupport",
+          "pubdate": "2020-06-19",
+          "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
+          "title": "Deserialization of Untrusted Data",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-8165"
+          ],
+          "uuid": "0bd86a75-852d-40b6-93a4-adbdeeca6f04"
+        },
+        {
+          "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
+          "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-502",
+            "CWE-937"
+          ],
+          "date": "2020-10-17",
+          "description": "A deserialization of untrusted data vulnernerability exists in rails that can allow an attacker to unmarshal user-provided objects in `MemCacheStore` and `RedisCacheStore` potentially resulting in an RCE.",
+          "fixed_versions": [
+            "5.2.4.3",
+            "6.0.3.1"
+          ],
+          "identifier": "CVE-2020-8165",
+          "identifiers": [
+            "CVE-2020-8165"
+          ],
+          "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
+          "package_slug": "gem/rails",
+          "pubdate": "2020-06-19",
+          "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
+          "title": "Deserialization of Untrusted Data",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-8165"
+          ],
+          "uuid": "b2dd3d82-1177-482e-8103-e75e76cb819a"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.3.1",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.4.3",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2020-8165"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-502"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c"
+            },
+            {
+              "name": "https://hackerone.com/reports/413388",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/413388"
+            },
+            {
+              "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
+            },
+            {
+              "name": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/"
+            },
+            {
+              "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
+            },
+            {
+              "name": "DSA-4766",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2020/dsa-4766"
+            },
+            {
+              "name": "openSUSE-SU-2020:1677",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00031.html"
+            },
+            {
+              "name": "openSUSE-SU-2020:1679",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-10/msg00034.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 7.5,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "HIGH",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-05-24T16:45Z",
+      "publishedDate": "2020-06-19T18:15Z"
+    }
+  }
 }

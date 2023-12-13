@@ -1,453 +1,470 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-39218",
-        "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
-        "id": "GSD-2021-39218"
+  "GSD": {
+    "alias": "CVE-2021-39218",
+    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+    "id": "GSD-2021-39218"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-39218",
-                "STATE": "PUBLIC",
-                "TITLE": "Out-of-bounds read/write and invalid free with `externref`s and GC safepoints in Wasmtime "
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "wasmtime",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 0.26.0, <= 0.29.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "bytecodealliance"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 6.3,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-590: Free of Memory not on the Heap"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-787: Out-of-bounds Write"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-125: Out-of-bounds Read"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://crates.io/crates/wasmtime",
-                        "refsource": "MISC",
-                        "url": "https://crates.io/crates/wasmtime"
-                    },
-                    {
-                        "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49"
-                    },
-                    {
-                        "name": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
-                        "refsource": "MISC",
-                        "url": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c"
-                    },
-                    {
-                        "name": "FEDORA-2021-68713440cb",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/"
-                    },
-                    {
-                        "name": "FEDORA-2021-1805eacb48",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-4873-36h9-wv49",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=0.26.0 <0.30.0",
-                    "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-10",
-                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
-                    "fixed_versions": [
-                        "0.30.0"
-                    ],
-                    "identifier": "CVE-2021-39218",
-                    "identifiers": [
-                        "CVE-2021-39218",
-                        "GHSA-4873-36h9-wv49"
-                    ],
-                    "not_impacted": "All versions before 0.26.0, all versions starting from 0.30.0",
-                    "package_slug": "conan/wasmtime",
-                    "pubdate": "2021-09-17",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
-                        "https://crates.io/crates/wasmtime",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
-                        "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
-                    ],
-                    "uuid": "b4a6a424-62a4-4ba5-a60f-7a3079a2a29c"
-                },
-                {
-                    "affected_range": ">=v0.26.0 <v0.30.0",
-                    "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-10",
-                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
-                    "fixed_versions": [
-                        "v0.30.0"
-                    ],
-                    "identifier": "CVE-2021-39218",
-                    "identifiers": [
-                        "CVE-2021-39218",
-                        "GHSA-4873-36h9-wv49"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
-                    "pubdate": "2021-09-17",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
-                        "https://crates.io/crates/wasmtime",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
-                        "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
-                    ],
-                    "uuid": "a5582e19-0b4d-4595-8571-5619345459fe",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "d2e9d6d593c0ed673de880956f4b4a7d6f4d734c",
-                                "tags": [
-                                    "v0.26.0"
-                                ],
-                                "timestamp": "20210405203420"
-                            },
-                            "number": "v0.26.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "e5704ca48f2ac43faaebaa4055c9f4cd01bac8c0",
-                                "tags": [
-                                    "v0.30.0"
-                                ],
-                                "timestamp": "20210917191246"
-                            },
-                            "number": "v0.30.0"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "[0.26.0,0.30.0)",
-                    "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-10",
-                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
-                    "fixed_versions": [
-                        "0.30.0"
-                    ],
-                    "identifier": "CVE-2021-39218",
-                    "identifiers": [
-                        "CVE-2021-39218",
-                        "GHSA-4873-36h9-wv49"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "nuget/Wasmtime",
-                    "pubdate": "2021-09-17",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
-                        "https://crates.io/crates/wasmtime",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
-                        "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
-                    ],
-                    "uuid": "3c1ec795-2d42-4143-8935-01aaac1753c4"
-                },
-                {
-                    "affected_range": ">=0.26.0,<0.30.0",
-                    "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-125",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-10",
-                    "description": "Wasmtime is an open source runtime for WebAssembly & WASI.We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare.",
-                    "fixed_versions": [
-                        "0.30.0"
-                    ],
-                    "identifier": "CVE-2021-39218",
-                    "identifiers": [
-                        "CVE-2021-39218",
-                        "GHSA-4873-36h9-wv49"
-                    ],
-                    "not_impacted": "All versions before 0.26.0, all versions starting from 0.30.0",
-                    "package_slug": "pypi/wasmtime",
-                    "pubdate": "2021-09-17",
-                    "solution": "Upgrade to version 0.30.0 or above.",
-                    "title": "Out-of-bounds Read",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39218"
-                    ],
-                    "uuid": "bf7239c6-d008-4068-bed2-056a44ccbec0"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:bytecodealliance:wasmtime:*:*:*:*:*:rust:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.30.0",
-                                "versionStartIncluding": "0.26.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:34:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-39218"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-125"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-787"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-590"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://crates.io/crates/wasmtime",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://crates.io/crates/wasmtime"
-                        },
-                        {
-                            "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49"
-                        },
-                        {
-                            "name": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c"
-                        },
-                        {
-                            "name": "FEDORA-2021-68713440cb",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/"
-                        },
-                        {
-                            "name": "FEDORA-2021-1805eacb48",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 3.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.4,
-                    "impactScore": 4.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "LOW",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.0,
-                    "impactScore": 5.2
-                }
-            },
-            "lastModifiedDate": "2021-12-10T20:06Z",
-            "publishedDate": "2021-09-17T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-39218"
+      ],
+      "details": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+      "id": "GSD-2021-39218",
+      "modified": "2023-12-13T01:23:15.668667Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-39218",
+        "STATE": "PUBLIC",
+        "TITLE": "Out-of-bounds read/write and invalid free with `externref`s and GC safepoints in Wasmtime "
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "wasmtime",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 0.26.0, <= 0.29.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "bytecodealliance"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "HIGH",
+          "baseScore": 6.3,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-590: Free of Memory not on the Heap"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-787: Out-of-bounds Write"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-125: Out-of-bounds Read"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://crates.io/crates/wasmtime",
+            "refsource": "MISC",
+            "url": "https://crates.io/crates/wasmtime"
+          },
+          {
+            "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49"
+          },
+          {
+            "name": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
+            "refsource": "MISC",
+            "url": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c"
+          },
+          {
+            "name": "FEDORA-2021-68713440cb",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/"
+          },
+          {
+            "name": "FEDORA-2021-1805eacb48",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-4873-36h9-wv49",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=0.26.0 <0.30.0",
+          "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-12-10",
+          "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+          "fixed_versions": [
+            "0.30.0"
+          ],
+          "identifier": "CVE-2021-39218",
+          "identifiers": [
+            "CVE-2021-39218",
+            "GHSA-4873-36h9-wv49"
+          ],
+          "not_impacted": "All versions before 0.26.0, all versions starting from 0.30.0",
+          "package_slug": "conan/wasmtime",
+          "pubdate": "2021-09-17",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
+            "https://crates.io/crates/wasmtime",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
+            "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+          ],
+          "uuid": "b4a6a424-62a4-4ba5-a60f-7a3079a2a29c"
+        },
+        {
+          "affected_range": ">=v0.26.0 <v0.30.0",
+          "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-12-10",
+          "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+          "fixed_versions": [
+            "v0.30.0"
+          ],
+          "identifier": "CVE-2021-39218",
+          "identifiers": [
+            "CVE-2021-39218",
+            "GHSA-4873-36h9-wv49"
+          ],
+          "not_impacted": "",
+          "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
+          "pubdate": "2021-09-17",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
+            "https://crates.io/crates/wasmtime",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
+            "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+          ],
+          "uuid": "a5582e19-0b4d-4595-8571-5619345459fe",
+          "versions": [
+            {
+              "commit": {
+                "sha": "d2e9d6d593c0ed673de880956f4b4a7d6f4d734c",
+                "tags": [
+                  "v0.26.0"
+                ],
+                "timestamp": "20210405203420"
+              },
+              "number": "v0.26.0"
+            },
+            {
+              "commit": {
+                "sha": "e5704ca48f2ac43faaebaa4055c9f4cd01bac8c0",
+                "tags": [
+                  "v0.30.0"
+                ],
+                "timestamp": "20210917191246"
+              },
+              "number": "v0.30.0"
+            }
+          ]
+        },
+        {
+          "affected_range": "[0.26.0,0.30.0)",
+          "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-12-10",
+          "description": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`.",
+          "fixed_versions": [
+            "0.30.0"
+          ],
+          "identifier": "CVE-2021-39218",
+          "identifiers": [
+            "CVE-2021-39218",
+            "GHSA-4873-36h9-wv49"
+          ],
+          "not_impacted": "",
+          "package_slug": "nuget/Wasmtime",
+          "pubdate": "2021-09-17",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-39218",
+            "https://crates.io/crates/wasmtime",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
+            "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+          ],
+          "uuid": "3c1ec795-2d42-4143-8935-01aaac1753c4"
+        },
+        {
+          "affected_range": ">=0.26.0,<0.30.0",
+          "affected_versions": "All versions starting from 0.26.0 before 0.30.0",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-125",
+            "CWE-937"
+          ],
+          "date": "2021-12-10",
+          "description": "Wasmtime is an open source runtime for WebAssembly & WASI.We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare.",
+          "fixed_versions": [
+            "0.30.0"
+          ],
+          "identifier": "CVE-2021-39218",
+          "identifiers": [
+            "CVE-2021-39218",
+            "GHSA-4873-36h9-wv49"
+          ],
+          "not_impacted": "All versions before 0.26.0, all versions starting from 0.30.0",
+          "package_slug": "pypi/wasmtime",
+          "pubdate": "2021-09-17",
+          "solution": "Upgrade to version 0.30.0 or above.",
+          "title": "Out-of-bounds Read",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-39218"
+          ],
+          "uuid": "bf7239c6-d008-4068-bed2-056a44ccbec0"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:bytecodealliance:wasmtime:*:*:*:*:*:rust:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.30.0",
+                "versionStartIncluding": "0.26.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:34:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-39218"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Wasmtime is an open source runtime for WebAssembly & WASI. In Wasmtime from version 0.26.0 and before version 0.30.0 is affected by a memory unsoundness vulnerability. There was an invalid free and out-of-bounds read and write bug when running Wasm that uses `externref`s in Wasmtime. To trigger this bug, Wasmtime needs to be running Wasm that uses `externref`s, the host creates non-null `externrefs`, Wasmtime performs a garbage collection (GC), and there has to be a Wasm frame on the stack that is at a GC safepoint where there are no live references at this safepoint, and there is a safepoint with live references earlier in this frame's function. Under this scenario, Wasmtime would incorrectly use the GC stack map for the safepoint from earlier in the function instead of the empty safepoint. This would result in Wasmtime treating arbitrary stack slots as `externref`s that needed to be rooted for GC. At the *next* GC, it would be determined that nothing was referencing these bogus `externref`s (because nothing could ever reference them, because they are not really `externref`s) and then Wasmtime would deallocate them and run `<ExternRef as Drop>::drop` on them. This results in a free of memory that is not necessarily on the heap (and shouldn't be freed at this moment even if it was), as well as potential out-of-bounds reads and writes. Even though support for `externref`s (via the reference types proposal) is enabled by default, unless you are creating non-null `externref`s in your host code or explicitly triggering GCs, you cannot be affected by this bug. We have reason to believe that the effective impact of this bug is relatively small because usage of `externref` is currently quite rare. This bug has been patched and users should upgrade to Wasmtime version 0.30.0. If you cannot upgrade Wasmtime at this time, you can avoid this bug by disabling the reference types proposal by passing `false` to `wasmtime::Config::wasm_reference_types`."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-125"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-787"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-590"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://crates.io/crates/wasmtime",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Third Party Advisory"
+              ],
+              "url": "https://crates.io/crates/wasmtime"
+            },
+            {
+              "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-4873-36h9-wv49"
+            },
+            {
+              "name": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/bytecodealliance/wasmtime/commit/398a73f0dd862dbe703212ebae8e34036a18c11c"
+            },
+            {
+              "name": "FEDORA-2021-68713440cb",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z2Z33FTXFQ6EOINVEQIP4DFBG53G5XIY/"
+            },
+            {
+              "name": "FEDORA-2021-1805eacb48",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WAVBRYDDUIY2ZR3K3FO4BVYJKIMJ5TP7/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 3.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:L/AC:M/Au:N/C:N/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.4,
+          "impactScore": 4.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "LOW",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.0,
+          "impactScore": 5.2
+        }
+      },
+      "lastModifiedDate": "2021-12-10T20:06Z",
+      "publishedDate": "2021-09-17T21:15Z"
+    }
+  }
 }

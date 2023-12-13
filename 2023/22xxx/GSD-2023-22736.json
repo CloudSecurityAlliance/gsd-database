@@ -1,281 +1,298 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-22736",
-        "id": "GSD-2023-22736",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2023:0467"
-        ]
+  "GSD": {
+    "alias": "CVE-2023-22736",
+    "id": "GSD-2023-22736",
+    "references": [
+      "https://access.redhat.com/errata/RHSA-2023:0467"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-22736",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "argo-cd",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 2.5.0=rc1, < 2.5.8"
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "= 2.6.0-rc4, < 2.6.0-rc5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "argoproj"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Versions starting with 2.5.0-rc1 and above, prior to 2.5.8, and version 2.6.0-rc4, are vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces. Reconciled Application namespaces are specified as a comma-delimited list of glob patterns. When sharding is enabled on the Application controller, it does not enforce that list of patterns when reconciling Applications. For example, if Application namespaces are configured to be argocd-*, the Application controller may reconcile an Application installed in a namespace called other, even though it does not start with argocd-. Reconciliation of the out-of-bounds Application is only triggered when the Application is updated, so the attacker must be able to cause an update operation on the Application resource. This bug only applies to users who have explicitly enabled the \"apps-in-any-namespace\" feature by setting `application.namespaces` in the argocd-cmd-params-cm ConfigMap or otherwise setting the `--application-namespaces` flags on the Application controller and API server components. The apps-in-any-namespace feature is in beta as of this Security Advisory's publish date. The bug is also limited to Argo CD instances where sharding is enabled by increasing the `replicas` count for the Application controller. Finally, the AppProjects' `sourceNamespaces` field acts as a secondary check against this exploit. To cause reconciliation of an Application in an out-of-bounds namespace, an AppProject must be available which permits Applications in the out-of-bounds namespace. A patch for this vulnerability has been released in versions 2.5.8 and 2.6.0-rc5. As a workaround, running only one replica of the Application controller will prevent exploitation of this bug. Making sure all AppProjects' sourceNamespaces are restricted within the confines of the configured Application namespaces will also prevent exploitation of this bug."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.6,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-862",
-                                "lang": "eng",
-                                "value": "CWE-862: Missing Authorization"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
-                        "refsource": "MISC",
-                        "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-6p4m-hw2h-6gmw",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=v2.5.0-rc1 <v2.5.8 || =v2.6.0-rc4",
-                    "affected_versions": "All versions starting from 2.5.0-rc1 before 2.5.8, version 2.6.0-rc4",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-01-25",
-                    "description": "All Argo CD versions starting with 2.5.0-rc1 is vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces.",
-                    "fixed_versions": [
-                        "v2.5.8",
-                        "v2.6.0-rc5"
-                    ],
-                    "identifier": "GMS-2023-135",
-                    "identifiers": [
-                        "GHSA-6p4m-hw2h-6gmw",
-                        "GMS-2023-135",
-                        "CVE-2023-22736"
-                    ],
-                    "not_impacted": "All versions before 2.5.0-rc1, all versions starting from 2.5.8 before 2.6.0-rc4, all versions after 2.6.0-rc4",
-                    "package_slug": "go/github.com/argoproj/argo-cd",
-                    "pubdate": "2023-01-25",
-                    "solution": "Upgrade to versions 2.5.8, 2.6.0-rc5 or above. *Note*: 2.6.0-rc5 may be an unstable version. Use caution.",
-                    "title": "Controller reconciles apps outside configured namespaces when sharding is enabled",
-                    "urls": [
-                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
-                        "https://github.com/advisories/GHSA-6p4m-hw2h-6gmw"
-                    ],
-                    "uuid": "1499aa11-59f1-4d5a-a54d-4f657d5b8440",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "2bf51f401d6700f8e8b9565d9fc3f66dcf60a0b6",
-                                "tags": [
-                                    "v2.5.0-rc1"
-                                ],
-                                "timestamp": "20221005165955"
-                            },
-                            "number": "v2.5.0-rc1"
-                        },
-                        {
-                            "commit": {
-                                "sha": "590ea32083e83f651f83f71ae4a1678476fca88c",
-                                "tags": [
-                                    "v2.6.0-rc4"
-                                ],
-                                "timestamp": "20230118021005"
-                            },
-                            "number": "v2.6.0-rc4"
-                        },
-                        {
-                            "commit": {
-                                "sha": "bbe870ff5904dd1cebeba6c5dcb7129ce7c2b5e2",
-                                "tags": [
-                                    "stable",
-                                    "v2.5.8"
-                                ],
-                                "timestamp": "20230125160115"
-                            },
-                            "number": "v2.5.8"
-                        },
-                        {
-                            "commit": {
-                                "sha": "e790028e5cf99d65d6896830fc4ca757c91ce0d5",
-                                "tags": [
-                                    "v2.6.0-rc5"
-                                ],
-                                "timestamp": "20230125174545"
-                            },
-                            "number": "v2.6.0-rc5"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.5.8",
-                                "versionStartIncluding": "2.5.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-22736"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Versions starting with 2.5.0-rc1 and above, prior to 2.5.8, and version 2.6.0-rc4, are vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces. Reconciled Application namespaces are specified as a comma-delimited list of glob patterns. When sharding is enabled on the Application controller, it does not enforce that list of patterns when reconciling Applications. For example, if Application namespaces are configured to be argocd-*, the Application controller may reconcile an Application installed in a namespace called other, even though it does not start with argocd-. Reconciliation of the out-of-bounds Application is only triggered when the Application is updated, so the attacker must be able to cause an update operation on the Application resource. This bug only applies to users who have explicitly enabled the \"apps-in-any-namespace\" feature by setting `application.namespaces` in the argocd-cmd-params-cm ConfigMap or otherwise setting the `--application-namespaces` flags on the Application controller and API server components. The apps-in-any-namespace feature is in beta as of this Security Advisory's publish date. The bug is also limited to Argo CD instances where sharding is enabled by increasing the `replicas` count for the Application controller. Finally, the AppProjects' `sourceNamespaces` field acts as a secondary check against this exploit. To cause reconciliation of an Application in an out-of-bounds namespace, an AppProject must be available which permits Applications in the out-of-bounds namespace. A patch for this vulnerability has been released in versions 2.5.8 and 2.6.0-rc5. As a workaround, running only one replica of the Application controller will prevent exploitation of this bug. Making sure all AppProjects' sourceNamespaces are restricted within the confines of the configured Application namespaces will also prevent exploitation of this bug."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-862"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 6.0
-                }
-            },
-            "lastModifiedDate": "2023-02-07T01:15Z",
-            "publishedDate": "2023-01-26T21:18Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-22736"
+      ],
+      "details": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Versions starting with 2.5.0-rc1 and above, prior to 2.5.8, and version 2.6.0-rc4, are vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces. Reconciled Application namespaces are specified as a comma-delimited list of glob patterns. When sharding is enabled on the Application controller, it does not enforce that list of patterns when reconciling Applications. For example, if Application namespaces are configured to be argocd-*, the Application controller may reconcile an Application installed in a namespace called other, even though it does not start with argocd-. Reconciliation of the out-of-bounds Application is only triggered when the Application is updated, so the attacker must be able to cause an update operation on the Application resource. This bug only applies to users who have explicitly enabled the \"apps-in-any-namespace\" feature by setting `application.namespaces` in the argocd-cmd-params-cm ConfigMap or otherwise setting the `--application-namespaces` flags on the Application controller and API server components. The apps-in-any-namespace feature is in beta as of this Security Advisory's publish date. The bug is also limited to Argo CD instances where sharding is enabled by increasing the `replicas` count for the Application controller. Finally, the AppProjects' `sourceNamespaces` field acts as a secondary check against this exploit. To cause reconciliation of an Application in an out-of-bounds namespace, an AppProject must be available which permits Applications in the out-of-bounds namespace. A patch for this vulnerability has been released in versions 2.5.8 and 2.6.0-rc5. As a workaround, running only one replica of the Application controller will prevent exploitation of this bug. Making sure all AppProjects' sourceNamespaces are restricted within the confines of the configured Application namespaces will also prevent exploitation of this bug.",
+      "id": "GSD-2023-22736",
+      "modified": "2023-12-13T01:20:42.898556Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-22736",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "argo-cd",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.5.0=rc1, < 2.5.8"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "= 2.6.0-rc4, < 2.6.0-rc5"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "argoproj"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Versions starting with 2.5.0-rc1 and above, prior to 2.5.8, and version 2.6.0-rc4, are vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces. Reconciled Application namespaces are specified as a comma-delimited list of glob patterns. When sharding is enabled on the Application controller, it does not enforce that list of patterns when reconciling Applications. For example, if Application namespaces are configured to be argocd-*, the Application controller may reconcile an Application installed in a namespace called other, even though it does not start with argocd-. Reconciliation of the out-of-bounds Application is only triggered when the Application is updated, so the attacker must be able to cause an update operation on the Application resource. This bug only applies to users who have explicitly enabled the \"apps-in-any-namespace\" feature by setting `application.namespaces` in the argocd-cmd-params-cm ConfigMap or otherwise setting the `--application-namespaces` flags on the Application controller and API server components. The apps-in-any-namespace feature is in beta as of this Security Advisory's publish date. The bug is also limited to Argo CD instances where sharding is enabled by increasing the `replicas` count for the Application controller. Finally, the AppProjects' `sourceNamespaces` field acts as a secondary check against this exploit. To cause reconciliation of an Application in an out-of-bounds namespace, an AppProject must be available which permits Applications in the out-of-bounds namespace. A patch for this vulnerability has been released in versions 2.5.8 and 2.6.0-rc5. As a workaround, running only one replica of the Application controller will prevent exploitation of this bug. Making sure all AppProjects' sourceNamespaces are restricted within the confines of the configured Application namespaces will also prevent exploitation of this bug."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.6,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-862",
+                "lang": "eng",
+                "value": "CWE-862: Missing Authorization"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
+            "refsource": "MISC",
+            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-6p4m-hw2h-6gmw",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=v2.5.0-rc1 <v2.5.8 || =v2.6.0-rc4",
+          "affected_versions": "All versions starting from 2.5.0-rc1 before 2.5.8, version 2.6.0-rc4",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-01-25",
+          "description": "All Argo CD versions starting with 2.5.0-rc1 is vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces.",
+          "fixed_versions": [
+            "v2.5.8",
+            "v2.6.0-rc5"
+          ],
+          "identifier": "GMS-2023-135",
+          "identifiers": [
+            "GHSA-6p4m-hw2h-6gmw",
+            "GMS-2023-135",
+            "CVE-2023-22736"
+          ],
+          "not_impacted": "All versions before 2.5.0-rc1, all versions starting from 2.5.8 before 2.6.0-rc4, all versions after 2.6.0-rc4",
+          "package_slug": "go/github.com/argoproj/argo-cd",
+          "pubdate": "2023-01-25",
+          "solution": "Upgrade to versions 2.5.8, 2.6.0-rc5 or above. *Note*: 2.6.0-rc5 may be an unstable version. Use caution.",
+          "title": "Controller reconciles apps outside configured namespaces when sharding is enabled",
+          "urls": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
+            "https://github.com/advisories/GHSA-6p4m-hw2h-6gmw"
+          ],
+          "uuid": "1499aa11-59f1-4d5a-a54d-4f657d5b8440",
+          "versions": [
+            {
+              "commit": {
+                "sha": "2bf51f401d6700f8e8b9565d9fc3f66dcf60a0b6",
+                "tags": [
+                  "v2.5.0-rc1"
+                ],
+                "timestamp": "20221005165955"
+              },
+              "number": "v2.5.0-rc1"
+            },
+            {
+              "commit": {
+                "sha": "590ea32083e83f651f83f71ae4a1678476fca88c",
+                "tags": [
+                  "v2.6.0-rc4"
+                ],
+                "timestamp": "20230118021005"
+              },
+              "number": "v2.6.0-rc4"
+            },
+            {
+              "commit": {
+                "sha": "bbe870ff5904dd1cebeba6c5dcb7129ce7c2b5e2",
+                "tags": [
+                  "stable",
+                  "v2.5.8"
+                ],
+                "timestamp": "20230125160115"
+              },
+              "number": "v2.5.8"
+            },
+            {
+              "commit": {
+                "sha": "e790028e5cf99d65d6896830fc4ca757c91ce0d5",
+                "tags": [
+                  "v2.6.0-rc5"
+                ],
+                "timestamp": "20230125174545"
+              },
+              "number": "v2.6.0-rc5"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.6.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.5.8",
+                "versionStartIncluding": "2.5.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-22736"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Versions starting with 2.5.0-rc1 and above, prior to 2.5.8, and version 2.6.0-rc4, are vulnerable to an authorization bypass bug which allows a malicious Argo CD user to deploy Applications outside the configured allowed namespaces. Reconciled Application namespaces are specified as a comma-delimited list of glob patterns. When sharding is enabled on the Application controller, it does not enforce that list of patterns when reconciling Applications. For example, if Application namespaces are configured to be argocd-*, the Application controller may reconcile an Application installed in a namespace called other, even though it does not start with argocd-. Reconciliation of the out-of-bounds Application is only triggered when the Application is updated, so the attacker must be able to cause an update operation on the Application resource. This bug only applies to users who have explicitly enabled the \"apps-in-any-namespace\" feature by setting `application.namespaces` in the argocd-cmd-params-cm ConfigMap or otherwise setting the `--application-namespaces` flags on the Application controller and API server components. The apps-in-any-namespace feature is in beta as of this Security Advisory's publish date. The bug is also limited to Argo CD instances where sharding is enabled by increasing the `replicas` count for the Application controller. Finally, the AppProjects' `sourceNamespaces` field acts as a secondary check against this exploit. To cause reconciliation of an Application in an out-of-bounds namespace, an AppProject must be available which permits Applications in the out-of-bounds namespace. A patch for this vulnerability has been released in versions 2.5.8 and 2.6.0-rc5. As a workaround, running only one replica of the Application controller will prevent exploitation of this bug. Making sure all AppProjects' sourceNamespaces are restricted within the confines of the configured Application namespaces will also prevent exploitation of this bug."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-862"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6p4m-hw2h-6gmw"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 6.0
+        }
+      },
+      "lastModifiedDate": "2023-02-07T01:15Z",
+      "publishedDate": "2023-01-26T21:18Z"
+    }
+  }
 }

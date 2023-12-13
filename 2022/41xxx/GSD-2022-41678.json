@@ -1,236 +1,253 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-41678",
-        "id": "GSD-2022-41678"
+  "GSD": {
+    "alias": "CVE-2022-41678",
+    "id": "GSD-2022-41678"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security@apache.org",
-                "ID": "CVE-2022-41678",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Apache ActiveMQ",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "not down converted",
-                                                    "x_cve_json_5_version_data": {
-                                                        "defaultStatus": "unaffected",
-                                                        "versions": [
-                                                            {
-                                                                "lessThan": "5.16.6",
-                                                                "status": "affected",
-                                                                "version": "0",
-                                                                "versionType": "semver"
-                                                            },
-                                                            {
-                                                                "lessThan": "5.17.4",
-                                                                "status": "affected",
-                                                                "version": "5.17.0",
-                                                                "versionType": "semver"
-                                                            },
-                                                            {
-                                                                "status": "unaffected",
-                                                                "version": "5.18.0"
-                                                            },
-                                                            {
-                                                                "status": "unaffected",
-                                                                "version": "6.0.0"
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Apache Software Foundation"
-                        }
-                    ]
-                }
-            },
-            "credits": [
-                {
-                    "lang": "en",
-                    "value": "wangxin@threatbook.cn"
-                },
-                {
-                    "lang": "en",
-                    "value": "wangzhendong@threatbook.cn"
-                },
-                {
-                    "lang": "en",
-                    "value": "honglonglong@threatbook.cn"
-                }
-            ],
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
-                    }
-                ]
-            },
-            "generator": {
-                "engine": "Vulnogram 0.1.0-dev"
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-502",
-                                "lang": "eng",
-                                "value": "CWE-502 Deserialization of Untrusted Data"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt",
-                        "refsource": "MISC",
-                        "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
-                    },
-                    {
-                        "name": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl",
-                        "refsource": "MISC",
-                        "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
-                    },
-                    {
-                        "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
-                        "refsource": "MISC",
-                        "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
-                    }
-                ]
-            },
-            "source": {
-                "defect": [
-                    "AMQ-9201"
-                ],
-                "discovery": "UNKNOWN"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.17.4",
-                                "versionStartIncluding": "5.17.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.16.6",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security@apache.org",
-                    "ID": "CVE-2022-41678"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-502"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt",
-                            "refsource": "",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
-                        },
-                        {
-                            "name": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl",
-                            "refsource": "",
-                            "tags": [
-                                "Mailing List",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
-                        },
-                        {
-                            "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
-                            "refsource": "",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-12-04T19:08Z",
-            "publishedDate": "2023-11-28T16:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-41678"
+      ],
+      "details": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n",
+      "id": "GSD-2022-41678",
+      "modified": "2023-12-13T01:19:32.482486Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security@apache.org",
+        "ID": "CVE-2022-41678",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Apache ActiveMQ",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected",
+                            "versions": [
+                              {
+                                "lessThan": "5.16.6",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "semver"
+                              },
+                              {
+                                "lessThan": "5.17.4",
+                                "status": "affected",
+                                "version": "5.17.0",
+                                "versionType": "semver"
+                              },
+                              {
+                                "status": "unaffected",
+                                "version": "5.18.0"
+                              },
+                              {
+                                "status": "unaffected",
+                                "version": "6.0.0"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Apache Software Foundation"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "wangxin@threatbook.cn"
+        },
+        {
+          "lang": "en",
+          "value": "wangzhendong@threatbook.cn"
+        },
+        {
+          "lang": "en",
+          "value": "honglonglong@threatbook.cn"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-502",
+                "lang": "eng",
+                "value": "CWE-502 Deserialization of Untrusted Data"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt",
+            "refsource": "MISC",
+            "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
+          },
+          {
+            "name": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl",
+            "refsource": "MISC",
+            "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
+          },
+          {
+            "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
+            "refsource": "MISC",
+            "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
+          }
+        ]
+      },
+      "source": {
+        "defect": [
+          "AMQ-9201"
+        ],
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.17.4",
+                "versionStartIncluding": "5.17.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.16.6",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security@apache.org",
+          "ID": "CVE-2022-41678"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-502"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt",
+              "refsource": "",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
+            },
+            {
+              "name": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl",
+              "refsource": "",
+              "tags": [
+                "Mailing List",
+                "Vendor Advisory"
+              ],
+              "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
+            },
+            {
+              "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
+              "refsource": "",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-12-04T19:08Z",
+      "publishedDate": "2023-11-28T16:15Z"
+    }
+  }
 }

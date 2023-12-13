@@ -1,325 +1,331 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-32224",
-        "description": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE.",
-        "id": "GSD-2022-32224",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-32224.html",
-            "https://access.redhat.com/errata/RHSA-2023:0261",
-            "https://access.redhat.com/errata/RHSA-2023:1151"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-32224",
+    "description": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE.",
+    "id": "GSD-2022-32224",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-32224.html",
+      "https://access.redhat.com/errata/RHSA-2023:0261",
+      "https://access.redhat.com/errata/RHSA-2023:1151"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "activerecord",
-                        "purl": "pkg:gem/activerecord"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-32224",
-                "GHSA-3hhc-qp5v-9p2j"
-            ],
-            "details": "There is a possible escalation to RCE when using YAML serialized columns in\nActive Record. This vulnerability has been assigned the CVE identifier\nCVE-2022-32224.\n\nVersions Affected:  All.\nNot affected:       None\nFixed Versions:     7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1\n\nImpact\n------\nWhen serialized columns that use YAML (the default) are deserialized, Rails\nuses `YAML.unsafe_load` to convert the YAML data in to Ruby objects.  If an\nattacker can manipulate data in the database (via means like SQL injection),\nthen it may be possible for the attacker to escalate to an RCE.\n\nImpacted Active Record models will look something like this:\n\n```ruby\nclass User < ApplicationRecord\n  serialize :options       # Vulnerable: Uses YAML for serialization\n  serialize :values, Array # Vulnerable: Uses YAML for serialization\n  serialize :values, JSON  # Not vulnerable\nend\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nThe released versions change the default YAML deserializer to use\n`YAML.safe_load`, which prevents deserialization of possibly dangerous\nobjects.  This may introduce backwards compatibility issues with existing\ndata.\n\nIn order to cope with that situation, the released version also contains two\nnew Active Record configuration options.  The configuration options are as\nfollows:\n\n* `config.active_record.use_yaml_unsafe_load`\n\nWhen set to true, this configuration option tells Rails to use the old\n\"unsafe\" YAML loading strategy, maintaining the existing behavior but leaving\nthe possible escalation vulnerability in place.  Setting this option to true\nis *not* recommended, but can aid in upgrading.\n\n* `config.active_record.yaml_column_permitted_classes`\n\nThe \"safe YAML\" loading method does not allow all classes to be deserialized\nby default.  This option allows you to specify classes deemed \"safe\" in your\napplication.  For example, if your application uses Symbol and Time in\nserialized data, you can add Symbol and Time to the allowed list as follows:\n\n```\nconfig.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]\n```\n\nWorkarounds\n-----------\nThere are no feasible workarounds for this issue, but other coders (such as\nJSON) are not impacted.\n",
-            "id": "GSD-2022-32224",
-            "modified": "2022-07-12T00:00:00.000Z",
-            "published": "2022-07-12T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 9.8,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Possible RCE escalation bug with Serialized Columns in Active Record"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "activerecord",
+            "purl": "pkg:gem/activerecord"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2022-32224",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Deserialization of Untrusted Data (CWE-502)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
-                        "refsource": "MISC",
-                        "url": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
-                    },
-                    {
-                        "name": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
-                    }
-                ]
-            }
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-32224",
-            "cvss_v3": 9.8,
-            "date": "2022-07-12",
-            "description": "There is a possible escalation to RCE when using YAML serialized columns in\nActive Record. This vulnerability has been assigned the CVE identifier\nCVE-2022-32224.\n\nVersions Affected:  All.\nNot affected:       None\nFixed Versions:     7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1\n\nImpact\n------\nWhen serialized columns that use YAML (the default) are deserialized, Rails\nuses `YAML.unsafe_load` to convert the YAML data in to Ruby objects.  If an\nattacker can manipulate data in the database (via means like SQL injection),\nthen it may be possible for the attacker to escalate to an RCE.\n\nImpacted Active Record models will look something like this:\n\n```ruby\nclass User < ApplicationRecord\n  serialize :options       # Vulnerable: Uses YAML for serialization\n  serialize :values, Array # Vulnerable: Uses YAML for serialization\n  serialize :values, JSON  # Not vulnerable\nend\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nThe released versions change the default YAML deserializer to use\n`YAML.safe_load`, which prevents deserialization of possibly dangerous\nobjects.  This may introduce backwards compatibility issues with existing\ndata.\n\nIn order to cope with that situation, the released version also contains two\nnew Active Record configuration options.  The configuration options are as\nfollows:\n\n* `config.active_record.use_yaml_unsafe_load`\n\nWhen set to true, this configuration option tells Rails to use the old\n\"unsafe\" YAML loading strategy, maintaining the existing behavior but leaving\nthe possible escalation vulnerability in place.  Setting this option to true\nis *not* recommended, but can aid in upgrading.\n\n* `config.active_record.yaml_column_permitted_classes`\n\nThe \"safe YAML\" loading method does not allow all classes to be deserialized\nby default.  This option allows you to specify classes deemed \"safe\" in your\napplication.  For example, if your application uses Symbol and Time in\nserialized data, you can add Symbol and Time to the allowed list as follows:\n\n```\nconfig.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]\n```\n\nWorkarounds\n-----------\nThere are no feasible workarounds for this issue, but other coders (such as\nJSON) are not impacted.\n",
-            "framework": "rails",
-            "gem": "activerecord",
-            "ghsa": "3hhc-qp5v-9p2j",
-            "patched_versions": [
-                "~> 5.2.8, >= 5.2.8.1",
-                "~> 6.0.5, >= 6.0.5.1",
-                "~> 6.1.6, >= 6.1.6.1",
-                ">= 7.0.3.1"
-            ],
-            "title": "Possible RCE escalation bug with Serialized Columns in Active Record",
-            "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<5.2.8.1||>=6.0.0 <6.0.5.1||>=6.1.0 <6.1.6.1||>=7.0.0 <7.0.3.1",
-                    "affected_versions": "All versions before 5.2.8.1, all versions starting from 6.0.0 before 6.0.5.1, all versions starting from 6.1.0 before 6.1.6.1, all versions starting from 7.0.0 before 7.0.3.1",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2022-12-08",
-                    "description": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE.",
-                    "fixed_versions": [
-                        "5.2.8.1",
-                        "6.0.5.1",
-                        "6.1.6.1",
-                        "7.0.3.1"
-                    ],
-                    "identifier": "CVE-2022-32224",
-                    "identifiers": [
-                        "CVE-2022-32224",
-                        "GHSA-3hhc-qp5v-9p2j",
-                        "GMS-2022-3029"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.8.1 before 6.0.0, all versions starting from 6.0.5.1 before 6.1.0, all versions starting from 6.1.6.1 before 7.0.0, all versions starting from 7.0.3.1",
-                    "package_slug": "gem/activerecord",
-                    "pubdate": "2022-12-05",
-                    "solution": "Upgrade to versions 5.2.8.1, 6.0.5.1, 6.1.6.1, 7.0.3.1 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-32224",
-                        "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
-                        "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
-                        "https://github.com/rails/rails/commit/611990f1a6c137c2d56b1ba06b27e5d2434dcd6a",
-                        "https://discuss.rubyonrails.org/t/cve-2022-32224-possible-rce-escalation-bug-with-serialized-columns-in-active-record/81017",
-                        "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/activerecord/CVE-2022-32224.yml"
-                    ],
-                    "uuid": "b60c2d6b-9083-4a97-a1b2-f7dc79bff74c"
-                },
-                {
-                    "affected_range": "<0",
-                    "affected_versions": "All versions up to 5.2.8, all versions starting from 6.0.0 up to 6.0.5, all versions starting from 6.1.0 up to 6.1.6, all versions starting from 7.0.0 up to 7.0.3",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-13",
-                    "description": "When serialized columns that use YAML (the default) are deserialized, Rails uses YAML.unsafe_load to convert the YAML data in to Ruby objects. If an attacker can manipulate data in the database (via means like SQL injection), then it may be possible for the attacker to escalate to an RCE.\n\nThere are no feasible workarounds for this issue, but other coders (such as JSON) are not impacted.",
-                    "fixed_versions": [
-                        "6.1.6.1",
-                        "7.0.3.1",
-                        "5.2.8.1",
-                        "6.0.5.1"
-                    ],
-                    "identifier": "GMS-2022-3029",
-                    "identifiers": [
-                        "GHSA-3hhc-qp5v-9p2j",
-                        "GMS-2022-3029",
-                        "CVE-2022-32224"
-                    ],
-                    "not_impacted": "All versions after 5.2.8 before 6.0.0, all versions after 6.0.5 before 6.1.0, all versions after 6.1.6 before 7.0.0, all versions after 7.0.3",
-                    "package_slug": "gem/activerecord",
-                    "pubdate": "2022-07-12",
-                    "solution": "Upgrade to versions 6.1.6.1, 7.0.3.1, 5.2.8.1, 6.0.5.1 or above.",
-                    "title": "Duplicate of ./gem/activerecord/CVE-2022-32224.yml",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-32224",
-                        "https://github.com/rails/rails/commit/611990f1a6c137c2d56b1ba06b27e5d2434dcd6a",
-                        "https://discuss.rubyonrails.org/t/cve-2022-32224-possible-rce-escalation-bug-with-serialized-columns-in-active-record/81017",
-                        "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/activerecord/CVE-2022-32224.yml",
-                        "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
-                        "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
-                    ],
-                    "uuid": "91508530-bb84-43d3-941e-23b3a395ec75"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.8.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.5.1",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.1.6.1",
-                                "versionStartIncluding": "6.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "7.0.3.1",
-                                "versionStartIncluding": "7.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2022-32224"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-502"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
-                        },
-                        {
-                            "name": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-12-08T13:20Z",
-            "publishedDate": "2022-12-05T22:15Z"
+      ],
+      "aliases": [
+        "CVE-2022-32224",
+        "GHSA-3hhc-qp5v-9p2j"
+      ],
+      "details": "There is a possible escalation to RCE when using YAML serialized columns in\nActive Record. This vulnerability has been assigned the CVE identifier\nCVE-2022-32224.\n\nVersions Affected:  All.\nNot affected:       None\nFixed Versions:     7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1\n\nImpact\n------\nWhen serialized columns that use YAML (the default) are deserialized, Rails\nuses `YAML.unsafe_load` to convert the YAML data in to Ruby objects.  If an\nattacker can manipulate data in the database (via means like SQL injection),\nthen it may be possible for the attacker to escalate to an RCE.\n\nImpacted Active Record models will look something like this:\n\n```ruby\nclass User < ApplicationRecord\n  serialize :options       # Vulnerable: Uses YAML for serialization\n  serialize :values, Array # Vulnerable: Uses YAML for serialization\n  serialize :values, JSON  # Not vulnerable\nend\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nThe released versions change the default YAML deserializer to use\n`YAML.safe_load`, which prevents deserialization of possibly dangerous\nobjects.  This may introduce backwards compatibility issues with existing\ndata.\n\nIn order to cope with that situation, the released version also contains two\nnew Active Record configuration options.  The configuration options are as\nfollows:\n\n* `config.active_record.use_yaml_unsafe_load`\n\nWhen set to true, this configuration option tells Rails to use the old\n\"unsafe\" YAML loading strategy, maintaining the existing behavior but leaving\nthe possible escalation vulnerability in place.  Setting this option to true\nis *not* recommended, but can aid in upgrading.\n\n* `config.active_record.yaml_column_permitted_classes`\n\nThe \"safe YAML\" loading method does not allow all classes to be deserialized\nby default.  This option allows you to specify classes deemed \"safe\" in your\napplication.  For example, if your application uses Symbol and Time in\nserialized data, you can add Symbol and Time to the allowed list as follows:\n\n```\nconfig.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]\n```\n\nWorkarounds\n-----------\nThere are no feasible workarounds for this issue, but other coders (such as\nJSON) are not impacted.\n",
+      "id": "GSD-2022-32224",
+      "modified": "2022-07-12T00:00:00.000Z",
+      "published": "2022-07-12T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible RCE escalation bug with Serialized Columns in Active Record"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2022-32224",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Deserialization of Untrusted Data (CWE-502)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
+            "refsource": "MISC",
+            "url": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
+          },
+          {
+            "name": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-32224",
+      "cvss_v3": 9.8,
+      "date": "2022-07-12",
+      "description": "There is a possible escalation to RCE when using YAML serialized columns in\nActive Record. This vulnerability has been assigned the CVE identifier\nCVE-2022-32224.\n\nVersions Affected:  All.\nNot affected:       None\nFixed Versions:     7.0.3.1, 6.1.6.1, 6.0.5.1, 5.2.8.1\n\nImpact\n------\nWhen serialized columns that use YAML (the default) are deserialized, Rails\nuses `YAML.unsafe_load` to convert the YAML data in to Ruby objects.  If an\nattacker can manipulate data in the database (via means like SQL injection),\nthen it may be possible for the attacker to escalate to an RCE.\n\nImpacted Active Record models will look something like this:\n\n```ruby\nclass User < ApplicationRecord\n  serialize :options       # Vulnerable: Uses YAML for serialization\n  serialize :values, Array # Vulnerable: Uses YAML for serialization\n  serialize :values, JSON  # Not vulnerable\nend\n```\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nThe released versions change the default YAML deserializer to use\n`YAML.safe_load`, which prevents deserialization of possibly dangerous\nobjects.  This may introduce backwards compatibility issues with existing\ndata.\n\nIn order to cope with that situation, the released version also contains two\nnew Active Record configuration options.  The configuration options are as\nfollows:\n\n* `config.active_record.use_yaml_unsafe_load`\n\nWhen set to true, this configuration option tells Rails to use the old\n\"unsafe\" YAML loading strategy, maintaining the existing behavior but leaving\nthe possible escalation vulnerability in place.  Setting this option to true\nis *not* recommended, but can aid in upgrading.\n\n* `config.active_record.yaml_column_permitted_classes`\n\nThe \"safe YAML\" loading method does not allow all classes to be deserialized\nby default.  This option allows you to specify classes deemed \"safe\" in your\napplication.  For example, if your application uses Symbol and Time in\nserialized data, you can add Symbol and Time to the allowed list as follows:\n\n```\nconfig.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]\n```\n\nWorkarounds\n-----------\nThere are no feasible workarounds for this issue, but other coders (such as\nJSON) are not impacted.\n",
+      "framework": "rails",
+      "gem": "activerecord",
+      "ghsa": "3hhc-qp5v-9p2j",
+      "patched_versions": [
+        "~> 5.2.8, >= 5.2.8.1",
+        "~> 6.0.5, >= 6.0.5.1",
+        "~> 6.1.6, >= 6.1.6.1",
+        ">= 7.0.3.1"
+      ],
+      "title": "Possible RCE escalation bug with Serialized Columns in Active Record",
+      "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<5.2.8.1||>=6.0.0 <6.0.5.1||>=6.1.0 <6.1.6.1||>=7.0.0 <7.0.3.1",
+          "affected_versions": "All versions before 5.2.8.1, all versions starting from 6.0.0 before 6.0.5.1, all versions starting from 6.1.0 before 6.1.6.1, all versions starting from 7.0.0 before 7.0.3.1",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-502",
+            "CWE-937"
+          ],
+          "date": "2022-12-08",
+          "description": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE.",
+          "fixed_versions": [
+            "5.2.8.1",
+            "6.0.5.1",
+            "6.1.6.1",
+            "7.0.3.1"
+          ],
+          "identifier": "CVE-2022-32224",
+          "identifiers": [
+            "CVE-2022-32224",
+            "GHSA-3hhc-qp5v-9p2j",
+            "GMS-2022-3029"
+          ],
+          "not_impacted": "All versions starting from 5.2.8.1 before 6.0.0, all versions starting from 6.0.5.1 before 6.1.0, all versions starting from 6.1.6.1 before 7.0.0, all versions starting from 7.0.3.1",
+          "package_slug": "gem/activerecord",
+          "pubdate": "2022-12-05",
+          "solution": "Upgrade to versions 5.2.8.1, 6.0.5.1, 6.1.6.1, 7.0.3.1 or above.",
+          "title": "Deserialization of Untrusted Data",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-32224",
+            "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
+            "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
+            "https://github.com/rails/rails/commit/611990f1a6c137c2d56b1ba06b27e5d2434dcd6a",
+            "https://discuss.rubyonrails.org/t/cve-2022-32224-possible-rce-escalation-bug-with-serialized-columns-in-active-record/81017",
+            "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/activerecord/CVE-2022-32224.yml"
+          ],
+          "uuid": "b60c2d6b-9083-4a97-a1b2-f7dc79bff74c"
+        },
+        {
+          "affected_range": "<0",
+          "affected_versions": "All versions up to 5.2.8, all versions starting from 6.0.0 up to 6.0.5, all versions starting from 6.1.0 up to 6.1.6, all versions starting from 7.0.0 up to 7.0.3",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-07-13",
+          "description": "When serialized columns that use YAML (the default) are deserialized, Rails uses YAML.unsafe_load to convert the YAML data in to Ruby objects. If an attacker can manipulate data in the database (via means like SQL injection), then it may be possible for the attacker to escalate to an RCE.\n\nThere are no feasible workarounds for this issue, but other coders (such as JSON) are not impacted.",
+          "fixed_versions": [
+            "6.1.6.1",
+            "7.0.3.1",
+            "5.2.8.1",
+            "6.0.5.1"
+          ],
+          "identifier": "GMS-2022-3029",
+          "identifiers": [
+            "GHSA-3hhc-qp5v-9p2j",
+            "GMS-2022-3029",
+            "CVE-2022-32224"
+          ],
+          "not_impacted": "All versions after 5.2.8 before 6.0.0, all versions after 6.0.5 before 6.1.0, all versions after 6.1.6 before 7.0.0, all versions after 7.0.3",
+          "package_slug": "gem/activerecord",
+          "pubdate": "2022-07-12",
+          "solution": "Upgrade to versions 6.1.6.1, 7.0.3.1, 5.2.8.1, 6.0.5.1 or above.",
+          "title": "Duplicate of ./gem/activerecord/CVE-2022-32224.yml",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-32224",
+            "https://github.com/rails/rails/commit/611990f1a6c137c2d56b1ba06b27e5d2434dcd6a",
+            "https://discuss.rubyonrails.org/t/cve-2022-32224-possible-rce-escalation-bug-with-serialized-columns-in-active-record/81017",
+            "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/activerecord/CVE-2022-32224.yml",
+            "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
+            "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
+          ],
+          "uuid": "91508530-bb84-43d3-941e-23b3a395ec75"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.8.1",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.5.1",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.1.6.1",
+                "versionStartIncluding": "6.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:activerecord_project:activerecord:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "7.0.3.1",
+                "versionStartIncluding": "7.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2022-32224"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "A possible escalation to RCE vulnerability exists when using YAML serialized columns in Active Record < 7.0.3.1, <6.1.6.1, <6.0.5.1 and <5.2.8.1 which could allow an attacker, that can manipulate data in the database (via means like SQL injection), the ability to escalate to an RCE."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-502"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/g/rubyonrails-security/c/MmFO3LYQE8U"
+            },
+            {
+              "name": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/advisories/GHSA-3hhc-qp5v-9p2j"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-12-08T13:20Z",
+      "publishedDate": "2022-12-05T22:15Z"
+    }
+  }
 }

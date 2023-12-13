@@ -1,449 +1,455 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-23633",
-        "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
-        "id": "GSD-2022-23633",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-23633.html",
-            "https://access.redhat.com/errata/RHSA-2022:5498",
-            "https://www.debian.org/security/2023/dsa-5372"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-23633",
+    "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
+    "id": "GSD-2022-23633",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-23633.html",
+      "https://access.redhat.com/errata/RHSA-2022:5498",
+      "https://www.debian.org/security/2023/dsa-5372"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionpack",
-                        "purl": "pkg:gem/actionpack"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-23633",
-                "GHSA-wh98-p28r-vrc9"
-            ],
-            "details": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
-            "id": "GSD-2022-23633",
-            "modified": "2022-02-11T00:00:00.000Z",
-            "published": "2022-02-11T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 7.4,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Possible exposure of information vulnerability in Action Pack"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionpack",
+            "purl": "pkg:gem/actionpack"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-23633",
-                "STATE": "PUBLIC",
-                "TITLE": "Exposure of sensitive information in Action Pack"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 7.0.0.0, < 7.0.2.1"
-                                                },
-                                                {
-                                                    "version_value": ">= 6.1.0.0, < 6.1.4.5"
-                                                },
-                                                {
-                                                    "version_value": ">= 6.0.0.0, < 6.0.4.5"
-                                                },
-                                                {
-                                                    "version_value": ">= 5.0.0, < 5.2.6.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "rails"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 7.4,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9"
-                    },
-                    {
-                        "name": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
-                        "refsource": "MISC",
-                        "url": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da"
-                    },
-                    {
-                        "name": "[oss-security] 20220211 [CVE-2022-23633] Possible exposure of information vulnerability in Action Pack",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2022/02/11/5"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20220903 [SECURITY] [DLA 3093-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00002.html"
-                    },
-                    {
-                        "name": "DSA-5372",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2023/dsa-5372"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-wh98-p28r-vrc9",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2022-23633",
+        "GHSA-wh98-p28r-vrc9"
+      ],
+      "details": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
+      "id": "GSD-2022-23633",
+      "modified": "2022-02-11T00:00:00.000Z",
+      "published": "2022-02-11T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ"
         },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-23633",
-            "cvss_v3": 7.4,
-            "date": "2022-02-11",
-            "description": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
-            "framework": "rails",
-            "gem": "actionpack",
-            "ghsa": "wh98-p28r-vrc9",
-            "patched_versions": [
-                "~> 5.2.6, >= 5.2.6.2",
-                "~> 6.0.4, >= 6.0.4.6",
-                "~> 6.1.4, >= 6.1.4.6",
-                ">= 7.0.2.2"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5",
-                    "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
-                ]
-            },
-            "title": "Possible exposure of information vulnerability in Action Pack",
-            "unaffected_versions": [
-                "< 5.0.0"
-            ],
-            "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ"
+        {
+          "type": "WEB",
+          "url": "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=5.0.0.0 <=5.2.6.1||>=6.0.0.0 <=6.0.4.5||>=6.1.0.0 <=6.1.4.5||>=7.0.0.0 <=7.0.2.1",
-                    "affected_versions": "All versions starting from 5.0.0.0 up to 5.2.6.1, all versions starting from 6.0.0.0 up to 6.0.4.5, all versions starting from 6.1.0.0 up to 6.1.4.5, all versions starting from 7.0.0.0 up to 7.0.2.1",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-200",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-11",
-                    "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
-                    "fixed_versions": [
-                        "5.2.6.2",
-                        "6.0.4.6",
-                        "6.1.4.6",
-                        "7.0.2.2"
-                    ],
-                    "identifier": "CVE-2022-23633",
-                    "identifiers": [
-                        "GHSA-wh98-p28r-vrc9",
-                        "CVE-2022-23633"
-                    ],
-                    "not_impacted": "All versions before 5.0.0.0, all versions after 5.2.6.1 before 6.0.0.0, all versions after 6.0.4.5 before 6.1.0.0, all versions after 6.1.4.5 before 7.0.0.0, all versions after 7.0.2.1",
-                    "package_slug": "gem/actionpack",
-                    "pubdate": "2022-02-11",
-                    "solution": "Upgrade to versions 5.2.6.2, 6.0.4.6, 6.1.4.6, 7.0.2.2 or above.",
-                    "title": "Exposure of Sensitive Information to an Unauthorized Actor",
-                    "urls": [
-                        "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
-                        "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
-                        "https://discuss.rubyonrails.org/t/cve-2022-23633-possible-exposure-of-information-vulnerability-in-action-pack/80016",
-                        "https://rubyonrails.org/2022/2/11/Rails-7-0-2-2-6-1-4-6-6-0-4-6-and-5-2-6-2-have-been-released",
-                        "https://github.com/advisories/GHSA-wh98-p28r-vrc9"
-                    ],
-                    "uuid": "6617e5a1-928c-4c6a-9444-d0f05ea87a6b"
-                },
-                {
-                    "affected_range": ">=5.0.0 <5.2.6.2||>=6.0.0 <6.0.4.6||>=6.1.0 <6.1.4.6||>=7.0.0 <7.0.2.2",
-                    "affected_versions": "All versions starting from 5.0.0 before 5.2.6.2, all versions starting from 6.0.0 before 6.0.4.6, all versions starting from 6.1.0 before 6.1.4.6, all versions starting from 7.0.0 before 7.0.2.2",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-212",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-11",
-                    "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests. This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
-                    "fixed_versions": [
-                        "5.2.6.2",
-                        "6.0.4.6",
-                        "6.1.4.6",
-                        "7.0.2.2"
-                    ],
-                    "identifier": "CVE-2022-23633",
-                    "identifiers": [
-                        "CVE-2022-23633",
-                        "GHSA-wh98-p28r-vrc9"
-                    ],
-                    "not_impacted": "All versions before 5.0.0, all versions starting from 5.2.6.2 before 6.0.0, all versions starting from 6.0.4.6 before 6.1.0, all versions starting from 6.1.4.6 before 7.0.0, all versions starting from 7.0.2.2",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2022-02-11",
-                    "solution": "Upgrade to versions 5.2.6.2, 6.0.4.6, 6.1.4.6, 7.0.2.2 or above.",
-                    "title": "Exposure of information in Action Pack",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-23633",
-                        "https://github.com/advisories/GHSA-wh98-p28r-vrc9",
-                        "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
-                        "http://www.openwall.com/lists/oss-security/2022/02/11/5"
-                    ],
-                    "uuid": "1eec09ea-1980-46f3-af3e-938ec60d200f"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "7.0.2.2",
-                                "versionStartIncluding": "7.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.1.4.6",
-                                "versionStartIncluding": "6.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.4.6",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.6.2",
-                                "versionStartIncluding": "5.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-23633"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-212"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da"
-                        },
-                        {
-                            "name": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9"
-                        },
-                        {
-                            "name": "[oss-security] 20220211 [CVE-2022-23633] Possible exposure of information vulnerability in Action Pack",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Mitigation",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2022/02/11/5"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20220903 [SECURITY] [DLA 3093-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00002.html"
-                        },
-                        {
-                            "name": "DSA-5372",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2023/dsa-5372"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.9,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-07-11T20:41Z",
-            "publishedDate": "2022-02-11T21:15Z"
+        {
+          "type": "WEB",
+          "url": "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.4,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible exposure of information vulnerability in Action Pack"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-23633",
+        "STATE": "PUBLIC",
+        "TITLE": "Exposure of sensitive information in Action Pack"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 7.0.0.0, < 7.0.2.1"
+                        },
+                        {
+                          "version_value": ">= 6.1.0.0, < 6.1.4.5"
+                        },
+                        {
+                          "version_value": ">= 6.0.0.0, < 6.0.4.5"
+                        },
+                        {
+                          "version_value": ">= 5.0.0, < 5.2.6.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "rails"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 7.4,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9"
+          },
+          {
+            "name": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
+            "refsource": "MISC",
+            "url": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da"
+          },
+          {
+            "name": "[oss-security] 20220211 [CVE-2022-23633] Possible exposure of information vulnerability in Action Pack",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2022/02/11/5"
+          },
+          {
+            "name": "[debian-lts-announce] 20220903 [SECURITY] [DLA 3093-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00002.html"
+          },
+          {
+            "name": "DSA-5372",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2023/dsa-5372"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-wh98-p28r-vrc9",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-23633",
+      "cvss_v3": 7.4,
+      "date": "2022-02-11",
+      "description": "## Impact\n\nUnder certain circumstances response bodies will not be closed, for example a\nbug in a webserver (https://github.com/puma/puma/pull/2812) or a bug in a Rack\nmiddleware. In the event a response is not notified of a `close`,\n`ActionDispatch::Executor` will not know to reset thread local state for the\nnext request. This can lead to data being leaked to subsequent requests,\nespecially when interacting with `ActiveSupport::CurrentAttributes`.\n\nUpgrading to the FIXED versions of Rails will ensure mitigation if this issue\neven in the context of a buggy webserver or middleware implementation.\n\n## Patches\n\nThis has been fixed in Rails 7.0.2.2, 6.1.4.6, 6.0.4.6, and 5.2.6.2.\n\n## Workarounds\n\nUpgrading is highly recommended, but to work around this problem the following\nmiddleware can be used:\n\n```\nclass GuardedExecutor < ActionDispatch::Executor\n  def call(env)\n    ensure_completed!\n    super\n  end\n\n  private\n\n    def ensure_completed!\n      @executor.new.complete! if @executor.active?\n    end\nend\n\n# Ensure the guard is inserted before ActionDispatch::Executor\nRails.application.configure do\n  config.middleware.swap ActionDispatch::Executor, GuardedExecutor, executor\nend\n```",
+      "framework": "rails",
+      "gem": "actionpack",
+      "ghsa": "wh98-p28r-vrc9",
+      "patched_versions": [
+        "~> 5.2.6, >= 5.2.6.2",
+        "~> 6.0.4, >= 6.0.4.6",
+        "~> 6.1.4, >= 6.1.4.6",
+        ">= 7.0.2.2"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/rails/rails/commit/10c64a472f2f19a5e485bdac7d5106a76aeb29a5",
+          "https://github.com/rails/rails/blob/7-0-stable/actionpack/CHANGELOG.md#rails-7021-february-11-2022"
+        ]
+      },
+      "title": "Possible exposure of information vulnerability in Action Pack",
+      "unaffected_versions": [
+        "< 5.0.0"
+      ],
+      "url": "https://groups.google.com/g/ruby-security-ann/c/FkTM-_7zSNA/m/K2RiMJBlBAAJ"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=5.0.0.0 <=5.2.6.1||>=6.0.0.0 <=6.0.4.5||>=6.1.0.0 <=6.1.4.5||>=7.0.0.0 <=7.0.2.1",
+          "affected_versions": "All versions starting from 5.0.0.0 up to 5.2.6.1, all versions starting from 6.0.0.0 up to 6.0.4.5, all versions starting from 6.1.0.0 up to 6.1.4.5, all versions starting from 7.0.0.0 up to 7.0.2.1",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-200",
+            "CWE-937"
+          ],
+          "date": "2022-02-11",
+          "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
+          "fixed_versions": [
+            "5.2.6.2",
+            "6.0.4.6",
+            "6.1.4.6",
+            "7.0.2.2"
+          ],
+          "identifier": "CVE-2022-23633",
+          "identifiers": [
+            "GHSA-wh98-p28r-vrc9",
+            "CVE-2022-23633"
+          ],
+          "not_impacted": "All versions before 5.0.0.0, all versions after 5.2.6.1 before 6.0.0.0, all versions after 6.0.4.5 before 6.1.0.0, all versions after 6.1.4.5 before 7.0.0.0, all versions after 7.0.2.1",
+          "package_slug": "gem/actionpack",
+          "pubdate": "2022-02-11",
+          "solution": "Upgrade to versions 5.2.6.2, 6.0.4.6, 6.1.4.6, 7.0.2.2 or above.",
+          "title": "Exposure of Sensitive Information to an Unauthorized Actor",
+          "urls": [
+            "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
+            "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
+            "https://discuss.rubyonrails.org/t/cve-2022-23633-possible-exposure-of-information-vulnerability-in-action-pack/80016",
+            "https://rubyonrails.org/2022/2/11/Rails-7-0-2-2-6-1-4-6-6-0-4-6-and-5-2-6-2-have-been-released",
+            "https://github.com/advisories/GHSA-wh98-p28r-vrc9"
+          ],
+          "uuid": "6617e5a1-928c-4c6a-9444-d0f05ea87a6b"
+        },
+        {
+          "affected_range": ">=5.0.0 <5.2.6.2||>=6.0.0 <6.0.4.6||>=6.1.0 <6.1.4.6||>=7.0.0 <7.0.2.2",
+          "affected_versions": "All versions starting from 5.0.0 before 5.2.6.2, all versions starting from 6.0.0 before 6.0.4.6, all versions starting from 6.1.0 before 6.1.4.6, all versions starting from 7.0.0 before 7.0.2.2",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-212",
+            "CWE-937"
+          ],
+          "date": "2023-07-11",
+          "description": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests. This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used.",
+          "fixed_versions": [
+            "5.2.6.2",
+            "6.0.4.6",
+            "6.1.4.6",
+            "7.0.2.2"
+          ],
+          "identifier": "CVE-2022-23633",
+          "identifiers": [
+            "CVE-2022-23633",
+            "GHSA-wh98-p28r-vrc9"
+          ],
+          "not_impacted": "All versions before 5.0.0, all versions starting from 5.2.6.2 before 6.0.0, all versions starting from 6.0.4.6 before 6.1.0, all versions starting from 6.1.4.6 before 7.0.0, all versions starting from 7.0.2.2",
+          "package_slug": "gem/rails",
+          "pubdate": "2022-02-11",
+          "solution": "Upgrade to versions 5.2.6.2, 6.0.4.6, 6.1.4.6, 7.0.2.2 or above.",
+          "title": "Exposure of information in Action Pack",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-23633",
+            "https://github.com/advisories/GHSA-wh98-p28r-vrc9",
+            "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
+            "http://www.openwall.com/lists/oss-security/2022/02/11/5"
+          ],
+          "uuid": "1eec09ea-1980-46f3-af3e-938ec60d200f"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "7.0.2.2",
+                "versionStartIncluding": "7.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.1.4.6",
+                "versionStartIncluding": "6.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.4.6",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.6.2",
+                "versionStartIncluding": "5.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-23633"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Action Pack is a framework for handling and responding to web requests. Under certain circumstances response bodies will not be closed. In the event a response is *not* notified of a `close`, `ActionDispatch::Executor` will not know to reset thread local state for the next request. This can lead to data being leaked to subsequent requests.This has been fixed in Rails 7.0.2.1, 6.1.4.5, 6.0.4.5, and 5.2.6.1. Upgrading is highly recommended, but to work around this problem a middleware described in GHSA-wh98-p28r-vrc9 can be used."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-212"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rails/rails/commit/f9a2ad03943d5c2ba54e1d45f155442b519c75da"
+            },
+            {
+              "name": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rails/rails/security/advisories/GHSA-wh98-p28r-vrc9"
+            },
+            {
+              "name": "[oss-security] 20220211 [CVE-2022-23633] Possible exposure of information vulnerability in Action Pack",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Mitigation",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2022/02/11/5"
+            },
+            {
+              "name": "[debian-lts-announce] 20220903 [SECURITY] [DLA 3093-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2022/09/msg00002.html"
+            },
+            {
+              "name": "DSA-5372",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2023/dsa-5372"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-07-11T20:41Z",
+      "publishedDate": "2022-02-11T21:15Z"
+    }
+  }
 }

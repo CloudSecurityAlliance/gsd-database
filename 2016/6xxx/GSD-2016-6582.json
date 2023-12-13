@@ -1,341 +1,347 @@
 {
-    "GSD": {
-        "alias": "CVE-2016-6582",
-        "description": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification.",
-        "id": "GSD-2016-6582"
+  "GSD": {
+    "alias": "CVE-2016-6582",
+    "description": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification.",
+    "id": "GSD-2016-6582"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2016-6582",
-            "modified": "2016-08-18T00:00:00.000Z",
-            "published": "2016-08-18T00:00:00.000Z",
-            "aliases": [
-                "CVE-2016-6582",
-                "GHSA-3m6r-39p3-jq25"
-            ],
-            "summary": "Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-            "details": "Doorkeeper failed to implement OAuth 2.0 Token Revocation (RFC 7009) in the\nfollowing ways:\n\n1. Public clients making valid, unauthenticated calls to revoke a token\n   would not have their token revoked\n2. Requests were not properly authenticating the *client credentials* but\n   were, instead, looking at the access token in a second location\n3. Because of 2, the requests were also not authorizing confidential\n   clients' ability to revoke a given token. It should only revoke tokens\n   that belong to it.\n\nThe security implication is: OAuth 2.0 clients who \"log out\" a user expect\nto have the corresponding access & refresh tokens revoked, preventing an\nattacker who may have already hijacked the session from continuing to\nimpersonate the victim. Because of the bug described above, this is not the\ncase. As far as OWASP is concerned, this counts as broken authentication\ndesign.\n\nMITRE has assigned CVE-2016-6582 due to the security issues raised. An\nattacker, thanks to 1, can replay a hijacked session after a victim logs\nout/revokes their token. Additionally, thanks to 2 & 3, an attacker via a\ncompromised confidential client could \"grief\" other clients by revoking\ntheir tokens (albeit this is an exceptionally narrow attack with little\nvalue).\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.1
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "doorkeeper",
-                        "purl": "pkg:gem/doorkeeper"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "http://www.openwall.com/lists/oss-security/2016/08/19/2"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "doorkeeper",
+            "purl": "pkg:gem/doorkeeper"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
-                "ID": "CVE-2016-6582",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "92551",
-                        "refsource": "BID",
-                        "url": "http://www.securityfocus.com/bid/92551"
-                    },
-                    {
-                        "name": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html",
-                        "refsource": "MISC",
-                        "url": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html"
-                    },
-                    {
-                        "name": "20160818 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-                        "refsource": "BUGTRAQ",
-                        "url": "http://www.securityfocus.com/archive/1/539268/100/0/threaded"
-                    },
-                    {
-                        "name": "20160822 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-                        "refsource": "FULLDISC",
-                        "url": "http://seclists.org/fulldisclosure/2016/Aug/105"
-                    },
-                    {
-                        "name": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0"
-                    },
-                    {
-                        "name": "https://github.com/doorkeeper-gem/doorkeeper/issues/875",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
-                    }
-                ]
-            }
+      ],
+      "aliases": [
+        "CVE-2016-6582",
+        "GHSA-3m6r-39p3-jq25"
+      ],
+      "details": "Doorkeeper failed to implement OAuth 2.0 Token Revocation (RFC 7009) in the\nfollowing ways:\n\n1. Public clients making valid, unauthenticated calls to revoke a token\n   would not have their token revoked\n2. Requests were not properly authenticating the *client credentials* but\n   were, instead, looking at the access token in a second location\n3. Because of 2, the requests were also not authorizing confidential\n   clients' ability to revoke a given token. It should only revoke tokens\n   that belong to it.\n\nThe security implication is: OAuth 2.0 clients who \"log out\" a user expect\nto have the corresponding access & refresh tokens revoked, preventing an\nattacker who may have already hijacked the session from continuing to\nimpersonate the victim. Because of the bug described above, this is not the\ncase. As far as OWASP is concerned, this counts as broken authentication\ndesign.\n\nMITRE has assigned CVE-2016-6582 due to the security issues raised. An\nattacker, thanks to 1, can replay a hijacked session after a victim logs\nout/revokes their token. Additionally, thanks to 2 & 3, an attacker via a\ncompromised confidential client could \"grief\" other clients by revoking\ntheir tokens (albeit this is an exceptionally narrow attack with little\nvalue).\n",
+      "id": "GSD-2016-6582",
+      "modified": "2016-08-18T00:00:00.000Z",
+      "published": "2016-08-18T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "http://www.openwall.com/lists/oss-security/2016/08/19/2"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<4.2.0",
-                    "affected_versions": "All versions before 4.2.0",
-                    "credit": "Justin Bull (@f3ndot)",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:P",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-254",
-                        "CWE-937"
-                    ],
-                    "date": "2018-10-09",
-                    "description": "Doorkeeper failed to implement OAuth Token Revocation (RFC ) in the following ways: Public clients making valid, unauthenticated calls to revoke a token would not have their token revoked Requests were not properly authenticating the *client credentials* but were, instead, looking at the access token in a second location Because of 2, the requests were also not authorizing confidential clients' ability to revoke a given token. It should only revoke tokens that belong to it. The security implication is: OAuth clients who \"log out\" a user expect to have the corresponding access & refresh tokens revoked, preventing an attacker who may have already hijacked the session from continuing to impersonate the victim. Because of the bug described above, this is not the case. As far as OWASP is concerned, this counts as broken authentication design. MITRE has assigned CVE-2016-6582 due to the security issues raised. An attacker, thanks to 1, can replay a hijacked session after a victim logs out/revokes their token. Additionally, thanks to 2 & 3, an attacker via a compromised confidential client could \"grief\" other clients by revoking their tokens (albeit this is an exceptionally narrow attack with little value).",
-                    "fixed_versions": [
-                        "4.2.0"
-                    ],
-                    "identifier": "CVE-2016-6582",
-                    "identifiers": [
-                        "CVE-2016-6582"
-                    ],
-                    "not_impacted": "All versions starting from 4.2.0",
-                    "package_slug": "gem/doorkeeper",
-                    "pubdate": "2017-01-23",
-                    "solution": "Upgrade to version 4.2.0 or above.",
-                    "title": "Broken token revocation, wrong auth/auth method",
-                    "urls": [
-                        "http://www.openwall.com/lists/oss-security/2016/08/19/2",
-                        "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53",
-                        "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
-                    ],
-                    "uuid": "0640b4d2-4420-4840-b5dd-6f07f8865408"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:doorkeeper_project:doorkeeper:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "4.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve@mitre.org",
-                    "ID": "CVE-2016-6582"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-254"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory",
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0"
-                        },
-                        {
-                            "name": "https://github.com/doorkeeper-gem/doorkeeper/issues/875",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
-                        },
-                        {
-                            "name": "92551",
-                            "refsource": "BID",
-                            "tags": [
-                                "Third Party Advisory",
-                                "VDB Entry"
-                            ],
-                            "url": "http://www.securityfocus.com/bid/92551"
-                        },
-                        {
-                            "name": "20160822 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-                            "refsource": "FULLDISC",
-                            "tags": [
-                                "Mailing List",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://seclists.org/fulldisclosure/2016/Aug/105"
-                        },
-                        {
-                            "name": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory",
-                                "VDB Entry"
-                            ],
-                            "url": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html"
-                        },
-                        {
-                            "name": "20160818 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-                            "refsource": "BUGTRAQ",
-                            "tags": [],
-                            "url": "http://www.securityfocus.com/archive/1/539268/100/0/threaded"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.4,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 4.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.1,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
-                        "version": "3.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.2
-                }
-            },
-            "lastModifiedDate": "2018-10-09T20:00Z",
-            "publishedDate": "2017-01-23T21:59Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "doorkeeper",
-            "cve": "2016-6582",
-            "ghsa": "3m6r-39p3-jq25",
-            "url": "http://www.openwall.com/lists/oss-security/2016/08/19/2",
-            "title": "Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
-            "date": "2016-08-18",
-            "description": "Doorkeeper failed to implement OAuth 2.0 Token Revocation (RFC 7009) in the\nfollowing ways:\n\n1. Public clients making valid, unauthenticated calls to revoke a token\n   would not have their token revoked\n2. Requests were not properly authenticating the *client credentials* but\n   were, instead, looking at the access token in a second location\n3. Because of 2, the requests were also not authorizing confidential\n   clients' ability to revoke a given token. It should only revoke tokens\n   that belong to it.\n\nThe security implication is: OAuth 2.0 clients who \"log out\" a user expect\nto have the corresponding access & refresh tokens revoked, preventing an\nattacker who may have already hijacked the session from continuing to\nimpersonate the victim. Because of the bug described above, this is not the\ncase. As far as OWASP is concerned, this counts as broken authentication\ndesign.\n\nMITRE has assigned CVE-2016-6582 due to the security issues raised. An\nattacker, thanks to 1, can replay a hijacked session after a victim logs\nout/revokes their token. Additionally, thanks to 2 & 3, an attacker via a\ncompromised confidential client could \"grief\" other clients by revoking\ntheir tokens (albeit this is an exceptionally narrow attack with little\nvalue).\n",
-            "cvss_v3": 9.1,
-            "unaffected_versions": [
-                "< 1.2.0"
-            ],
-            "patched_versions": [
-                ">= 4.2.0"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53"
-                ]
-            }
+        {
+          "type": "WEB",
+          "url": "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.1,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Doorkeeper gem does not revoke tokens & uses wrong auth/auth method"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@mitre.org",
+        "ID": "CVE-2016-6582",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "92551",
+            "refsource": "BID",
+            "url": "http://www.securityfocus.com/bid/92551"
+          },
+          {
+            "name": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html",
+            "refsource": "MISC",
+            "url": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html"
+          },
+          {
+            "name": "20160818 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
+            "refsource": "BUGTRAQ",
+            "url": "http://www.securityfocus.com/archive/1/539268/100/0/threaded"
+          },
+          {
+            "name": "20160822 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
+            "refsource": "FULLDISC",
+            "url": "http://seclists.org/fulldisclosure/2016/Aug/105"
+          },
+          {
+            "name": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0"
+          },
+          {
+            "name": "https://github.com/doorkeeper-gem/doorkeeper/issues/875",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2016-6582",
+      "cvss_v3": 9.1,
+      "date": "2016-08-18",
+      "description": "Doorkeeper failed to implement OAuth 2.0 Token Revocation (RFC 7009) in the\nfollowing ways:\n\n1. Public clients making valid, unauthenticated calls to revoke a token\n   would not have their token revoked\n2. Requests were not properly authenticating the *client credentials* but\n   were, instead, looking at the access token in a second location\n3. Because of 2, the requests were also not authorizing confidential\n   clients' ability to revoke a given token. It should only revoke tokens\n   that belong to it.\n\nThe security implication is: OAuth 2.0 clients who \"log out\" a user expect\nto have the corresponding access & refresh tokens revoked, preventing an\nattacker who may have already hijacked the session from continuing to\nimpersonate the victim. Because of the bug described above, this is not the\ncase. As far as OWASP is concerned, this counts as broken authentication\ndesign.\n\nMITRE has assigned CVE-2016-6582 due to the security issues raised. An\nattacker, thanks to 1, can replay a hijacked session after a victim logs\nout/revokes their token. Additionally, thanks to 2 & 3, an attacker via a\ncompromised confidential client could \"grief\" other clients by revoking\ntheir tokens (albeit this is an exceptionally narrow attack with little\nvalue).\n",
+      "gem": "doorkeeper",
+      "ghsa": "3m6r-39p3-jq25",
+      "patched_versions": [
+        ">= 4.2.0"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53"
+        ]
+      },
+      "title": "Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
+      "unaffected_versions": [
+        "< 1.2.0"
+      ],
+      "url": "http://www.openwall.com/lists/oss-security/2016/08/19/2"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<4.2.0",
+          "affected_versions": "All versions before 4.2.0",
+          "credit": "Justin Bull (@f3ndot)",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:P",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-254",
+            "CWE-937"
+          ],
+          "date": "2018-10-09",
+          "description": "Doorkeeper failed to implement OAuth Token Revocation (RFC ) in the following ways: Public clients making valid, unauthenticated calls to revoke a token would not have their token revoked Requests were not properly authenticating the *client credentials* but were, instead, looking at the access token in a second location Because of 2, the requests were also not authorizing confidential clients' ability to revoke a given token. It should only revoke tokens that belong to it. The security implication is: OAuth clients who \"log out\" a user expect to have the corresponding access & refresh tokens revoked, preventing an attacker who may have already hijacked the session from continuing to impersonate the victim. Because of the bug described above, this is not the case. As far as OWASP is concerned, this counts as broken authentication design. MITRE has assigned CVE-2016-6582 due to the security issues raised. An attacker, thanks to 1, can replay a hijacked session after a victim logs out/revokes their token. Additionally, thanks to 2 & 3, an attacker via a compromised confidential client could \"grief\" other clients by revoking their tokens (albeit this is an exceptionally narrow attack with little value).",
+          "fixed_versions": [
+            "4.2.0"
+          ],
+          "identifier": "CVE-2016-6582",
+          "identifiers": [
+            "CVE-2016-6582"
+          ],
+          "not_impacted": "All versions starting from 4.2.0",
+          "package_slug": "gem/doorkeeper",
+          "pubdate": "2017-01-23",
+          "solution": "Upgrade to version 4.2.0 or above.",
+          "title": "Broken token revocation, wrong auth/auth method",
+          "urls": [
+            "http://www.openwall.com/lists/oss-security/2016/08/19/2",
+            "https://github.com/doorkeeper-gem/doorkeeper/commit/fb938051777a3c9cb071e96fc66458f8f615bd53",
+            "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
+          ],
+          "uuid": "0640b4d2-4420-4840-b5dd-6f07f8865408"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:doorkeeper_project:doorkeeper:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "4.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve@mitre.org",
+          "ID": "CVE-2016-6582"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "The Doorkeeper gem before 4.2.0 for Ruby might allow remote attackers to conduct replay attacks or revoke arbitrary tokens by leveraging failure to implement the OAuth 2.0 Token Revocation specification."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-254"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory",
+                "Release Notes"
+              ],
+              "url": "https://github.com/doorkeeper-gem/doorkeeper/releases/tag/v4.2.0"
+            },
+            {
+              "name": "https://github.com/doorkeeper-gem/doorkeeper/issues/875",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/doorkeeper-gem/doorkeeper/issues/875"
+            },
+            {
+              "name": "92551",
+              "refsource": "BID",
+              "tags": [
+                "Third Party Advisory",
+                "VDB Entry"
+              ],
+              "url": "http://www.securityfocus.com/bid/92551"
+            },
+            {
+              "name": "20160822 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
+              "refsource": "FULLDISC",
+              "tags": [
+                "Mailing List",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "http://seclists.org/fulldisclosure/2016/Aug/105"
+            },
+            {
+              "name": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory",
+                "VDB Entry"
+              ],
+              "url": "http://packetstormsecurity.com/files/138430/Doorkeeper-4.1.0-Token-Revocation.html"
+            },
+            {
+              "name": "20160818 [CVE-2016-6582] Doorkeeper gem does not revoke tokens & uses wrong auth/auth method",
+              "refsource": "BUGTRAQ",
+              "tags": [],
+              "url": "http://www.securityfocus.com/archive/1/539268/100/0/threaded"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.4,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 4.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.1,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+            "version": "3.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.2
+        }
+      },
+      "lastModifiedDate": "2018-10-09T20:00Z",
+      "publishedDate": "2017-01-23T21:59Z"
+    }
+  }
 }

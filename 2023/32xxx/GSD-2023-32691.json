@@ -1,236 +1,253 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-32691",
-        "id": "GSD-2023-32691"
+  "GSD": {
+    "alias": "CVE-2023-32691",
+    "id": "GSD-2023-32691"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-32691",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "gost",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "<= 2.11.5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "ginuerzh"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "gost (GO Simple Tunnel) is a simple tunnel written in golang. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparison function. Untrusted input, sourced from a HTTP header, is compared directly with a secret. Since this comparison is not secure, an attacker can mount a side-channel timing attack to guess the password. As a workaround, this can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \n"
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.9,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-203",
-                                "lang": "eng",
-                                "value": "CWE-203: Observable Discrepancy"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
-                        "refsource": "MISC",
-                        "url": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww"
-                    },
-                    {
-                        "name": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
-                        "refsource": "MISC",
-                        "url": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-qjrq-hm79-49ww",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<=v2.11.5",
-                    "affected_versions": "All versions up to 2.11.5",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-203",
-                        "CWE-937"
-                    ],
-                    "date": "2023-06-05",
-                    "description": "[Timing attacks](https://en.wikipedia.org/wiki/Timing_attack) occur when an attacker can guess a secret by observing a difference in processing time for valid and invalid inputs. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparision function.\nMore information on this attack type can be found in [this blog post](https://verboselogging.com/2012/08/20/a-timing-attack-in-action). \n\n# Root Cause Analysis\n\nIn this case, the vulnerability occurs due to the following code.\n\nhttps://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46-L46\n\nHere, a untrusted input, sourced from a HTTP header, is compared directly with a secret. \nSince, this comparision is not secure, an attacker can mount a side-channel timing attack to guess the password.\n\n# Remediation\n\nThis can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \nAn example fix can be found in https://github.com/runatlantis/atlantis/commit/48870911974adddaa4c99c8089e79b7d787fa820 Alternatively, one can apply the patch below\n\n```\nFrom d18cff85e1a565f688f717fd8f2cacea62ff9dbf Mon Sep 17 00:00:00 2001\nFrom: Porcupiney Hairs <porcupiney.hairs@protonmail.com>\nDate: Sun, 7 May 2023 01:03:33 +0530\nSubject: [PATCH] Fix : Timing attack\n\n---\n auth.go | 4 +++-\n 1 file changed, 3 insertions(+), 1 deletion(-)\n\ndiff --git a/auth.go b/auth.go\nindex 1be96e9..be13f23 100644\n--- a/auth.go\n+++ b/auth.go\n@@ -2,6 +2,7 @@ package gost\n \n import (\n \t\"bufio\"\n+\t\"crypto/subtle\"\n \t\"io\"\n \t\"strings\"\n \t\"sync\"\n@@ -43,7 +44,8 @@ func (au *LocalAuthenticator) Authenticate(user, password string) bool {\n \t}\n \n \tv, ok := au.kvs[user]\n-\treturn ok && (v == \"\" || password == v)\n+\tpassOk := subtle.ConstantTimeCompare([]byte(password), []byte(v)) == 0\n+\treturn ok && (v == \"\" || passOk)\n }\n \n // Add adds a key-value pair to the Authenticator.\n-- \n2.25.1\n\n```",
-                    "fixed_versions": [],
-                    "identifier": "GMS-2023-1583",
-                    "identifiers": [
-                        "CVE-2023-32691",
-                        "GHSA-qjrq-hm79-49ww",
-                        "GMS-2023-1583"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "go/github.com/ginuerzh/gost",
-                    "pubdate": "2023-05-30",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "ginuerzh/gost vulnerable to Timing Attack",
-                    "urls": [
-                        "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
-                        "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
-                        "https://github.com/advisories/GHSA-qjrq-hm79-49ww"
-                    ],
-                    "uuid": "09dac1f0-857e-410c-ba33-bf39c74e09b1",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "729d0e70005607dc7c69fc1de62fd8fe21f85355",
-                                "tags": [
-                                    "v2.11.5"
-                                ],
-                                "timestamp": "20230120064313"
-                            },
-                            "number": "v2.11.5"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:go_simple_tunnel_project:go_simple_tunnel:*:*:*:*:*:go:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "2.11.5",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-32691"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "gost (GO Simple Tunnel) is a simple tunnel written in golang. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparison function. Untrusted input, sourced from a HTTP header, is compared directly with a secret. Since this comparison is not secure, an attacker can mount a side-channel timing attack to guess the password. As a workaround, this can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-203"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46"
-                        },
-                        {
-                            "name": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.9,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-06-05T17:37Z",
-            "publishedDate": "2023-05-30T04:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-32691"
+      ],
+      "details": "gost (GO Simple Tunnel) is a simple tunnel written in golang. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparison function. Untrusted input, sourced from a HTTP header, is compared directly with a secret. Since this comparison is not secure, an attacker can mount a side-channel timing attack to guess the password. As a workaround, this can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \n",
+      "id": "GSD-2023-32691",
+      "modified": "2023-12-13T01:20:23.264506Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-32691",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "gost",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "<= 2.11.5"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "ginuerzh"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "gost (GO Simple Tunnel) is a simple tunnel written in golang. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparison function. Untrusted input, sourced from a HTTP header, is compared directly with a secret. Since this comparison is not secure, an attacker can mount a side-channel timing attack to guess the password. As a workaround, this can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-203",
+                "lang": "eng",
+                "value": "CWE-203: Observable Discrepancy"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
+            "refsource": "MISC",
+            "url": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww"
+          },
+          {
+            "name": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
+            "refsource": "MISC",
+            "url": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qjrq-hm79-49ww",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<=v2.11.5",
+          "affected_versions": "All versions up to 2.11.5",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-203",
+            "CWE-937"
+          ],
+          "date": "2023-06-05",
+          "description": "[Timing attacks](https://en.wikipedia.org/wiki/Timing_attack) occur when an attacker can guess a secret by observing a difference in processing time for valid and invalid inputs. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparision function.\nMore information on this attack type can be found in [this blog post](https://verboselogging.com/2012/08/20/a-timing-attack-in-action). \n\n# Root Cause Analysis\n\nIn this case, the vulnerability occurs due to the following code.\n\nhttps://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46-L46\n\nHere, a untrusted input, sourced from a HTTP header, is compared directly with a secret. \nSince, this comparision is not secure, an attacker can mount a side-channel timing attack to guess the password.\n\n# Remediation\n\nThis can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \nAn example fix can be found in https://github.com/runatlantis/atlantis/commit/48870911974adddaa4c99c8089e79b7d787fa820 Alternatively, one can apply the patch below\n\n```\nFrom d18cff85e1a565f688f717fd8f2cacea62ff9dbf Mon Sep 17 00:00:00 2001\nFrom: Porcupiney Hairs <porcupiney.hairs@protonmail.com>\nDate: Sun, 7 May 2023 01:03:33 +0530\nSubject: [PATCH] Fix : Timing attack\n\n---\n auth.go | 4 +++-\n 1 file changed, 3 insertions(+), 1 deletion(-)\n\ndiff --git a/auth.go b/auth.go\nindex 1be96e9..be13f23 100644\n--- a/auth.go\n+++ b/auth.go\n@@ -2,6 +2,7 @@ package gost\n \n import (\n \t\"bufio\"\n+\t\"crypto/subtle\"\n \t\"io\"\n \t\"strings\"\n \t\"sync\"\n@@ -43,7 +44,8 @@ func (au *LocalAuthenticator) Authenticate(user, password string) bool {\n \t}\n \n \tv, ok := au.kvs[user]\n-\treturn ok && (v == \"\" || password == v)\n+\tpassOk := subtle.ConstantTimeCompare([]byte(password), []byte(v)) == 0\n+\treturn ok && (v == \"\" || passOk)\n }\n \n // Add adds a key-value pair to the Authenticator.\n-- \n2.25.1\n\n```",
+          "fixed_versions": [],
+          "identifier": "GMS-2023-1583",
+          "identifiers": [
+            "CVE-2023-32691",
+            "GHSA-qjrq-hm79-49ww",
+            "GMS-2023-1583"
+          ],
+          "not_impacted": "",
+          "package_slug": "go/github.com/ginuerzh/gost",
+          "pubdate": "2023-05-30",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "ginuerzh/gost vulnerable to Timing Attack",
+          "urls": [
+            "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
+            "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
+            "https://github.com/advisories/GHSA-qjrq-hm79-49ww"
+          ],
+          "uuid": "09dac1f0-857e-410c-ba33-bf39c74e09b1",
+          "versions": [
+            {
+              "commit": {
+                "sha": "729d0e70005607dc7c69fc1de62fd8fe21f85355",
+                "tags": [
+                  "v2.11.5"
+                ],
+                "timestamp": "20230120064313"
+              },
+              "number": "v2.11.5"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:go_simple_tunnel_project:go_simple_tunnel:*:*:*:*:*:go:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "2.11.5",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-32691"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "gost (GO Simple Tunnel) is a simple tunnel written in golang. Sensitive secrets such as passwords, token and API keys should be compared only using a constant-time comparison function. Untrusted input, sourced from a HTTP header, is compared directly with a secret. Since this comparison is not secure, an attacker can mount a side-channel timing attack to guess the password. As a workaround, this can be easily fixed using a constant time comparing function such as `crypto/subtle`'s `ConstantTimeCompare`. \n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-203"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://github.com/ginuerzh/gost/blob/1c62376e0880e4094bd3731e06bd4f7842638f6a/auth.go#L46"
+            },
+            {
+              "name": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/ginuerzh/gost/security/advisories/GHSA-qjrq-hm79-49ww"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-06-05T17:37Z",
+      "publishedDate": "2023-05-30T04:15Z"
+    }
+  }
 }

@@ -1,338 +1,344 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-43805",
-        "description": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity.",
-        "id": "GSD-2021-43805"
+  "GSD": {
+    "alias": "CVE-2021-43805",
+    "description": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity.",
+    "id": "GSD-2021-43805"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-43805",
-            "modified": "2021-12-07T00:00:00.000Z",
-            "published": "2021-12-07T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-43805",
-                "GHSA-qxmr-qxh6-2cc9"
-            ],
-            "summary": "ReDos vulnerability on guest checkout email validation",
-            "details": "### Impact\nDenial of service vulnerability that could be exploited during a guest checkout.\nThe regular expression used to validate a guest order's email was subject to\nexponential backtracking through a fragment like `a.a.`.\n\nBefore the patch, it can be reproduced in the console like this:\n\n```ruby\nirb(main)> Spree::EmailValidator::EMAIL_REGEXP.match \"a@a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.@\"\nprocessing time: 54.293660s\n=> nil\n```\n\nTo reproduce in the browser, fill in the \"Customer Email\" field with that fake\nemail address during a guest checkout. Before that, you should open the browser\ndev tools and change the `type` attribute for that field from `email` to `text`.\nAfter entering a fake address and pressing the \"Save & Continue\" button, the\nbrowser will take a long term to perform the request before showing an error\nmessage for the invalid address. Eventually, making the email string even longer\ncould lead to the exhaustion of server resources.\n\n### Patches\nVersions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular\nexpression.\n\nThere's an improbable chance that some orders in your system end up having\nassociated an email address that is no longer valid. We've added a task to check\nprecisely that:\n\n```bash\nbin/rails solidus:check_orders_with_invalid_email\n```\n\nThe above will print information for every affected order if any.\n\n### Workarounds\n\nIf a prompt upgrade is not an option, please, add the following to\n`config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::EmailValidator.send(:remove_const, :EMAIL_REGEXP)\n  Spree::EmailValidator::EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP\nend\n```\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.5
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "solidus_core",
-                        "purl": "pkg:gem/solidus_core"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus/commit/6be174c955fad84017ca67589c676526bc5ade71"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://en.wikipedia.org/wiki/ReDoS"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://snyk.io/blog/redos-and-catastrophic-backtracking/"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "solidus_core",
+            "purl": "pkg:gem/solidus_core"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-43805",
-                "STATE": "PUBLIC",
-                "TITLE": "ReDos vulnerability on guest checkout email validation"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "solidus",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 3.1.0, < 3.1.4"
-                                                },
-                                                {
-                                                    "version_value": ">= 3.0.0, < 3.0.4"
-                                                },
-                                                {
-                                                    "version_value": "< 2.11.13"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "solidusio"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 7.5,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-1333: Inefficient Regular Expression Complexity"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
-                    },
-                    {
-                        "name": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401",
-                        "refsource": "MISC",
-                        "url": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-qxmr-qxh6-2cc9",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2021-43805",
+        "GHSA-qxmr-qxh6-2cc9"
+      ],
+      "details": "### Impact\nDenial of service vulnerability that could be exploited during a guest checkout.\nThe regular expression used to validate a guest order's email was subject to\nexponential backtracking through a fragment like `a.a.`.\n\nBefore the patch, it can be reproduced in the console like this:\n\n```ruby\nirb(main)> Spree::EmailValidator::EMAIL_REGEXP.match \"a@a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.@\"\nprocessing time: 54.293660s\n=> nil\n```\n\nTo reproduce in the browser, fill in the \"Customer Email\" field with that fake\nemail address during a guest checkout. Before that, you should open the browser\ndev tools and change the `type` attribute for that field from `email` to `text`.\nAfter entering a fake address and pressing the \"Save & Continue\" button, the\nbrowser will take a long term to perform the request before showing an error\nmessage for the invalid address. Eventually, making the email string even longer\ncould lead to the exhaustion of server resources.\n\n### Patches\nVersions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular\nexpression.\n\nThere's an improbable chance that some orders in your system end up having\nassociated an email address that is no longer valid. We've added a task to check\nprecisely that:\n\n```bash\nbin/rails solidus:check_orders_with_invalid_email\n```\n\nThe above will print information for every affected order if any.\n\n### Workarounds\n\nIf a prompt upgrade is not an option, please, add the following to\n`config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::EmailValidator.send(:remove_const, :EMAIL_REGEXP)\n  Spree::EmailValidator::EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP\nend\n```\n",
+      "id": "GSD-2021-43805",
+      "modified": "2021-12-07T00:00:00.000Z",
+      "published": "2021-12-07T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.11.13||>=3.0.0 <3.0.4||>=3.1.0 <3.1.4",
-                    "affected_versions": "All versions before 2.11.13, all versions starting from 3.0.0 before 3.0.4, all versions starting from 3.1.0 before 3.1.4",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-1333",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-08",
-                    "description": "Solidus is a free, open-source ecommerce platform built on Rails.If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity.",
-                    "fixed_versions": [
-                        "2.11.13",
-                        "3.0.4",
-                        "3.1.4"
-                    ],
-                    "identifier": "CVE-2021-43805",
-                    "identifiers": [
-                        "CVE-2021-43805",
-                        "GHSA-qxmr-qxh6-2cc9"
-                    ],
-                    "not_impacted": "All versions starting from 2.11.13 before 3.0.0, all versions starting from 3.0.4 before 3.1.0, all versions starting from 3.1.4",
-                    "package_slug": "gem/solidus_core",
-                    "pubdate": "2021-12-07",
-                    "solution": "Upgrade to versions 2.11.13, 3.0.4, 3.1.4 or above.",
-                    "title": "Inefficient Regular Expression Complexity",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-43805",
-                        "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
-                        "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
-                    ],
-                    "uuid": "badfc2bd-42b3-419c-8fe9-31aeecf0fc8b"
-                }
-            ]
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus/commit/6be174c955fad84017ca67589c676526bc5ade71"
         },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.11.13",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.0.4",
-                                "versionStartIncluding": "3.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.1.4",
-                                "versionStartIncluding": "3.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-43805"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
+        {
+          "type": "WEB",
+          "url": "https://en.wikipedia.org/wiki/ReDoS"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/blog/redos-and-catastrophic-backtracking/"
+        }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.5,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "ReDos vulnerability on guest checkout email validation"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-43805",
+        "STATE": "PUBLIC",
+        "TITLE": "ReDos vulnerability on guest checkout email validation"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "solidus",
+                    "version": {
+                      "version_data": [
                         {
-                            "lang": "en",
-                            "value": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-1333"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
+                          "version_value": ">= 3.1.0, < 3.1.4"
                         },
                         {
-                            "name": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
+                          "version_value": ">= 3.0.0, < 3.0.4"
+                        },
+                        {
+                          "version_value": "< 2.11.13"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2021-12-08T17:30Z",
-            "publishedDate": "2021-12-07T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "solidus_core",
-            "cve": "2021-43805",
-            "ghsa": "qxmr-qxh6-2cc9",
-            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
-            "title": "ReDos vulnerability on guest checkout email validation",
-            "date": "2021-12-07",
-            "description": "### Impact\nDenial of service vulnerability that could be exploited during a guest checkout.\nThe regular expression used to validate a guest order's email was subject to\nexponential backtracking through a fragment like `a.a.`.\n\nBefore the patch, it can be reproduced in the console like this:\n\n```ruby\nirb(main)> Spree::EmailValidator::EMAIL_REGEXP.match \"a@a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.@\"\nprocessing time: 54.293660s\n=> nil\n```\n\nTo reproduce in the browser, fill in the \"Customer Email\" field with that fake\nemail address during a guest checkout. Before that, you should open the browser\ndev tools and change the `type` attribute for that field from `email` to `text`.\nAfter entering a fake address and pressing the \"Save & Continue\" button, the\nbrowser will take a long term to perform the request before showing an error\nmessage for the invalid address. Eventually, making the email string even longer\ncould lead to the exhaustion of server resources.\n\n### Patches\nVersions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular\nexpression.\n\nThere's an improbable chance that some orders in your system end up having\nassociated an email address that is no longer valid. We've added a task to check\nprecisely that:\n\n```bash\nbin/rails solidus:check_orders_with_invalid_email\n```\n\nThe above will print information for every affected order if any.\n\n### Workarounds\n\nIf a prompt upgrade is not an option, please, add the following to\n`config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::EmailValidator.send(:remove_const, :EMAIL_REGEXP)\n  Spree::EmailValidator::EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP\nend\n```\n",
-            "cvss_v3": 7.5,
-            "patched_versions": [
-                "~> 2.11.13",
-                "~> 3.0.4",
-                ">= 3.1.4"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/solidusio/solidus/commit/6be174c955fad84017ca67589c676526bc5ade71",
-                    "https://en.wikipedia.org/wiki/ReDoS",
-                    "https://snyk.io/blog/redos-and-catastrophic-backtracking/"
+                      ]
+                    }
+                  }
                 ]
+              },
+              "vendor_name": "solidusio"
             }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 7.5,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-1333: Inefficient Regular Expression Complexity"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
+          },
+          {
+            "name": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401",
+            "refsource": "MISC",
+            "url": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qxmr-qxh6-2cc9",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-43805",
+      "cvss_v3": 7.5,
+      "date": "2021-12-07",
+      "description": "### Impact\nDenial of service vulnerability that could be exploited during a guest checkout.\nThe regular expression used to validate a guest order's email was subject to\nexponential backtracking through a fragment like `a.a.`.\n\nBefore the patch, it can be reproduced in the console like this:\n\n```ruby\nirb(main)> Spree::EmailValidator::EMAIL_REGEXP.match \"a@a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.@\"\nprocessing time: 54.293660s\n=> nil\n```\n\nTo reproduce in the browser, fill in the \"Customer Email\" field with that fake\nemail address during a guest checkout. Before that, you should open the browser\ndev tools and change the `type` attribute for that field from `email` to `text`.\nAfter entering a fake address and pressing the \"Save & Continue\" button, the\nbrowser will take a long term to perform the request before showing an error\nmessage for the invalid address. Eventually, making the email string even longer\ncould lead to the exhaustion of server resources.\n\n### Patches\nVersions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular\nexpression.\n\nThere's an improbable chance that some orders in your system end up having\nassociated an email address that is no longer valid. We've added a task to check\nprecisely that:\n\n```bash\nbin/rails solidus:check_orders_with_invalid_email\n```\n\nThe above will print information for every affected order if any.\n\n### Workarounds\n\nIf a prompt upgrade is not an option, please, add the following to\n`config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::EmailValidator.send(:remove_const, :EMAIL_REGEXP)\n  Spree::EmailValidator::EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP\nend\n```\n",
+      "gem": "solidus_core",
+      "ghsa": "qxmr-qxh6-2cc9",
+      "patched_versions": [
+        "~> 2.11.13",
+        "~> 3.0.4",
+        ">= 3.1.4"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/solidusio/solidus/commit/6be174c955fad84017ca67589c676526bc5ade71",
+          "https://en.wikipedia.org/wiki/ReDoS",
+          "https://snyk.io/blog/redos-and-catastrophic-backtracking/"
+        ]
+      },
+      "title": "ReDos vulnerability on guest checkout email validation",
+      "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.11.13||>=3.0.0 <3.0.4||>=3.1.0 <3.1.4",
+          "affected_versions": "All versions before 2.11.13, all versions starting from 3.0.0 before 3.0.4, all versions starting from 3.1.0 before 3.1.4",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-1333",
+            "CWE-937"
+          ],
+          "date": "2021-12-08",
+          "description": "Solidus is a free, open-source ecommerce platform built on Rails.If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity.",
+          "fixed_versions": [
+            "2.11.13",
+            "3.0.4",
+            "3.1.4"
+          ],
+          "identifier": "CVE-2021-43805",
+          "identifiers": [
+            "CVE-2021-43805",
+            "GHSA-qxmr-qxh6-2cc9"
+          ],
+          "not_impacted": "All versions starting from 2.11.13 before 3.0.0, all versions starting from 3.0.4 before 3.1.0, all versions starting from 3.1.4",
+          "package_slug": "gem/solidus_core",
+          "pubdate": "2021-12-07",
+          "solution": "Upgrade to versions 2.11.13, 3.0.4, 3.1.4 or above.",
+          "title": "Inefficient Regular Expression Complexity",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-43805",
+            "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
+            "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
+          ],
+          "uuid": "badfc2bd-42b3-419c-8fe9-31aeecf0fc8b"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.11.13",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.0.4",
+                "versionStartIncluding": "3.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.1.4",
+                "versionStartIncluding": "3.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-43805"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Solidus is a free, open-source ecommerce platform built on Rails. Versions of Solidus prior to 3.1.4, 3.0.4, and 2.11.13 have a denial of service vulnerability that could be exploited during a guest checkout. The regular expression used to validate a guest order's email was subject to exponential backtracking through a fragment like `a.a.` Versions 3.1.4, 3.0.4, and 2.11.13 have been patched to use a different regular expression. The maintainers added a check for email addresses that are no longer valid that will print information about any affected orders that exist. If a prompt upgrade is not an option, a workaround is available. It is possible to edit the file `config/application.rb` manually (with code provided by the maintainers in the GitHub Security Advisory) to check email validity."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-1333"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-qxmr-qxh6-2cc9"
+            },
+            {
+              "name": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus/commit/9867153e01e3c3b898cdbcedd7b43375ea922401"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 5.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2021-12-08T17:30Z",
+      "publishedDate": "2021-12-07T18:15Z"
     }
+  }
 }

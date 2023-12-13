@@ -1,65 +1,81 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-3102",
-        "id": "GSD-2022-3102",
-        "references": [
-            "https://security.archlinux.org/CVE-2022-3102",
-            "https://www.suse.com/security/cve/CVE-2022-3102.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-3102",
+    "id": "GSD-2022-3102",
+    "references": [
+      "https://security.archlinux.org/CVE-2022-3102",
+      "https://www.suse.com/security/cve/CVE-2022-3102.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "cve@mitre.org",
-                "ID": "CVE-2022-3102",
-                "STATE": "RESERVED"
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.4",
-                    "affected_versions": "All versions before 1.4",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-09-21",
-                    "description": "The JWT code can auto-detect the type of token being provided, and this can lead the application to incorrect conclusions about the trustworthiness of the token.\nQuoting the private disclosure we received : \"Under certain circumstances, it is possible to substitute a [..] signed JWS with a JWE that is encrypted with the public key that is normally used for signature validation.\"\nThis substitution attack can occur only if the validating application also have access to the private key, normally used to sign the tokens, available during validation of the received JWT.\nThe significance of this attacks depends on the use of the token, it may lead to authentication bypass or authorization bypass (respectively if claims are used to authenticate or authorize certain actions), because the attacker has full control of the data placed in the JWE and can inject any desired claim value.\n\nSeveral mitigating factors exist that can protect applications from this issue:\n- If the private key corresponding to the public key used to encrypt the JWE is not available to the application an exception will be raised.\n- If the JWK is specified with the 'use' parameter set to 'sig' (as expected for keys used only for signing/verification) an exception will be raised.\n- If the JWK is specified with the 'key_ops' parameter set and it does not include the 'decrypt' operation an exception will be raised.\n- Applications may check the token type before validation, in this case they would fail to detect an expected JWS\n\nNormally, signing and validation are done by different applications, so this scenario should be unlikely. However it is possible to have applications that both sign and validate tokens and do not separate JWKs in use, or do not set a JWK 'use' type.\n\nDue to the mitigating factors, and the fact that specific operational constraints and conditions need to be in place to successfully exploit this issue to generate an authentication bypass, we rate this security issue as moderate. Other avenues may decide on a different rating based on use case, always verify what conditions apply to your use of the library to assess risk.\n\nMany thanks to Tom Tervoort of Secura for finding and reporting this issue.\n",
-                    "fixed_versions": [
-                        "1.4"
-                    ],
-                    "identifier": "GMS-2022-4401",
-                    "identifiers": [
-                        "GHSA-gwp4-mcv4-w95j",
-                        "GMS-2022-4401",
-                        "CVE-2022-3102"
-                    ],
-                    "not_impacted": "All versions starting from 1.4",
-                    "package_slug": "pypi/jwcrypto",
-                    "pubdate": "2022-09-21",
-                    "solution": "Upgrade to version 1.4 or above.",
-                    "title": "jwcrypto token substitution can lead to authentication bypass",
-                    "urls": [
-                        "https://github.com/latchset/jwcrypto/security/advisories/GHSA-gwp4-mcv4-w95j",
-                        "https://github.com/latchset/jwcrypto/commit/f4e912f83cb578e2cd47f8a9398bf15f680bf558",
-                        "https://github.com/latchset/jwcrypto/releases/tag/v1.4.0",
-                        "https://github.com/advisories/GHSA-gwp4-mcv4-w95j"
-                    ],
-                    "uuid": "49486a63-9fd3-4ebe-aac9-2ecd2c8f5a06"
-                }
-            ]
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-3102"
+      ],
+      "id": "GSD-2022-3102",
+      "modified": "2023-12-13T01:19:39.824948Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@mitre.org",
+        "ID": "CVE-2022-3102",
+        "STATE": "RESERVED"
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+          }
+        ]
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.4",
+          "affected_versions": "All versions before 1.4",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-09-21",
+          "description": "The JWT code can auto-detect the type of token being provided, and this can lead the application to incorrect conclusions about the trustworthiness of the token.\nQuoting the private disclosure we received : \"Under certain circumstances, it is possible to substitute a [..] signed JWS with a JWE that is encrypted with the public key that is normally used for signature validation.\"\nThis substitution attack can occur only if the validating application also have access to the private key, normally used to sign the tokens, available during validation of the received JWT.\nThe significance of this attacks depends on the use of the token, it may lead to authentication bypass or authorization bypass (respectively if claims are used to authenticate or authorize certain actions), because the attacker has full control of the data placed in the JWE and can inject any desired claim value.\n\nSeveral mitigating factors exist that can protect applications from this issue:\n- If the private key corresponding to the public key used to encrypt the JWE is not available to the application an exception will be raised.\n- If the JWK is specified with the 'use' parameter set to 'sig' (as expected for keys used only for signing/verification) an exception will be raised.\n- If the JWK is specified with the 'key_ops' parameter set and it does not include the 'decrypt' operation an exception will be raised.\n- Applications may check the token type before validation, in this case they would fail to detect an expected JWS\n\nNormally, signing and validation are done by different applications, so this scenario should be unlikely. However it is possible to have applications that both sign and validate tokens and do not separate JWKs in use, or do not set a JWK 'use' type.\n\nDue to the mitigating factors, and the fact that specific operational constraints and conditions need to be in place to successfully exploit this issue to generate an authentication bypass, we rate this security issue as moderate. Other avenues may decide on a different rating based on use case, always verify what conditions apply to your use of the library to assess risk.\n\nMany thanks to Tom Tervoort of Secura for finding and reporting this issue.\n",
+          "fixed_versions": [
+            "1.4"
+          ],
+          "identifier": "GMS-2022-4401",
+          "identifiers": [
+            "GHSA-gwp4-mcv4-w95j",
+            "GMS-2022-4401",
+            "CVE-2022-3102"
+          ],
+          "not_impacted": "All versions starting from 1.4",
+          "package_slug": "pypi/jwcrypto",
+          "pubdate": "2022-09-21",
+          "solution": "Upgrade to version 1.4 or above.",
+          "title": "jwcrypto token substitution can lead to authentication bypass",
+          "urls": [
+            "https://github.com/latchset/jwcrypto/security/advisories/GHSA-gwp4-mcv4-w95j",
+            "https://github.com/latchset/jwcrypto/commit/f4e912f83cb578e2cd47f8a9398bf15f680bf558",
+            "https://github.com/latchset/jwcrypto/releases/tag/v1.4.0",
+            "https://github.com/advisories/GHSA-gwp4-mcv4-w95j"
+          ],
+          "uuid": "49486a63-9fd3-4ebe-aac9-2ecd2c8f5a06"
+        }
+      ]
+    }
+  }
 }

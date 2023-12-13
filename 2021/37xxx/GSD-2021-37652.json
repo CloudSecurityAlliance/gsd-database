@@ -1,353 +1,370 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-37652",
-        "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-        "id": "GSD-2021-37652",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-37652.html",
-            "https://security.archlinux.org/CVE-2021-37652"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-37652",
+    "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+    "id": "GSD-2021-37652",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-37652.html",
+      "https://security.archlinux.org/CVE-2021-37652"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-37652",
-                "STATE": "PUBLIC",
-                "TITLE": "Use after free in boosted trees creation in TensorFlow"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-37652"
+      ],
+      "details": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+      "id": "GSD-2021-37652",
+      "modified": "2023-12-13T01:23:09.433304Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-37652",
+        "STATE": "PUBLIC",
+        "TITLE": "Use after free in boosted trees creation in TensorFlow"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 2.5.0, < 2.5.1"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.4.0, < 2.4.3"
-                                                },
-                                                {
-                                                    "version_value": "< 2.3.4"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 7.8,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-416: Use After Free"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-m7fm-4jfh-jrg6",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
-                    "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-25",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3",
-                        "2.5.1"
-                    ],
-                    "identifier": "CVE-2021-37652",
-                    "identifiers": [
-                        "GHSA-m7fm-4jfh-jrg6",
-                        "CVE-2021-37652"
-                    ],
-                    "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2021-08-25",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37652",
-                        "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
-                        "https://github.com/advisories/GHSA-m7fm-4jfh-jrg6"
-                    ],
-                    "uuid": "39a0677e-a3e7-4a2f-b080-cf86a234ea2e"
-                },
-                {
-                    "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
-                    "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-25",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3",
-                        "2.5.1"
-                    ],
-                    "identifier": "CVE-2021-37652",
-                    "identifiers": [
-                        "GHSA-m7fm-4jfh-jrg6",
-                        "CVE-2021-37652"
-                    ],
-                    "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2021-08-25",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37652",
-                        "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
-                        "https://github.com/advisories/GHSA-m7fm-4jfh-jrg6"
-                    ],
-                    "uuid": "64460204-055f-4f30-a7e0-3410438e7bfa"
-                },
-                {
-                    "affected_range": ">=2.3.0,<2.3.4||>=2.4.0,<2.4.3||>=2.5.0,<=2.6.0",
-                    "affected_versions": "All versions starting from 2.3.0 before 2.3.4, all versions starting from 2.4.0 before 2.4.3, all versions starting from 2.5.0 up to 2.6.0",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-415",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-25",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. The implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed.",
-                    "fixed_versions": [
-                        "2.3.4",
-                        "2.4.3",
-                        "2.6.1"
-                    ],
-                    "identifier": "CVE-2021-37652",
-                    "identifiers": [
-                        "CVE-2021-37652",
-                        "GHSA-m7fm-4jfh-jrg6"
-                    ],
-                    "not_impacted": "All versions before 2.3.0, all versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.6.0",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2021-08-12",
-                    "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.6.1 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-37652"
-                    ],
-                    "uuid": "e02a14fb-985b-4314-8b4b-deec7d113379"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.4.3",
-                                "versionStartIncluding": "2.4.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc0:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.3.4",
-                                "versionStartIncluding": "2.3.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.5.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-37652"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-415"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab"
+                          "version_value": ">= 2.5.0, < 2.5.1"
                         },
                         {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6"
+                          "version_value": ">= 2.4.0, < 2.4.3"
+                        },
+                        {
+                          "version_value": "< 2.3.4"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.6,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-10-25T16:03Z",
-            "publishedDate": "2021-08-12T22:15Z"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "HIGH",
+          "baseScore": 7.8,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-416: Use After Free"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-m7fm-4jfh-jrg6",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
+          "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2021-08-25",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3",
+            "2.5.1"
+          ],
+          "identifier": "CVE-2021-37652",
+          "identifiers": [
+            "GHSA-m7fm-4jfh-jrg6",
+            "CVE-2021-37652"
+          ],
+          "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2021-08-25",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37652",
+            "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
+            "https://github.com/advisories/GHSA-m7fm-4jfh-jrg6"
+          ],
+          "uuid": "39a0677e-a3e7-4a2f-b080-cf86a234ea2e"
+        },
+        {
+          "affected_range": "<2.3.4||>=2.4.0,<2.4.3||==2.5.0",
+          "affected_versions": "All versions before 2.3.4, all versions starting from 2.4.0 before 2.4.3, version 2.5.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2021-08-25",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3",
+            "2.5.1"
+          ],
+          "identifier": "CVE-2021-37652",
+          "identifiers": [
+            "GHSA-m7fm-4jfh-jrg6",
+            "CVE-2021-37652"
+          ],
+          "not_impacted": "All versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.5.0",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2021-08-25",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.5.1 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37652",
+            "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
+            "https://github.com/advisories/GHSA-m7fm-4jfh-jrg6"
+          ],
+          "uuid": "64460204-055f-4f30-a7e0-3410438e7bfa"
+        },
+        {
+          "affected_range": ">=2.3.0,<2.3.4||>=2.4.0,<2.4.3||>=2.5.0,<=2.6.0",
+          "affected_versions": "All versions starting from 2.3.0 before 2.3.4, all versions starting from 2.4.0 before 2.4.3, all versions starting from 2.5.0 up to 2.6.0",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-415",
+            "CWE-937"
+          ],
+          "date": "2022-10-25",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. The implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The implementation uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed.",
+          "fixed_versions": [
+            "2.3.4",
+            "2.4.3",
+            "2.6.1"
+          ],
+          "identifier": "CVE-2021-37652",
+          "identifiers": [
+            "CVE-2021-37652",
+            "GHSA-m7fm-4jfh-jrg6"
+          ],
+          "not_impacted": "All versions before 2.3.0, all versions starting from 2.3.4 before 2.4.0, all versions starting from 2.4.3 before 2.5.0, all versions after 2.6.0",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2021-08-12",
+          "solution": "Upgrade to versions 2.3.4, 2.4.3, 2.6.1 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-37652"
+          ],
+          "uuid": "e02a14fb-985b-4314-8b4b-deec7d113379"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.4.3",
+                "versionStartIncluding": "2.4.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.6.0:rc0:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.3.4",
+                "versionStartIncluding": "2.3.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.5.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-37652"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "TensorFlow is an end-to-end open source platform for machine learning. In affected versions the implementation for `tf.raw_ops.BoostedTreesCreateEnsemble` can result in a use after free error if an attacker supplies specially crafted arguments. The [implementation](https://github.com/tensorflow/tensorflow/blob/f24faa153ad31a4b51578f8181d3aaab77a1ddeb/tensorflow/core/kernels/boosted_trees/resource_ops.cc#L55) uses a reference counted resource and decrements the refcount if the initialization fails, as it should. However, when the code was written, the resource was represented as a naked pointer but later refactoring has changed it to be a smart pointer. Thus, when the pointer leaves the scope, a subsequent `free`-ing of the resource occurs, but this fails to take into account that the refcount has already reached 0, thus the resource has been already freed. During this double-free process, members of the resource object are accessed for cleanup but they are invalid as the entire resource has been freed. We have patched the issue in GitHub commit 5ecec9c6fbdbc6be03295685190a45e7eee726ab. The fix will be included in TensorFlow 2.6.0. We will also cherrypick this commit on TensorFlow 2.5.1, TensorFlow 2.4.3, and TensorFlow 2.3.4, as these are also affected and still in supported range."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-415"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/5ecec9c6fbdbc6be03295685190a45e7eee726ab"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m7fm-4jfh-jrg6"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.6,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-10-25T16:03Z",
+      "publishedDate": "2021-08-12T22:15Z"
     }
+  }
 }

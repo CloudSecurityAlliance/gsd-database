@@ -1,325 +1,342 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-28708",
-        "description": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2).",
-        "id": "GSD-2021-28708",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-28708.html",
-            "https://www.debian.org/security/2021/dsa-5017"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-28708",
+    "description": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2).",
+    "id": "GSD-2021-28708",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-28708.html",
+      "https://www.debian.org/security/2021/dsa-5017"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security@xen.org",
-                "ID": "CVE-2021-28708",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "xen",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "xen-unstable"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {
-                                        "product_name": "xen",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "?<",
-                                                    "version_value": "4.12"
-                                                },
-                                                {
-                                                    "version_affected": ">=",
-                                                    "version_value": "4.12.x"
-                                                },
-                                                {
-                                                    "version_affected": "!>",
-                                                    "version_value": "4.14.x"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {
-                                        "product_name": "xen",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "4.15.x"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Xen"
-                        }
-                    ]
-                }
-            },
-            "configuration": {
-                "configuration_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "All Xen versions from 4.7 onwards are affected.  Xen versions 4.6 and\nolder are not affected.\n\nOnly x86 HVM and PVH guests started in populate-on-demand mode can\nleverage the vulnerability.  Populate-on-demand mode is activated\nwhen the guest's xl configuration file specifies a \"maxmem\" value which\nis larger than the \"memory\" value."
-                            }
-                        ]
-                    }
-                }
-            },
-            "credit": {
-                "credit_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "This issue was discovered by Jan Beulich of SUSE."
-                            }
-                        ]
-                    }
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2)."
-                    }
-                ]
-            },
-            "impact": {
-                "impact_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Malicious or buggy guest kernels may be able to mount a Denial of\nService (DoS) attack affecting the entire system.  Privilege escalation\nand information leaks cannot be ruled out."
-                            }
-                        ]
-                    }
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "unknown"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://xenbits.xenproject.org/xsa/advisory-388.txt",
-                        "refsource": "MISC",
-                        "url": "https://xenbits.xenproject.org/xsa/advisory-388.txt"
-                    },
-                    {
-                        "name": "FEDORA-2021-03645e9807",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/I7ZGWVVRI4XY2XSTBI3XEMWBXPDVX6OT/"
-                    },
-                    {
-                        "name": "DSA-5017",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2021/dsa-5017"
-                    },
-                    {
-                        "name": "FEDORA-2021-2b3a2de94f",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PXUI4VMD52CH3T7YXAG3J2JW7ZNN3SXF/"
-                    }
-                ]
-            },
-            "workaround": {
-                "workaround_data": {
-                    "description": {
-                        "description_data": [
-                            {
-                                "lang": "eng",
-                                "value": "Not starting x86 HVM or PVH guests in populate-on-demand mode will avoid\nthe vulnerability."
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "4.15.1",
-                                "versionStartIncluding": "4.7.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:34:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security@xen.org",
-                    "ID": "CVE-2021-28708"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2)."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-77"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://xenbits.xenproject.org/xsa/advisory-388.txt",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://xenbits.xenproject.org/xsa/advisory-388.txt"
-                        },
-                        {
-                            "name": "FEDORA-2021-03645e9807",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/I7ZGWVVRI4XY2XSTBI3XEMWBXPDVX6OT/"
-                        },
-                        {
-                            "name": "DSA-5017",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2021/dsa-5017"
-                        },
-                        {
-                            "name": "FEDORA-2021-2b3a2de94f",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PXUI4VMD52CH3T7YXAG3J2JW7ZNN3SXF/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "COMPLETE",
-                        "baseScore": 6.9,
-                        "confidentialityImpact": "COMPLETE",
-                        "integrityImpact": "COMPLETE",
-                        "vectorString": "AV:L/AC:M/Au:N/C:C/I:C/A:C",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.4,
-                    "impactScore": 10.0,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.0,
-                    "impactScore": 6.0
-                }
-            },
-            "lastModifiedDate": "2021-12-15T17:39Z",
-            "publishedDate": "2021-11-24T01:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-28708"
+      ],
+      "details": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2).",
+      "id": "GSD-2021-28708",
+      "modified": "2023-12-13T01:23:29.127272Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security@xen.org",
+        "ID": "CVE-2021-28708",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "xen",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "xen-unstable"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "product_name": "xen",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "?<",
+                          "version_value": "4.12"
+                        },
+                        {
+                          "version_affected": ">=",
+                          "version_value": "4.12.x"
+                        },
+                        {
+                          "version_affected": "!>",
+                          "version_value": "4.14.x"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "product_name": "xen",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "4.15.x"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Xen"
+            }
+          ]
+        }
+      },
+      "configuration": {
+        "configuration_data": {
+          "description": {
+            "description_data": [
+              {
+                "lang": "eng",
+                "value": "All Xen versions from 4.7 onwards are affected.  Xen versions 4.6 and\nolder are not affected.\n\nOnly x86 HVM and PVH guests started in populate-on-demand mode can\nleverage the vulnerability.  Populate-on-demand mode is activated\nwhen the guest's xl configuration file specifies a \"maxmem\" value which\nis larger than the \"memory\" value."
+              }
+            ]
+          }
+        }
+      },
+      "credit": {
+        "credit_data": {
+          "description": {
+            "description_data": [
+              {
+                "lang": "eng",
+                "value": "This issue was discovered by Jan Beulich of SUSE."
+              }
+            ]
+          }
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2)."
+          }
+        ]
+      },
+      "impact": {
+        "impact_data": {
+          "description": {
+            "description_data": [
+              {
+                "lang": "eng",
+                "value": "Malicious or buggy guest kernels may be able to mount a Denial of\nService (DoS) attack affecting the entire system.  Privilege escalation\nand information leaks cannot be ruled out."
+              }
+            ]
+          }
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "unknown"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://xenbits.xenproject.org/xsa/advisory-388.txt",
+            "refsource": "MISC",
+            "url": "https://xenbits.xenproject.org/xsa/advisory-388.txt"
+          },
+          {
+            "name": "FEDORA-2021-03645e9807",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/I7ZGWVVRI4XY2XSTBI3XEMWBXPDVX6OT/"
+          },
+          {
+            "name": "DSA-5017",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2021/dsa-5017"
+          },
+          {
+            "name": "FEDORA-2021-2b3a2de94f",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PXUI4VMD52CH3T7YXAG3J2JW7ZNN3SXF/"
+          }
+        ]
+      },
+      "workaround": {
+        "workaround_data": {
+          "description": {
+            "description_data": [
+              {
+                "lang": "eng",
+                "value": "Not starting x86 HVM or PVH guests in populate-on-demand mode will avoid\nthe vulnerability."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
+                "cpe_name": [],
+                "versionEndIncluding": "4.15.1",
+                "versionStartIncluding": "4.7.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:34:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security@xen.org",
+          "ID": "CVE-2021-28708"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "PoD operations on misaligned GFNs T[his CNA information record relates to multiple CVEs; the text explains which aspects/vulnerabilities correspond to which CVE.] x86 HVM and PVH guests may be started in populate-on-demand (PoD) mode, to provide a way for them to later easily have more memory assigned. Guests are permitted to control certain P2M aspects of individual pages via hypercalls. These hypercalls may act on ranges of pages specified via page orders (resulting in a power-of-2 number of pages). The implementation of some of these hypercalls for PoD does not enforce the base page frame number to be suitably aligned for the specified order, yet some code involved in PoD handling actually makes such an assumption. These operations are XENMEM_decrease_reservation (CVE-2021-28704) and XENMEM_populate_physmap (CVE-2021-28707), the latter usable only by domains controlling the guest, i.e. a de-privileged qemu or a stub domain. (Patch 1, combining the fix to both these two issues.) In addition handling of XENMEM_decrease_reservation can also trigger a host crash when the specified page order is neither 4k nor 2M nor 1G (CVE-2021-28708, patch 2)."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-77"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://xenbits.xenproject.org/xsa/advisory-388.txt",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://xenbits.xenproject.org/xsa/advisory-388.txt"
+            },
+            {
+              "name": "FEDORA-2021-03645e9807",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/I7ZGWVVRI4XY2XSTBI3XEMWBXPDVX6OT/"
+            },
+            {
+              "name": "DSA-5017",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2021/dsa-5017"
+            },
+            {
+              "name": "FEDORA-2021-2b3a2de94f",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PXUI4VMD52CH3T7YXAG3J2JW7ZNN3SXF/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "COMPLETE",
+            "baseScore": 6.9,
+            "confidentialityImpact": "COMPLETE",
+            "integrityImpact": "COMPLETE",
+            "vectorString": "AV:L/AC:M/Au:N/C:C/I:C/A:C",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.4,
+          "impactScore": 10.0,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.0,
+          "impactScore": 6.0
+        }
+      },
+      "lastModifiedDate": "2021-12-15T17:39Z",
+      "publishedDate": "2021-11-24T01:15Z"
+    }
+  }
 }

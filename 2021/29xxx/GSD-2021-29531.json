@@ -1,353 +1,370 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-29531",
-        "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
-        "id": "GSD-2021-29531",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-29531.html",
-            "https://security.archlinux.org/CVE-2021-29531"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-29531",
+    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+    "id": "GSD-2021-29531",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-29531.html",
+      "https://security.archlinux.org/CVE-2021-29531"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-29531",
-                "STATE": "PUBLIC",
-                "TITLE": "CHECK-fail in tf.raw_ops.EncodePng"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-29531"
+      ],
+      "details": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+      "id": "GSD-2021-29531",
+      "modified": "2023-12-13T01:23:36.866358Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-29531",
+        "STATE": "PUBLIC",
+        "TITLE": "CHECK-fail in tf.raw_ops.EncodePng"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 2.1.4"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.2.0, < 2.2.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.3.0, < 2.3.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.4.0, < 2.4.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 2.5,
-                    "baseSeverity": "LOW",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-754: Improper Check for Unusual or Exceptional Conditions"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-3qxp-qjq7-w4hf",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
-                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-707",
-                        "CWE-754",
-                        "CWE-937"
-                    ],
-                    "date": "2021-05-21",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument  is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.1.4",
-                        "2.2.3",
-                        "2.3.3",
-                        "2.4.2"
-                    ],
-                    "identifier": "CVE-2021-29531",
-                    "identifiers": [
-                        "GHSA-3qxp-qjq7-w4hf",
-                        "CVE-2021-29531"
-                    ],
-                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2021-05-21",
-                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
-                    "title": "Improper Check for Unusual or Exceptional Conditions",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29531",
-                        "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
-                        "https://github.com/advisories/GHSA-3qxp-qjq7-w4hf"
-                    ],
-                    "uuid": "9ea82973-f218-411d-ac75-1fd6d932310d"
-                },
-                {
-                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
-                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-707",
-                        "CWE-754",
-                        "CWE-937"
-                    ],
-                    "date": "2021-05-21",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument  is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.1.4",
-                        "2.2.3",
-                        "2.3.3",
-                        "2.4.2"
-                    ],
-                    "identifier": "CVE-2021-29531",
-                    "identifiers": [
-                        "GHSA-3qxp-qjq7-w4hf",
-                        "CVE-2021-29531"
-                    ],
-                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2021-05-21",
-                    "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
-                    "title": "Improper Check for Unusual or Exceptional Conditions",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29531",
-                        "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
-                        "https://github.com/advisories/GHSA-3qxp-qjq7-w4hf"
-                    ],
-                    "uuid": "f42bea0d-aced-4845-86bf-a3ba23dd0bbd"
-                },
-                {
-                    "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
-                    "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
-                    "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-754",
-                        "CWE-937"
-                    ],
-                    "date": "2021-05-20",
-                    "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack.",
-                    "fixed_versions": [
-                        "2.5.0"
-                    ],
-                    "identifier": "CVE-2021-29531",
-                    "identifiers": [
-                        "CVE-2021-29531",
-                        "GHSA-3qxp-qjq7-w4hf"
-                    ],
-                    "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2021-05-14",
-                    "solution": "Upgrade to version 2.5.0 or above.",
-                    "title": "Improper Check for Unusual or Exceptional Conditions",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-29531"
-                    ],
-                    "uuid": "fc0ce138-05b3-4c01-860b-fa8fc062b1f2"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.1.4",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.2.3",
-                                "versionStartIncluding": "2.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.3.3",
-                                "versionStartIncluding": "2.3.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.4.2",
-                                "versionStartIncluding": "2.4.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-29531"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-754"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1"
+                          "version_value": "< 2.1.4"
                         },
                         {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf"
+                          "version_value": ">= 2.2.0, < 2.2.3"
+                        },
+                        {
+                          "version_value": ">= 2.3.0, < 2.3.3"
+                        },
+                        {
+                          "version_value": ">= 2.4.0, < 2.4.2"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 2.1,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "LOW",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 5.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2021-05-20T15:46Z",
-            "publishedDate": "2021-05-14T20:15Z"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "LOW",
+          "baseScore": 2.5,
+          "baseSeverity": "LOW",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-754: Improper Check for Unusual or Exceptional Conditions"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-3qxp-qjq7-w4hf",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+          "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-707",
+            "CWE-754",
+            "CWE-937"
+          ],
+          "date": "2021-05-21",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument  is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.1.4",
+            "2.2.3",
+            "2.3.3",
+            "2.4.2"
+          ],
+          "identifier": "CVE-2021-29531",
+          "identifiers": [
+            "GHSA-3qxp-qjq7-w4hf",
+            "CVE-2021-29531"
+          ],
+          "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2021-05-21",
+          "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+          "title": "Improper Check for Unusual or Exceptional Conditions",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-29531",
+            "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
+            "https://github.com/advisories/GHSA-3qxp-qjq7-w4hf"
+          ],
+          "uuid": "9ea82973-f218-411d-ac75-1fd6d932310d"
+        },
+        {
+          "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+          "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-707",
+            "CWE-754",
+            "CWE-937"
+          ],
+          "date": "2021-05-21",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument  is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.1.4",
+            "2.2.3",
+            "2.3.3",
+            "2.4.2"
+          ],
+          "identifier": "CVE-2021-29531",
+          "identifiers": [
+            "GHSA-3qxp-qjq7-w4hf",
+            "CVE-2021-29531"
+          ],
+          "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2021-05-21",
+          "solution": "Upgrade to versions 2.1.4, 2.2.3, 2.3.3, 2.4.2 or above.",
+          "title": "Improper Check for Unusual or Exceptional Conditions",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-29531",
+            "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
+            "https://github.com/advisories/GHSA-3qxp-qjq7-w4hf"
+          ],
+          "uuid": "f42bea0d-aced-4845-86bf-a3ba23dd0bbd"
+        },
+        {
+          "affected_range": "<2.1.4||>=2.2.0,<2.2.3||>=2.3.0,<2.3.3||>=2.4.0,<2.4.2",
+          "affected_versions": "All versions before 2.1.4, all versions starting from 2.2.0 before 2.2.3, all versions starting from 2.3.0 before 2.3.3, all versions starting from 2.4.0 before 2.4.2",
+          "cvss_v2": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-754",
+            "CWE-937"
+          ],
+          "date": "2021-05-20",
+          "description": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`, the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`. Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack.",
+          "fixed_versions": [
+            "2.5.0"
+          ],
+          "identifier": "CVE-2021-29531",
+          "identifiers": [
+            "CVE-2021-29531",
+            "GHSA-3qxp-qjq7-w4hf"
+          ],
+          "not_impacted": "All versions starting from 2.1.4 before 2.2.0, all versions starting from 2.2.3 before 2.3.0, all versions starting from 2.3.3 before 2.4.0, all versions starting from 2.4.2",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2021-05-14",
+          "solution": "Upgrade to version 2.5.0 or above.",
+          "title": "Improper Check for Unusual or Exceptional Conditions",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-29531"
+          ],
+          "uuid": "fc0ce138-05b3-4c01-860b-fa8fc062b1f2"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.1.4",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.2.3",
+                "versionStartIncluding": "2.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.3.3",
+                "versionStartIncluding": "2.3.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.4.2",
+                "versionStartIncluding": "2.4.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-29531"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "TensorFlow is an end-to-end open source platform for machine learning. An attacker can trigger a `CHECK` fail in PNG encoding by providing an empty input tensor as the pixel data. This is because the implementation(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L57-L60) only validates that the total number of pixels in the image does not overflow. Thus, an attacker can send an empty matrix for encoding. However, if the tensor is empty, then the associated buffer is `nullptr`. Hence, when calling `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/kernels/image/encode_png_op.cc#L79-L93), the first argument (i.e., `image.flat<T>().data()`) is `NULL`. This then triggers the `CHECK_NOTNULL` in the first line of `png::WriteImageToBuffer`(https://github.com/tensorflow/tensorflow/blob/e312e0791ce486a80c9d23110841525c6f7c3289/tensorflow/core/lib/png/png_io.cc#L345-L349). Since `image` is null, this results in `abort` being called after printing the stacktrace. Effectively, this allows an attacker to mount a denial of service attack. The fix will be included in TensorFlow 2.5.0. We will also cherrypick this commit on TensorFlow 2.4.2, TensorFlow 2.3.3, TensorFlow 2.2.3 and TensorFlow 2.1.4, as these are also affected and still in supported range."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-754"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/26eb323554ffccd173e8a79a8c05c15b685ae4d1"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-3qxp-qjq7-w4hf"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 2.1,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "LOW",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2021-05-20T15:46Z",
+      "publishedDate": "2021-05-14T20:15Z"
     }
+  }
 }

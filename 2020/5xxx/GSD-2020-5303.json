@@ -1,283 +1,300 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-5303",
-        "description": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10.",
-        "id": "GSD-2020-5303"
+  "GSD": {
+    "alias": "CVE-2020-5303",
+    "description": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10.",
+    "id": "GSD-2020-5303"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-5303",
-                "STATE": "PUBLIC",
-                "TITLE": "Denial of service in Tendermint"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Tendermint",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 0.32.0, < 0.32.10"
-                                                },
-                                                {
-                                                    "version_value": ">= 0.33.0, < 0.33.3"
-                                                },
-                                                {
-                                                    "version_value": "< 0.31.12"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Tendermint"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 3.1,
-                    "baseSeverity": "LOW",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:N/I:N/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-789: Uncontrolled Memory Allocation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6"
-                    },
-                    {
-                        "name": "https://hackerone.com/reports/820317",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/820317"
-                    },
-                    {
-                        "name": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-v24h-pjjv-mcp6",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=0.33.0 <0.33.3||<0.31.12||>=0.32.0 <0.32.10",
-                    "affected_versions": "All versions starting from 0.33.0 before 0.33.3, all versions before 0.31.12, all versions starting from 0.32.0 before 0.32.10",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-787",
-                        "CWE-937"
-                    ],
-                    "date": "2021-05-27",
-                    "description": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10.",
-                    "fixed_versions": [
-                        "0.31.12"
-                    ],
-                    "identifier": "CVE-2020-5303",
-                    "identifiers": [
-                        "GHSA-v24h-pjjv-mcp6",
-                        "CVE-2020-5303"
-                    ],
-                    "not_impacted": "All versions before 0.33.0, all versions starting from 0.31.12 before 0.33.3",
-                    "package_slug": "go/github.com/tendermint/tendermint/p2p",
-                    "pubdate": "2021-05-27",
-                    "solution": "Upgrade to version 0.31.12 or above.",
-                    "title": "Out-of-bounds Write",
-                    "urls": [
-                        "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-5303",
-                        "https://github.com/tendermint/tendermint/issues/1696",
-                        "https://github.com/tendermint/tendermint/issues/3338",
-                        "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
-                        "https://github.com/tendermint/tendermint/blob/master/CHANGELOG.md#denial-of-service-1",
-                        "https://github.com/advisories/GHSA-v24h-pjjv-mcp6"
-                    ],
-                    "uuid": "c87a510c-8ab1-499d-94b8-f4a75a24101c"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.31.12",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.32.10",
-                                "versionStartIncluding": "0.32.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.33.3",
-                                "versionStartIncluding": "0.33.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-5303"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-787"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd"
-                        },
-                        {
-                            "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6"
-                        },
-                        {
-                            "name": "https://hackerone.com/reports/820317",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Permissions Required",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/820317"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 3.7,
-                        "baseSeverity": "LOW",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2020-06-30T18:15Z",
-            "publishedDate": "2020-04-10T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2020-5303"
+      ],
+      "details": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10.",
+      "id": "GSD-2020-5303",
+      "modified": "2023-12-13T01:22:03.172724Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-5303",
+        "STATE": "PUBLIC",
+        "TITLE": "Denial of service in Tendermint"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Tendermint",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 0.32.0, < 0.32.10"
+                        },
+                        {
+                          "version_value": ">= 0.33.0, < 0.33.3"
+                        },
+                        {
+                          "version_value": "< 0.31.12"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Tendermint"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "LOW",
+          "baseScore": 3.1,
+          "baseSeverity": "LOW",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:N/I:N/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-789: Uncontrolled Memory Allocation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6"
+          },
+          {
+            "name": "https://hackerone.com/reports/820317",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/820317"
+          },
+          {
+            "name": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
+            "refsource": "MISC",
+            "url": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-v24h-pjjv-mcp6",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=0.33.0 <0.33.3||<0.31.12||>=0.32.0 <0.32.10",
+          "affected_versions": "All versions starting from 0.33.0 before 0.33.3, all versions before 0.31.12, all versions starting from 0.32.0 before 0.32.10",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-787",
+            "CWE-937"
+          ],
+          "date": "2021-05-27",
+          "description": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10.",
+          "fixed_versions": [
+            "0.31.12"
+          ],
+          "identifier": "CVE-2020-5303",
+          "identifiers": [
+            "GHSA-v24h-pjjv-mcp6",
+            "CVE-2020-5303"
+          ],
+          "not_impacted": "All versions before 0.33.0, all versions starting from 0.31.12 before 0.33.3",
+          "package_slug": "go/github.com/tendermint/tendermint/p2p",
+          "pubdate": "2021-05-27",
+          "solution": "Upgrade to version 0.31.12 or above.",
+          "title": "Out-of-bounds Write",
+          "urls": [
+            "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-5303",
+            "https://github.com/tendermint/tendermint/issues/1696",
+            "https://github.com/tendermint/tendermint/issues/3338",
+            "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
+            "https://github.com/tendermint/tendermint/blob/master/CHANGELOG.md#denial-of-service-1",
+            "https://github.com/advisories/GHSA-v24h-pjjv-mcp6"
+          ],
+          "uuid": "c87a510c-8ab1-499d-94b8-f4a75a24101c"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.31.12",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.32.10",
+                "versionStartIncluding": "0.32.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.33.3",
+                "versionStartIncluding": "0.33.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-5303"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Tendermint before versions 0.33.3, 0.32.10, and 0.31.12 has a denial-of-service vulnerability. Tendermint does not limit the number of P2P connection requests. For each p2p connection, it allocates XXX bytes. Even though this memory is garbage collected once the connection is terminated (due to duplicate IP or reaching a maximum number of inbound peers), temporary memory spikes can lead to OOM (Out-Of-Memory) exceptions. Additionally, Tendermint does not reclaim activeID of a peer after it's removed in Mempool reactor. This does not happen all the time. It only happens when a connection fails (for any reason) before the Peer is created and added to all reactors. RemovePeer is therefore called before AddPeer, which leads to always growing memory (activeIDs map). The activeIDs map has a maximum size of 65535 and the node will panic if this map reaches the maximum. An attacker can create a lot of connection attempts (exploiting above denial of service), which ultimately will lead to the node panicking. These issues are patched in Tendermint 0.33.3 and 0.32.10."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-787"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tendermint/tendermint/commit/e2d6859afd7dba4cf97c7f7d412e7d8fc908d1cd"
+            },
+            {
+              "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-v24h-pjjv-mcp6"
+            },
+            {
+              "name": "https://hackerone.com/reports/820317",
+              "refsource": "MISC",
+              "tags": [
+                "Permissions Required",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/820317"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 3.7,
+            "baseSeverity": "LOW",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2020-06-30T18:15Z",
+      "publishedDate": "2020-04-10T19:15Z"
+    }
+  }
 }

@@ -1,325 +1,342 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-0215",
-        "id": "GSD-2023-0215",
-        "references": [
-            "https://alas.aws.amazon.com/cve/html/CVE-2023-0215.html",
-            "https://www.debian.org/security/2023/dsa-5343",
-            "https://access.redhat.com/errata/RHSA-2023:0946",
-            "https://www.suse.com/security/cve/CVE-2023-0215.html",
-            "https://ubuntu.com/security/CVE-2023-0215"
-        ]
+  "GSD": {
+    "alias": "CVE-2023-0215",
+    "id": "GSD-2023-0215",
+    "references": [
+      "https://alas.aws.amazon.com/cve/html/CVE-2023-0215.html",
+      "https://www.debian.org/security/2023/dsa-5343",
+      "https://access.redhat.com/errata/RHSA-2023:0946",
+      "https://www.suse.com/security/cve/CVE-2023-0215.html",
+      "https://ubuntu.com/security/CVE-2023-0215"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "openssl-security@openssl.org",
-                "ID": "CVE-2023-0215",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "OpenSSL",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "3.0.0",
-                                                    "version_value": "3.0.8"
-                                                },
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "1.1.1",
-                                                    "version_value": "1.1.1t"
-                                                },
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "1.0.2",
-                                                    "version_value": "1.0.2zg"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "OpenSSL"
-                        }
-                    ]
-                }
-            },
-            "credits": [
-                {
-                    "lang": "en",
-                    "value": "Octavio Galland (Max Planck Institute for Security and Privacy)"
-                },
-                {
-                    "lang": "en",
-                    "value": "Marcel B\u00f6hme (Max Planck Institute for Security and Privacy)"
-                },
-                {
-                    "lang": "en",
-                    "value": "Viktor Dukhovni"
-                },
-                {
-                    "lang": "en",
-                    "value": "Matt Caswell"
-                }
-            ],
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n"
-                    }
-                ]
-            },
-            "generator": {
-                "engine": "Vulnogram 0.1.0-dev"
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "use-after-free"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://www.openssl.org/news/secadv/20230207.txt",
-                        "refsource": "MISC",
-                        "url": "https://www.openssl.org/news/secadv/20230207.txt"
-                    },
-                    {
-                        "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd",
-                        "refsource": "MISC",
-                        "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd"
-                    },
-                    {
-                        "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344",
-                        "refsource": "MISC",
-                        "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344"
-                    },
-                    {
-                        "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb",
-                        "refsource": "MISC",
-                        "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20230427-0007/",
-                        "refsource": "MISC",
-                        "url": "https://security.netapp.com/advisory/ntap-20230427-0007/"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20230427-0009/",
-                        "refsource": "MISC",
-                        "url": "https://security.netapp.com/advisory/ntap-20230427-0009/"
-                    }
-                ]
-            },
-            "source": {
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=1.0.2 <1.0.2zg||>=1.1.1 <1.1.1t||>=3.0.0 <3.0.8",
-                    "affected_versions": "All versions starting from 1.0.2 before 1.0.2zg, all versions starting from 1.1.1 before 1.1.1t, all versions starting from 3.0.0 before 3.0.8",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-416",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-19",
-                    "description": "The public API function BIO_new_NDEF is a helper function used for streaming ASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the SMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by end user applications. The function receives a BIO from the caller, prepends a new BIO_f_asn1 filter BIO onto the front of it to form a BIO chain, and then returns the new head of the BIO chain to the caller. Under certain conditions, for example if a CMS recipient public key is invalid, the new filter BIO is freed and the function returns a NULL result indicating a failure. However, in this case, the BIO chain is not properly cleaned up and the BIO passed by the caller still retains internal pointers to the previously freed filter BIO. If the caller then goes on to call BIO_pop() on the BIO then a use-after-free will occur. This will most likely result in a crash. This scenario occurs directly in the internal function B64_write_ASN1() which may cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on the BIO. This internal function is in turn called by the public API functions PEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream, SMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7. Other public API functions that may be impacted by this include i2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and i2d_PKCS7_bio_stream. The OpenSSL cms and smime command line applications are similarly affected.",
-                    "fixed_versions": [
-                        "1.1.0l",
-                        "1.1.1t",
-                        "3.0.8"
-                    ],
-                    "identifier": "CVE-2023-0215",
-                    "identifiers": [
-                        "CVE-2023-0215"
-                    ],
-                    "not_impacted": "All versions before 1.0.2, all versions starting from 1.0.2zg before 1.1.1, all versions starting from 1.1.1t before 3.0.0, all versions starting from 3.0.8",
-                    "package_slug": "conan/openssl",
-                    "pubdate": "2023-02-08",
-                    "solution": "Upgrade to versions 1.1.0l, 1.1.1t, 3.0.8 or above.",
-                    "title": "Use After Free",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-0215",
-                        "https://www.openssl.org/news/secadv/20230207.txt"
-                    ],
-                    "uuid": "e816f5aa-63b9-46e9-9b8d-d27c0767b4b7"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.0.8",
-                                "versionStartIncluding": "3.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.1t",
-                                "versionStartIncluding": "1.1.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.2zg",
-                                "versionStartIncluding": "1.0.2",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:stormshield:stormshield_management_center:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.3.3",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "openssl-security@openssl.org",
-                    "ID": "CVE-2023-0215"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-416"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://www.openssl.org/news/secadv/20230207.txt",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://www.openssl.org/news/secadv/20230207.txt"
-                        },
-                        {
-                            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344"
-                        },
-                        {
-                            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb"
-                        },
-                        {
-                            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20230427-0007/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://security.netapp.com/advisory/ntap-20230427-0007/"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20230427-0009/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://security.netapp.com/advisory/ntap-20230427-0009/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-07-19T00:55Z",
-            "publishedDate": "2023-02-08T20:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-0215"
+      ],
+      "details": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n",
+      "id": "GSD-2023-0215",
+      "modified": "2023-12-13T01:20:22.794474Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "openssl-security@openssl.org",
+        "ID": "CVE-2023-0215",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "OpenSSL",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.0.0",
+                          "version_value": "3.0.8"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "1.1.1",
+                          "version_value": "1.1.1t"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "1.0.2",
+                          "version_value": "1.0.2zg"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "OpenSSL"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Octavio Galland (Max Planck Institute for Security and Privacy)"
+        },
+        {
+          "lang": "en",
+          "value": "Marcel B\u00f6hme (Max Planck Institute for Security and Privacy)"
+        },
+        {
+          "lang": "en",
+          "value": "Viktor Dukhovni"
+        },
+        {
+          "lang": "en",
+          "value": "Matt Caswell"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "use-after-free"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.openssl.org/news/secadv/20230207.txt",
+            "refsource": "MISC",
+            "url": "https://www.openssl.org/news/secadv/20230207.txt"
+          },
+          {
+            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd",
+            "refsource": "MISC",
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd"
+          },
+          {
+            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344",
+            "refsource": "MISC",
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344"
+          },
+          {
+            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb",
+            "refsource": "MISC",
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20230427-0007/",
+            "refsource": "MISC",
+            "url": "https://security.netapp.com/advisory/ntap-20230427-0007/"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20230427-0009/",
+            "refsource": "MISC",
+            "url": "https://security.netapp.com/advisory/ntap-20230427-0009/"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=1.0.2 <1.0.2zg||>=1.1.1 <1.1.1t||>=3.0.0 <3.0.8",
+          "affected_versions": "All versions starting from 1.0.2 before 1.0.2zg, all versions starting from 1.1.1 before 1.1.1t, all versions starting from 3.0.0 before 3.0.8",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-416",
+            "CWE-937"
+          ],
+          "date": "2023-07-19",
+          "description": "The public API function BIO_new_NDEF is a helper function used for streaming ASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the SMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by end user applications. The function receives a BIO from the caller, prepends a new BIO_f_asn1 filter BIO onto the front of it to form a BIO chain, and then returns the new head of the BIO chain to the caller. Under certain conditions, for example if a CMS recipient public key is invalid, the new filter BIO is freed and the function returns a NULL result indicating a failure. However, in this case, the BIO chain is not properly cleaned up and the BIO passed by the caller still retains internal pointers to the previously freed filter BIO. If the caller then goes on to call BIO_pop() on the BIO then a use-after-free will occur. This will most likely result in a crash. This scenario occurs directly in the internal function B64_write_ASN1() which may cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on the BIO. This internal function is in turn called by the public API functions PEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream, SMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7. Other public API functions that may be impacted by this include i2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and i2d_PKCS7_bio_stream. The OpenSSL cms and smime command line applications are similarly affected.",
+          "fixed_versions": [
+            "1.1.0l",
+            "1.1.1t",
+            "3.0.8"
+          ],
+          "identifier": "CVE-2023-0215",
+          "identifiers": [
+            "CVE-2023-0215"
+          ],
+          "not_impacted": "All versions before 1.0.2, all versions starting from 1.0.2zg before 1.1.1, all versions starting from 1.1.1t before 3.0.0, all versions starting from 3.0.8",
+          "package_slug": "conan/openssl",
+          "pubdate": "2023-02-08",
+          "solution": "Upgrade to versions 1.1.0l, 1.1.1t, 3.0.8 or above.",
+          "title": "Use After Free",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-0215",
+            "https://www.openssl.org/news/secadv/20230207.txt"
+          ],
+          "uuid": "e816f5aa-63b9-46e9-9b8d-d27c0767b4b7"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.0.8",
+                "versionStartIncluding": "3.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.1t",
+                "versionStartIncluding": "1.1.1",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.2zg",
+                "versionStartIncluding": "1.0.2",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:stormshield:stormshield_management_center:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.3.3",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "openssl-security@openssl.org",
+          "ID": "CVE-2023-0215"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-416"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://www.openssl.org/news/secadv/20230207.txt",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://www.openssl.org/news/secadv/20230207.txt"
+            },
+            {
+              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=c3829dd8825c654652201e16f8a0a0c46ee3f344"
+            },
+            {
+              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9816136fe31d92ace4037d5da5257f763aeeb4eb"
+            },
+            {
+              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8818064ce3c3c0f1b740a5aaba2a987e75bfbafd"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20230427-0007/",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://security.netapp.com/advisory/ntap-20230427-0007/"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20230427-0009/",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://security.netapp.com/advisory/ntap-20230427-0009/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-07-19T00:55Z",
+      "publishedDate": "2023-02-08T20:15Z"
+    }
+  }
 }

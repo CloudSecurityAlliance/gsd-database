@@ -1,251 +1,268 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-32323",
-        "id": "GSD-2023-32323"
+  "GSD": {
+    "alias": "CVE-2023-32323",
+    "id": "GSD-2023-32323"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-32323",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "synapse",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.74.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "matrix-org"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. A malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y. Synapse instances with federation disabled are not affected. In versions of Synapse up to and including 1.73, Synapse did not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event. Synapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n"
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:L",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-20",
-                                "lang": "eng",
-                                "value": "CWE-20: Improper Input Validation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
-                        "refsource": "MISC",
-                        "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr"
-                    },
-                    {
-                        "name": "https://github.com/matrix-org/synapse/issues/14492",
-                        "refsource": "MISC",
-                        "url": "https://github.com/matrix-org/synapse/issues/14492"
-                    },
-                    {
-                        "name": "https://github.com/matrix-org/synapse/pull/14642",
-                        "refsource": "MISC",
-                        "url": "https://github.com/matrix-org/synapse/pull/14642"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-f3wc-3vxv-xmvr",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.74.0",
-                    "affected_versions": "All versions before 1.74.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2023-06-02",
-                    "description": "### Impact\n\nA malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y.\n\nSynapse instances with federation disabled are not affected.\n\n#### Details\n\nThe Matrix protocol allows homeservers to provide an `invite_room_state` field on a [room invite](https://spec.matrix.org/v1.5/client-server-api/#mroommember) containing a [summary of room state](https://spec.matrix.org/v1.5/client-server-api/#stripped-state). In versions of Synapse up to and including v1.73.0, Synapse does not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event.\n\nAn attacker with an account on a vulnerable Synapse homeserver X could exploit this by having X create an over-sized invite event in a room with a user from another homeserver Y. Once acknowledged by the invitee's homeserver, the invite event would be sent in a batch of events to Y. If the malicious invite is so large that the entire batch is rejected as too large, X's outgoing traffic to Y would become \"stuck\", meaning that messages and state events created by X would remain unseen by Y.\n\n### Patches\n\nSynapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n### Workarounds\n\nThere are no robust workarounds.\n\nThis attack needs an account on Synapse homeserver X to deny federation from X to another homeserver Y. As a partial mitigation, Synapse operators can disable open registration to limit the ability of attackers to create new accounts on homeserver X.\n\nIf homeserver X has been attacked in this way, restarting it will resume outgoing federation by entering \"catchup mode\". For catchup mode to ignore the oversized invites, every attacked room must have a correctly-sized event sent by X which is newer than any oversized invite. This is difficult to arrange, and does not prevent the attacker from repeating their attack.\n\n### References\n\n- https://github.com/matrix-org/synapse/issues/14492 was caused by this issue.\n- https://github.com/matrix-org/synapse/issues/14642 includes the patch described above.\n\n### For more information\n\nIf you have any questions or comments about this advisory, e-mail us at [security@matrix.org](mailto:security@matrix.org).",
-                    "fixed_versions": [
-                        "1.74.0"
-                    ],
-                    "identifier": "CVE-2023-32323",
-                    "identifiers": [
-                        "CVE-2023-32323",
-                        "GHSA-f3wc-3vxv-xmvr"
-                    ],
-                    "not_impacted": "All versions starting from 1.74.0",
-                    "package_slug": "pypi/matrix-synapse",
-                    "pubdate": "2023-05-26",
-                    "solution": "Upgrade to version 1.74.0 or above.",
-                    "title": "Synapse Outgoing federation to specific hosts can be disabled by sending malicious invites",
-                    "urls": [
-                        "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
-                        "https://github.com/matrix-org/synapse/issues/14492",
-                        "https://github.com/matrix-org/synapse/pull/14642",
-                        "https://github.com/advisories/GHSA-f3wc-3vxv-xmvr"
-                    ],
-                    "uuid": "8396c4f6-65a5-4f05-b04a-d5fe94312bf8"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:matrix:synapse:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.74.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-32323"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. A malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y. Synapse instances with federation disabled are not affected. In versions of Synapse up to and including 1.73, Synapse did not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event. Synapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-20"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr"
-                        },
-                        {
-                            "name": "https://github.com/matrix-org/synapse/pull/14642",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/matrix-org/synapse/pull/14642"
-                        },
-                        {
-                            "name": "https://github.com/matrix-org/synapse/issues/14492",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Issue Tracking"
-                            ],
-                            "url": "https://github.com/matrix-org/synapse/issues/14492"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 4.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2023-09-18T04:15Z",
-            "publishedDate": "2023-05-26T14:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-32323"
+      ],
+      "details": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. A malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y. Synapse instances with federation disabled are not affected. In versions of Synapse up to and including 1.73, Synapse did not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event. Synapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n",
+      "id": "GSD-2023-32323",
+      "modified": "2023-12-13T01:20:23.408951Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-32323",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "synapse",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.74.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "matrix-org"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. A malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y. Synapse instances with federation disabled are not affected. In versions of Synapse up to and including 1.73, Synapse did not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event. Synapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-20",
+                "lang": "eng",
+                "value": "CWE-20: Improper Input Validation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
+            "refsource": "MISC",
+            "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr"
+          },
+          {
+            "name": "https://github.com/matrix-org/synapse/issues/14492",
+            "refsource": "MISC",
+            "url": "https://github.com/matrix-org/synapse/issues/14492"
+          },
+          {
+            "name": "https://github.com/matrix-org/synapse/pull/14642",
+            "refsource": "MISC",
+            "url": "https://github.com/matrix-org/synapse/pull/14642"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-f3wc-3vxv-xmvr",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.74.0",
+          "affected_versions": "All versions before 1.74.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2023-06-02",
+          "description": "### Impact\n\nA malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y.\n\nSynapse instances with federation disabled are not affected.\n\n#### Details\n\nThe Matrix protocol allows homeservers to provide an `invite_room_state` field on a [room invite](https://spec.matrix.org/v1.5/client-server-api/#mroommember) containing a [summary of room state](https://spec.matrix.org/v1.5/client-server-api/#stripped-state). In versions of Synapse up to and including v1.73.0, Synapse does not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event.\n\nAn attacker with an account on a vulnerable Synapse homeserver X could exploit this by having X create an over-sized invite event in a room with a user from another homeserver Y. Once acknowledged by the invitee's homeserver, the invite event would be sent in a batch of events to Y. If the malicious invite is so large that the entire batch is rejected as too large, X's outgoing traffic to Y would become \"stuck\", meaning that messages and state events created by X would remain unseen by Y.\n\n### Patches\n\nSynapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n### Workarounds\n\nThere are no robust workarounds.\n\nThis attack needs an account on Synapse homeserver X to deny federation from X to another homeserver Y. As a partial mitigation, Synapse operators can disable open registration to limit the ability of attackers to create new accounts on homeserver X.\n\nIf homeserver X has been attacked in this way, restarting it will resume outgoing federation by entering \"catchup mode\". For catchup mode to ignore the oversized invites, every attacked room must have a correctly-sized event sent by X which is newer than any oversized invite. This is difficult to arrange, and does not prevent the attacker from repeating their attack.\n\n### References\n\n- https://github.com/matrix-org/synapse/issues/14492 was caused by this issue.\n- https://github.com/matrix-org/synapse/issues/14642 includes the patch described above.\n\n### For more information\n\nIf you have any questions or comments about this advisory, e-mail us at [security@matrix.org](mailto:security@matrix.org).",
+          "fixed_versions": [
+            "1.74.0"
+          ],
+          "identifier": "CVE-2023-32323",
+          "identifiers": [
+            "CVE-2023-32323",
+            "GHSA-f3wc-3vxv-xmvr"
+          ],
+          "not_impacted": "All versions starting from 1.74.0",
+          "package_slug": "pypi/matrix-synapse",
+          "pubdate": "2023-05-26",
+          "solution": "Upgrade to version 1.74.0 or above.",
+          "title": "Synapse Outgoing federation to specific hosts can be disabled by sending malicious invites",
+          "urls": [
+            "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
+            "https://github.com/matrix-org/synapse/issues/14492",
+            "https://github.com/matrix-org/synapse/pull/14642",
+            "https://github.com/advisories/GHSA-f3wc-3vxv-xmvr"
+          ],
+          "uuid": "8396c4f6-65a5-4f05-b04a-d5fe94312bf8"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:matrix:synapse:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.74.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-32323"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. A malicious user on a Synapse homeserver X with permission to create certain state events can disable outbound federation from X to an arbitrary homeserver Y. Synapse instances with federation disabled are not affected. In versions of Synapse up to and including 1.73, Synapse did not limit the size of `invite_room_state`, meaning that it was possible to create an arbitrarily large invite event. Synapse 1.74 refuses to create oversized `invite_room_state` fields. Server operators should upgrade to Synapse 1.74 or newer urgently.\n\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-20"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-f3wc-3vxv-xmvr"
+            },
+            {
+              "name": "https://github.com/matrix-org/synapse/pull/14642",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/matrix-org/synapse/pull/14642"
+            },
+            {
+              "name": "https://github.com/matrix-org/synapse/issues/14492",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Issue Tracking"
+              ],
+              "url": "https://github.com/matrix-org/synapse/issues/14492"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 4.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2023-09-18T04:15Z",
+      "publishedDate": "2023-05-26T14:15Z"
+    }
+  }
 }

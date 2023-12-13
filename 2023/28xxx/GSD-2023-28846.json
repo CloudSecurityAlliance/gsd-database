@@ -1,296 +1,313 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-28846",
-        "id": "GSD-2023-28846"
+  "GSD": {
+    "alias": "CVE-2023-28846",
+    "id": "GSD-2023-28846"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-28846",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "unpoly-rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 2.7.2.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "unpoly"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 5.9,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-400",
-                                "lang": "eng",
-                                "value": "CWE-400: Uncontrolled Resource Consumption"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
-                        "refsource": "MISC",
-                        "url": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78"
-                    },
-                    {
-                        "name": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
-                        "refsource": "MISC",
-                        "url": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16"
-                    },
-                    {
-                        "name": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
-                        "refsource": "MISC",
-                        "url": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks"
-                    },
-                    {
-                        "name": "https://github.com/unpoly/unpoly-rails/",
-                        "refsource": "MISC",
-                        "url": "https://github.com/unpoly/unpoly-rails/"
-                    },
-                    {
-                        "name": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
-                        "refsource": "MISC",
-                        "url": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning"
-                    },
-                    {
-                        "name": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
-                        "refsource": "MISC",
-                        "url": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long"
-                    },
-                    {
-                        "name": "https://unpoly.com/up.protocol",
-                        "refsource": "MISC",
-                        "url": "https://unpoly.com/up.protocol"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-m875-3xf6-mf78",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.7.2.2",
-                    "affected_versions": "All versions before 2.7.2.2",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2023-04-07",
-                    "description": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails.",
-                    "fixed_versions": [
-                        "2.7.2.2"
-                    ],
-                    "identifier": "CVE-2023-28846",
-                    "identifiers": [
-                        "CVE-2023-28846",
-                        "GHSA-m875-3xf6-mf78"
-                    ],
-                    "not_impacted": "All versions starting from 2.7.2.2",
-                    "package_slug": "gem/unpoly-rails",
-                    "pubdate": "2023-03-30",
-                    "solution": "Upgrade to version 2.7.2.2 or above.",
-                    "title": "Uncontrolled Resource Consumption",
-                    "urls": [
-                        "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-28846",
-                        "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
-                        "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
-                        "https://github.com/unpoly/unpoly-rails/",
-                        "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
-                        "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
-                        "https://unpoly.com/up.protocol",
-                        "https://github.com/advisories/GHSA-m875-3xf6-mf78"
-                    ],
-                    "uuid": "e75bcbe4-b1df-4bd1-956a-6e9623f18997"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:unpoly:unpoly-rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.7.2.2",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-28846"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-400"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/unpoly/unpoly-rails/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://github.com/unpoly/unpoly-rails/"
-                        },
-                        {
-                            "name": "https://unpoly.com/up.protocol",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product"
-                            ],
-                            "url": "https://unpoly.com/up.protocol"
-                        },
-                        {
-                            "name": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78"
-                        },
-                        {
-                            "name": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Technical Description"
-                            ],
-                            "url": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks"
-                        },
-                        {
-                            "name": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16"
-                        },
-                        {
-                            "name": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning"
-                        },
-                        {
-                            "name": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-04-07T18:28Z",
-            "publishedDate": "2023-03-30T20:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-28846"
+      ],
+      "details": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails.",
+      "id": "GSD-2023-28846",
+      "modified": "2023-12-13T01:20:48.506095Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-28846",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "unpoly-rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 2.7.2.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "unpoly"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-400",
+                "lang": "eng",
+                "value": "CWE-400: Uncontrolled Resource Consumption"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
+            "refsource": "MISC",
+            "url": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78"
+          },
+          {
+            "name": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
+            "refsource": "MISC",
+            "url": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16"
+          },
+          {
+            "name": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
+            "refsource": "MISC",
+            "url": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks"
+          },
+          {
+            "name": "https://github.com/unpoly/unpoly-rails/",
+            "refsource": "MISC",
+            "url": "https://github.com/unpoly/unpoly-rails/"
+          },
+          {
+            "name": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
+            "refsource": "MISC",
+            "url": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning"
+          },
+          {
+            "name": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
+            "refsource": "MISC",
+            "url": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long"
+          },
+          {
+            "name": "https://unpoly.com/up.protocol",
+            "refsource": "MISC",
+            "url": "https://unpoly.com/up.protocol"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-m875-3xf6-mf78",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.7.2.2",
+          "affected_versions": "All versions before 2.7.2.2",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2023-04-07",
+          "description": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails.",
+          "fixed_versions": [
+            "2.7.2.2"
+          ],
+          "identifier": "CVE-2023-28846",
+          "identifiers": [
+            "CVE-2023-28846",
+            "GHSA-m875-3xf6-mf78"
+          ],
+          "not_impacted": "All versions starting from 2.7.2.2",
+          "package_slug": "gem/unpoly-rails",
+          "pubdate": "2023-03-30",
+          "solution": "Upgrade to version 2.7.2.2 or above.",
+          "title": "Uncontrolled Resource Consumption",
+          "urls": [
+            "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-28846",
+            "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
+            "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
+            "https://github.com/unpoly/unpoly-rails/",
+            "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
+            "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
+            "https://unpoly.com/up.protocol",
+            "https://github.com/advisories/GHSA-m875-3xf6-mf78"
+          ],
+          "uuid": "e75bcbe4-b1df-4bd1-956a-6e9623f18997"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:unpoly:unpoly-rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.7.2.2",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-28846"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Unpoly is a JavaScript framework for server-side web applications. There is a possible Denial of Service (DoS) vulnerability in the `unpoly-rails` gem that implements the Unpoly server protocol for Rails applications. This issues affects Rails applications that operate as an upstream of a load balancer's that uses passive health checks. The `unpoly-rails` gem echoes the request URL as an `X-Up-Location` response header. By making a request with exceedingly long URLs (paths or query string), an attacker can cause unpoly-rails to write a exceedingly large response header. If the response header is too large to be parsed by a load balancer downstream of the Rails application, it may cause the load balancer to remove the upstream from a load balancing group. This causes that application instance to become unavailable until a configured timeout is reached or until an active healthcheck succeeds. This issue has been fixed and released as version 2.7.2.2 which is available via RubyGems and GitHub. Users unable to upgrade may: Configure your load balancer to use active health checks, e.g. by periodically requesting a route with a known response that indicates healthiness; Configure your load balancer so the maximum size of response headers is at least twice the maximum size of a URL; or instead of changing your server configuration you may also configure your Rails application to delete redundant `X-Up-Location` headers set by unpoly-rails."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-400"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/unpoly/unpoly-rails/",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://github.com/unpoly/unpoly-rails/"
+            },
+            {
+              "name": "https://unpoly.com/up.protocol",
+              "refsource": "MISC",
+              "tags": [
+                "Product"
+              ],
+              "url": "https://unpoly.com/up.protocol"
+            },
+            {
+              "name": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/unpoly/unpoly-rails/security/advisories/GHSA-m875-3xf6-mf78"
+            },
+            {
+              "name": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks",
+              "refsource": "MISC",
+              "tags": [
+                "Technical Description"
+              ],
+              "url": "https://docs.nginx.com/nginx/admin-guide/load-balancer/http-health-check/#passive-health-checks"
+            },
+            {
+              "name": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/unpoly/unpoly-rails/commit/cd9ad0007daceeb3b2354fdcab4f88350427bf16"
+            },
+            {
+              "name": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://makandracards.com/operations/537537-nginx-proxy-buffer-tuning"
+            },
+            {
+              "name": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://tryhexadecimal.com/guides/http/414-request-uri-too-long"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-04-07T18:28Z",
+      "publishedDate": "2023-03-30T20:15Z"
+    }
+  }
 }

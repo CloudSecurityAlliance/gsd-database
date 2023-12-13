@@ -1,190 +1,207 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-45814",
-        "id": "GSD-2023-45814"
+  "GSD": {
+    "alias": "CVE-2023-45814",
+    "id": "GSD-2023-45814"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-45814",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Bunkum",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 4.0.0, < 4.2.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "LittleBigRefresh"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Bunkum is an open-source protocol-agnostic request server for custom game servers. First, a little bit of background. So, in the beginning, Bunkum's `AuthenticationService` only supported injecting `IUser`s. However, as Refresh and SoundShapesServer implemented permissions systems support for injecting `IToken`s into endpoints was added. All was well until 4.0. Bunkum 4.0 then changed to enforce relations between `IToken`s and `IUser`s. This wasn't implemented in a very good way in the `AuthenticationService`, and ended up breaking caching in such a way that cached tokens would persist after the lifetime of the request - since we tried to cache both tokens and users. From that point until now, from what I understand, Bunkum was attempting to use that cached token at the start of the next request once cached. Naturally, when that token expired, downstream projects like Refresh would remove the object from Realm - and cause the object in the cache to be in a detached state, causing an exception from invalid use of `IToken.User`. So in other words, a use-after-free since Realm can't manage the lifetime of the cached token. Security-wise, the scope is fairly limited, can only be pulled off on a couple endpoints given a few conditions, and you can't guarantee which token you're going to get. Also, the token *would* get invalidated properly if the endpoint had either a `IToken` usage or a `IUser` usage. The fix is to just wipe the token cache after the request was handled, which is now in `4.2.1`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-772",
-                                "lang": "eng",
-                                "value": "CWE-772: Missing Release of Resource after Effective Lifetime"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq",
-                        "refsource": "MISC",
-                        "url": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq"
-                    },
-                    {
-                        "name": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76",
-                        "refsource": "MISC",
-                        "url": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-jrf2-h5j6-3rrq",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:littlebigfresh:bunkum:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "4.2.1",
-                                "versionStartIncluding": "4.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-45814"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Bunkum is an open-source protocol-agnostic request server for custom game servers. First, a little bit of background. So, in the beginning, Bunkum's `AuthenticationService` only supported injecting `IUser`s. However, as Refresh and SoundShapesServer implemented permissions systems support for injecting `IToken`s into endpoints was added. All was well until 4.0. Bunkum 4.0 then changed to enforce relations between `IToken`s and `IUser`s. This wasn't implemented in a very good way in the `AuthenticationService`, and ended up breaking caching in such a way that cached tokens would persist after the lifetime of the request - since we tried to cache both tokens and users. From that point until now, from what I understand, Bunkum was attempting to use that cached token at the start of the next request once cached. Naturally, when that token expired, downstream projects like Refresh would remove the object from Realm - and cause the object in the cache to be in a detached state, causing an exception from invalid use of `IToken.User`. So in other words, a use-after-free since Realm can't manage the lifetime of the cached token. Security-wise, the scope is fairly limited, can only be pulled off on a couple endpoints given a few conditions, and you can't guarantee which token you're going to get. Also, the token *would* get invalidated properly if the endpoint had either a `IToken` usage or a `IUser` usage. The fix is to just wipe the token cache after the request was handled, which is now in `4.2.1`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-772"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76"
-                        },
-                        {
-                            "name": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2023-10-30T17:16Z",
-            "publishedDate": "2023-10-18T22:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-45814"
+      ],
+      "details": "Bunkum is an open-source protocol-agnostic request server for custom game servers. First, a little bit of background. So, in the beginning, Bunkum's `AuthenticationService` only supported injecting `IUser`s. However, as Refresh and SoundShapesServer implemented permissions systems support for injecting `IToken`s into endpoints was added. All was well until 4.0. Bunkum 4.0 then changed to enforce relations between `IToken`s and `IUser`s. This wasn't implemented in a very good way in the `AuthenticationService`, and ended up breaking caching in such a way that cached tokens would persist after the lifetime of the request - since we tried to cache both tokens and users. From that point until now, from what I understand, Bunkum was attempting to use that cached token at the start of the next request once cached. Naturally, when that token expired, downstream projects like Refresh would remove the object from Realm - and cause the object in the cache to be in a detached state, causing an exception from invalid use of `IToken.User`. So in other words, a use-after-free since Realm can't manage the lifetime of the cached token. Security-wise, the scope is fairly limited, can only be pulled off on a couple endpoints given a few conditions, and you can't guarantee which token you're going to get. Also, the token *would* get invalidated properly if the endpoint had either a `IToken` usage or a `IUser` usage. The fix is to just wipe the token cache after the request was handled, which is now in `4.2.1`. Users are advised to upgrade. There are no known workarounds for this vulnerability.",
+      "id": "GSD-2023-45814",
+      "modified": "2023-12-13T01:20:38.067830Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-45814",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Bunkum",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 4.0.0, < 4.2.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "LittleBigRefresh"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Bunkum is an open-source protocol-agnostic request server for custom game servers. First, a little bit of background. So, in the beginning, Bunkum's `AuthenticationService` only supported injecting `IUser`s. However, as Refresh and SoundShapesServer implemented permissions systems support for injecting `IToken`s into endpoints was added. All was well until 4.0. Bunkum 4.0 then changed to enforce relations between `IToken`s and `IUser`s. This wasn't implemented in a very good way in the `AuthenticationService`, and ended up breaking caching in such a way that cached tokens would persist after the lifetime of the request - since we tried to cache both tokens and users. From that point until now, from what I understand, Bunkum was attempting to use that cached token at the start of the next request once cached. Naturally, when that token expired, downstream projects like Refresh would remove the object from Realm - and cause the object in the cache to be in a detached state, causing an exception from invalid use of `IToken.User`. So in other words, a use-after-free since Realm can't manage the lifetime of the cached token. Security-wise, the scope is fairly limited, can only be pulled off on a couple endpoints given a few conditions, and you can't guarantee which token you're going to get. Also, the token *would* get invalidated properly if the endpoint had either a `IToken` usage or a `IUser` usage. The fix is to just wipe the token cache after the request was handled, which is now in `4.2.1`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-772",
+                "lang": "eng",
+                "value": "CWE-772: Missing Release of Resource after Effective Lifetime"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq",
+            "refsource": "MISC",
+            "url": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq"
+          },
+          {
+            "name": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76",
+            "refsource": "MISC",
+            "url": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-jrf2-h5j6-3rrq",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:littlebigfresh:bunkum:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "4.2.1",
+                "versionStartIncluding": "4.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-45814"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Bunkum is an open-source protocol-agnostic request server for custom game servers. First, a little bit of background. So, in the beginning, Bunkum's `AuthenticationService` only supported injecting `IUser`s. However, as Refresh and SoundShapesServer implemented permissions systems support for injecting `IToken`s into endpoints was added. All was well until 4.0. Bunkum 4.0 then changed to enforce relations between `IToken`s and `IUser`s. This wasn't implemented in a very good way in the `AuthenticationService`, and ended up breaking caching in such a way that cached tokens would persist after the lifetime of the request - since we tried to cache both tokens and users. From that point until now, from what I understand, Bunkum was attempting to use that cached token at the start of the next request once cached. Naturally, when that token expired, downstream projects like Refresh would remove the object from Realm - and cause the object in the cache to be in a detached state, causing an exception from invalid use of `IToken.User`. So in other words, a use-after-free since Realm can't manage the lifetime of the cached token. Security-wise, the scope is fairly limited, can only be pulled off on a couple endpoints given a few conditions, and you can't guarantee which token you're going to get. Also, the token *would* get invalidated properly if the endpoint had either a `IToken` usage or a `IUser` usage. The fix is to just wipe the token cache after the request was handled, which is now in `4.2.1`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-772"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/LittleBigRefresh/Bunkum/commit/6e109464ed9255f558182f001f475a378405ff76"
+            },
+            {
+              "name": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/LittleBigRefresh/Bunkum/security/advisories/GHSA-jrf2-h5j6-3rrq"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2023-10-30T17:16Z",
+      "publishedDate": "2023-10-18T22:15Z"
+    }
+  }
 }

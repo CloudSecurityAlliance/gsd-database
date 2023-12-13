@@ -1,177 +1,194 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-31038",
-        "id": "GSD-2023-31038"
+  "GSD": {
+    "alias": "CVE-2023-31038",
+    "id": "GSD-2023-31038"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security@apache.org",
-                "ID": "CVE-2023-31038",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Apache Log4cxx",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "<",
-                                                    "version_name": "0.9.0",
-                                                    "version_value": "1.1.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Apache Software Foundation"
-                        }
-                    ]
-                }
-            },
-            "configuration": [
-                {
-                    "lang": "en",
-                    "supportingMedia": [
-                        {
-                            "base64": false,
-                            "type": "text/html",
-                            "value": "Log4cxx must be built with ODBC support, and configured to log messages to a database for this to occur<br>"
-                        }
-                    ],
-                    "value": "Log4cxx must be built with ODBC support, and configured to log messages to a database for this to occur\n"
-                }
-            ],
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n"
-                    }
-                ]
-            },
-            "generator": {
-                "engine": "Vulnogram 0.1.0-dev"
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-89",
-                                "lang": "eng",
-                                "value": "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9",
-                        "refsource": "MISC",
-                        "url": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9"
-                    }
-                ]
-            },
-            "source": {
-                "discovery": "INTERNAL"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:apache:log4cxx:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.0",
-                                "versionStartIncluding": "0.9.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security@apache.org",
-                    "ID": "CVE-2023-31038"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-89"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Mailing List",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-05-15T16:10Z",
-            "publishedDate": "2023-05-08T09:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-31038"
+      ],
+      "details": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n",
+      "id": "GSD-2023-31038",
+      "modified": "2023-12-13T01:20:30.058424Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security@apache.org",
+        "ID": "CVE-2023-31038",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Apache Log4cxx",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0.9.0",
+                          "version_value": "1.1.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Apache Software Foundation"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "Log4cxx must be built with ODBC support, and configured to log messages to a database for this to occur<br>"
+            }
+          ],
+          "value": "Log4cxx must be built with ODBC support, and configured to log messages to a database for this to occur\n"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-89",
+                "lang": "eng",
+                "value": "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9",
+            "refsource": "MISC",
+            "url": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "INTERNAL"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:apache:log4cxx:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.0",
+                "versionStartIncluding": "0.9.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security@apache.org",
+          "ID": "CVE-2023-31038"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-89"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Mailing List",
+                "Vendor Advisory"
+              ],
+              "url": "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-05-15T16:10Z",
+      "publishedDate": "2023-05-08T09:15Z"
+    }
+  }
 }

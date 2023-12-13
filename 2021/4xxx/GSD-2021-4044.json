@@ -1,582 +1,599 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-4044",
-        "description": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0).",
-        "id": "GSD-2021-4044",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-4044.html",
-            "https://security.archlinux.org/CVE-2021-4044"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-4044",
+    "description": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0).",
+    "id": "GSD-2021-4044",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-4044.html",
+      "https://security.archlinux.org/CVE-2021-4044"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "openssl-security@openssl.org",
-                "DATE_PUBLIC": "2021-12-14",
-                "ID": "CVE-2021-4044",
-                "STATE": "PUBLIC",
-                "TITLE": "Invalid handling of X509_verify_cert() internal errors in libssl"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "OpenSSL",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "Fixed in OpenSSL 3.0.1 (Affected 3.0.0)"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "OpenSSL"
-                        }
-                    ]
-                }
-            },
-            "credit": [
-                {
-                    "lang": "eng",
-                    "value": "Tobias Nie\u00dfen"
-                }
-            ],
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0)."
-                    }
-                ]
-            },
-            "impact": [
-                {
-                    "lang": "eng",
-                    "url": "https://www.openssl.org/policies/secpolicy.html#Moderate",
-                    "value": "Moderate"
-                }
-            ],
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Invalid error handling"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://www.openssl.org/news/secadv/20211214.txt",
-                        "refsource": "CONFIRM",
-                        "url": "https://www.openssl.org/news/secadv/20211214.txt"
-                    },
-                    {
-                        "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256",
-                        "refsource": "CONFIRM",
-                        "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20211229-0003/",
-                        "refsource": "CONFIRM",
-                        "url": "https://security.netapp.com/advisory/ntap-20211229-0003/"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.0.2||=1.1.0||=3.0.0",
-                    "affected_versions": "All versions before 1.0.2, version 1.1.0, version 3.0.0",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-835",
-                        "CWE-937"
-                    ],
-                    "date": "2022-08-30",
-                    "description": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses.",
-                    "fixed_versions": [
-                        "1.0.2s",
-                        "3.0.1"
-                    ],
-                    "identifier": "CVE-2021-4044",
-                    "identifiers": [
-                        "CVE-2021-4044"
-                    ],
-                    "not_impacted": "All versions starting from 1.0.2 before 1.1.0, all versions after 1.1.0 before 3.0.0, all versions after 3.0.0",
-                    "package_slug": "conan/openssl",
-                    "pubdate": "2021-12-14",
-                    "solution": "Upgrade to versions 1.0.2s, 3.0.1 or above.",
-                    "title": "Loop with Unreachable Exit Condition ('Infinite Loop')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-4044",
-                        "https://www.openssl.org/news/secadv/20211214.txt",
-                        "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256"
-                    ],
-                    "uuid": "31029308-3b3d-4089-b6af-7729e672e133"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:1.1.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.0.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:netapp:cloud_backup:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:netapp:snapcenter:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:netapp:ontap_select_deploy_administration_utility:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:netapp:e-series_performance_analyzer:-:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:a250_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:a250:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:500f_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:500f:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h500s_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h500s:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h700s_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h700s:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h300e_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h300e:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h500e_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h500e:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h700e_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h700e:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h410s_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h410s:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h410c_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h410c:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:netapp:h300s_firmware:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:h:netapp:h300s:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nodejs:node.js:*:*:*:*:-:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "17.3.0",
-                                "versionStartIncluding": "17.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "openssl-security@openssl.org",
-                    "ID": "CVE-2021-4044"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0)."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-835"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://www.openssl.org/news/secadv/20211214.txt",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://www.openssl.org/news/secadv/20211214.txt"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20211229-0003/",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://security.netapp.com/advisory/ntap-20211229-0003/"
-                        },
-                        {
-                            "name": "https://git.openssl.org/gitweb/?p=openssl.git%3Ba=commitdiff%3Bh=758754966791c537ea95241438454aa86f91f256",
-                            "refsource": "",
-                            "tags": [],
-                            "url": "https://git.openssl.org/gitweb/?p=openssl.git%3Ba=commitdiff%3Bh=758754966791c537ea95241438454aa86f91f256"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-11-09T14:44Z",
-            "publishedDate": "2021-12-14T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-4044"
+      ],
+      "details": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0).",
+      "id": "GSD-2021-4044",
+      "modified": "2023-12-13T01:23:11.434466Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "openssl-security@openssl.org",
+        "DATE_PUBLIC": "2021-12-14",
+        "ID": "CVE-2021-4044",
+        "STATE": "PUBLIC",
+        "TITLE": "Invalid handling of X509_verify_cert() internal errors in libssl"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "OpenSSL",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "Fixed in OpenSSL 3.0.1 (Affected 3.0.0)"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "OpenSSL"
+            }
+          ]
+        }
+      },
+      "credit": [
+        {
+          "lang": "eng",
+          "value": "Tobias Nie\u00dfen"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0)."
+          }
+        ]
+      },
+      "impact": [
+        {
+          "lang": "eng",
+          "url": "https://www.openssl.org/policies/secpolicy.html#Moderate",
+          "value": "Moderate"
+        }
+      ],
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Invalid error handling"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.openssl.org/news/secadv/20211214.txt",
+            "refsource": "CONFIRM",
+            "url": "https://www.openssl.org/news/secadv/20211214.txt"
+          },
+          {
+            "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256",
+            "refsource": "CONFIRM",
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20211229-0003/",
+            "refsource": "CONFIRM",
+            "url": "https://security.netapp.com/advisory/ntap-20211229-0003/"
+          }
+        ]
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.0.2||=1.1.0||=3.0.0",
+          "affected_versions": "All versions before 1.0.2, version 1.1.0, version 3.0.0",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-835",
+            "CWE-937"
+          ],
+          "date": "2022-08-30",
+          "description": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses.",
+          "fixed_versions": [
+            "1.0.2s",
+            "3.0.1"
+          ],
+          "identifier": "CVE-2021-4044",
+          "identifiers": [
+            "CVE-2021-4044"
+          ],
+          "not_impacted": "All versions starting from 1.0.2 before 1.1.0, all versions after 1.1.0 before 3.0.0, all versions after 3.0.0",
+          "package_slug": "conan/openssl",
+          "pubdate": "2021-12-14",
+          "solution": "Upgrade to versions 1.0.2s, 3.0.1 or above.",
+          "title": "Loop with Unreachable Exit Condition ('Infinite Loop')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-4044",
+            "https://www.openssl.org/news/secadv/20211214.txt",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=758754966791c537ea95241438454aa86f91f256"
+          ],
+          "uuid": "31029308-3b3d-4089-b6af-7729e672e133"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:1.1.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.0.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:netapp:cloud_backup:-:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:netapp:snapcenter:-:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:netapp:ontap_select_deploy_administration_utility:-:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:netapp:e-series_performance_analyzer:-:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:a250_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:a250:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:500f_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:500f:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h500s_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h500s:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h700s_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h700s:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h300e_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h300e:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h500e_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h500e:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h700e_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h700e:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h410s_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h410s:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h410c_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h410c:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:netapp:h300s_firmware:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:h:netapp:h300s:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:nodejs:node.js:*:*:*:*:-:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "17.3.0",
+                "versionStartIncluding": "17.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "openssl-security@openssl.org",
+          "ID": "CVE-2021-4044"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Internally libssl in OpenSSL calls X509_verify_cert() on the client side to verify a certificate supplied by a server. That function may return a negative return value to indicate an internal error (for example out of memory). Such a negative return value is mishandled by OpenSSL and will cause an IO function (such as SSL_connect() or SSL_do_handshake()) to not indicate success and a subsequent call to SSL_get_error() to return the value SSL_ERROR_WANT_RETRY_VERIFY. This return value is only supposed to be returned by OpenSSL if the application has previously called SSL_CTX_set_cert_verify_callback(). Since most applications do not do this the SSL_ERROR_WANT_RETRY_VERIFY return value from SSL_get_error() will be totally unexpected and applications may not behave correctly as a result. The exact behaviour will depend on the application but it could result in crashes, infinite loops or other similar incorrect responses. This issue is made more serious in combination with a separate bug in OpenSSL 3.0 that will cause X509_verify_cert() to indicate an internal error when processing a certificate chain. This will occur where a certificate does not include the Subject Alternative Name extension but where a Certificate Authority has enforced name constraints. This issue can occur even with valid chains. By combining the two issues an attacker could induce incorrect, application dependent behaviour. Fixed in OpenSSL 3.0.1 (Affected 3.0.0)."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-835"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://www.openssl.org/news/secadv/20211214.txt",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://www.openssl.org/news/secadv/20211214.txt"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20211229-0003/",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://security.netapp.com/advisory/ntap-20211229-0003/"
+            },
+            {
+              "name": "https://git.openssl.org/gitweb/?p=openssl.git%3Ba=commitdiff%3Bh=758754966791c537ea95241438454aa86f91f256",
+              "refsource": "",
+              "tags": [],
+              "url": "https://git.openssl.org/gitweb/?p=openssl.git%3Ba=commitdiff%3Bh=758754966791c537ea95241438454aa86f91f256"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 5.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-11-09T14:44Z",
+      "publishedDate": "2021-12-14T19:15Z"
+    }
+  }
 }

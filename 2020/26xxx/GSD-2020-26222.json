@@ -1,393 +1,399 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-26222",
-        "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class.",
-        "id": "GSD-2020-26222"
+  "GSD": {
+    "alias": "CVE-2020-26222",
+    "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class.",
+    "id": "GSD-2020-26222"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-26222",
-            "modified": "2020-11-13T00:00:00.000Z",
-            "published": "2020-11-13T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-26222",
-                "GHSA-23f7-99jx-m54r"
-            ],
-            "summary": "Remote code execution in dependabot-core branch names when cloning",
-            "details": "### Impact\nRemote code execution vulnerability in `dependabot-common` and\n`dependabot-go_modules` when a source branch name contains malicious\ninjectable bash code.\n\nFor example, if Dependabot is configured to use the following source branch\nname: `\"/$({curl,127.0.0.1})\"`, Dependabot will make a HTTP request to the\nfollowing URL: 127.0.0.1 when cloning the source repository.\n\nWhen Dependabot is configured to clone the source repository during an update,\nDependabot runs a shell command to git clone the repository:\n\n```bash\ngit clone --no-tags --no-recurse-submodules --depth=1 --branch=<BRANCH> --single-branch <GITHUB_REPO_URL> repo/contents/path\n```\n\nDependabot will always clone the source repository for `go_modules` during the\nfile fetching step and can be configured to clone the repository for other\npackage managers using the `FileFetcher` class from `dependabot-common`.\n\n```ruby\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: \"/$({curl,127.0.0.1})\",\n)\n\nrepo_contents_path = \"./file/path\"\nfetcher = Dependabot::FileFetchers.for_package_manager(\"bundler\").\n                  new(source: source, credentials: [],\n                  repo_contents_path: repo_contents_path)\nfetcher.clone_repo_contents\n```\n\n### Workarounds\nEscape the branch name prior to passing it to the `Dependabot::Source` class.\n\nFor example using `shellwords`:\n\n```ruby\nrequire \"shellwords\"\nbranch = Shellwords.escape(\"/$({curl,127.0.0.1})\")\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: branch,\n)\n```",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 8.7
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "dependabot-common",
-                        "purl": "pkg:gem/dependabot-common"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/dependabot/dependabot-core/pull/2727"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "dependabot-common",
+            "purl": "pkg:gem/dependabot-common"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-26222",
-                "STATE": "PUBLIC",
-                "TITLE": "Remote code execution in dependabot-core"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "dependabot-core",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 0.125.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "dependabot"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 8.7,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "LOW",
-                    "scope": "CHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-74"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
-                    },
-                    {
-                        "name": "https://github.com/dependabot/dependabot-core/pull/2727",
-                        "refsource": "MISC",
-                        "url": "https://github.com/dependabot/dependabot-core/pull/2727"
-                    },
-                    {
-                        "name": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5",
-                        "refsource": "MISC",
-                        "url": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-23f7-99jx-m54r",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2020-26222",
+        "GHSA-23f7-99jx-m54r"
+      ],
+      "details": "### Impact\nRemote code execution vulnerability in `dependabot-common` and\n`dependabot-go_modules` when a source branch name contains malicious\ninjectable bash code.\n\nFor example, if Dependabot is configured to use the following source branch\nname: `\"/$({curl,127.0.0.1})\"`, Dependabot will make a HTTP request to the\nfollowing URL: 127.0.0.1 when cloning the source repository.\n\nWhen Dependabot is configured to clone the source repository during an update,\nDependabot runs a shell command to git clone the repository:\n\n```bash\ngit clone --no-tags --no-recurse-submodules --depth=1 --branch=<BRANCH> --single-branch <GITHUB_REPO_URL> repo/contents/path\n```\n\nDependabot will always clone the source repository for `go_modules` during the\nfile fetching step and can be configured to clone the repository for other\npackage managers using the `FileFetcher` class from `dependabot-common`.\n\n```ruby\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: \"/$({curl,127.0.0.1})\",\n)\n\nrepo_contents_path = \"./file/path\"\nfetcher = Dependabot::FileFetchers.for_package_manager(\"bundler\").\n                  new(source: source, credentials: [],\n                  repo_contents_path: repo_contents_path)\nfetcher.clone_repo_contents\n```\n\n### Workarounds\nEscape the branch name prior to passing it to the `Dependabot::Source` class.\n\nFor example using `shellwords`:\n\n```ruby\nrequire \"shellwords\"\nbranch = Shellwords.escape(\"/$({curl,127.0.0.1})\")\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: branch,\n)\n```",
+      "id": "GSD-2020-26222",
+      "modified": "2020-11-13T00:00:00.000Z",
+      "published": "2020-11-13T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=0.119.0 <=0.125.1",
-                    "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-74",
-                        "CWE-937"
-                    ],
-                    "date": "2020-12-03",
-                    "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code.",
-                    "fixed_versions": [
-                        "0.125.2"
-                    ],
-                    "identifier": "CVE-2020-26222",
-                    "identifiers": [
-                        "CVE-2020-26222",
-                        "GHSA-23f7-99jx-m54r"
-                    ],
-                    "not_impacted": "All versions before 0.119.0, all versions after 0.125.1",
-                    "package_slug": "gem/dependabot-common",
-                    "pubdate": "2020-11-13",
-                    "solution": "Upgrade to version 0.125.2 or above.",
-                    "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-26222",
-                        "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
-                        "https://github.com/dependabot/dependabot-core/pull/2727",
-                        "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
-                    ],
-                    "uuid": "041b1a87-2ef6-41b9-ad14-2d0f0abc10e0"
-                },
-                {
-                    "affected_range": ">=0.119.0 <=0.125.1",
-                    "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-74",
-                        "CWE-937"
-                    ],
-                    "date": "2020-12-03",
-                    "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: `/$({curl,127.0.0.1})`, Dependabot will make a HTTP request to the following URL: `127.0.0.1` when cloning the source repository. As a workaround, one can escape the branch name prior to passing it to the `Dependabot::Source` class.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2020-26222",
-                    "identifiers": [
-                        "CVE-2020-26222",
-                        "GHSA-23f7-99jx-m54r"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "gem/dependabot-core",
-                    "pubdate": "2020-11-13",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "Injection Vulnerability",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-26222"
-                    ],
-                    "uuid": "d2e16d5e-8e66-4c2c-aaf9-58a00bf315e3"
-                },
-                {
-                    "affected_range": ">=0.119.0 <=0.125.1",
-                    "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-74",
-                        "CWE-937"
-                    ],
-                    "date": "2020-12-03",
-                    "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code.",
-                    "fixed_versions": [
-                        "0.125.2"
-                    ],
-                    "identifier": "CVE-2020-26222",
-                    "identifiers": [
-                        "CVE-2020-26222",
-                        "GHSA-23f7-99jx-m54r"
-                    ],
-                    "not_impacted": "All versions before 0.119.0, all versions after 0.125.1",
-                    "package_slug": "gem/dependabot-omnibus",
-                    "pubdate": "2020-11-13",
-                    "solution": "Upgrade to version 0.125.2 or above.",
-                    "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-26222",
-                        "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
-                        "https://github.com/dependabot/dependabot-core/pull/2727",
-                        "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
-                    ],
-                    "uuid": "df740358-769b-4b1e-8fc9-dbf97324d0f1"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:0.119.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:0.119.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.125.1",
-                                "versionStartIncluding": "0.119.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-26222"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-74"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
-                        },
-                        {
-                            "name": "https://github.com/dependabot/dependabot-core/pull/2727",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/dependabot/dependabot-core/pull/2727"
-                        },
-                        {
-                            "name": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.5,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2020-12-03T15:53Z",
-            "publishedDate": "2020-11-13T16:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "dependabot-omnibus",
-            "cve": "2020-26222",
-            "ghsa": "23f7-99jx-m54r",
-            "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
-            "title": "Remote code execution in dependabot-core branch names when cloning",
-            "date": "2020-11-13",
-            "description": "### Impact\nRemote code execution vulnerability in `dependabot-common` and\n`dependabot-go_modules` when a source branch name contains malicious\ninjectable bash code.\n\nFor example, if Dependabot is configured to use the following source branch\nname: `\"/$({curl,127.0.0.1})\"`, Dependabot will make a HTTP request to the\nfollowing URL: 127.0.0.1 when cloning the source repository.\n\nWhen Dependabot is configured to clone the source repository during an update,\nDependabot runs a shell command to git clone the repository:\n\n```bash\ngit clone --no-tags --no-recurse-submodules --depth=1 --branch=<BRANCH> --single-branch <GITHUB_REPO_URL> repo/contents/path\n```\n\nDependabot will always clone the source repository for `go_modules` during the\nfile fetching step and can be configured to clone the repository for other\npackage managers using the `FileFetcher` class from `dependabot-common`.\n\n```ruby\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: \"/$({curl,127.0.0.1})\",\n)\n\nrepo_contents_path = \"./file/path\"\nfetcher = Dependabot::FileFetchers.for_package_manager(\"bundler\").\n                  new(source: source, credentials: [],\n                  repo_contents_path: repo_contents_path)\nfetcher.clone_repo_contents\n```\n\n### Workarounds\nEscape the branch name prior to passing it to the `Dependabot::Source` class.\n\nFor example using `shellwords`:\n\n```ruby\nrequire \"shellwords\"\nbranch = Shellwords.escape(\"/$({curl,127.0.0.1})\")\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: branch,\n)\n```",
-            "cvss_v3": 8.7,
-            "unaffected_versions": [
-                "< 0.119.0.beta1"
-            ],
-            "patched_versions": [
-                ">= 0.125.1"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/dependabot/dependabot-core/pull/2727"
-                ]
-            }
+        {
+          "type": "WEB",
+          "url": "https://github.com/dependabot/dependabot-core/pull/2727"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 8.7,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Remote code execution in dependabot-core branch names when cloning"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-26222",
+        "STATE": "PUBLIC",
+        "TITLE": "Remote code execution in dependabot-core"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "dependabot-core",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 0.125.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "dependabot"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 8.7,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "LOW",
+          "scope": "CHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-74"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
+          },
+          {
+            "name": "https://github.com/dependabot/dependabot-core/pull/2727",
+            "refsource": "MISC",
+            "url": "https://github.com/dependabot/dependabot-core/pull/2727"
+          },
+          {
+            "name": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5",
+            "refsource": "MISC",
+            "url": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-23f7-99jx-m54r",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-26222",
+      "cvss_v3": 8.7,
+      "date": "2020-11-13",
+      "description": "### Impact\nRemote code execution vulnerability in `dependabot-common` and\n`dependabot-go_modules` when a source branch name contains malicious\ninjectable bash code.\n\nFor example, if Dependabot is configured to use the following source branch\nname: `\"/$({curl,127.0.0.1})\"`, Dependabot will make a HTTP request to the\nfollowing URL: 127.0.0.1 when cloning the source repository.\n\nWhen Dependabot is configured to clone the source repository during an update,\nDependabot runs a shell command to git clone the repository:\n\n```bash\ngit clone --no-tags --no-recurse-submodules --depth=1 --branch=<BRANCH> --single-branch <GITHUB_REPO_URL> repo/contents/path\n```\n\nDependabot will always clone the source repository for `go_modules` during the\nfile fetching step and can be configured to clone the repository for other\npackage managers using the `FileFetcher` class from `dependabot-common`.\n\n```ruby\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: \"/$({curl,127.0.0.1})\",\n)\n\nrepo_contents_path = \"./file/path\"\nfetcher = Dependabot::FileFetchers.for_package_manager(\"bundler\").\n                  new(source: source, credentials: [],\n                  repo_contents_path: repo_contents_path)\nfetcher.clone_repo_contents\n```\n\n### Workarounds\nEscape the branch name prior to passing it to the `Dependabot::Source` class.\n\nFor example using `shellwords`:\n\n```ruby\nrequire \"shellwords\"\nbranch = Shellwords.escape(\"/$({curl,127.0.0.1})\")\nsource = Dependabot::Source.new(\n  provider: \"github\",\n  repo: \"repo/name\",\n  directory: \"/\",\n  branch: branch,\n)\n```",
+      "gem": "dependabot-omnibus",
+      "ghsa": "23f7-99jx-m54r",
+      "patched_versions": [
+        ">= 0.125.1"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/dependabot/dependabot-core/pull/2727"
+        ]
+      },
+      "title": "Remote code execution in dependabot-core branch names when cloning",
+      "unaffected_versions": [
+        "< 0.119.0.beta1"
+      ],
+      "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=0.119.0 <=0.125.1",
+          "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-74",
+            "CWE-937"
+          ],
+          "date": "2020-12-03",
+          "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code.",
+          "fixed_versions": [
+            "0.125.2"
+          ],
+          "identifier": "CVE-2020-26222",
+          "identifiers": [
+            "CVE-2020-26222",
+            "GHSA-23f7-99jx-m54r"
+          ],
+          "not_impacted": "All versions before 0.119.0, all versions after 0.125.1",
+          "package_slug": "gem/dependabot-common",
+          "pubdate": "2020-11-13",
+          "solution": "Upgrade to version 0.125.2 or above.",
+          "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-26222",
+            "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
+            "https://github.com/dependabot/dependabot-core/pull/2727",
+            "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
+          ],
+          "uuid": "041b1a87-2ef6-41b9-ad14-2d0f0abc10e0"
+        },
+        {
+          "affected_range": ">=0.119.0 <=0.125.1",
+          "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-74",
+            "CWE-937"
+          ],
+          "date": "2020-12-03",
+          "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: `/$({curl,127.0.0.1})`, Dependabot will make a HTTP request to the following URL: `127.0.0.1` when cloning the source repository. As a workaround, one can escape the branch name prior to passing it to the `Dependabot::Source` class.",
+          "fixed_versions": [],
+          "identifier": "CVE-2020-26222",
+          "identifiers": [
+            "CVE-2020-26222",
+            "GHSA-23f7-99jx-m54r"
+          ],
+          "not_impacted": "",
+          "package_slug": "gem/dependabot-core",
+          "pubdate": "2020-11-13",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "Injection Vulnerability",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-26222"
+          ],
+          "uuid": "d2e16d5e-8e66-4c2c-aaf9-58a00bf315e3"
+        },
+        {
+          "affected_range": ">=0.119.0 <=0.125.1",
+          "affected_versions": "All versions starting from 0.119.0 up to 0.125.1",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-74",
+            "CWE-937"
+          ],
+          "date": "2020-12-03",
+          "description": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from beta1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code.",
+          "fixed_versions": [
+            "0.125.2"
+          ],
+          "identifier": "CVE-2020-26222",
+          "identifiers": [
+            "CVE-2020-26222",
+            "GHSA-23f7-99jx-m54r"
+          ],
+          "not_impacted": "All versions before 0.119.0, all versions after 0.125.1",
+          "package_slug": "gem/dependabot-omnibus",
+          "pubdate": "2020-11-13",
+          "solution": "Upgrade to version 0.125.2 or above.",
+          "title": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-26222",
+            "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
+            "https://github.com/dependabot/dependabot-core/pull/2727",
+            "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
+          ],
+          "uuid": "df740358-769b-4b1e-8fc9-dbf97324d0f1"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:0.119.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:0.119.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:dependabot_project:dependabot:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.125.1",
+                "versionStartIncluding": "0.119.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-26222"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Dependabot is a set of packages for automated dependency management for Ruby, JavaScript, Python, PHP, Elixir, Rust, Java, .NET, Elm and Go. In Dependabot-Core from version 0.119.0.beta1 before version 0.125.1, there is a remote code execution vulnerability in dependabot-common and dependabot-go_modules when a source branch name contains malicious injectable bash code. For example, if Dependabot is configured to use the following source branch name: \"/$({curl,127.0.0.1})\", Dependabot will make a HTTP request to the following URL: 127.0.0.1 when cloning the source repository. The fix was applied to version 0.125.1. As a workaround, one can escape the branch name prior to passing it to the Dependabot::Source class."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-74"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/dependabot/dependabot-core/security/advisories/GHSA-23f7-99jx-m54r"
+            },
+            {
+              "name": "https://github.com/dependabot/dependabot-core/pull/2727",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/dependabot/dependabot-core/pull/2727"
+            },
+            {
+              "name": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/dependabot/dependabot-core/commit/e089116abbe284425b976f7920e502b8e83a61b5"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.5,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2020-12-03T15:53Z",
+      "publishedDate": "2020-11-13T16:15Z"
+    }
+  }
 }

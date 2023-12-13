@@ -1,265 +1,282 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-34455",
-        "id": "GSD-2023-34455"
+  "GSD": {
+    "alias": "CVE-2023-34455",
+    "id": "GSD-2023-34455"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-34455",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "snappy-java",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.1.10.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "xerial"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-770",
-                                "lang": "eng",
-                                "value": "CWE-770: Allocation of Resources Without Limits or Throttling"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
-                        "refsource": "MISC",
-                        "url": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh"
-                    },
-                    {
-                        "name": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
-                        "refsource": "MISC",
-                        "url": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea"
-                    },
-                    {
-                        "name": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
-                        "refsource": "MISC",
-                        "url": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388"
-                    },
-                    {
-                        "name": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
-                        "refsource": "MISC",
-                        "url": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20230818-0009/",
-                        "refsource": "MISC",
-                        "url": "https://security.netapp.com/advisory/ntap-20230818-0009/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-qcwq-55hx-v3vh",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "(,1.1.10.0]",
-                    "affected_versions": "All versions up to 1.1.10.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-770",
-                        "CWE-937"
-                    ],
-                    "date": "2023-08-18",
-                    "description": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue.",
-                    "fixed_versions": [
-                        "1.1.10.1"
-                    ],
-                    "identifier": "CVE-2023-34455",
-                    "identifiers": [
-                        "GHSA-qcwq-55hx-v3vh",
-                        "CVE-2023-34455"
-                    ],
-                    "not_impacted": "All versions after 1.1.10.0",
-                    "package_slug": "maven/org.xerial.snappy/snappy-java",
-                    "pubdate": "2023-06-15",
-                    "solution": "Upgrade to version 1.1.10.1 or above.",
-                    "title": "Allocation of Resources Without Limits or Throttling",
-                    "urls": [
-                        "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
-                        "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
-                        "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
-                        "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-34455",
-                        "https://security.netapp.com/advisory/ntap-20230818-0009/",
-                        "https://github.com/advisories/GHSA-qcwq-55hx-v3vh"
-                    ],
-                    "uuid": "b1864c97-e3da-4892-bfde-adc4918ae8f3"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:xerial:snappy-java:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.10.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-34455"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-770"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea"
-                        },
-                        {
-                            "name": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh"
-                        },
-                        {
-                            "name": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking"
-                            ],
-                            "url": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java"
-                        },
-                        {
-                            "name": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking"
-                            ],
-                            "url": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20230818-0009/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://security.netapp.com/advisory/ntap-20230818-0009/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-08-18T14:15Z",
-            "publishedDate": "2023-06-15T18:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-34455"
+      ],
+      "details": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+      "id": "GSD-2023-34455",
+      "modified": "2023-12-13T01:20:30.909429Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-34455",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "snappy-java",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.1.10.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "xerial"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-770",
+                "lang": "eng",
+                "value": "CWE-770: Allocation of Resources Without Limits or Throttling"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
+            "refsource": "MISC",
+            "url": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh"
+          },
+          {
+            "name": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
+            "refsource": "MISC",
+            "url": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea"
+          },
+          {
+            "name": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
+            "refsource": "MISC",
+            "url": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388"
+          },
+          {
+            "name": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
+            "refsource": "MISC",
+            "url": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20230818-0009/",
+            "refsource": "MISC",
+            "url": "https://security.netapp.com/advisory/ntap-20230818-0009/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qcwq-55hx-v3vh",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "(,1.1.10.0]",
+          "affected_versions": "All versions up to 1.1.10.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-770",
+            "CWE-937"
+          ],
+          "date": "2023-08-18",
+          "description": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+          "fixed_versions": [
+            "1.1.10.1"
+          ],
+          "identifier": "CVE-2023-34455",
+          "identifiers": [
+            "GHSA-qcwq-55hx-v3vh",
+            "CVE-2023-34455"
+          ],
+          "not_impacted": "All versions after 1.1.10.0",
+          "package_slug": "maven/org.xerial.snappy/snappy-java",
+          "pubdate": "2023-06-15",
+          "solution": "Upgrade to version 1.1.10.1 or above.",
+          "title": "Allocation of Resources Without Limits or Throttling",
+          "urls": [
+            "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
+            "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
+            "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
+            "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-34455",
+            "https://security.netapp.com/advisory/ntap-20230818-0009/",
+            "https://github.com/advisories/GHSA-qcwq-55hx-v3vh"
+          ],
+          "uuid": "b1864c97-e3da-4892-bfde-adc4918ae8f3"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:xerial:snappy-java:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.10.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-34455"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn\u2019t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn\u2019t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-770"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/xerial/snappy-java/commit/3bf67857fcf70d9eea56eed4af7c925671e8eaea"
+            },
+            {
+              "name": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/xerial/snappy-java/security/advisories/GHSA-qcwq-55hx-v3vh"
+            },
+            {
+              "name": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking"
+              ],
+              "url": "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/SnappyInputStream.java"
+            },
+            {
+              "name": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking"
+              ],
+              "url": "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/SnappyInputStream.java#L388"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20230818-0009/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://security.netapp.com/advisory/ntap-20230818-0009/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-08-18T14:15Z",
+      "publishedDate": "2023-06-15T18:15Z"
+    }
+  }
 }

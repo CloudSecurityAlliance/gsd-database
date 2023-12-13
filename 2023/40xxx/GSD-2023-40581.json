@@ -1,256 +1,273 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-40581",
-        "id": "GSD-2023-40581"
+  "GSD": {
+    "alias": "CVE-2023-40581",
+    "id": "GSD-2023-40581"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-40581",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "yt-dlp",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 2021.04.11, < 2023.09.24"
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< nightly 2023.09.24.003044"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "yt-dlp"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "yt-dlp is a youtube-dl fork with additional features and fixes. yt-dlp allows the user to provide shell command lines to be executed at various stages in its download steps through the `--exec` flag. This flag allows output template expansion in its argument, so that metadata values may be used in the shell commands. The metadata fields can be combined with the `%q` conversion, which is intended to quote/escape these values so they can be safely passed to the shell. However, the escaping used for `cmd` (the shell used by Python's `subprocess` on Windows) does not properly escape special characters, which can allow for remote code execution if `--exec` is used directly with maliciously crafted remote data. This vulnerability only impacts `yt-dlp` on Windows, and the vulnerability is present regardless of whether `yt-dlp` is run from `cmd` or from `PowerShell`. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2023.09.24 fixes this issue by properly escaping each special character. `\\n` will be replaced by `\\r` as no way of escaping it has been found. It is recommended to upgrade yt-dlp to version 2023.09.24 as soon as possible. Also, always be careful when using --exec, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade: 1. Avoid using any output template expansion in --exec other than {} (filepath). 2. If expansion in --exec is needed, verify the fields you are using do not contain \", | or &. 3. Instead of using --exec, write the info json and load the fields from it instead.\n"
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.4,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-78",
-                                "lang": "eng",
-                                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-42h4-v29r-42qg",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "versionEndExcluding": "2023.09.24",
-                                        "versionStartIncluding": "2021.04.11",
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-40581"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "yt-dlp is a youtube-dl fork with additional features and fixes. yt-dlp allows the user to provide shell command lines to be executed at various stages in its download steps through the `--exec` flag. This flag allows output template expansion in its argument, so that metadata values may be used in the shell commands. The metadata fields can be combined with the `%q` conversion, which is intended to quote/escape these values so they can be safely passed to the shell. However, the escaping used for `cmd` (the shell used by Python's `subprocess` on Windows) does not properly escape special characters, which can allow for remote code execution if `--exec` is used directly with maliciously crafted remote data. This vulnerability only impacts `yt-dlp` on Windows, and the vulnerability is present regardless of whether `yt-dlp` is run from `cmd` or from `PowerShell`. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2023.09.24 fixes this issue by properly escaping each special character. `\\n` will be replaced by `\\r` as no way of escaping it has been found. It is recommended to upgrade yt-dlp to version 2023.09.24 as soon as possible. Also, always be careful when using --exec, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade: 1. Avoid using any output template expansion in --exec other than {} (filepath). 2. If expansion in --exec is needed, verify the fields you are using do not contain \", | or &. 3. Instead of using --exec, write the info json and load the fields from it instead.\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-78"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-09-27T14:48Z",
-            "publishedDate": "2023-09-25T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-40581"
+      ],
+      "details": "yt-dlp is a youtube-dl fork with additional features and fixes. yt-dlp allows the user to provide shell command lines to be executed at various stages in its download steps through the `--exec` flag. This flag allows output template expansion in its argument, so that metadata values may be used in the shell commands. The metadata fields can be combined with the `%q` conversion, which is intended to quote/escape these values so they can be safely passed to the shell. However, the escaping used for `cmd` (the shell used by Python's `subprocess` on Windows) does not properly escape special characters, which can allow for remote code execution if `--exec` is used directly with maliciously crafted remote data. This vulnerability only impacts `yt-dlp` on Windows, and the vulnerability is present regardless of whether `yt-dlp` is run from `cmd` or from `PowerShell`. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2023.09.24 fixes this issue by properly escaping each special character. `\\n` will be replaced by `\\r` as no way of escaping it has been found. It is recommended to upgrade yt-dlp to version 2023.09.24 as soon as possible. Also, always be careful when using --exec, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade: 1. Avoid using any output template expansion in --exec other than {} (filepath). 2. If expansion in --exec is needed, verify the fields you are using do not contain \", | or &. 3. Instead of using --exec, write the info json and load the fields from it instead.\n",
+      "id": "GSD-2023-40581",
+      "modified": "2023-12-13T01:20:44.211904Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-40581",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "yt-dlp",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2021.04.11, < 2023.09.24"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< nightly 2023.09.24.003044"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "yt-dlp"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "yt-dlp is a youtube-dl fork with additional features and fixes. yt-dlp allows the user to provide shell command lines to be executed at various stages in its download steps through the `--exec` flag. This flag allows output template expansion in its argument, so that metadata values may be used in the shell commands. The metadata fields can be combined with the `%q` conversion, which is intended to quote/escape these values so they can be safely passed to the shell. However, the escaping used for `cmd` (the shell used by Python's `subprocess` on Windows) does not properly escape special characters, which can allow for remote code execution if `--exec` is used directly with maliciously crafted remote data. This vulnerability only impacts `yt-dlp` on Windows, and the vulnerability is present regardless of whether `yt-dlp` is run from `cmd` or from `PowerShell`. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2023.09.24 fixes this issue by properly escaping each special character. `\\n` will be replaced by `\\r` as no way of escaping it has been found. It is recommended to upgrade yt-dlp to version 2023.09.24 as soon as possible. Also, always be careful when using --exec, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade: 1. Avoid using any output template expansion in --exec other than {} (filepath). 2. If expansion in --exec is needed, verify the fields you are using do not contain \", | or &. 3. Instead of using --exec, write the info json and load the fields from it instead.\n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.4,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-78",
+                "lang": "eng",
+                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-42h4-v29r-42qg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "versionEndExcluding": "2023.09.24",
+                    "versionStartIncluding": "2021.04.11",
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-40581"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "yt-dlp is a youtube-dl fork with additional features and fixes. yt-dlp allows the user to provide shell command lines to be executed at various stages in its download steps through the `--exec` flag. This flag allows output template expansion in its argument, so that metadata values may be used in the shell commands. The metadata fields can be combined with the `%q` conversion, which is intended to quote/escape these values so they can be safely passed to the shell. However, the escaping used for `cmd` (the shell used by Python's `subprocess` on Windows) does not properly escape special characters, which can allow for remote code execution if `--exec` is used directly with maliciously crafted remote data. This vulnerability only impacts `yt-dlp` on Windows, and the vulnerability is present regardless of whether `yt-dlp` is run from `cmd` or from `PowerShell`. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2023.09.24 fixes this issue by properly escaping each special character. `\\n` will be replaced by `\\r` as no way of escaping it has been found. It is recommended to upgrade yt-dlp to version 2023.09.24 as soon as possible. Also, always be careful when using --exec, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade: 1. Avoid using any output template expansion in --exec other than {} (filepath). 2. If expansion in --exec is needed, verify the fields you are using do not contain \", | or &. 3. Instead of using --exec, write the info json and load the fields from it instead.\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-78"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Release Notes"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Release Notes"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.09.24"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Release Notes"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.09.24.003044"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-09-27T14:48Z",
+      "publishedDate": "2023-09-25T19:15Z"
+    }
+  }
 }

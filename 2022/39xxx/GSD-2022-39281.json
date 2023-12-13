@@ -1,299 +1,305 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-39281",
-        "description": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue.",
-        "id": "GSD-2022-39281"
+  "GSD": {
+    "alias": "CVE-2022-39281",
+    "description": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue.",
+    "id": "GSD-2022-39281"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "fat_free_crm",
-                        "purl": "pkg:gem/fat_free_crm"
-                    }
-                }
-            ],
-            "aliases": [
-                "CVE-2022-39281",
-                "GHSA-p75c-5x3h-cxcg"
-            ],
-            "details": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
-            "id": "GSD-2022-39281",
-            "modified": "2022-10-07T00:00:00.000Z",
-            "published": "2022-10-07T00:00:00.000Z",
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
-                }
-            ],
-            "schema_version": "1.4.0",
-            "severity": [
-                {
-                    "score": 6.5,
-                    "type": "CVSS_V3"
-                }
-            ],
-            "summary": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint"
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "fat_free_crm",
+            "purl": "pkg:gem/fat_free_crm"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-39281",
-                "STATE": "PUBLIC",
-                "TITLE": "Remote Denial of Service via Tasks endpoint in fat_free_crm"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "fat_free_crm",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 0.20.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "fatfreecrm"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 6.5,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-20: Improper Input Validation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
-                    },
-                    {
-                        "name": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
-                    },
-                    {
-                        "name": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-p75c-5x3h-cxcg",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2022-39281",
+        "GHSA-p75c-5x3h-cxcg"
+      ],
+      "details": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
+      "id": "GSD-2022-39281",
+      "modified": "2022-10-07T00:00:00.000Z",
+      "published": "2022-10-07T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
         },
-        "github.com/rubysec/ruby-advisory-db": {
-            "cve": "2022-39281",
-            "cvss_v3": 6.5,
-            "date": "2022-10-07",
-            "description": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
-            "gem": "fat_free_crm",
-            "ghsa": "p75c-5x3h-cxcg",
-            "patched_versions": [
-                ">= 0.20.1"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
-                    "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
-                ]
-            },
-            "title": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint",
-            "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
+        {
+          "type": "WEB",
+          "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<0.20.1",
-                    "affected_versions": "All versions before 0.20.1",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-20",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-07",
-                    "description": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue.",
-                    "fixed_versions": [
-                        "0.20.1"
-                    ],
-                    "identifier": "CVE-2022-39281",
-                    "identifiers": [
-                        "GHSA-p75c-5x3h-cxcg",
-                        "CVE-2022-39281"
-                    ],
-                    "not_impacted": "All versions starting from 0.20.1",
-                    "package_slug": "gem/fat_free_crm",
-                    "pubdate": "2022-10-07",
-                    "solution": "Upgrade to version 0.20.1 or above.",
-                    "title": "Improper Input Validation",
-                    "urls": [
-                        "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
-                        "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
-                        "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
-                        "https://github.com/advisories/GHSA-p75c-5x3h-cxcg"
-                    ],
-                    "uuid": "37a6e94d-3453-4102-83d2-66d796f6771d"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fatfreecrm:fatfreecrm:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.20.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-39281"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "NVD-CWE-noinfo"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
-                        },
-                        {
-                            "name": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
-                        },
-                        {
-                            "name": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2022-10-11T15:30Z",
-            "publishedDate": "2022-10-08T01:15Z"
+        {
+          "type": "WEB",
+          "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 6.5,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-39281",
+        "STATE": "PUBLIC",
+        "TITLE": "Remote Denial of Service via Tasks endpoint in fat_free_crm"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "fat_free_crm",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 0.20.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "fatfreecrm"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 6.5,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-20: Improper Input Validation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
+          },
+          {
+            "name": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
+            "refsource": "MISC",
+            "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
+          },
+          {
+            "name": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
+            "refsource": "MISC",
+            "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p75c-5x3h-cxcg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2022-39281",
+      "cvss_v3": 6.5,
+      "date": "2022-10-07",
+      "description": "### Impact\nAn authenticated user can perform a remote Denial of Service attack against\nFat Free CRM.\n\nThis vulnerability has been assigned the CVE identifier: CVE-2022-39281\n\nAffected versions: All\nNot affected: None\nFixed versions: 0.20.1\n\nAll users running an affected release should either upgrade or apply the patch\nimmediately.\n\n### Releases\nFixed versions: 0.20.1 and above\n\n### Patches\n\nIf you are unable to upgrade immediately, you should apply the following\npatch.\n\n```\ndiff --git a/app/models/polymorphic/task.rb b/app/models/polymorphic/task.rb\nindex d3d5c32c..7cdb24d6 100644\n--- a/app/models/polymorphic/task.rb\n+++ b/app/models/polymorphic/task.rb\n@@ -189,6 +189,7 @@ class Task < ActiveRecord::Base\n   #----------------------------------------------------------------------------\n   def self.bucket_empty?(bucket, user, view = \"pending\")\n     return false if bucket.blank? || !ALLOWED_VIEWS.include?(view)\n+    return false unless Setting.task_bucket.map(&:to_s).include?(bucket.to_s)\n\n     if view == \"assigned\"\n       assigned_by(user).send(bucket).pending.count\n```\n",
+      "gem": "fat_free_crm",
+      "ghsa": "p75c-5x3h-cxcg",
+      "patched_versions": [
+        ">= 0.20.1"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
+          "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
+        ]
+      },
+      "title": "Fat Free CRM vulnerable to Remote Denial of Service via Tasks endpoint",
+      "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<0.20.1",
+          "affected_versions": "All versions before 0.20.1",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-20",
+            "CWE-937"
+          ],
+          "date": "2022-10-07",
+          "description": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue.",
+          "fixed_versions": [
+            "0.20.1"
+          ],
+          "identifier": "CVE-2022-39281",
+          "identifiers": [
+            "GHSA-p75c-5x3h-cxcg",
+            "CVE-2022-39281"
+          ],
+          "not_impacted": "All versions starting from 0.20.1",
+          "package_slug": "gem/fat_free_crm",
+          "pubdate": "2022-10-07",
+          "solution": "Upgrade to version 0.20.1 or above.",
+          "title": "Improper Input Validation",
+          "urls": [
+            "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
+            "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
+            "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
+            "https://github.com/advisories/GHSA-p75c-5x3h-cxcg"
+          ],
+          "uuid": "37a6e94d-3453-4102-83d2-66d796f6771d"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:fatfreecrm:fatfreecrm:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.20.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-39281"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "fat_free_crm is a an open source, Ruby on Rails customer relationship management platform (CRM). In versions prior to 0.20.1 an authenticated user can perform a remote Denial of Service attack against Fat Free CRM via bucket access. The vulnerability has been patched in commit `c85a254` and will be available in release `0.20.1`. Users are advised to upgrade or to manually apply patch `c85a254`. There are no known workarounds for this issue."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "NVD-CWE-noinfo"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/fatfreecrm/fat_free_crm/releases/tag/v0.20.1"
+            },
+            {
+              "name": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/fatfreecrm/fat_free_crm/commit/c85a2546348c2692d32f952c753f7f0b43d1ca71"
+            },
+            {
+              "name": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/fatfreecrm/fat_free_crm/security/advisories/GHSA-p75c-5x3h-cxcg"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2022-10-11T15:30Z",
+      "publishedDate": "2022-10-08T01:15Z"
+    }
+  }
 }

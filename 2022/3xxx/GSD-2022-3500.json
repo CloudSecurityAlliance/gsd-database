@@ -1,279 +1,296 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-3500",
-        "id": "GSD-2022-3500",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2022:8444",
-            "https://www.suse.com/security/cve/CVE-2022-3500.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-3500",
+    "id": "GSD-2022-3500",
+    "references": [
+      "https://access.redhat.com/errata/RHSA-2022:8444",
+      "https://www.suse.com/security/cve/CVE-2022-3500.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "secalert@redhat.com",
-                "ID": "CVE-2022-3500",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "keylime",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "keylime 6.5.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "A vulnerability was found in keylime. This security issue happens in some circumstances, due to some improperly handled exceptions, there exists the possibility that a rogue agent could create errors on the verifier that stopped attestation attempts for that host leaving it in an attested state but not verifying that anymore."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-248"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://access.redhat.com/security/cve/CVE-2022-3500",
-                        "refsource": "MISC",
-                        "url": "https://access.redhat.com/security/cve/CVE-2022-3500"
-                    },
-                    {
-                        "name": "https://github.com/keylime/keylime/pull/1128",
-                        "refsource": "MISC",
-                        "url": "https://github.com/keylime/keylime/pull/1128"
-                    },
-                    {
-                        "name": "FEDORA-2022-5a6ed3607d",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQH5CJRX65QYMQN5WGUKKKE3IRJBWG5Z/"
-                    },
-                    {
-                        "name": "FEDORA-2022-7a312cde45",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QX4XVCAUFGJ2I2NCTOKONTJGRJB2NBBT/"
-                    },
-                    {
-                        "name": "FEDORA-2022-8ad3246cc0",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PUTHMDVFNGGVPCNPOGULMJAAFEP7MEXP/"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<6.5.1",
-                    "affected_versions": "All versions before 6.5.1",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-28",
-                    "description": "### Impact\n\nThis vulnerability creates a false sense of security for keylime users -- i.e. a user could query keylime and conclude that a parcitular node/agent is correctly attested, while attestations are not in fact taking place.\n\n**Short explanation**: the keylime verifier creates periodic reports on the state of each attested agent. The keylime verifier runs a set of python asynchronous processes to challenge attested nodes and create reports on the outcome. \n\nThe vulnerability consists of the above named python asynchronous processes failing silently, i.e. quitting without leaving behind a database entry, raising an error or producing even a mention of an error in a log. The silent failure can be triggered by a small set of transient network failure conditions; recoverable device driver crashes being one such condition we saw in the wild.\n\n### Patches\n\nThe problem is fixed in keylime starting with tag 6.5.1\n\n### Workarounds\n\nThis [patch](https://github.com/keylime/keylime/pull/1128/files) can be retroactively applied to any running keylime deployment.\nOnly running verifiers need to be patched.\nAfter the patch is applied, the keylime verifier needs to be restarted.\n\n### References\n\nThe problem, as well as the proposed fix, are described in detail [here](https://github.com/keylime/keylime/pull/1128).\nFurther details about the system where the bug was found, and the conditions in which the bug was found, are available from @galmasi on demand.\n\n### For more information\n\nIf you have any questions or comments about this [advisory](https://github.com/keylime/keylime/security/advisories/GHSA-hff2-x2j9-gxgv), please comment at the bottom of the advisory itself.\n",
-                    "fixed_versions": [
-                        "6.5.1"
-                    ],
-                    "identifier": "GMS-2022-6012",
-                    "identifiers": [
-                        "GHSA-hff2-x2j9-gxgv",
-                        "GMS-2022-6012",
-                        "CVE-2022-3500"
-                    ],
-                    "not_impacted": "All versions starting from 6.5.1",
-                    "package_slug": "pypi/keylime",
-                    "pubdate": "2022-10-28",
-                    "solution": "Upgrade to version 6.5.1 or above.",
-                    "title": "Keylime: unhandled exceptions could lead to invalid attestation states",
-                    "urls": [
-                        "https://github.com/keylime/keylime/security/advisories/GHSA-hff2-x2j9-gxgv",
-                        "https://github.com/keylime/keylime/pull/1128/files",
-                        "https://github.com/advisories/GHSA-hff2-x2j9-gxgv"
-                    ],
-                    "uuid": "8a0517bb-f131-4c32-8ab2-631ae3553866"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:keylime:keylime:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.5.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:redhat:enterprise_linux:9.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "secalert@redhat.com",
-                    "ID": "CVE-2022-3500"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "A vulnerability was found in keylime. This security issue happens in some circumstances, due to some improperly handled exceptions, there exists the possibility that a rogue agent could create errors on the verifier that stopped attestation attempts for that host leaving it in an attested state but not verifying that anymore."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-248"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/keylime/keylime/pull/1128",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/keylime/keylime/pull/1128"
-                        },
-                        {
-                            "name": "https://access.redhat.com/security/cve/CVE-2022-3500",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://access.redhat.com/security/cve/CVE-2022-3500"
-                        },
-                        {
-                            "name": "FEDORA-2022-5a6ed3607d",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQH5CJRX65QYMQN5WGUKKKE3IRJBWG5Z/"
-                        },
-                        {
-                            "name": "FEDORA-2022-8ad3246cc0",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PUTHMDVFNGGVPCNPOGULMJAAFEP7MEXP/"
-                        },
-                        {
-                            "name": "FEDORA-2022-7a312cde45",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QX4XVCAUFGJ2I2NCTOKONTJGRJB2NBBT/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 5.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.4,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-02-01T16:00Z",
-            "publishedDate": "2022-11-22T19:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-3500"
+      ],
+      "details": "A vulnerability was found in keylime. This security issue happens in some circumstances, due to some improperly handled exceptions, there exists the possibility that a rogue agent could create errors on the verifier that stopped attestation attempts for that host leaving it in an attested state but not verifying that anymore.",
+      "id": "GSD-2022-3500",
+      "modified": "2023-12-13T01:19:40.225410Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "secalert@redhat.com",
+        "ID": "CVE-2022-3500",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "keylime",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "keylime 6.5.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "A vulnerability was found in keylime. This security issue happens in some circumstances, due to some improperly handled exceptions, there exists the possibility that a rogue agent could create errors on the verifier that stopped attestation attempts for that host leaving it in an attested state but not verifying that anymore."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-248"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://access.redhat.com/security/cve/CVE-2022-3500",
+            "refsource": "MISC",
+            "url": "https://access.redhat.com/security/cve/CVE-2022-3500"
+          },
+          {
+            "name": "https://github.com/keylime/keylime/pull/1128",
+            "refsource": "MISC",
+            "url": "https://github.com/keylime/keylime/pull/1128"
+          },
+          {
+            "name": "FEDORA-2022-5a6ed3607d",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQH5CJRX65QYMQN5WGUKKKE3IRJBWG5Z/"
+          },
+          {
+            "name": "FEDORA-2022-7a312cde45",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QX4XVCAUFGJ2I2NCTOKONTJGRJB2NBBT/"
+          },
+          {
+            "name": "FEDORA-2022-8ad3246cc0",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PUTHMDVFNGGVPCNPOGULMJAAFEP7MEXP/"
+          }
+        ]
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<6.5.1",
+          "affected_versions": "All versions before 6.5.1",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2022-10-28",
+          "description": "### Impact\n\nThis vulnerability creates a false sense of security for keylime users -- i.e. a user could query keylime and conclude that a parcitular node/agent is correctly attested, while attestations are not in fact taking place.\n\n**Short explanation**: the keylime verifier creates periodic reports on the state of each attested agent. The keylime verifier runs a set of python asynchronous processes to challenge attested nodes and create reports on the outcome. \n\nThe vulnerability consists of the above named python asynchronous processes failing silently, i.e. quitting without leaving behind a database entry, raising an error or producing even a mention of an error in a log. The silent failure can be triggered by a small set of transient network failure conditions; recoverable device driver crashes being one such condition we saw in the wild.\n\n### Patches\n\nThe problem is fixed in keylime starting with tag 6.5.1\n\n### Workarounds\n\nThis [patch](https://github.com/keylime/keylime/pull/1128/files) can be retroactively applied to any running keylime deployment.\nOnly running verifiers need to be patched.\nAfter the patch is applied, the keylime verifier needs to be restarted.\n\n### References\n\nThe problem, as well as the proposed fix, are described in detail [here](https://github.com/keylime/keylime/pull/1128).\nFurther details about the system where the bug was found, and the conditions in which the bug was found, are available from @galmasi on demand.\n\n### For more information\n\nIf you have any questions or comments about this [advisory](https://github.com/keylime/keylime/security/advisories/GHSA-hff2-x2j9-gxgv), please comment at the bottom of the advisory itself.\n",
+          "fixed_versions": [
+            "6.5.1"
+          ],
+          "identifier": "GMS-2022-6012",
+          "identifiers": [
+            "GHSA-hff2-x2j9-gxgv",
+            "GMS-2022-6012",
+            "CVE-2022-3500"
+          ],
+          "not_impacted": "All versions starting from 6.5.1",
+          "package_slug": "pypi/keylime",
+          "pubdate": "2022-10-28",
+          "solution": "Upgrade to version 6.5.1 or above.",
+          "title": "Keylime: unhandled exceptions could lead to invalid attestation states",
+          "urls": [
+            "https://github.com/keylime/keylime/security/advisories/GHSA-hff2-x2j9-gxgv",
+            "https://github.com/keylime/keylime/pull/1128/files",
+            "https://github.com/advisories/GHSA-hff2-x2j9-gxgv"
+          ],
+          "uuid": "8a0517bb-f131-4c32-8ab2-631ae3553866"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:keylime:keylime:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.5.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:redhat:enterprise_linux:9.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "secalert@redhat.com",
+          "ID": "CVE-2022-3500"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "A vulnerability was found in keylime. This security issue happens in some circumstances, due to some improperly handled exceptions, there exists the possibility that a rogue agent could create errors on the verifier that stopped attestation attempts for that host leaving it in an attested state but not verifying that anymore."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-248"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/keylime/keylime/pull/1128",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/keylime/keylime/pull/1128"
+            },
+            {
+              "name": "https://access.redhat.com/security/cve/CVE-2022-3500",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://access.redhat.com/security/cve/CVE-2022-3500"
+            },
+            {
+              "name": "FEDORA-2022-5a6ed3607d",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQH5CJRX65QYMQN5WGUKKKE3IRJBWG5Z/"
+            },
+            {
+              "name": "FEDORA-2022-8ad3246cc0",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PUTHMDVFNGGVPCNPOGULMJAAFEP7MEXP/"
+            },
+            {
+              "name": "FEDORA-2022-7a312cde45",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QX4XVCAUFGJ2I2NCTOKONTJGRJB2NBBT/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.4,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-02-01T16:00Z",
+      "publishedDate": "2022-11-22T19:15Z"
+    }
+  }
 }

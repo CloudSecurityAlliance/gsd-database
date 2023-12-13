@@ -1,347 +1,364 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-24730",
-        "description": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds.",
-        "id": "GSD-2022-24730",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2022:1039",
-            "https://access.redhat.com/errata/RHSA-2022:1040",
-            "https://access.redhat.com/errata/RHSA-2022:1041",
-            "https://access.redhat.com/errata/RHSA-2022:1042"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-24730",
+    "description": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds.",
+    "id": "GSD-2022-24730",
+    "references": [
+      "https://access.redhat.com/errata/RHSA-2022:1039",
+      "https://access.redhat.com/errata/RHSA-2022:1040",
+      "https://access.redhat.com/errata/RHSA-2022:1041",
+      "https://access.redhat.com/errata/RHSA-2022:1042"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-24730",
-                "STATE": "PUBLIC",
-                "TITLE": "Path traversal and improper access control allows leaking out-of-bound files from Argo CD repo-server"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "argo-cd",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 1.3.0, < 2.1.11"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.2.0, < 2.2.6"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.3.0-rc1, < 2.3.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "argoproj"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 7.7,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "CHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-284: Improper Access Control"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-r9cr-hvjj-496v",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=v1.3.0 <v2.1.11 || >=v2.2.0 <v2.2.6 || >=v2.3.0-rc1 <v2.3.0",
-                    "affected_versions": "All versions starting from 1.3.0 before 2.1.11, all versions starting from 2.2.0 before 2.2.6, all versions starting from 2.3.0-rc1 before 2.3.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-284",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2022-03-29",
-                    "description": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds.",
-                    "fixed_versions": [
-                        "v2.1.11",
-                        "v2.2.6",
-                        "v2.3.0"
-                    ],
-                    "identifier": "CVE-2022-24730",
-                    "identifiers": [
-                        "GHSA-r9cr-hvjj-496v",
-                        "CVE-2022-24730"
-                    ],
-                    "not_impacted": "All versions before 1.3.0, all versions starting from 2.1.11 before 2.2.0, all versions starting from 2.2.6 before 2.3.0-rc1, all versions starting from 2.3.0",
-                    "package_slug": "go/github.com/argoproj/argo-cd",
-                    "pubdate": "2022-03-24",
-                    "solution": "Upgrade to versions 2.1.11, 2.2.6, 2.3.0 or above.",
-                    "title": "Improper Access Control",
-                    "urls": [
-                        "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-24730",
-                        "https://github.com/advisories/GHSA-r9cr-hvjj-496v"
-                    ],
-                    "uuid": "ea3482fb-a919-4d1f-96b5-6d27a796187d",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "9f8608c9fcb2a1d8dcc06eeadd57e5c0334c5800",
-                                "tags": [
-                                    "v1.3.0"
-                                ],
-                                "timestamp": "20191113010324"
-                            },
-                            "number": "v1.3.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "6da92a8e8103ce4145bb0fe2b7e952be79c9ff0a",
-                                "tags": [
-                                    "v2.2.0"
-                                ],
-                                "timestamp": "20211214180104"
-                            },
-                            "number": "v2.2.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "7d7eed49329197207e5b86420780696bfc8c9ca9",
-                                "tags": [
-                                    "v2.3.0-rc1"
-                                ],
-                                "timestamp": "20220130214254"
-                            },
-                            "number": "v2.3.0-rc1"
-                        },
-                        {
-                            "commit": {
-                                "sha": "e25d3b54354dc529a11a1ccbb19f6338aa027525",
-                                "tags": [
-                                    "v2.1.11"
-                                ],
-                                "timestamp": "20220306053033"
-                            },
-                            "number": "v2.1.11"
-                        },
-                        {
-                            "commit": {
-                                "sha": "2e550c3f0723daf94df7343b7c40f459aafd6fff",
-                                "tags": [
-                                    "v2.2.6"
-                                ],
-                                "timestamp": "20220306055051"
-                            },
-                            "number": "v2.2.6"
-                        },
-                        {
-                            "commit": {
-                                "sha": "fe427802293b090f43f91f5839393174df6c3b3a",
-                                "tags": [
-                                    "v2.3.0"
-                                ],
-                                "timestamp": "20220306061859"
-                            },
-                            "number": "v2.3.0"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.2.6",
-                                "versionStartIncluding": "2.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.1.11",
-                                "versionStartIncluding": "1.3.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc5:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-24730"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-22"
-                                },
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-863"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.0,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-06-23T19:16Z",
-            "publishedDate": "2022-03-23T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-24730"
+      ],
+      "details": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds.",
+      "id": "GSD-2022-24730",
+      "modified": "2023-12-13T01:19:43.292880Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-24730",
+        "STATE": "PUBLIC",
+        "TITLE": "Path traversal and improper access control allows leaking out-of-bound files from Argo CD repo-server"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "argo-cd",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 1.3.0, < 2.1.11"
+                        },
+                        {
+                          "version_value": ">= 2.2.0, < 2.2.6"
+                        },
+                        {
+                          "version_value": ">= 2.3.0-rc1, < 2.3.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "argoproj"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 7.7,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "CHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-284: Improper Access Control"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-r9cr-hvjj-496v",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=v1.3.0 <v2.1.11 || >=v2.2.0 <v2.2.6 || >=v2.3.0-rc1 <v2.3.0",
+          "affected_versions": "All versions starting from 1.3.0 before 2.1.11, all versions starting from 2.2.0 before 2.2.6, all versions starting from 2.3.0-rc1 before 2.3.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-284",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2022-03-29",
+          "description": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds.",
+          "fixed_versions": [
+            "v2.1.11",
+            "v2.2.6",
+            "v2.3.0"
+          ],
+          "identifier": "CVE-2022-24730",
+          "identifiers": [
+            "GHSA-r9cr-hvjj-496v",
+            "CVE-2022-24730"
+          ],
+          "not_impacted": "All versions before 1.3.0, all versions starting from 2.1.11 before 2.2.0, all versions starting from 2.2.6 before 2.3.0-rc1, all versions starting from 2.3.0",
+          "package_slug": "go/github.com/argoproj/argo-cd",
+          "pubdate": "2022-03-24",
+          "solution": "Upgrade to versions 2.1.11, 2.2.6, 2.3.0 or above.",
+          "title": "Improper Access Control",
+          "urls": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-24730",
+            "https://github.com/advisories/GHSA-r9cr-hvjj-496v"
+          ],
+          "uuid": "ea3482fb-a919-4d1f-96b5-6d27a796187d",
+          "versions": [
+            {
+              "commit": {
+                "sha": "9f8608c9fcb2a1d8dcc06eeadd57e5c0334c5800",
+                "tags": [
+                  "v1.3.0"
+                ],
+                "timestamp": "20191113010324"
+              },
+              "number": "v1.3.0"
+            },
+            {
+              "commit": {
+                "sha": "6da92a8e8103ce4145bb0fe2b7e952be79c9ff0a",
+                "tags": [
+                  "v2.2.0"
+                ],
+                "timestamp": "20211214180104"
+              },
+              "number": "v2.2.0"
+            },
+            {
+              "commit": {
+                "sha": "7d7eed49329197207e5b86420780696bfc8c9ca9",
+                "tags": [
+                  "v2.3.0-rc1"
+                ],
+                "timestamp": "20220130214254"
+              },
+              "number": "v2.3.0-rc1"
+            },
+            {
+              "commit": {
+                "sha": "e25d3b54354dc529a11a1ccbb19f6338aa027525",
+                "tags": [
+                  "v2.1.11"
+                ],
+                "timestamp": "20220306053033"
+              },
+              "number": "v2.1.11"
+            },
+            {
+              "commit": {
+                "sha": "2e550c3f0723daf94df7343b7c40f459aafd6fff",
+                "tags": [
+                  "v2.2.6"
+                ],
+                "timestamp": "20220306055051"
+              },
+              "number": "v2.2.6"
+            },
+            {
+              "commit": {
+                "sha": "fe427802293b090f43f91f5839393174df6c3b3a",
+                "tags": [
+                  "v2.3.0"
+                ],
+                "timestamp": "20220306061859"
+              },
+              "number": "v2.3.0"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.2.6",
+                "versionStartIncluding": "2.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.1.11",
+                "versionStartIncluding": "1.3.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:argo-cd:2.3.0:rc5:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-24730"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Argo CD starting with version 1.3.0 but before versions 2.1.11, 2.2.6, and 2.3.0 is vulnerable to a path traversal bug, compounded by an improper access control bug, allowing a malicious user with read-only repository access to leak sensitive files from Argo CD's repo-server. A malicious Argo CD user who has been granted `get` access for a repository containing a Helm chart can craft an API request to the `/api/v1/repositories/{repo_url}/appdetails` endpoint to leak the contents of out-of-bounds files from the repo-server. The malicious payload would reference an out-of-bounds file, and the contents of that file would be returned as part of the response. Contents from a non-YAML file may be returned as part of an error message. The attacker would have to know or guess the location of the target file. Sensitive files which could be leaked include files from other Applications' source repositories or any secrets which have been mounted as files on the repo-server. This vulnerability is patched in Argo CD versions 2.1.11, 2.2.6, and 2.3.0. The patches prevent path traversal and limit access to users who either A) have been granted Application `create` privileges or B) have been granted Application `get` privileges and are requesting details for a `repo_url` that has already been used for the given Application. There are currently no known workarounds."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-22"
+                },
+                {
+                  "lang": "en",
+                  "value": "CWE-863"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-r9cr-hvjj-496v"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.0,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-06-23T19:16Z",
+      "publishedDate": "2022-03-23T21:15Z"
+    }
+  }
 }

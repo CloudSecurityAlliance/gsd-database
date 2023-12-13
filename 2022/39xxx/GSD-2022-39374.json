@@ -1,238 +1,255 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-39374",
-        "id": "GSD-2022-39374"
+  "GSD": {
+    "alias": "CVE-2022-39374",
+    "id": "GSD-2022-39374"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-39374",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "synapse",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 1.62.0, < 1.68.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "matrix-org"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. If Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected. This issue has been patched in version 1.68.0\n\n"
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.0"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-400",
-                                "lang": "eng",
-                                "value": "CWE-400: Uncontrolled Resource Consumption"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
-                        "refsource": "MISC",
-                        "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7"
-                    },
-                    {
-                        "name": "https://github.com/matrix-org/synapse/pull/13723",
-                        "refsource": "MISC",
-                        "url": "https://github.com/matrix-org/synapse/pull/13723"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-p9qp-c452-f9r7",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=1.62.0,<1.68.0",
-                    "affected_versions": "All versions starting from 1.62.0 before 1.68.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2023-06-02",
-                    "description": "### Impact\nIf Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected.\n\nSynapse homeservers are affected by this issue if and only if they are joined to rooms which members of untrusted homeservers are joined or invited to. \n\n- Synapse homeservers in rooms available over public federation **are** affected.\n- Synapse homeservers with federation disabled are not affected.\n- Synapse homeservers in a closed federation containing only trusted servers are not affected.\n- Synapse homeservers which are only joined to rooms with federation disabled[^1] are not affected.\n\n### Patches\nAdministrators of homeservers with federation enabled are advised to upgrade to 1.68.0 or higher.\n\n### Workarounds\n * Federation can be disabled by setting [`federation_domain_allow list`](https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#federation_domain_allow list) to an empty list (`[]`).\n\n### References\n- https://github.com/matrix-org/synapse/pull/13723\n\n[^1]: See `m.federate` in the [`m.room.create` definition](https://spec.matrix.org/v1.4/client-server-api/#mroomcreate).\n\n### For more information\n\nIf you have any questions or comments about this advisory, e-mail us at [security@matrix.org](mailto:security@matrix.org).",
-                    "fixed_versions": [
-                        "1.68.0"
-                    ],
-                    "identifier": "CVE-2022-39374",
-                    "identifiers": [
-                        "CVE-2022-39374",
-                        "GHSA-p9qp-c452-f9r7"
-                    ],
-                    "not_impacted": "All versions before 1.62.0, all versions starting from 1.68.0",
-                    "package_slug": "pypi/matrix-synapse",
-                    "pubdate": "2023-05-26",
-                    "solution": "Upgrade to version 1.68.0 or above.",
-                    "title": "Synapse Denial of service due to incorrect application of event authorization rules during state resolution",
-                    "urls": [
-                        "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
-                        "https://github.com/matrix-org/synapse/pull/13723",
-                        "https://github.com/advisories/GHSA-p9qp-c452-f9r7"
-                    ],
-                    "uuid": "2df52be7-343b-4c83-8e9a-3087fa726960"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:matrix:synapse:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.68.0",
-                                "versionStartIncluding": "1.62.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-39374"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. If Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected. This issue has been patched in version 1.68.0\n\n"
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-400"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/matrix-org/synapse/pull/13723",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch"
-                            ],
-                            "url": "https://github.com/matrix-org/synapse/pull/13723"
-                        },
-                        {
-                            "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-09-18T04:15Z",
-            "publishedDate": "2023-05-26T14:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-39374"
+      ],
+      "details": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. If Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected. This issue has been patched in version 1.68.0\n\n",
+      "id": "GSD-2022-39374",
+      "modified": "2023-12-13T01:19:21.052805Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-39374",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "synapse",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 1.62.0, < 1.68.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "matrix-org"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. If Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected. This issue has been patched in version 1.68.0\n\n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.0"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-400",
+                "lang": "eng",
+                "value": "CWE-400: Uncontrolled Resource Consumption"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
+            "refsource": "MISC",
+            "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7"
+          },
+          {
+            "name": "https://github.com/matrix-org/synapse/pull/13723",
+            "refsource": "MISC",
+            "url": "https://github.com/matrix-org/synapse/pull/13723"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p9qp-c452-f9r7",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=1.62.0,<1.68.0",
+          "affected_versions": "All versions starting from 1.62.0 before 1.68.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2023-06-02",
+          "description": "### Impact\nIf Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected.\n\nSynapse homeservers are affected by this issue if and only if they are joined to rooms which members of untrusted homeservers are joined or invited to. \n\n- Synapse homeservers in rooms available over public federation **are** affected.\n- Synapse homeservers with federation disabled are not affected.\n- Synapse homeservers in a closed federation containing only trusted servers are not affected.\n- Synapse homeservers which are only joined to rooms with federation disabled[^1] are not affected.\n\n### Patches\nAdministrators of homeservers with federation enabled are advised to upgrade to 1.68.0 or higher.\n\n### Workarounds\n * Federation can be disabled by setting [`federation_domain_allow list`](https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#federation_domain_allow list) to an empty list (`[]`).\n\n### References\n- https://github.com/matrix-org/synapse/pull/13723\n\n[^1]: See `m.federate` in the [`m.room.create` definition](https://spec.matrix.org/v1.4/client-server-api/#mroomcreate).\n\n### For more information\n\nIf you have any questions or comments about this advisory, e-mail us at [security@matrix.org](mailto:security@matrix.org).",
+          "fixed_versions": [
+            "1.68.0"
+          ],
+          "identifier": "CVE-2022-39374",
+          "identifiers": [
+            "CVE-2022-39374",
+            "GHSA-p9qp-c452-f9r7"
+          ],
+          "not_impacted": "All versions before 1.62.0, all versions starting from 1.68.0",
+          "package_slug": "pypi/matrix-synapse",
+          "pubdate": "2023-05-26",
+          "solution": "Upgrade to version 1.68.0 or above.",
+          "title": "Synapse Denial of service due to incorrect application of event authorization rules during state resolution",
+          "urls": [
+            "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
+            "https://github.com/matrix-org/synapse/pull/13723",
+            "https://github.com/advisories/GHSA-p9qp-c452-f9r7"
+          ],
+          "uuid": "2df52be7-343b-4c83-8e9a-3087fa726960"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:matrix:synapse:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.68.0",
+                "versionStartIncluding": "1.62.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-39374"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Synapse is an open-source Matrix homeserver written and maintained by the Matrix.org Foundation. If Synapse and a malicious homeserver are both joined to the same room, the malicious homeserver can trick Synapse into accepting previously rejected events into its view of the current state of that room. This can be exploited in a way that causes all further messages and state changes sent in that room from the vulnerable homeserver to be rejected. This issue has been patched in version 1.68.0\n\n"
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-400"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/matrix-org/synapse/pull/13723",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch"
+              ],
+              "url": "https://github.com/matrix-org/synapse/pull/13723"
+            },
+            {
+              "name": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/matrix-org/synapse/security/advisories/GHSA-p9qp-c452-f9r7"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UJIJRP5ZH6B3KGFLHCAKR2IX2Y4Z25QD/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-09-18T04:15Z",
+      "publishedDate": "2023-05-26T14:15Z"
+    }
+  }
 }

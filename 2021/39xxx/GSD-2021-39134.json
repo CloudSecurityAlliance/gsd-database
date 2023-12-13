@@ -1,326 +1,343 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-39134",
-        "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above.",
-        "id": "GSD-2021-39134",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-39134.html",
-            "https://advisories.mageia.org/CVE-2021-39134.html",
-            "https://security.archlinux.org/CVE-2021-39134"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-39134",
+    "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above.",
+    "id": "GSD-2021-39134",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-39134.html",
+      "https://advisories.mageia.org/CVE-2021-39134.html",
+      "https://security.archlinux.org/CVE-2021-39134"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-39134",
-                "STATE": "PUBLIC",
-                "TITLE": "UNIX Symbolic Link (Symlink) Following in @npmcli/arborist"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "arborist",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 2.8.2"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "npm"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "LOCAL",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 8.2,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "CHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-61: UNIX Symbolic Link (Symlink) Following"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc"
-                    },
-                    {
-                        "name": "https://www.npmjs.com/package/@npmcli/arborist",
-                        "refsource": "MISC",
-                        "url": "https://www.npmjs.com/package/@npmcli/arborist"
-                    },
-                    {
-                        "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
-                        "refsource": "MISC",
-                        "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                    },
-                    {
-                        "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
-                        "refsource": "CONFIRM",
-                        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-2h3h-q99f-3fhc",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.8.2",
-                    "affected_versions": "All versions before 2.8.2",
-                    "cvss_v2": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-178",
-                        "CWE-937"
-                    ],
-                    "date": "2022-08-12",
-                    "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder.",
-                    "fixed_versions": [
-                        "2.8.2"
-                    ],
-                    "identifier": "CVE-2021-39134",
-                    "identifiers": [
-                        "CVE-2021-39134",
-                        "GHSA-2h3h-q99f-3fhc"
-                    ],
-                    "not_impacted": "All versions starting from 2.8.2",
-                    "package_slug": "npm/@npmcli/arborist",
-                    "pubdate": "2021-08-31",
-                    "solution": "Upgrade to version 2.8.2 or above.",
-                    "title": "UNIX Symbolic Link (Symlink) Following",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-39134",
-                        "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
-                        "https://www.npmjs.com/package/@npmcli/arborist",
-                        "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                    ],
-                    "uuid": "0caee093-f7f8-410a-bf70-4894562743c2"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:npmjs:arborist:*:*:*:*:*:node.js:*:*",
-                                        "cpe_name": [],
-                                        "versionEndExcluding": "2.8.2",
-                                        "vulnerable": true
-                                    }
-                                ],
-                                "operator": "OR"
-                            },
-                            {
-                                "children": [],
-                                "cpe_match": [
-                                    {
-                                        "cpe23Uri": "cpe:2.3:a:npmjs:npm:*:*:*:*:*:*:*:*",
-                                        "cpe_name": [],
-                                        "versionEndExcluding": "7.20.7",
-                                        "vulnerable": false
-                                    }
-                                ],
-                                "operator": "OR"
-                            }
-                        ],
-                        "cpe_match": [],
-                        "operator": "AND"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:20.3.3:*:*:*:enterprise:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:21.2.0:*:*:*:enterprise:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.0.1.1",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-39134"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-178"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc"
-                        },
-                        {
-                            "name": "https://www.npmjs.com/package/@npmcli/arborist",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Product",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.npmjs.com/package/@npmcli/arborist"
-                        },
-                        {
-                            "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
-                        },
-                        {
-                            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "LOCAL",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.4,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 3.4,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2022-08-12T17:49Z",
-            "publishedDate": "2021-08-31T17:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-39134"
+      ],
+      "details": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above.",
+      "id": "GSD-2021-39134",
+      "modified": "2023-12-13T01:23:15.623322Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-39134",
+        "STATE": "PUBLIC",
+        "TITLE": "UNIX Symbolic Link (Symlink) Following in @npmcli/arborist"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "arborist",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 2.8.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "npm"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "LOCAL",
+          "availabilityImpact": "NONE",
+          "baseScore": 8.2,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "CHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-61: UNIX Symbolic Link (Symlink) Following"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc"
+          },
+          {
+            "name": "https://www.npmjs.com/package/@npmcli/arborist",
+            "refsource": "MISC",
+            "url": "https://www.npmjs.com/package/@npmcli/arborist"
+          },
+          {
+            "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
+            "refsource": "MISC",
+            "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+          },
+          {
+            "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+            "refsource": "CONFIRM",
+            "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-2h3h-q99f-3fhc",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.8.2",
+          "affected_versions": "All versions before 2.8.2",
+          "cvss_v2": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-178",
+            "CWE-937"
+          ],
+          "date": "2022-08-12",
+          "description": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder.",
+          "fixed_versions": [
+            "2.8.2"
+          ],
+          "identifier": "CVE-2021-39134",
+          "identifiers": [
+            "CVE-2021-39134",
+            "GHSA-2h3h-q99f-3fhc"
+          ],
+          "not_impacted": "All versions starting from 2.8.2",
+          "package_slug": "npm/@npmcli/arborist",
+          "pubdate": "2021-08-31",
+          "solution": "Upgrade to version 2.8.2 or above.",
+          "title": "UNIX Symbolic Link (Symlink) Following",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-39134",
+            "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
+            "https://www.npmjs.com/package/@npmcli/arborist",
+            "https://www.oracle.com/security-alerts/cpuoct2021.html"
+          ],
+          "uuid": "0caee093-f7f8-410a-bf70-4894562743c2"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:a:npmjs:arborist:*:*:*:*:*:node.js:*:*",
+                    "cpe_name": [],
+                    "versionEndExcluding": "2.8.2",
+                    "vulnerable": true
+                  }
+                ],
+                "operator": "OR"
+              },
+              {
+                "children": [],
+                "cpe_match": [
+                  {
+                    "cpe23Uri": "cpe:2.3:a:npmjs:npm:*:*:*:*:*:*:*:*",
+                    "cpe_name": [],
+                    "versionEndExcluding": "7.20.7",
+                    "vulnerable": false
+                  }
+                ],
+                "operator": "OR"
+              }
+            ],
+            "cpe_match": [],
+            "operator": "AND"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:20.3.3:*:*:*:enterprise:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:oracle:graalvm:21.2.0:*:*:*:enterprise:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:siemens:sinec_infrastructure_network_services:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.0.1.1",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-39134"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "`@npmcli/arborist`, the library that calculates dependency trees and manages the `node_modules` folder hierarchy for the npm command line interface, aims to guarantee that package dependency contracts will be met, and the extraction of package contents will always be performed into the expected folder. This is, in part, accomplished by resolving dependency specifiers defined in `package.json` manifests for dependencies with a specific name, and nesting folders to resolve conflicting dependencies. When multiple dependencies differ only in the case of their name, Arborist's internal data structure saw them as separate items that could coexist within the same level in the `node_modules` hierarchy. However, on case-insensitive file systems (such as macOS and Windows), this is not the case. Combined with a symlink dependency such as `file:/some/path`, this allowed an attacker to create a situation in which arbitrary contents could be written to any location on the filesystem. For example, a package `pwn-a` could define a dependency in their `package.json` file such as `\"foo\": \"file:/some/path\"`. Another package, `pwn-b` could define a dependency such as `FOO: \"file:foo.tgz\"`. On case-insensitive file systems, if `pwn-a` was installed, and then `pwn-b` was installed afterwards, the contents of `foo.tgz` would be written to `/some/path`, and any existing contents of `/some/path` would be removed. Anyone using npm v7.20.6 or earlier on a case-insensitive filesystem is potentially affected. This is patched in @npmcli/arborist 2.8.2 which is included in npm v7.20.7 and above."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-178"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/npm/arborist/security/advisories/GHSA-2h3h-q99f-3fhc"
+            },
+            {
+              "name": "https://www.npmjs.com/package/@npmcli/arborist",
+              "refsource": "MISC",
+              "tags": [
+                "Product",
+                "Third Party Advisory"
+              ],
+              "url": "https://www.npmjs.com/package/@npmcli/arborist"
+            },
+            {
+              "name": "https://www.oracle.com/security-alerts/cpuoct2021.html",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+            },
+            {
+              "name": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-389290.pdf"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "LOCAL",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.4,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 3.4,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2022-08-12T17:49Z",
+      "publishedDate": "2021-08-31T17:15Z"
+    }
+  }
 }

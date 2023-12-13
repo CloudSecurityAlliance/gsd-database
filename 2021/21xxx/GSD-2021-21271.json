@@ -1,319 +1,336 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-21271",
-        "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
-        "id": "GSD-2021-21271"
+  "GSD": {
+    "alias": "CVE-2021-21271",
+    "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
+    "id": "GSD-2021-21271"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-21271",
-                "STATE": "PUBLIC",
-                "TITLE": "Denial of service in TenderMint Core"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tendermint",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 0.34.0,  < 0.34.3"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tendermint"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 6.5,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "{\"CWE-400\":\"Uncontrolled Resource Consumption\"}"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg"
-                    },
-                    {
-                        "name": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3"
-                    },
-                    {
-                        "name": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-p658-8693-mhvg",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=0.34.0 <0.34.3",
-                    "affected_versions": "All versions starting from 0.34.0 before 0.34.3",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2023-02-15",
-                    "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
-                    "fixed_versions": [
-                        "0.34.3"
-                    ],
-                    "identifier": "CVE-2021-21271",
-                    "identifiers": [
-                        "GHSA-p658-8693-mhvg",
-                        "CVE-2021-21271"
-                    ],
-                    "not_impacted": "All versions before 0.34.0, all versions starting from 0.34.3",
-                    "package_slug": "go/github.com/tendermint/tendermint",
-                    "pubdate": "2022-10-07",
-                    "solution": "Upgrade to version 0.34.3 or above.",
-                    "title": "Uncontrolled Resource Consumption",
-                    "urls": [
-                        "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-21271",
-                        "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
-                        "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
-                        "https://pkg.go.dev/vuln/GO-2022-1052",
-                        "https://github.com/advisories/GHSA-p658-8693-mhvg"
-                    ],
-                    "uuid": "5defcca7-d417-413c-a096-6c55b074f08f"
-                },
-                {
-                    "affected_range": ">=v0.34.0 <v0.34.3",
-                    "affected_versions": "All versions starting from 0.34.0 before 0.34.3",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2022-10-07",
-                    "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
-                    "fixed_versions": [
-                        "v0.34.3"
-                    ],
-                    "identifier": "CVE-2021-21271",
-                    "identifiers": [
-                        "GHSA-p658-8693-mhvg",
-                        "CVE-2021-21271"
-                    ],
-                    "not_impacted": "All versions before 0.34.0, all versions starting from 0.34.3",
-                    "package_slug": "go/github.com/tendermint/tendermint/evidence",
-                    "pubdate": "2022-10-07",
-                    "solution": "Upgrade to version 0.34.3 or above.",
-                    "title": "Uncontrolled Resource Consumption",
-                    "urls": [
-                        "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-21271",
-                        "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
-                        "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
-                        "https://github.com/advisories/GHSA-p658-8693-mhvg"
-                    ],
-                    "uuid": "90a793a4-a6ca-43ee-8462-b0b3e2121cdf",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "b7cbc8a93532032c6b7e6ab987df57e9e15967ea",
-                                "tags": [
-                                    "v0.34.0"
-                                ],
-                                "timestamp": "20201119175234"
-                            },
-                            "number": "v0.34.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "d7132e4a187535b8cb4f9f580c2db4675a829d9c",
-                                "tags": [
-                                    "v0.34.3"
-                                ],
-                                "timestamp": "20210119151247"
-                            },
-                            "number": "v0.34.3"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "0.34.2",
-                                "versionStartIncluding": "0.34.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-21271"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-400"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76"
-                        },
-                        {
-                            "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg"
-                        },
-                        {
-                            "name": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2021-02-08T21:23Z",
-            "publishedDate": "2021-01-26T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-21271"
+      ],
+      "details": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
+      "id": "GSD-2021-21271",
+      "modified": "2023-12-13T01:23:11.133192Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-21271",
+        "STATE": "PUBLIC",
+        "TITLE": "Denial of service in TenderMint Core"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tendermint",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 0.34.0,  < 0.34.3"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tendermint"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 6.5,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "{\"CWE-400\":\"Uncontrolled Resource Consumption\"}"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg"
+          },
+          {
+            "name": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
+            "refsource": "MISC",
+            "url": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3"
+          },
+          {
+            "name": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
+            "refsource": "MISC",
+            "url": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p658-8693-mhvg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=0.34.0 <0.34.3",
+          "affected_versions": "All versions starting from 0.34.0 before 0.34.3",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2023-02-15",
+          "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
+          "fixed_versions": [
+            "0.34.3"
+          ],
+          "identifier": "CVE-2021-21271",
+          "identifiers": [
+            "GHSA-p658-8693-mhvg",
+            "CVE-2021-21271"
+          ],
+          "not_impacted": "All versions before 0.34.0, all versions starting from 0.34.3",
+          "package_slug": "go/github.com/tendermint/tendermint",
+          "pubdate": "2022-10-07",
+          "solution": "Upgrade to version 0.34.3 or above.",
+          "title": "Uncontrolled Resource Consumption",
+          "urls": [
+            "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-21271",
+            "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
+            "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
+            "https://pkg.go.dev/vuln/GO-2022-1052",
+            "https://github.com/advisories/GHSA-p658-8693-mhvg"
+          ],
+          "uuid": "5defcca7-d417-413c-a096-6c55b074f08f"
+        },
+        {
+          "affected_range": ">=v0.34.0 <v0.34.3",
+          "affected_versions": "All versions starting from 0.34.0 before 0.34.3",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2022-10-07",
+          "description": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors.",
+          "fixed_versions": [
+            "v0.34.3"
+          ],
+          "identifier": "CVE-2021-21271",
+          "identifiers": [
+            "GHSA-p658-8693-mhvg",
+            "CVE-2021-21271"
+          ],
+          "not_impacted": "All versions before 0.34.0, all versions starting from 0.34.3",
+          "package_slug": "go/github.com/tendermint/tendermint/evidence",
+          "pubdate": "2022-10-07",
+          "solution": "Upgrade to version 0.34.3 or above.",
+          "title": "Uncontrolled Resource Consumption",
+          "urls": [
+            "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-21271",
+            "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
+            "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
+            "https://github.com/advisories/GHSA-p658-8693-mhvg"
+          ],
+          "uuid": "90a793a4-a6ca-43ee-8462-b0b3e2121cdf",
+          "versions": [
+            {
+              "commit": {
+                "sha": "b7cbc8a93532032c6b7e6ab987df57e9e15967ea",
+                "tags": [
+                  "v0.34.0"
+                ],
+                "timestamp": "20201119175234"
+              },
+              "number": "v0.34.0"
+            },
+            {
+              "commit": {
+                "sha": "d7132e4a187535b8cb4f9f580c2db4675a829d9c",
+                "tags": [
+                  "v0.34.3"
+                ],
+                "timestamp": "20210119151247"
+              },
+              "number": "v0.34.3"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:tendermint:tendermint:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "0.34.2",
+                "versionStartIncluding": "0.34.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-21271"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Tendermint Core is an open source Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine - written in any programming language - and securely replicates it on many machines. Tendermint Core v0.34.0 introduced a new way of handling evidence of misbehavior. As part of this, we added a new Timestamp field to Evidence structs. This timestamp would be calculated using the same algorithm that is used when a block is created and proposed. (This algorithm relies on the timestamp of the last commit from this specific block.) In Tendermint Core v0.34.0-v0.34.2, the consensus reactor is responsible for forming DuplicateVoteEvidence whenever double signs are observed. However, the current block is still \u201cin flight\u201d when it is being formed by the consensus reactor. It hasn\u2019t been finalized through network consensus yet. This means that different nodes in the network may observe different \u201clast commits\u201d when assigning a timestamp to DuplicateVoteEvidence. In turn, different nodes could form DuplicateVoteEvidence objects at the same height but with different timestamps. One DuplicateVoteEvidence object (with one timestamp) will then eventually get finalized in the block, but this means that any DuplicateVoteEvidence with a different timestamp is considered invalid. Any node that formed invalid DuplicateVoteEvidence will continue to propose invalid evidence; its peers may see this, and choose to disconnect from this node. This bug means that double signs are DoS vectors in Tendermint Core v0.34.0-v0.34.2. Tendermint Core v0.34.3 is a security release which fixes this bug. As of v0.34.3, DuplicateVoteEvidence is no longer formed by the consensus reactor; rather, the consensus reactor passes the Votes themselves into the EvidencePool, which is now responsible for forming DuplicateVoteEvidence. The EvidencePool has timestamp info that should be consistent across the network, which means that DuplicateVoteEvidence formed in this reactor should have consistent timestamps. This release changes the API between the consensus and evidence reactors."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-400"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tendermint/tendermint/commit/a2a6852ab99e4a0f9e79f0ea8c1726e262e25c76"
+            },
+            {
+              "name": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tendermint/tendermint/security/advisories/GHSA-p658-8693-mhvg"
+            },
+            {
+              "name": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tendermint/tendermint/blob/v0.34.3/CHANGELOG.md#v0.34.3"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2021-02-08T21:23Z",
+      "publishedDate": "2021-01-26T21:15Z"
+    }
+  }
 }

@@ -1,444 +1,450 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-8164",
-        "description": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters.",
-        "id": "GSD-2020-8164",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2020-8164.html",
-            "https://www.debian.org/security/2020/dsa-4766",
-            "https://access.redhat.com/errata/RHSA-2021:1313"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-8164",
+    "description": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters.",
+    "id": "GSD-2020-8164",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2020-8164.html",
+      "https://www.debian.org/security/2020/dsa-4766",
+      "https://access.redhat.com/errata/RHSA-2021:1313"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-8164",
-            "modified": "2020-05-18T00:00:00.000Z",
-            "published": "2020-05-18T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-8164",
-                "GHSA-8727-m6gj-mc37"
-            ],
-            "summary": "Possible Strong Parameters Bypass in ActionPack",
-            "details": "There is a strong parameters bypass vector in ActionPack.\n\nVersions Affected:  rails <= 6.0.3\nNot affected:       rails < 4.0.0\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\nIn some cases user supplied information can be inadvertently leaked from\nStrong Parameters.  Specifically the return value of `each`, or `each_value`,\nor `each_pair` will return the underlying \"untrusted\" hash of data that was\nread from the parameters.  Applications that use this return value may be\ninadvertently use untrusted user input.\n\nImpacted code will look something like this:\n\n```\ndef update\n  # Attacker has included the parameter: `{ is_admin: true }`\n  User.update(clean_up_params)\nend\n\ndef clean_up_params\n   params.each { |k, v|  SomeModel.check(v) if k == :name }\nend\n```\n\nNote the mistaken use of `each` in the `clean_up_params` method in the above\nexample.\n\nWorkarounds\n-----------\nDo not use the return values of `each`, `each_value`, or `each_pair` in your\napplication.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.5
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionpack",
-                        "purl": "pkg:gem/actionpack"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/f6ioe4sdpbY"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionpack",
+            "purl": "pkg:gem/actionpack"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2020-8164",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "5.2.4.3, 6.0.3.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Deserialization of Untrusted Data (CWE-502)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://hackerone.com/reports/292797",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/292797"
-                    },
-                    {
-                        "name": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY",
-                        "refsource": "MISC",
-                        "url": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
-                    },
-                    {
-                        "name": "DSA-4766",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2020/dsa-4766"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:1533",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00089.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:1536",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00093.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2020:1575",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00107.html"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
-                    "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2020-09-30",
-                    "description": "A deserialization of untrusted data vulnerability exists in rails, rails which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters.",
-                    "fixed_versions": [
-                        "5.2.4.3",
-                        "6.0.3.1"
-                    ],
-                    "identifier": "CVE-2020-8164",
-                    "identifiers": [
-                        "CVE-2020-8164"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
-                    "package_slug": "gem/actionpack",
-                    "pubdate": "2020-06-19",
-                    "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-8164"
-                    ],
-                    "uuid": "d5fa99f8-5ef4-439f-8689-adaf4477fece"
-                },
-                {
-                    "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
-                    "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-502",
-                        "CWE-937"
-                    ],
-                    "date": "2020-09-30",
-                    "description": "A deserialization of untrusted data vulnerability exists in rails which can allow an attacker to supply information can be inadvertently leaked.",
-                    "fixed_versions": [
-                        "5.2.4.3",
-                        "6.0.3.1"
-                    ],
-                    "identifier": "CVE-2020-8164",
-                    "identifiers": [
-                        "CVE-2020-8164"
-                    ],
-                    "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2020-06-19",
-                    "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
-                    "title": "Deserialization of Untrusted Data",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-8164"
-                    ],
-                    "uuid": "e4ee7df0-2905-4bb3-8dd5-81f33b6fc530"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.3.1",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.4.3",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:opensuse:backports_sle:15.0:sp1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2020-8164"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-502"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://hackerone.com/reports/292797",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/292797"
-                        },
-                        {
-                            "name": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
-                        },
-                        {
-                            "name": "DSA-4766",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2020/dsa-4766"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:1533",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00089.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:1536",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00093.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2020:1575",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00107.html"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2022-05-24T16:44Z",
-            "publishedDate": "2020-06-19T17:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionpack",
-            "framework": "rails",
-            "cve": "2020-8164",
-            "ghsa": "8727-m6gj-mc37",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/f6ioe4sdpbY",
-            "title": "Possible Strong Parameters Bypass in ActionPack",
-            "date": "2020-05-18",
-            "description": "There is a strong parameters bypass vector in ActionPack.\n\nVersions Affected:  rails <= 6.0.3\nNot affected:       rails < 4.0.0\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\nIn some cases user supplied information can be inadvertently leaked from\nStrong Parameters.  Specifically the return value of `each`, or `each_value`,\nor `each_pair` will return the underlying \"untrusted\" hash of data that was\nread from the parameters.  Applications that use this return value may be\ninadvertently use untrusted user input.\n\nImpacted code will look something like this:\n\n```\ndef update\n  # Attacker has included the parameter: `{ is_admin: true }`\n  User.update(clean_up_params)\nend\n\ndef clean_up_params\n   params.each { |k, v|  SomeModel.check(v) if k == :name }\nend\n```\n\nNote the mistaken use of `each` in the `clean_up_params` method in the above\nexample.\n\nWorkarounds\n-----------\nDo not use the return values of `each`, `each_value`, or `each_pair` in your\napplication.\n",
-            "cvss_v3": 7.5,
-            "unaffected_versions": [
-                "< 4.0.0"
-            ],
-            "patched_versions": [
-                "~> 5.2.4, >= 5.2.4.3",
-                ">= 6.0.3.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2020-8164",
+        "GHSA-8727-m6gj-mc37"
+      ],
+      "details": "There is a strong parameters bypass vector in ActionPack.\n\nVersions Affected:  rails <= 6.0.3\nNot affected:       rails < 4.0.0\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\nIn some cases user supplied information can be inadvertently leaked from\nStrong Parameters.  Specifically the return value of `each`, or `each_value`,\nor `each_pair` will return the underlying \"untrusted\" hash of data that was\nread from the parameters.  Applications that use this return value may be\ninadvertently use untrusted user input.\n\nImpacted code will look something like this:\n\n```\ndef update\n  # Attacker has included the parameter: `{ is_admin: true }`\n  User.update(clean_up_params)\nend\n\ndef clean_up_params\n   params.each { |k, v|  SomeModel.check(v) if k == :name }\nend\n```\n\nNote the mistaken use of `each` in the `clean_up_params` method in the above\nexample.\n\nWorkarounds\n-----------\nDo not use the return values of `each`, `each_value`, or `each_pair` in your\napplication.\n",
+      "id": "GSD-2020-8164",
+      "modified": "2020-05-18T00:00:00.000Z",
+      "published": "2020-05-18T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/f6ioe4sdpbY"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.5,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible Strong Parameters Bypass in ActionPack"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2020-8164",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "5.2.4.3, 6.0.3.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Deserialization of Untrusted Data (CWE-502)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://hackerone.com/reports/292797",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/292797"
+          },
+          {
+            "name": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY"
+          },
+          {
+            "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
+          },
+          {
+            "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
+          },
+          {
+            "name": "DSA-4766",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2020/dsa-4766"
+          },
+          {
+            "name": "openSUSE-SU-2020:1533",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00089.html"
+          },
+          {
+            "name": "openSUSE-SU-2020:1536",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00093.html"
+          },
+          {
+            "name": "openSUSE-SU-2020:1575",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00107.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-8164",
+      "cvss_v3": 7.5,
+      "date": "2020-05-18",
+      "description": "There is a strong parameters bypass vector in ActionPack.\n\nVersions Affected:  rails <= 6.0.3\nNot affected:       rails < 4.0.0\nFixed Versions:     rails >= 5.2.4.3, rails >= 6.0.3.1\n\nImpact\n------\nIn some cases user supplied information can be inadvertently leaked from\nStrong Parameters.  Specifically the return value of `each`, or `each_value`,\nor `each_pair` will return the underlying \"untrusted\" hash of data that was\nread from the parameters.  Applications that use this return value may be\ninadvertently use untrusted user input.\n\nImpacted code will look something like this:\n\n```\ndef update\n  # Attacker has included the parameter: `{ is_admin: true }`\n  User.update(clean_up_params)\nend\n\ndef clean_up_params\n   params.each { |k, v|  SomeModel.check(v) if k == :name }\nend\n```\n\nNote the mistaken use of `each` in the `clean_up_params` method in the above\nexample.\n\nWorkarounds\n-----------\nDo not use the return values of `each`, `each_value`, or `each_pair` in your\napplication.\n",
+      "framework": "rails",
+      "gem": "actionpack",
+      "ghsa": "8727-m6gj-mc37",
+      "patched_versions": [
+        "~> 5.2.4, >= 5.2.4.3",
+        ">= 6.0.3.1"
+      ],
+      "title": "Possible Strong Parameters Bypass in ActionPack",
+      "unaffected_versions": [
+        "< 4.0.0"
+      ],
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/f6ioe4sdpbY"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
+          "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-502",
+            "CWE-937"
+          ],
+          "date": "2020-09-30",
+          "description": "A deserialization of untrusted data vulnerability exists in rails, rails which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters.",
+          "fixed_versions": [
+            "5.2.4.3",
+            "6.0.3.1"
+          ],
+          "identifier": "CVE-2020-8164",
+          "identifiers": [
+            "CVE-2020-8164"
+          ],
+          "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
+          "package_slug": "gem/actionpack",
+          "pubdate": "2020-06-19",
+          "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
+          "title": "Deserialization of Untrusted Data",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-8164"
+          ],
+          "uuid": "d5fa99f8-5ef4-439f-8689-adaf4477fece"
+        },
+        {
+          "affected_range": "<5.2.4.3||>=6.0.0 <6.0.3.1",
+          "affected_versions": "All versions before 5.2.4.3, all versions starting from 6.0.0 before 6.0.3.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-502",
+            "CWE-937"
+          ],
+          "date": "2020-09-30",
+          "description": "A deserialization of untrusted data vulnerability exists in rails which can allow an attacker to supply information can be inadvertently leaked.",
+          "fixed_versions": [
+            "5.2.4.3",
+            "6.0.3.1"
+          ],
+          "identifier": "CVE-2020-8164",
+          "identifiers": [
+            "CVE-2020-8164"
+          ],
+          "not_impacted": "All versions starting from 5.2.4.3 before 6.0.0, all versions starting from 6.0.3.1",
+          "package_slug": "gem/rails",
+          "pubdate": "2020-06-19",
+          "solution": "Upgrade to versions 5.2.4.3, 6.0.3.1 or above.",
+          "title": "Deserialization of Untrusted Data",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-8164"
+          ],
+          "uuid": "e4ee7df0-2905-4bb3-8dd5-81f33b6fc530"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.3.1",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.4.3",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:opensuse:backports_sle:15.0:sp1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2020-8164"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "A deserialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 which can allow an attacker to supply information can be inadvertently leaked fromStrong Parameters."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-502"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://hackerone.com/reports/292797",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/292797"
+            },
+            {
+              "name": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/g/rubyonrails-security/c/f6ioe4sdpbY"
+            },
+            {
+              "name": "[debian-lts-announce] 20200619 [SECURITY] [DLA 2251-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2020/06/msg00022.html"
+            },
+            {
+              "name": "[debian-lts-announce] 20200720 [SECURITY] [DLA 2282-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2020/07/msg00013.html"
+            },
+            {
+              "name": "DSA-4766",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2020/dsa-4766"
+            },
+            {
+              "name": "openSUSE-SU-2020:1533",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00089.html"
+            },
+            {
+              "name": "openSUSE-SU-2020:1536",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00093.html"
+            },
+            {
+              "name": "openSUSE-SU-2020:1575",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2020-09/msg00107.html"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.0,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2022-05-24T16:44Z",
+      "publishedDate": "2020-06-19T17:15Z"
+    }
+  }
 }

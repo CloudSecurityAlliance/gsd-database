@@ -1,704 +1,710 @@
 {
-    "GSD": {
-        "alias": "CVE-2016-0752",
-        "description": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname.",
-        "id": "GSD-2016-0752",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2016-0752.html",
-            "https://www.debian.org/security/2016/dsa-3464",
-            "https://access.redhat.com/errata/RHSA-2016:0455",
-            "https://access.redhat.com/errata/RHSA-2016:0454",
-            "https://access.redhat.com/errata/RHSA-2016:0296",
-            "https://packetstormsecurity.com/files/cve/CVE-2016-0752"
-        ]
+  "GSD": {
+    "alias": "CVE-2016-0752",
+    "description": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname.",
+    "id": "GSD-2016-0752",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2016-0752.html",
+      "https://www.debian.org/security/2016/dsa-3464",
+      "https://access.redhat.com/errata/RHSA-2016:0455",
+      "https://access.redhat.com/errata/RHSA-2016:0454",
+      "https://access.redhat.com/errata/RHSA-2016:0296",
+      "https://packetstormsecurity.com/files/cve/CVE-2016-0752"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2016-0752",
-            "modified": "2016-01-25T00:00:00.000Z",
-            "published": "2016-01-25T00:00:00.000Z",
-            "aliases": [
-                "CVE-2016-0752"
-            ],
-            "summary": "Possible Information Leak Vulnerability in Action View",
-            "details": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionpack",
-                        "purl": "pkg:gem/actionpack"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionpack",
+            "purl": "pkg:gem/actionpack"
+          }
         }
-    },
-    "namespaces": {
-        "cisa.gov": {
-            "cveID": "CVE-2016-0752",
-            "dateAdded": "2022-03-25",
-            "dueDate": "2022-04-15",
-            "product": "Ruby on Rails",
-            "requiredAction": "Apply updates per vendor instructions.",
-            "shortDescription": "Directory traversal vulnerability in Action View in Ruby on Rails allows remote attackers to read arbitrary files.",
-            "vendorProject": "Rails",
-            "vulnerabilityName": "Ruby on Rails Directory Traversal Vulnerability"
-        },
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "secalert@redhat.com",
-                "ID": "CVE-2016-0752",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "40561",
-                        "refsource": "EXPLOIT-DB",
-                        "url": "https://www.exploit-db.com/exploits/40561/"
-                    },
-                    {
-                        "name": "openSUSE-SU-2016:0372",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
-                    },
-                    {
-                        "name": "openSUSE-SU-2016:0363",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
-                    },
-                    {
-                        "name": "[oss-security] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2016/01/25/13"
-                    },
-                    {
-                        "name": "FEDORA-2016-97002ad37b",
-                        "refsource": "FEDORA",
-                        "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178069.html"
-                    },
-                    {
-                        "name": "SUSE-SU-2016:1146",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
-                    },
-                    {
-                        "name": "81801",
-                        "refsource": "BID",
-                        "url": "http://www.securityfocus.com/bid/81801"
-                    },
-                    {
-                        "name": "1034816",
-                        "refsource": "SECTRACK",
-                        "url": "http://www.securitytracker.com/id/1034816"
-                    },
-                    {
-                        "name": "FEDORA-2016-fa0dec2360",
-                        "refsource": "FEDORA",
-                        "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178044.html"
-                    },
-                    {
-                        "name": "[ruby-security-ann] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
-                        "refsource": "MLIST",
-                        "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/335P1DcLG00/JXcBnTtZEgAJ"
-                    },
-                    {
-                        "name": "DSA-3464",
-                        "refsource": "DEBIAN",
-                        "url": "http://www.debian.org/security/2016/dsa-3464"
-                    },
-                    {
-                        "name": "RHSA-2016:0296",
-                        "refsource": "REDHAT",
-                        "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<3.2.22.1",
-                    "affected_versions": "All versions before 3.2.22.1",
-                    "credit": "John Poulin",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-937"
-                    ],
-                    "date": "2019-08-08",
-                    "description": "Applications that pass unverified user input to the `render` method in a controller may be vulnerable to an information leak vulnerability. Carefully crafted requests can render files from unexpected places like outside the application's view directory, and can possibly escalate this to a remote code execution attack.",
-                    "fixed_versions": [
-                        "3.2.22.1"
-                    ],
-                    "identifier": "CVE-2016-0752",
-                    "identifiers": [
-                        "CVE-2016-0752"
-                    ],
-                    "package_slug": "gem/actionpack",
-                    "pubdate": "2016-02-15",
-                    "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
-                    "title": "Possible Information Leak Vulnerability in ActionView",
-                    "urls": [
-                        "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
-                    ],
-                    "uuid": "83ce344a-9c70-4c28-aa71-ee040cb07b68"
-                },
-                {
-                    "affected_range": ">=5.0.0.alpha <5.0.0.beta1.1||>=4.2.0.alpha <4.2.5.1||<4.1.14.1",
-                    "affected_versions": "All versions starting from 5.0.0.alpha before 5.0.0.beta1.1, all versions starting from 4.2.0.alpha before 4.2.5.1, all versions before 4.1.14.1",
-                    "credit": "John Poulin",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-937"
-                    ],
-                    "date": "2019-08-08",
-                    "description": "Applications that pass unverified user input to the `render` method in a controller may be vulnerable to an information leak vulnerability. Carefully crafted requests can render files from unexpected places like outside the application's view directory, and can possibly escalate this to a remote code execution attack. ",
-                    "fixed_versions": [
-                        "4.1.14.1",
-                        "4.2.5.1",
-                        "5.0.0.beta1.1"
-                    ],
-                    "identifier": "CVE-2016-0752",
-                    "identifiers": [
-                        "CVE-2016-0752"
-                    ],
-                    "package_slug": "gem/actionview",
-                    "pubdate": "2016-02-15",
-                    "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
-                    "title": "Possible Information Leak Vulnerability",
-                    "urls": [
-                        "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
-                    ],
-                    "uuid": "2cb5b4be-915d-4ffe-beea-95146cfa6061"
-                },
-                {
-                    "affected_range": ">=4.0.0 <=5.0.0",
-                    "affected_versions": "All versions starting from 4.0.0 up to 5.0.0",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-22",
-                        "CWE-937"
-                    ],
-                    "date": "2019-08-08",
-                    "description": "The Rails gem allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a `..` in a pathname.",
-                    "fixed_versions": [
-                        "5.0.1"
-                    ],
-                    "identifier": "CVE-2016-0752",
-                    "identifiers": [
-                        "CVE-2016-0752"
-                    ],
-                    "not_impacted": "All versions before 4.0.0, all versions after 5.0.0",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2016-02-16",
-                    "solution": "Upgrade to versions 5.0.1 or above.",
-                    "title": "Path Traversal",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2016-0752"
-                    ],
-                    "uuid": "f1576168-f930-4a11-b848-d02bcfad912f"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:beta:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:5.0.0:beta1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.1.11:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc3:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc4:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "3.2.22",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc1:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:-:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc2:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "secalert@redhat.com",
-                    "ID": "CVE-2016-0752"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-22"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "[ruby-security-ann] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
-                            "refsource": "MLIST",
-                            "tags": [],
-                            "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/335P1DcLG00/JXcBnTtZEgAJ"
-                        },
-                        {
-                            "name": "[oss-security] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
-                            "refsource": "MLIST",
-                            "tags": [],
-                            "url": "http://www.openwall.com/lists/oss-security/2016/01/25/13"
-                        },
-                        {
-                            "name": "81801",
-                            "refsource": "BID",
-                            "tags": [],
-                            "url": "http://www.securityfocus.com/bid/81801"
-                        },
-                        {
-                            "name": "SUSE-SU-2016:1146",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
-                        },
-                        {
-                            "name": "FEDORA-2016-fa0dec2360",
-                            "refsource": "FEDORA",
-                            "tags": [],
-                            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178044.html"
-                        },
-                        {
-                            "name": "RHSA-2016:0296",
-                            "refsource": "REDHAT",
-                            "tags": [],
-                            "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
-                        },
-                        {
-                            "name": "FEDORA-2016-97002ad37b",
-                            "refsource": "FEDORA",
-                            "tags": [],
-                            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178069.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2016:0372",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
-                        },
-                        {
-                            "name": "openSUSE-SU-2016:0363",
-                            "refsource": "SUSE",
-                            "tags": [],
-                            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
-                        },
-                        {
-                            "name": "DSA-3464",
-                            "refsource": "DEBIAN",
-                            "tags": [],
-                            "url": "http://www.debian.org/security/2016/dsa-3464"
-                        },
-                        {
-                            "name": "40561",
-                            "refsource": "EXPLOIT-DB",
-                            "tags": [],
-                            "url": "https://www.exploit-db.com/exploits/40561/"
-                        },
-                        {
-                            "name": "1034816",
-                            "refsource": "SECTRACK",
-                            "tags": [],
-                            "url": "http://www.securitytracker.com/id/1034816"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": true,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM"
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.0"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2019-08-08T15:43Z",
-            "publishedDate": "2016-02-16T02:59Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionview",
-            "framework": "rails",
-            "cve": "2016-0752",
-            "ghsa": "xrr4-p6fq-hjg7",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00",
-            "title": "Possible Information Leak Vulnerability in Action View",
-            "date": "2016-01-25",
-            "description": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
-            "cvss_v2": 5.0,
-            "cvss_v3": 7.5,
-            "patched_versions": [
-                ">= 5.0.0.beta1.1",
-                "~> 4.2.5, >= 4.2.5.1",
-                "~> 4.1.14, >= 4.1.14.1"
-            ],
-            "notes": "'~> 3.2.22.1' is found in gems/actionpack/CVE-2016-0752.yml"
+      ],
+      "aliases": [
+        "CVE-2016-0752"
+      ],
+      "details": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
+      "id": "GSD-2016-0752",
+      "modified": "2016-01-25T00:00:00.000Z",
+      "published": "2016-01-25T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
         }
+      ],
+      "schema_version": "1.4.0",
+      "summary": "Possible Information Leak Vulnerability in Action View"
     }
+  },
+  "namespaces": {
+    "cisa.gov": {
+      "cveID": "CVE-2016-0752",
+      "dateAdded": "2022-03-25",
+      "dueDate": "2022-04-15",
+      "product": "Ruby on Rails",
+      "requiredAction": "Apply updates per vendor instructions.",
+      "shortDescription": "Directory traversal vulnerability in Action View in Ruby on Rails allows remote attackers to read arbitrary files.",
+      "vendorProject": "Rails",
+      "vulnerabilityName": "Ruby on Rails Directory Traversal Vulnerability"
+    },
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "secalert@redhat.com",
+        "ID": "CVE-2016-0752",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "40561",
+            "refsource": "EXPLOIT-DB",
+            "url": "https://www.exploit-db.com/exploits/40561/"
+          },
+          {
+            "name": "openSUSE-SU-2016:0372",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
+          },
+          {
+            "name": "openSUSE-SU-2016:0363",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
+          },
+          {
+            "name": "[oss-security] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2016/01/25/13"
+          },
+          {
+            "name": "FEDORA-2016-97002ad37b",
+            "refsource": "FEDORA",
+            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178069.html"
+          },
+          {
+            "name": "SUSE-SU-2016:1146",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
+          },
+          {
+            "name": "81801",
+            "refsource": "BID",
+            "url": "http://www.securityfocus.com/bid/81801"
+          },
+          {
+            "name": "1034816",
+            "refsource": "SECTRACK",
+            "url": "http://www.securitytracker.com/id/1034816"
+          },
+          {
+            "name": "FEDORA-2016-fa0dec2360",
+            "refsource": "FEDORA",
+            "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178044.html"
+          },
+          {
+            "name": "[ruby-security-ann] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
+            "refsource": "MLIST",
+            "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/335P1DcLG00/JXcBnTtZEgAJ"
+          },
+          {
+            "name": "DSA-3464",
+            "refsource": "DEBIAN",
+            "url": "http://www.debian.org/security/2016/dsa-3464"
+          },
+          {
+            "name": "RHSA-2016:0296",
+            "refsource": "REDHAT",
+            "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2016-0752",
+      "cvss_v2": 5.0,
+      "cvss_v3": 7.5,
+      "date": "2016-01-25",
+      "description": "There is a possible directory traversal and information leak vulnerability in\nAction View. This vulnerability has been assigned the CVE identifier\nCVE-2016-0752.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     5.0.0.beta1.1, 4.2.5.1, 4.1.14.1, 3.2.22.1\n\nImpact\n------\nApplications that pass unverified user input to the `render` method in a\ncontroller may be vulnerable to an information leak vulnerability.\n\nImpacted code will look something like this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nCarefully crafted requests can cause the above code to render files from\nunexpected places like outside the application's view directory, and can\npossibly escalate this to a remote code execution attack.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe FIXED releases are available at the normal locations.\n\nWorkarounds\n-----------\nA workaround to this issue is to not pass arbitrary user input to the `render`\nmethod.  Instead, verify that data before passing it to the `render` method.\n\nFor example, change this:\n\n```ruby\ndef index\n  render params[:id]\nend\n```\n\nTo this:\n\n```ruby\ndef index\n  render verify_template(params[:id])\nend\n\nprivate\ndef verify_template(name)\n  # add verification logic particular to your application here\nend\n```\n\nPatches\n-------\nTo aid users who aren't able to upgrade immediately we have provided patches for\nthe two supported release series. They are in git-am format and consist of a\nsingle changeset.\n\n* 3-2-render_data_leak.patch - Patch for 3.2 series\n* 4-1-render_data_leak.patch - Patch for 4.1 series\n* 4-2-render_data_leak.patch - Patch for 4.2 series\n* 5-0-render_data_leak.patch - Patch for 5.0 series\n\nPlease note that only the 4.1.x and 4.2.x series are supported at present. Users\nof earlier unsupported releases are advised to upgrade as soon as possible as we\ncannot guarantee the continued availability of security fixes for unsupported\nreleases.\n\nCredits\n-------\nThanks John Poulin for reporting this!\n",
+      "framework": "rails",
+      "gem": "actionview",
+      "ghsa": "xrr4-p6fq-hjg7",
+      "notes": "'~> 3.2.22.1' is found in gems/actionpack/CVE-2016-0752.yml",
+      "patched_versions": [
+        ">= 5.0.0.beta1.1",
+        "~> 4.2.5, >= 4.2.5.1",
+        "~> 4.1.14, >= 4.1.14.1"
+      ],
+      "title": "Possible Information Leak Vulnerability in Action View",
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<3.2.22.1",
+          "affected_versions": "All versions before 3.2.22.1",
+          "credit": "John Poulin",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-937"
+          ],
+          "date": "2019-08-08",
+          "description": "Applications that pass unverified user input to the `render` method in a controller may be vulnerable to an information leak vulnerability. Carefully crafted requests can render files from unexpected places like outside the application's view directory, and can possibly escalate this to a remote code execution attack.",
+          "fixed_versions": [
+            "3.2.22.1"
+          ],
+          "identifier": "CVE-2016-0752",
+          "identifiers": [
+            "CVE-2016-0752"
+          ],
+          "package_slug": "gem/actionpack",
+          "pubdate": "2016-02-15",
+          "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
+          "title": "Possible Information Leak Vulnerability in ActionView",
+          "urls": [
+            "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
+          ],
+          "uuid": "83ce344a-9c70-4c28-aa71-ee040cb07b68"
+        },
+        {
+          "affected_range": ">=5.0.0.alpha <5.0.0.beta1.1||>=4.2.0.alpha <4.2.5.1||<4.1.14.1",
+          "affected_versions": "All versions starting from 5.0.0.alpha before 5.0.0.beta1.1, all versions starting from 4.2.0.alpha before 4.2.5.1, all versions before 4.1.14.1",
+          "credit": "John Poulin",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-937"
+          ],
+          "date": "2019-08-08",
+          "description": "Applications that pass unverified user input to the `render` method in a controller may be vulnerable to an information leak vulnerability. Carefully crafted requests can render files from unexpected places like outside the application's view directory, and can possibly escalate this to a remote code execution attack. ",
+          "fixed_versions": [
+            "4.1.14.1",
+            "4.2.5.1",
+            "5.0.0.beta1.1"
+          ],
+          "identifier": "CVE-2016-0752",
+          "identifiers": [
+            "CVE-2016-0752"
+          ],
+          "package_slug": "gem/actionview",
+          "pubdate": "2016-02-15",
+          "solution": "Upgrade to latest, apply patches or use workaround. See provided link.",
+          "title": "Possible Information Leak Vulnerability",
+          "urls": [
+            "https://groups.google.com/forum/#!topic/rubyonrails-security/335P1DcLG00"
+          ],
+          "uuid": "2cb5b4be-915d-4ffe-beea-95146cfa6061"
+        },
+        {
+          "affected_range": ">=4.0.0 <=5.0.0",
+          "affected_versions": "All versions starting from 4.0.0 up to 5.0.0",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-22",
+            "CWE-937"
+          ],
+          "date": "2019-08-08",
+          "description": "The Rails gem allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a `..` in a pathname.",
+          "fixed_versions": [
+            "5.0.1"
+          ],
+          "identifier": "CVE-2016-0752",
+          "identifiers": [
+            "CVE-2016-0752"
+          ],
+          "not_impacted": "All versions before 4.0.0, all versions after 5.0.0",
+          "package_slug": "gem/rails",
+          "pubdate": "2016-02-16",
+          "solution": "Upgrade to versions 5.0.1 or above.",
+          "title": "Path Traversal",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2016-0752"
+          ],
+          "uuid": "f1576168-f930-4a11-b848-d02bcfad912f"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.10:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.9:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:beta:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.14:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:5.0.0:beta1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.5:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:4.1.11:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc3:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.6:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.10:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:rc4:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "3.2.22",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.13:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.12:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:rc1:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.9:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.1:-:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.0.0:rc2:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "secalert@redhat.com",
+          "ID": "CVE-2016-0752"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Directory traversal vulnerability in Action View in Ruby on Rails before 3.2.22.1, 4.0.x and 4.1.x before 4.1.14.1, 4.2.x before 4.2.5.1, and 5.x before 5.0.0.beta1.1 allows remote attackers to read arbitrary files by leveraging an application's unrestricted use of the render method and providing a .. (dot dot) in a pathname."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-22"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "[ruby-security-ann] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
+              "refsource": "MLIST",
+              "tags": [],
+              "url": "https://groups.google.com/forum/message/raw?msg=ruby-security-ann/335P1DcLG00/JXcBnTtZEgAJ"
+            },
+            {
+              "name": "[oss-security] 20160125 [CVE-2016-0752] Possible Information Leak Vulnerability in Action View",
+              "refsource": "MLIST",
+              "tags": [],
+              "url": "http://www.openwall.com/lists/oss-security/2016/01/25/13"
+            },
+            {
+              "name": "81801",
+              "refsource": "BID",
+              "tags": [],
+              "url": "http://www.securityfocus.com/bid/81801"
+            },
+            {
+              "name": "SUSE-SU-2016:1146",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2016-04/msg00053.html"
+            },
+            {
+              "name": "FEDORA-2016-fa0dec2360",
+              "refsource": "FEDORA",
+              "tags": [],
+              "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178044.html"
+            },
+            {
+              "name": "RHSA-2016:0296",
+              "refsource": "REDHAT",
+              "tags": [],
+              "url": "http://rhn.redhat.com/errata/RHSA-2016-0296.html"
+            },
+            {
+              "name": "FEDORA-2016-97002ad37b",
+              "refsource": "FEDORA",
+              "tags": [],
+              "url": "http://lists.fedoraproject.org/pipermail/package-announce/2016-February/178069.html"
+            },
+            {
+              "name": "openSUSE-SU-2016:0372",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00043.html"
+            },
+            {
+              "name": "openSUSE-SU-2016:0363",
+              "refsource": "SUSE",
+              "tags": [],
+              "url": "http://lists.opensuse.org/opensuse-updates/2016-02/msg00034.html"
+            },
+            {
+              "name": "DSA-3464",
+              "refsource": "DEBIAN",
+              "tags": [],
+              "url": "http://www.debian.org/security/2016/dsa-3464"
+            },
+            {
+              "name": "40561",
+              "refsource": "EXPLOIT-DB",
+              "tags": [],
+              "url": "https://www.exploit-db.com/exploits/40561/"
+            },
+            {
+              "name": "1034816",
+              "refsource": "SECTRACK",
+              "tags": [],
+              "url": "http://www.securitytracker.com/id/1034816"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": true,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.0,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM"
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.0"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2019-08-08T15:43Z",
+      "publishedDate": "2016-02-16T02:59Z"
+    }
+  }
 }

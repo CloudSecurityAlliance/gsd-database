@@ -1,336 +1,342 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-4054",
-        "description": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1.",
-        "id": "GSD-2020-4054",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2020-4054.html",
-            "https://www.debian.org/security/2020/dsa-4730",
-            "https://ubuntu.com/security/CVE-2020-4054"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-4054",
+    "description": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1.",
+    "id": "GSD-2020-4054",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2020-4054.html",
+      "https://www.debian.org/security/2020/dsa-4730",
+      "https://ubuntu.com/security/CVE-2020-4054"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-4054",
-            "modified": "2020-06-16T00:00:00.000Z",
-            "published": "2020-06-16T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-4054",
-                "GHSA-p4x4-rw2p-8j8m"
-            ],
-            "summary": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize",
-            "details": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.3
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "sanitize",
-                        "purl": "pkg:gem/sanitize"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "sanitize",
+            "purl": "pkg:gem/sanitize"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-4054",
-                "STATE": "PUBLIC",
-                "TITLE": "Cross-site Scripting in Sanitize"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Sanitize",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 3.0.0, < 5.2.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "rgrove"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 7.3,
-                    "baseSeverity": "HIGH",
-                    "confidentialityImpact": "LOW",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
-                    },
-                    {
-                        "name": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9",
-                        "refsource": "MISC",
-                        "url": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9"
-                    },
-                    {
-                        "name": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1",
-                        "refsource": "MISC",
-                        "url": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1"
-                    },
-                    {
-                        "name": "DSA-4730",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2020/dsa-4730"
-                    },
-                    {
-                        "name": "USN-4543-1",
-                        "refsource": "UBUNTU",
-                        "url": "https://usn.ubuntu.com/4543-1/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-p4x4-rw2p-8j8m",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=3.0.0 <5.2.1",
-                    "affected_versions": "All versions starting from 3.0.0 before 5.2.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-79",
-                        "CWE-937"
-                    ],
-                    "date": "2020-09-28",
-                    "description": "In Sanitize (RubyGem sanitize) there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's `relaxed` config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist.",
-                    "fixed_versions": [
-                        "5.2.1"
-                    ],
-                    "identifier": "CVE-2020-4054",
-                    "identifiers": [
-                        "CVE-2020-4054",
-                        "GHSA-p4x4-rw2p-8j8m"
-                    ],
-                    "not_impacted": "All versions before 3.0.0, all versions starting from 5.2.1",
-                    "package_slug": "gem/sanitize",
-                    "pubdate": "2020-06-16",
-                    "solution": "Upgrade to version 5.2.1 or above.",
-                    "title": "Cross-site Scripting",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-4054"
-                    ],
-                    "uuid": "51d54511-791b-4f8a-a1b3-f3f4daeae777"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:sanitize_project:sanitize:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.1",
-                                "versionStartIncluding": "3.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-4054"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-79"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9"
-                        },
-                        {
-                            "name": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
-                        },
-                        {
-                            "name": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1"
-                        },
-                        {
-                            "name": "DSA-4730",
-                            "refsource": "DEBIAN",
-                            "tags": [],
-                            "url": "https://www.debian.org/security/2020/dsa-4730"
-                        },
-                        {
-                            "name": "USN-4543-1",
-                            "refsource": "UBUNTU",
-                            "tags": [],
-                            "url": "https://usn.ubuntu.com/4543-1/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 7.3,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.4
-                }
-            },
-            "lastModifiedDate": "2020-09-28T20:15Z",
-            "publishedDate": "2020-06-16T22:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "sanitize",
-            "cve": "2020-4054",
-            "ghsa": "p4x4-rw2p-8j8m",
-            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
-            "title": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize",
-            "date": "2020-06-16",
-            "description": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
-            "cvss_v3": 7.3,
-            "unaffected_versions": [
-                "< 3.0.0"
-            ],
-            "patched_versions": [
-                ">= 5.2.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2020-4054",
+        "GHSA-p4x4-rw2p-8j8m"
+      ],
+      "details": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
+      "id": "GSD-2020-4054",
+      "modified": "2020-06-16T00:00:00.000Z",
+      "published": "2020-06-16T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.3,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-4054",
+        "STATE": "PUBLIC",
+        "TITLE": "Cross-site Scripting in Sanitize"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Sanitize",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 3.0.0, < 5.2.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "rgrove"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "LOW",
+          "baseScore": 7.3,
+          "baseSeverity": "HIGH",
+          "confidentialityImpact": "LOW",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
+          },
+          {
+            "name": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9",
+            "refsource": "MISC",
+            "url": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9"
+          },
+          {
+            "name": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1",
+            "refsource": "MISC",
+            "url": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1"
+          },
+          {
+            "name": "DSA-4730",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2020/dsa-4730"
+          },
+          {
+            "name": "USN-4543-1",
+            "refsource": "UBUNTU",
+            "url": "https://usn.ubuntu.com/4543-1/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p4x4-rw2p-8j8m",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-4054",
+      "cvss_v3": 7.3,
+      "date": "2020-06-16",
+      "description": "When HTML is sanitized using Sanitize's \"relaxed\" config or a custom config that allows certain\nelements, some content in a `<math>` or `<svg>` element may not be sanitized correctly even if\n`math` and `svg` are not in the allowlist.\n\nYou are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom\nconfig that allows one or more of the following HTML elements:\n\n- `iframe`\n- `math`\n- `noembed`\n- `noframes`\n- `noscript`\n- `plaintext`\n- `script`\n- `style`\n- `svg`\n- `xmp`\n\n### Impact\n\nUsing carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize,\npotentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is\nrendered in a browser.\n\n### Releases\n\nThis problem has been fixed in Sanitize 5.2.1.\n\n### Workarounds\n\nIf upgrading is not possible, a workaround is to override the default value of Sanitize's\n`:remove_contents` config option with the following value, which ensures that the contents of\n`math` and `svg` elements (among others) are removed entirely when those elements are not in the\nallowlist:\n\n```ruby\n%w[iframe math noembed noframes noscript plaintext script style svg xmp]\n```\n\nFor example, if you currently use Sanitize's relaxed config, you can create a custom config\nobject that overrides the default value of `:remove_contents` like this:\n\n```ruby\ncustom_config = Sanitize::Config.merge(\n  Sanitize::Config::RELAXED,\n  :remove_contents => %w[iframe math noembed noframes noscript plaintext script style svg xmp]\n)\n```\n\nYou would then pass this custom config to Sanitize when sanitizing HTML.",
+      "gem": "sanitize",
+      "ghsa": "p4x4-rw2p-8j8m",
+      "patched_versions": [
+        ">= 5.2.1"
+      ],
+      "title": "Cross-site scripting vulnerability via `<math>` or `<svg>` element in Sanitize",
+      "unaffected_versions": [
+        "< 3.0.0"
+      ],
+      "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=3.0.0 <5.2.1",
+          "affected_versions": "All versions starting from 3.0.0 before 5.2.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-79",
+            "CWE-937"
+          ],
+          "date": "2020-09-28",
+          "description": "In Sanitize (RubyGem sanitize) there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's `relaxed` config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist.",
+          "fixed_versions": [
+            "5.2.1"
+          ],
+          "identifier": "CVE-2020-4054",
+          "identifiers": [
+            "CVE-2020-4054",
+            "GHSA-p4x4-rw2p-8j8m"
+          ],
+          "not_impacted": "All versions before 3.0.0, all versions starting from 5.2.1",
+          "package_slug": "gem/sanitize",
+          "pubdate": "2020-06-16",
+          "solution": "Upgrade to version 5.2.1 or above.",
+          "title": "Cross-site Scripting",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-4054"
+          ],
+          "uuid": "51d54511-791b-4f8a-a1b3-f3f4daeae777"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:sanitize_project:sanitize:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.1",
+                "versionStartIncluding": "3.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-4054"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "In Sanitize (RubyGem sanitize) greater than or equal to 3.0.0 and less than 5.2.1, there is a cross-site scripting vulnerability. When HTML is sanitized using Sanitize's \"relaxed\" config, or a custom config that allows certain elements, some content in a math or svg element may not be sanitized correctly even if math and svg are not in the allowlist. You are likely to be vulnerable to this issue if you use Sanitize's relaxed config or a custom config that allows one or more of the following HTML elements: iframe, math, noembed, noframes, noscript, plaintext, script, style, svg, xmp. Using carefully crafted input, an attacker may be able to sneak arbitrary HTML through Sanitize, potentially resulting in XSS (cross-site scripting) or other undesired behavior when that HTML is rendered in a browser. This has been fixed in 5.2.1."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-79"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rgrove/sanitize/commit/a11498de9e283cd457b35ee252983662f7452aa9"
+            },
+            {
+              "name": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rgrove/sanitize/security/advisories/GHSA-p4x4-rw2p-8j8m"
+            },
+            {
+              "name": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/rgrove/sanitize/releases/tag/v5.2.1"
+            },
+            {
+              "name": "DSA-4730",
+              "refsource": "DEBIAN",
+              "tags": [],
+              "url": "https://www.debian.org/security/2020/dsa-4730"
+            },
+            {
+              "name": "USN-4543-1",
+              "refsource": "UBUNTU",
+              "tags": [],
+              "url": "https://usn.ubuntu.com/4543-1/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 7.3,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.4
+        }
+      },
+      "lastModifiedDate": "2020-09-28T20:15Z",
+      "publishedDate": "2020-06-16T22:15Z"
+    }
+  }
 }

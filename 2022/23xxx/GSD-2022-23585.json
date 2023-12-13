@@ -1,358 +1,375 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-23585",
-        "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-        "id": "GSD-2022-23585",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-23585.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-23585",
+    "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+    "id": "GSD-2022-23585",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-23585.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-23585",
-                "STATE": "PUBLIC",
-                "TITLE": "Memory leak in decoding PNG images in Tensorflow"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "tensorflow",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 2.5.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.6.0, < 2.6.3"
-                                                },
-                                                {
-                                                    "version_value": ">= 2.7.0, < 2.7.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "tensorflow"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 4.3,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-401: Missing Release of Memory after Effective Lifetime"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-fq6p-6334-8gr4",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
-                    "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-401",
-                        "CWE-78",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-11",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-23585",
-                    "identifiers": [
-                        "GHSA-fq6p-6334-8gr4",
-                        "CVE-2022-23585"
-                    ],
-                    "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2022-02-09",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Missing Release of Memory after Effective Lifetime",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
-                        "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
-                        "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
-                        "https://github.com/advisories/GHSA-fq6p-6334-8gr4"
-                    ],
-                    "uuid": "efc942bc-d936-40da-95f4-712ff429aa05"
-                },
-                {
-                    "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
-                    "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-401",
-                        "CWE-78",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-11",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-23585",
-                    "identifiers": [
-                        "GHSA-fq6p-6334-8gr4",
-                        "CVE-2022-23585"
-                    ],
-                    "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2022-02-09",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Missing Release of Memory after Effective Lifetime",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
-                        "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
-                        "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
-                        "https://github.com/advisories/GHSA-fq6p-6334-8gr4"
-                    ],
-                    "uuid": "5f303f58-6886-45b0-ba3c-ed75ebaca6b1"
-                },
-                {
-                    "affected_range": "<=2.5.2||>=2.6.0,<=2.6.2||==2.7.0",
-                    "affected_versions": "All versions up to 2.5.2, all versions starting from 2.6.0 up to 2.6.2, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-401",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-10",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow We will also cherrypick this commit on TensorFlow, TensorFlow, and TensorFlow, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-23585",
-                    "identifiers": [
-                        "CVE-2022-23585",
-                        "GHSA-fq6p-6334-8gr4"
-                    ],
-                    "not_impacted": "All versions after 2.5.2 before 2.6.0, all versions after 2.6.2 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2022-02-04",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Missing Release of Memory after Effective Lifetime",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
-                        "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
-                        "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
-                    ],
-                    "uuid": "a6ee6ce1-f5c2-452c-9bb8-29610d7636dd"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "2.5.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "2.6.2",
-                                "versionStartIncluding": "2.6.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.7.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-23585"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-401"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2022-02-10T17:32Z",
-            "publishedDate": "2022-02-04T23:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-23585"
+      ],
+      "details": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+      "id": "GSD-2022-23585",
+      "modified": "2023-12-13T01:19:34.981048Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-23585",
+        "STATE": "PUBLIC",
+        "TITLE": "Memory leak in decoding PNG images in Tensorflow"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "tensorflow",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "< 2.5.3"
+                        },
+                        {
+                          "version_value": ">= 2.6.0, < 2.6.3"
+                        },
+                        {
+                          "version_value": ">= 2.7.0, < 2.7.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "tensorflow"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "LOW",
+          "baseScore": 4.3,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-401: Missing Release of Memory after Effective Lifetime"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-fq6p-6334-8gr4",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
+          "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-401",
+            "CWE-78",
+            "CWE-937"
+          ],
+          "date": "2022-02-11",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-23585",
+          "identifiers": [
+            "GHSA-fq6p-6334-8gr4",
+            "CVE-2022-23585"
+          ],
+          "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2022-02-09",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Missing Release of Memory after Effective Lifetime",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
+            "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
+            "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
+            "https://github.com/advisories/GHSA-fq6p-6334-8gr4"
+          ],
+          "uuid": "efc942bc-d936-40da-95f4-712ff429aa05"
+        },
+        {
+          "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
+          "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-401",
+            "CWE-78",
+            "CWE-937"
+          ],
+          "date": "2022-02-11",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-23585",
+          "identifiers": [
+            "GHSA-fq6p-6334-8gr4",
+            "CVE-2022-23585"
+          ],
+          "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2022-02-09",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Missing Release of Memory after Effective Lifetime",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
+            "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
+            "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
+            "https://github.com/advisories/GHSA-fq6p-6334-8gr4"
+          ],
+          "uuid": "5f303f58-6886-45b0-ba3c-ed75ebaca6b1"
+        },
+        {
+          "affected_range": "<=2.5.2||>=2.6.0,<=2.6.2||==2.7.0",
+          "affected_versions": "All versions up to 2.5.2, all versions starting from 2.6.0 up to 2.6.2, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-401",
+            "CWE-937"
+          ],
+          "date": "2022-02-10",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow We will also cherrypick this commit on TensorFlow, TensorFlow, and TensorFlow, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-23585",
+          "identifiers": [
+            "CVE-2022-23585",
+            "GHSA-fq6p-6334-8gr4"
+          ],
+          "not_impacted": "All versions after 2.5.2 before 2.6.0, all versions after 2.6.2 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2022-02-04",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Missing Release of Memory after Effective Lifetime",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-23585",
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
+            "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
+            "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
+          ],
+          "uuid": "a6ee6ce1-f5c2-452c-9bb8-29610d7636dd"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "2.5.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "2.6.2",
+                "versionStartIncluding": "2.6.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.7.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-23585"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Tensorflow is an Open Source Machine Learning Framework. When decoding PNG images TensorFlow can produce a memory leak if the image is invalid. After calling `png::CommonInitDecode(..., &decode)`, the `decode` value contains allocated buffers which can only be freed by calling `png::CommonFreeDecode(&decode)`. However, several error case in the function implementation invoke the `OP_REQUIRES` macro which immediately terminates the execution of the function, without allowing for the memory free to occur. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-401"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-fq6p-6334-8gr4"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/blob/a1320ec1eac186da1d03f033109191f715b2b130/tensorflow/core/kernels/image/decode_image_op.cc#L322-L416"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/ab51e5b813573dc9f51efa335aebcf2994125ee9"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2022-02-10T17:32Z",
+      "publishedDate": "2022-02-04T23:15Z"
+    }
+  }
 }

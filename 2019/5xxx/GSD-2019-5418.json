@@ -1,553 +1,559 @@
 {
-    "GSD": {
-        "alias": "CVE-2019-5418",
-        "description": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
-        "id": "GSD-2019-5418",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2019-5418.html",
-            "https://access.redhat.com/errata/RHSA-2019:1289",
-            "https://access.redhat.com/errata/RHSA-2019:1149",
-            "https://access.redhat.com/errata/RHSA-2019:1147",
-            "https://access.redhat.com/errata/RHSA-2019:0796",
-            "https://packetstormsecurity.com/files/cve/CVE-2019-5418"
-        ]
+  "GSD": {
+    "alias": "CVE-2019-5418",
+    "description": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
+    "id": "GSD-2019-5418",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2019-5418.html",
+      "https://access.redhat.com/errata/RHSA-2019:1289",
+      "https://access.redhat.com/errata/RHSA-2019:1149",
+      "https://access.redhat.com/errata/RHSA-2019:1147",
+      "https://access.redhat.com/errata/RHSA-2019:0796",
+      "https://packetstormsecurity.com/files/cve/CVE-2019-5418"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2019-5418",
-            "modified": "2019-03-13T00:00:00.000Z",
-            "published": "2019-03-13T00:00:00.000Z",
-            "aliases": [
-                "CVE-2019-5418",
-                "GHSA-86g5-2wh3-gc9j"
-            ],
-            "summary": "File Content Disclosure in Action View",
-            "details": "There is a possible file content disclosure vulnerability in Action View. This\nvulnerability has been assigned the CVE identifier CVE-2019-5418.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, 4.2.11.1\n\nImpact\n------\nThere is a possible file content disclosure vulnerability in Action View.\nSpecially crafted accept headers in combination with calls to `render file:`\ncan cause arbitrary files on the target server to be rendered, disclosing the\nfile contents.\n\nThe impact is limited to calls to `render` which render file contents without\na specified accept format.  Impacted code in a controller looks something like\nthis:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\"\n  end\nend\n```\n\nRendering templates as opposed to files is not impacted by this vulnerability.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, and 4.2.11.1 releases are\navailable at the normal locations.\n\nWorkarounds\n-----------\nThis vulnerability can be mitigated by specifying a format for file rendering,\nlike this:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\", formats: [:html]\n  end\nend\n```\n\nIn summary, impacted calls to `render` look like this:\n\n```\nrender file: \"#{Rails.root}/some/file\"\n```\n\nThe vulnerability can be mitigated by changing to this:\n\n```\nrender file: \"#{Rails.root}/some/file\", formats: [:html]\n```\n\nOther calls to `render` are not impacted.\n\nAlternatively, the following monkey patch can be applied in an initializer:\n\n```\n$ cat config/initializers/formats_filter.rb\n# frozen_string_literal: true\n\nActionDispatch::Request.prepend(Module.new do\n  def formats\n    super().select do |format|\n      format.symbol || format.ref == \"*/*\"\n    end\n  end\nend)\n```\n\nCredits\n-------\nThanks to John Hawthorn <john@hawthorn.email> of GitHub\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 7.5
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "actionview",
-                        "purl": "pkg:gem/actionview"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "actionview",
+            "purl": "pkg:gem/actionview"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2019-5418",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "5.2.2.1"
-                                                },
-                                                {
-                                                    "version_value": "5.1.6.2"
-                                                },
-                                                {
-                                                    "version_value": "5.0.7.2"
-                                                },
-                                                {
-                                                    "version_value": "4.2.11.1"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Rails"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Path Traversal (CWE-22)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "46585",
-                        "refsource": "EXPLOIT-DB",
-                        "url": "https://www.exploit-db.com/exploits/46585/"
-                    },
-                    {
-                        "name": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
-                        "refsource": "MISC",
-                        "url": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html"
-                    },
-                    {
-                        "name": "[oss-security] 20190322 [CVE-2019-5418] Amendment: Possible Remote Code Execution Exploit in Action View",
-                        "refsource": "MLIST",
-                        "url": "http://www.openwall.com/lists/oss-security/2019/03/22/1"
-                    },
-                    {
-                        "name": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
-                        "refsource": "CONFIRM",
-                        "url": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/"
-                    },
-                    {
-                        "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q",
-                        "refsource": "CONFIRM",
-                        "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
-                    },
-                    {
-                        "name": "[debian-lts-announce] 20190331 [SECURITY] [DLA 1739-1] rails security update",
-                        "refsource": "MLIST",
-                        "url": "https://lists.debian.org/debian-lts-announce/2019/03/msg00042.html"
-                    },
-                    {
-                        "name": "RHSA-2019:0796",
-                        "refsource": "REDHAT",
-                        "url": "https://access.redhat.com/errata/RHSA-2019:0796"
-                    },
-                    {
-                        "name": "openSUSE-SU-2019:1344",
-                        "refsource": "SUSE",
-                        "url": "http://lists.opensuse.org/opensuse-security-announce/2019-05/msg00011.html"
-                    },
-                    {
-                        "name": "FEDORA-2019-1cfe24db5c",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Y43636TH4D6T46IC6N2RQVJTRFJAAYGA/"
-                    },
-                    {
-                        "name": "RHSA-2019:1149",
-                        "refsource": "REDHAT",
-                        "url": "https://access.redhat.com/errata/RHSA-2019:1149"
-                    },
-                    {
-                        "name": "RHSA-2019:1147",
-                        "refsource": "REDHAT",
-                        "url": "https://access.redhat.com/errata/RHSA-2019:1147"
-                    },
-                    {
-                        "name": "RHSA-2019:1289",
-                        "refsource": "REDHAT",
-                        "url": "https://access.redhat.com/errata/RHSA-2019:1289"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=3.0.0 <4.2.11.1||>=5.0.0 <5.0.7.2||>=5.1.0 <5.1.6.2||>=5.2.0 <5.2.2.1",
-                    "affected_versions": "All versions starting from 3.0.0 before 4.2.11.1, all versions starting from 5.0.0 before 5.0.7.2, all versions starting from 5.1.0 before 5.1.6.2, all versions starting from 5.2.0 before 5.2.2.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2020-10-16",
-                    "description": "There is a File Content Disclosure vulnerability in Action View  and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
-                    "fixed_versions": [
-                        "4.2.11.1",
-                        "5.0.7.2",
-                        "5.1.6.2",
-                        "5.2.2.1"
-                    ],
-                    "identifier": "CVE-2019-5418",
-                    "identifiers": [
-                        "CVE-2019-5418"
-                    ],
-                    "not_impacted": "All versions before 3.0.0, all versions starting from 4.2.11.1 before 5.0.0, all versions starting from 5.0.7.2 before 5.1.0, all versions starting from 5.1.6.2 before 5.2.0",
-                    "package_slug": "gem/actionview",
-                    "pubdate": "2019-03-27",
-                    "solution": "Upgrade to versions 5.0.7.2, 5.1.6.2, 5.2.2.1 or above.",
-                    "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2019-5418",
-                        "https://access.redhat.com/errata/RHSA-2019:1289"
-                    ],
-                    "uuid": "d6edb767-ac5a-4bc6-8c7f-35dce92903f9"
-                },
-                {
-                    "affected_range": "<4.2.11.1||>=5.0.0 <5.0.7.2||>=5.1.0 <5.1.6.2||>=5.2.0 <5.2.2.1",
-                    "affected_versions": "All versions before 4.2.11.1, all versions starting from 5.0.0 before 5.0.7.2, all versions starting from 5.1.0 before 5.1.6.2, all versions starting from 5.2.0 before 5.2.2.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                    "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2019-10-11",
-                    "description": "There is a File Content Disclosure vulnerability in Action View where specially crafted `Accept` headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
-                    "fixed_versions": [
-                        "4.2.11.1",
-                        "5.0.7.2",
-                        "5.1.6.2",
-                        "5.2.2.1"
-                    ],
-                    "identifier": "CVE-2019-5418",
-                    "identifiers": [
-                        "CVE-2019-5418"
-                    ],
-                    "not_impacted": "All versions starting from 4.2.11.1 before 5.0.0, all versions starting from 5.0.7.2 before 5.1.0, all versions starting from 5.1.6.2 before 5.2.0, all versions starting from 5.2.2.1",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2019-03-27",
-                    "solution": "Upgrade to versions 4.2.11.1, 5.0.7.2, 5.1.6.2, 5.2.2.1 or above.",
-                    "title": "Information Exposure",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2019-5418",
-                        "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
-                        "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
-                        "https://www.exploit-db.com/exploits/46585/"
-                    ],
-                    "uuid": "8d1df401-d117-44ce-8106-c147d960ae4c"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "4.2.11.1",
-                                "versionStartIncluding": "3.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.0.7.2",
-                                "versionStartIncluding": "5.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.1.6.2",
-                                "versionStartIncluding": "5.1.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.2.1",
-                                "versionStartIncluding": "5.2.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:redhat:cloudforms:4.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:30:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:redhat:cloudforms:4.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:redhat:software_collections:1.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2019-5418"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "NVD-CWE-noinfo"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "46585",
-                            "refsource": "EXPLOIT-DB",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory",
-                                "VDB Entry"
-                            ],
-                            "url": "https://www.exploit-db.com/exploits/46585/"
-                        },
-                        {
-                            "name": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/"
-                        },
-                        {
-                            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
-                        },
-                        {
-                            "name": "[oss-security] 20190322 [CVE-2019-5418] Amendment: Possible Remote Code Execution Exploit in Action View",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Mitigation",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://www.openwall.com/lists/oss-security/2019/03/22/1"
-                        },
-                        {
-                            "name": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory",
-                                "VDB Entry"
-                            ],
-                            "url": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html"
-                        },
-                        {
-                            "name": "[debian-lts-announce] 20190331 [SECURITY] [DLA 1739-1] rails security update",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.debian.org/debian-lts-announce/2019/03/msg00042.html"
-                        },
-                        {
-                            "name": "RHSA-2019:0796",
-                            "refsource": "REDHAT",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://access.redhat.com/errata/RHSA-2019:0796"
-                        },
-                        {
-                            "name": "openSUSE-SU-2019:1344",
-                            "refsource": "SUSE",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "http://lists.opensuse.org/opensuse-security-announce/2019-05/msg00011.html"
-                        },
-                        {
-                            "name": "FEDORA-2019-1cfe24db5c",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Y43636TH4D6T46IC6N2RQVJTRFJAAYGA/"
-                        },
-                        {
-                            "name": "RHSA-2019:1149",
-                            "refsource": "REDHAT",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://access.redhat.com/errata/RHSA-2019:1149"
-                        },
-                        {
-                            "name": "RHSA-2019:1147",
-                            "refsource": "REDHAT",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://access.redhat.com/errata/RHSA-2019:1147"
-                        },
-                        {
-                            "name": "RHSA-2019:1289",
-                            "refsource": "REDHAT",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://access.redhat.com/errata/RHSA-2019:1289"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2020-10-16T19:02Z",
-            "publishedDate": "2019-03-27T14:29Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "actionview",
-            "framework": "rails",
-            "cve": "2019-5418",
-            "ghsa": "86g5-2wh3-gc9j",
-            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q",
-            "title": "File Content Disclosure in Action View",
-            "date": "2019-03-13",
-            "description": "There is a possible file content disclosure vulnerability in Action View. This\nvulnerability has been assigned the CVE identifier CVE-2019-5418.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, 4.2.11.1\n\nImpact\n------\nThere is a possible file content disclosure vulnerability in Action View.\nSpecially crafted accept headers in combination with calls to `render file:`\ncan cause arbitrary files on the target server to be rendered, disclosing the\nfile contents.\n\nThe impact is limited to calls to `render` which render file contents without\na specified accept format.  Impacted code in a controller looks something like\nthis:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\"\n  end\nend\n```\n\nRendering templates as opposed to files is not impacted by this vulnerability.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, and 4.2.11.1 releases are\navailable at the normal locations.\n\nWorkarounds\n-----------\nThis vulnerability can be mitigated by specifying a format for file rendering,\nlike this:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\", formats: [:html]\n  end\nend\n```\n\nIn summary, impacted calls to `render` look like this:\n\n```\nrender file: \"#{Rails.root}/some/file\"\n```\n\nThe vulnerability can be mitigated by changing to this:\n\n```\nrender file: \"#{Rails.root}/some/file\", formats: [:html]\n```\n\nOther calls to `render` are not impacted.\n\nAlternatively, the following monkey patch can be applied in an initializer:\n\n```\n$ cat config/initializers/formats_filter.rb\n# frozen_string_literal: true\n\nActionDispatch::Request.prepend(Module.new do\n  def formats\n    super().select do |format|\n      format.symbol || format.ref == \"*/*\"\n    end\n  end\nend)\n```\n\nCredits\n-------\nThanks to John Hawthorn <john@hawthorn.email> of GitHub\n",
-            "cvss_v3": 7.5,
-            "patched_versions": [
-                "~> 4.2.11, >= 4.2.11.1",
-                "~> 5.0.7, >= 5.0.7.2",
-                "~> 5.1.6, >= 5.1.6.2",
-                "~> 5.2.2, >= 5.2.2.1",
-                ">= 6.0.0.beta3"
-            ]
+      ],
+      "aliases": [
+        "CVE-2019-5418",
+        "GHSA-86g5-2wh3-gc9j"
+      ],
+      "details": "There is a possible file content disclosure vulnerability in Action View. This\nvulnerability has been assigned the CVE identifier CVE-2019-5418.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, 4.2.11.1\n\nImpact\n------\nThere is a possible file content disclosure vulnerability in Action View.\nSpecially crafted accept headers in combination with calls to `render file:`\ncan cause arbitrary files on the target server to be rendered, disclosing the\nfile contents.\n\nThe impact is limited to calls to `render` which render file contents without\na specified accept format.  Impacted code in a controller looks something like\nthis:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\"\n  end\nend\n```\n\nRendering templates as opposed to files is not impacted by this vulnerability.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, and 4.2.11.1 releases are\navailable at the normal locations.\n\nWorkarounds\n-----------\nThis vulnerability can be mitigated by specifying a format for file rendering,\nlike this:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\", formats: [:html]\n  end\nend\n```\n\nIn summary, impacted calls to `render` look like this:\n\n```\nrender file: \"#{Rails.root}/some/file\"\n```\n\nThe vulnerability can be mitigated by changing to this:\n\n```\nrender file: \"#{Rails.root}/some/file\", formats: [:html]\n```\n\nOther calls to `render` are not impacted.\n\nAlternatively, the following monkey patch can be applied in an initializer:\n\n```\n$ cat config/initializers/formats_filter.rb\n# frozen_string_literal: true\n\nActionDispatch::Request.prepend(Module.new do\n  def formats\n    super().select do |format|\n      format.symbol || format.ref == \"*/*\"\n    end\n  end\nend)\n```\n\nCredits\n-------\nThanks to John Hawthorn <john@hawthorn.email> of GitHub\n",
+      "id": "GSD-2019-5418",
+      "modified": "2019-03-13T00:00:00.000Z",
+      "published": "2019-03-13T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 7.5,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "File Content Disclosure in Action View"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2019-5418",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "5.2.2.1"
+                        },
+                        {
+                          "version_value": "5.1.6.2"
+                        },
+                        {
+                          "version_value": "5.0.7.2"
+                        },
+                        {
+                          "version_value": "4.2.11.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Rails"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Path Traversal (CWE-22)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "46585",
+            "refsource": "EXPLOIT-DB",
+            "url": "https://www.exploit-db.com/exploits/46585/"
+          },
+          {
+            "name": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
+            "refsource": "MISC",
+            "url": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html"
+          },
+          {
+            "name": "[oss-security] 20190322 [CVE-2019-5418] Amendment: Possible Remote Code Execution Exploit in Action View",
+            "refsource": "MLIST",
+            "url": "http://www.openwall.com/lists/oss-security/2019/03/22/1"
+          },
+          {
+            "name": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
+            "refsource": "CONFIRM",
+            "url": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/"
+          },
+          {
+            "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q",
+            "refsource": "CONFIRM",
+            "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
+          },
+          {
+            "name": "[debian-lts-announce] 20190331 [SECURITY] [DLA 1739-1] rails security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2019/03/msg00042.html"
+          },
+          {
+            "name": "RHSA-2019:0796",
+            "refsource": "REDHAT",
+            "url": "https://access.redhat.com/errata/RHSA-2019:0796"
+          },
+          {
+            "name": "openSUSE-SU-2019:1344",
+            "refsource": "SUSE",
+            "url": "http://lists.opensuse.org/opensuse-security-announce/2019-05/msg00011.html"
+          },
+          {
+            "name": "FEDORA-2019-1cfe24db5c",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Y43636TH4D6T46IC6N2RQVJTRFJAAYGA/"
+          },
+          {
+            "name": "RHSA-2019:1149",
+            "refsource": "REDHAT",
+            "url": "https://access.redhat.com/errata/RHSA-2019:1149"
+          },
+          {
+            "name": "RHSA-2019:1147",
+            "refsource": "REDHAT",
+            "url": "https://access.redhat.com/errata/RHSA-2019:1147"
+          },
+          {
+            "name": "RHSA-2019:1289",
+            "refsource": "REDHAT",
+            "url": "https://access.redhat.com/errata/RHSA-2019:1289"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2019-5418",
+      "cvss_v3": 7.5,
+      "date": "2019-03-13",
+      "description": "There is a possible file content disclosure vulnerability in Action View. This\nvulnerability has been assigned the CVE identifier CVE-2019-5418.\n\nVersions Affected:  All.\nNot affected:       None.\nFixed Versions:     6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, 4.2.11.1\n\nImpact\n------\nThere is a possible file content disclosure vulnerability in Action View.\nSpecially crafted accept headers in combination with calls to `render file:`\ncan cause arbitrary files on the target server to be rendered, disclosing the\nfile contents.\n\nThe impact is limited to calls to `render` which render file contents without\na specified accept format.  Impacted code in a controller looks something like\nthis:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\"\n  end\nend\n```\n\nRendering templates as opposed to files is not impacted by this vulnerability.\n\nAll users running an affected release should either upgrade or use one of the\nworkarounds immediately.\n\nReleases\n--------\nThe 6.0.0.beta3, 5.2.2.1, 5.1.6.2, 5.0.7.2, and 4.2.11.1 releases are\navailable at the normal locations.\n\nWorkarounds\n-----------\nThis vulnerability can be mitigated by specifying a format for file rendering,\nlike this:\n\n```\nclass UserController < ApplicationController\n  def index\n    render file: \"#{Rails.root}/some/file\", formats: [:html]\n  end\nend\n```\n\nIn summary, impacted calls to `render` look like this:\n\n```\nrender file: \"#{Rails.root}/some/file\"\n```\n\nThe vulnerability can be mitigated by changing to this:\n\n```\nrender file: \"#{Rails.root}/some/file\", formats: [:html]\n```\n\nOther calls to `render` are not impacted.\n\nAlternatively, the following monkey patch can be applied in an initializer:\n\n```\n$ cat config/initializers/formats_filter.rb\n# frozen_string_literal: true\n\nActionDispatch::Request.prepend(Module.new do\n  def formats\n    super().select do |format|\n      format.symbol || format.ref == \"*/*\"\n    end\n  end\nend)\n```\n\nCredits\n-------\nThanks to John Hawthorn <john@hawthorn.email> of GitHub\n",
+      "framework": "rails",
+      "gem": "actionview",
+      "ghsa": "86g5-2wh3-gc9j",
+      "patched_versions": [
+        "~> 4.2.11, >= 4.2.11.1",
+        "~> 5.0.7, >= 5.0.7.2",
+        "~> 5.1.6, >= 5.1.6.2",
+        "~> 5.2.2, >= 5.2.2.1",
+        ">= 6.0.0.beta3"
+      ],
+      "title": "File Content Disclosure in Action View",
+      "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=3.0.0 <4.2.11.1||>=5.0.0 <5.0.7.2||>=5.1.0 <5.1.6.2||>=5.2.0 <5.2.2.1",
+          "affected_versions": "All versions starting from 3.0.0 before 4.2.11.1, all versions starting from 5.0.0 before 5.0.7.2, all versions starting from 5.1.0 before 5.1.6.2, all versions starting from 5.2.0 before 5.2.2.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2020-10-16",
+          "description": "There is a File Content Disclosure vulnerability in Action View  and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
+          "fixed_versions": [
+            "4.2.11.1",
+            "5.0.7.2",
+            "5.1.6.2",
+            "5.2.2.1"
+          ],
+          "identifier": "CVE-2019-5418",
+          "identifiers": [
+            "CVE-2019-5418"
+          ],
+          "not_impacted": "All versions before 3.0.0, all versions starting from 4.2.11.1 before 5.0.0, all versions starting from 5.0.7.2 before 5.1.0, all versions starting from 5.1.6.2 before 5.2.0",
+          "package_slug": "gem/actionview",
+          "pubdate": "2019-03-27",
+          "solution": "Upgrade to versions 5.0.7.2, 5.1.6.2, 5.2.2.1 or above.",
+          "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-5418",
+            "https://access.redhat.com/errata/RHSA-2019:1289"
+          ],
+          "uuid": "d6edb767-ac5a-4bc6-8c7f-35dce92903f9"
+        },
+        {
+          "affected_range": "<4.2.11.1||>=5.0.0 <5.0.7.2||>=5.1.0 <5.1.6.2||>=5.2.0 <5.2.2.1",
+          "affected_versions": "All versions before 4.2.11.1, all versions starting from 5.0.0 before 5.0.7.2, all versions starting from 5.1.0 before 5.1.6.2, all versions starting from 5.2.0 before 5.2.2.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+          "cvss_v3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2019-10-11",
+          "description": "There is a File Content Disclosure vulnerability in Action View where specially crafted `Accept` headers can cause contents of arbitrary files on the target system's filesystem to be exposed.",
+          "fixed_versions": [
+            "4.2.11.1",
+            "5.0.7.2",
+            "5.1.6.2",
+            "5.2.2.1"
+          ],
+          "identifier": "CVE-2019-5418",
+          "identifiers": [
+            "CVE-2019-5418"
+          ],
+          "not_impacted": "All versions starting from 4.2.11.1 before 5.0.0, all versions starting from 5.0.7.2 before 5.1.0, all versions starting from 5.1.6.2 before 5.2.0, all versions starting from 5.2.2.1",
+          "package_slug": "gem/rails",
+          "pubdate": "2019-03-27",
+          "solution": "Upgrade to versions 4.2.11.1, 5.0.7.2, 5.1.6.2, 5.2.2.1 or above.",
+          "title": "Information Exposure",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-5418",
+            "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
+            "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
+            "https://www.exploit-db.com/exploits/46585/"
+          ],
+          "uuid": "8d1df401-d117-44ce-8106-c147d960ae4c"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "4.2.11.1",
+                "versionStartIncluding": "3.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.0.7.2",
+                "versionStartIncluding": "5.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.1.6.2",
+                "versionStartIncluding": "5.1.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.2.1",
+                "versionStartIncluding": "5.2.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:8.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:redhat:cloudforms:4.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:opensuse:leap:15.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:30:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:redhat:cloudforms:4.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:redhat:software_collections:1.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2019-5418"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "There is a File Content Disclosure vulnerability in Action View <5.2.2.1, <5.1.6.2, <5.0.7.2, <4.2.11.1 and v3 where specially crafted accept headers can cause contents of arbitrary files on the target system's filesystem to be exposed."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "NVD-CWE-noinfo"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "46585",
+              "refsource": "EXPLOIT-DB",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory",
+                "VDB Entry"
+              ],
+              "url": "https://www.exploit-db.com/exploits/46585/"
+            },
+            {
+              "name": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://weblog.rubyonrails.org/2019/3/13/Rails-4-2-5-1-5-1-6-2-have-been-released/"
+            },
+            {
+              "name": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://groups.google.com/forum/#!topic/rubyonrails-security/pFRKI96Sm8Q"
+            },
+            {
+              "name": "[oss-security] 20190322 [CVE-2019-5418] Amendment: Possible Remote Code Execution Exploit in Action View",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Mitigation",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "http://www.openwall.com/lists/oss-security/2019/03/22/1"
+            },
+            {
+              "name": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory",
+                "VDB Entry"
+              ],
+              "url": "http://packetstormsecurity.com/files/152178/Rails-5.2.1-Arbitrary-File-Content-Disclosure.html"
+            },
+            {
+              "name": "[debian-lts-announce] 20190331 [SECURITY] [DLA 1739-1] rails security update",
+              "refsource": "MLIST",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.debian.org/debian-lts-announce/2019/03/msg00042.html"
+            },
+            {
+              "name": "RHSA-2019:0796",
+              "refsource": "REDHAT",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://access.redhat.com/errata/RHSA-2019:0796"
+            },
+            {
+              "name": "openSUSE-SU-2019:1344",
+              "refsource": "SUSE",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "http://lists.opensuse.org/opensuse-security-announce/2019-05/msg00011.html"
+            },
+            {
+              "name": "FEDORA-2019-1cfe24db5c",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Y43636TH4D6T46IC6N2RQVJTRFJAAYGA/"
+            },
+            {
+              "name": "RHSA-2019:1149",
+              "refsource": "REDHAT",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://access.redhat.com/errata/RHSA-2019:1149"
+            },
+            {
+              "name": "RHSA-2019:1147",
+              "refsource": "REDHAT",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://access.redhat.com/errata/RHSA-2019:1147"
+            },
+            {
+              "name": "RHSA-2019:1289",
+              "refsource": "REDHAT",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://access.redhat.com/errata/RHSA-2019:1289"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.0,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2020-10-16T19:02Z",
+      "publishedDate": "2019-03-27T14:29Z"
+    }
+  }
 }

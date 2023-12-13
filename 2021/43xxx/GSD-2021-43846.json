@@ -1,418 +1,424 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-43846",
-        "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
-        "id": "GSD-2021-43846"
+  "GSD": {
+    "alias": "CVE-2021-43846",
+    "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
+    "id": "GSD-2021-43846"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-43846",
-            "modified": "2022-01-06T00:00:00.000Z",
-            "published": "2022-01-06T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-43846",
-                "GHSA-h3fg-h5v3-vf8m"
-            ],
-            "summary": "CSRF forgery protection bypass in solidus_frontend",
-            "details": "### Impact\nCSRF vulnerability that allows a malicious site to add an item to the user's\ncart without their knowledge.\n\nAll `solidus_frontend` versions are affected. If you're using your own\nstorefront, please, follow along to make sure you're not affected.\n\nTo reproduce the issue:\n\n- Pick the id for a variant with available stock. From the rails console:\n\n```ruby\nSpree::Variant.in_stock.pluck(:id)\n```\n\nSay we pick variant id `2`.\n\n- Launch your application, for instance,\n  on `http://localhost:3000`:\n\n```bash\nbin/rails server\n```\n\n- Open your browser dev tools.\n\n- Click on whatever link in your store.\n\n- Copy the value of the `Cookie` request header sent for the previous request\nfrom your browser dev tools.\n\n- Execute the following, using your previously selected variant id and the\nvalue of the `Cookie` header (notice how it doesn't contain any authentication\ntoken):\n\n```bash\ncurl -X POST -d \"variant_id=2&quantity=1\" -H \"Cookie:\nguest_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrWlRVMWRQWnpKMVZVdFNXRzlPVW1aaWJHTjZZa0VpIiwiZXhwIjpudWxsLCJwdXIiOiJjb29raWUuZ3Vlc3RfdG9rZW4ifX0%3D--5006ba5d346f621c760a29b6a797bf351d17d1b8;\n_sandbox_session=vhutu5%2FL9NmWrUpGc3DxrFA%2FFsQD1dHn1cNsD7nvE84zcjWf17Af4%2F%2F2Vab3md71b6KTb9NP6WktdXktpwH4eU01jEGIBXG5%2BMzW5nL0nb4W269qk1io4LYljvoOg8%2BZVll7oJCVkJLKKh0sSoS0Kg8j%2FCHHs%2BsShohP%2BGnA%2Bfr9Ub8H6HofpSmloSpsfHHygmX0ho03fEgzHJ4DD5wJctaNKwg7NhVikHh5kgIPPHl84OGCgv3p2oe9jR19HTxOKq7BtyvDd7XZsecWhkcfS8BPnvDDUWZG6qpAEFI5kWo81KkpSJ%2Bp6Q1HOo8%3D--n3G2vgaDG7VS%2B%2FhF--ZTjxBAkfGG3hpr4GRQ2S1Q%3D%3D;\n__profilin=p%3Dt\" http://localhost:3000/orders/populate\n```\n\n- Reload your browser and look at how your cart got updated.\n\n### Patches\n\nPlease, upgrade `solidus` to versions `3.1.5`, `3.0.5` or `2.11.14`.\n\nAfter upgrading, make sure you read the \"Upgrade notes\"  section below.\n\n### Upgrade notes\n\nThe patch adds CSRF token verification to the \"Add to cart\" action. Adding\nforgery protection to a form that missed it can have some side effects.\n\n#### `InvalidAuthenticityToken` errors\n\nIf you're using the `:exception` strategy, it's likely that after upgrading,\nyou'll see more `ActionController::InvalidAuthenticityToken` errors popping out\nin your logs. Due to browser-side cache, a form can be re-rendered and sent without\nany attached request cookie (for instance, when re-opening a mobile browser). That\nwill cause an authentication error, as the sent token won't match with the one in\nthe session (none in this case). That's a known problem in the Rails community (see\nhttps://github.com/rails/rails/issues/21948), and, at this point, there's no perfect\nsolution.\n\nAny attempt to mitigate the issue should be seen at the application level.\nFor an excellent survey of all the available options, take a look at\nhttps://github.com/betagouv/demarches-simplifiees.fr/blob/5b4f7f9ae9eaf0ac94008b62f7047e4714626cf9/doc/adr-csrf-forgery.md.\nThe latter is a third-party link. As the information is relevant here, we're going\nto copy it below, but it should be clear that all the credit goes to @kemenaran:\n\n> # Protecting against request forgery using CRSF tokens\n>\n> ## Context\n>\n> Rails has CSRF protection enabled by default, to protect against POST-based CSRF attacks.\n>\n> To protect from this, Rails stores two copies of a random token (the so-named CSRF token) on each request:\n> - one copy embedded in each HTML page,\n> - another copy in the user session.\n>\n> When performing a POST request, Rails checks that the two copies match – and\n> otherwise denies the request. This protects against an attacker that would\n> generate a form secretly pointing to our website: the attacker can't read\n> the token in the session, and so can't post a form with a valid token.\n>\n> The problem is that, much more often, this has false positives.\n> There are several cases for that, including:\n>\n> 1. The web browser (often mobile) loads a page containing a form, then is\n> closed by the user. Later, when the browser is re-opened, it restores the\n> page from the cache. But the session cookie has expired, and so is not\n> restored – so the copy of the CSRF token stored in the session is missing.\n> When the user submits the form, they get an \"InvalidAuthenticityToken\"\n> exception.\n>\n> 2. The user attempts to fill a form, and gets an error message (usually in\n> response to a POST request). They close the browser. When the browser is\n> re-opened, it attempts to restore the page. On Chrome this is blocked by the\n> browser, because the browser denies retrying a (probably non-idempotent)\n> POST request. Safari however happily retries the POST request – but without\n> sending any cookies (in an attempt to avoid having unexpected side-effects).\n> So the copy of the CSRF token in the session is missing (because no cookie\n> was sent), and the user get an \"InvalidAuthenticityToken\" exception.\n>\n> ## Options considered\n>\n> ### Extend the session cookie duration\n>\n> We can configure the session cookie to be valid for a longer time (like 2\n> weeks).\n>\n> Pros:\n> - It solves 1., because when the browser restores the page, the session\n> cookie is still valid.\n>\n> Cons:\n> - Users would be signed-in for a much longer time by default, which has\n> unacceptable security implications.\n> - It doesn't solve 2. (because Safari doesn't send any cookie when restoring\n> a page from a POST request)\n>\n> ### Change the cache parameters\n>\n> We can send a HTTP cache header stating 'Cache-Control: no-store, no-cache'.\n> This instructs the browser to never keep any copy of the page, and to always\n> make a request to the server to restore it.\n>\n> This solution was attempted during a year in production, and solved 1.\n> – but also introduced another type of InvalidAuthenticityToken errors. In\n> that scenario, the user attempts to fill a form, and gets an error message\n> (usually in response to a POST request). They then navigate on another domain (like\n> France Connect), then hit the \"Back\" button. Crossing back the domain boundary\n> may cause the browser to either block the request or retry an invalid POST request.\n>\n> Pros:\n> - It solves 1., because on relaunch the browser requests a fresh page again\n> (instead of serving it from its cache), thus retrieving a fresh session and\n> a fresh matching CSRF token.\n>\n> Cons:\n> - It doesn't solve 2.\n> - It causes another type of InvalidAuthenticityToken errors.\n>\n> ### Using a null-session strategy\n>\n> We can change the default protect_from_forgery strategy to :null_session.\n> This makes the current request use an empty session for the request duration.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page\n> when a stale form is submitted.\n>\n> Cons:\n> - The user is asked to sign-in only after filling and submitting the form,\n> losing their time and data\n> - The user will not be redirected to their original page after signing-in\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null\n> session is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n>\n> ### Using a reset-session strategy\n>\n> We can change the default protect_from_forgery strategy to :reset_session.\n> This clears the user session permanently, logging them out until they log in\n> again.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted.\n>\n> Cons:\n> - A forgery error in a browser tab will disconnect the user in all its open\n> tabs\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null session\n> is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n> - It allows an attacker to disconnect an user on demand, which is not only\n> inconvenient, but also has security implication (the attacker could then log\n> the user on it's own attacker account, pretending to be the user account)\n>\n> ### Redirect to login form\n>\n> When a forgery error occurs, we can instead redirect to the login form.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted (but the user data is lost).\n> - It kind of solves 2., by redirecting to a \"Please sign-in\" page when a\n> previously POSTed form is reloaded.\n>\n> Cons:\n> - Not all forms require authentication – so for\n> public forms there is no point redirecting to the login form.\n> - The user will not be redirected to their original page after signing-in\n> (because setting the redirect path is a state-changing action, and it is\n> dangerous to let an unauthorized request changing the state – an attacker\n> could control the path where an user is automatically redirected to.)\n> - The implementation is finicky, and may introduce security errors.\n> For instance, a naive implementation that catches the exception and\n> redirect_to the sign-in page will prevent Devise from running a cleanup code\n> – which means the user will still be logged, and the CSRF protection is\n> bypassed. However a well-tested implementation that lets Devise code run\n> should avoid these pittfalls.\n>\n> ### Using a long-lived cookie for CSRF tokens\n>\n> Instead of storing the CSRF token in the session cookie (which is deleted\n> when the browser is closed), we can instead store it in a longer-lived\n> cookie. For this we need to patch Rails.\n>\n> Pros:\n> - It solves 1., because when the user submits a stale form, even if the\n> session cookie because stale, the long-lived CSRF cookie is still valid.\n>\n> Cons:\n> - It doesn't solve 2., because when Safari retries a POST request, it sends\n> none of the cookies (not even long-lived ones).\n> - Patching Rails may introduce security issues (now or in the future)\n\n#### Broken behavior due to session expiration + template cache\n\nAlthough pretty unlikely, you should make sure that your current setup for\ncache/session expiration is compatible. The upgrade can break the addition\nof products to the cart if both:\n\n- The \"Add to cart\" form is being cached (usually along with the variant\ninformation).\n\n- A user session is reset at every or every few requests.\n\nThe token validation depends on the issuing and consuming sessions\nbeing the same. If a product page is cached with the token in it, it can\nbecome stale on a subsequent rendering if the session changes.\n\nTo check that you're safe, after having upgraded locally, go through the\nfollowing steps:\n\n- Enable cache on dev mode:\n\n```bash\nbin/rails dev:cache\n```\n\n- Visit the page for a variant with stock.\n\n- Reload that page several times.\n\n- Click on the \"Add to cart\"  button.\n\n- Remember to rerun `bin/rails dev:cache` to turn off cache again.\n\nNo error or session reset should happen.\n\nOtherwise, you can try with:\n\n- Revisiting how your session gets expired.\n- Changing the caching strategy to exclude the token.\n\n#### Using weaker CSRF protection strategies\n\nIt's also important to understand that a complete fix will only be in place\nwhen using the `:exception` forgery protection strategy. The\n`solidus_frontend` engine can't do pretty much anything otherwise. Using\nweaker CSRF strategies should be an informed and limited decision made by the\napplication team. After the upgrade:\n\n- An app using `:null_session` should also be safe, but there will be side\neffects. That strategy runs with a null object session. As such, no order and\nno user is found on it. A new `cart` state order is created in the database,\nassociated with no user. Next time the user visits the site, they won't find\nany difference in its cart state.\n\n- An app using `:reset_session` is not entirely safe. That strategy resets the\nsession. That means that registered users will be logged out. Next time a user\nvisits, they'll see the cart with the items added during the CSRF attack,\nalthough it won't be associated with their account in the case of registered\nusers.\n\n#### Reversing the update\n\nIf you still want to deploy the upgraded version before changing your\napplication code (if the latter is needed), you can add the following\nworkaround to your `config/application.rb` (however, take into account that\nyou'll keep being vulnerable):\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.skip_before_action :verify_authenticity_token, only:\n    [:populate]\nend\n```\n\n### Workarounds\n\nIf an upgrade is not an option, you can work around the issue by adding the\nfollowing to `config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.protect_from_forgery with: ApplicationController.forgery_protection_strategy.name.demodulize.underscore.to_sym,\n    only: [:populate]\nend\n```\n\nHowever, go through the same safety check detailed on \"Upgrade notes\" above.\n\n### References\n\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [How CSRF tokens are generated and validated on Rails](https://medium.com/rubyinside/a-deep-dive-into-csrf-protection-in-rails-19fa0a42c0ef)\n- [Solidus security](https://solidus.io/security/)\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.3
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "solidus_frontend",
-                        "purl": "pkg:gem/solidus_frontend"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
-                },
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "solidus_frontend",
+            "purl": "pkg:gem/solidus_frontend"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-43846",
-                "STATE": "PUBLIC",
-                "TITLE": "CSRF forgery protection bypass for Spree::OrdersController#populate"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "solidus",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 3.1.0, < 3.1.5"
-                                                },
-                                                {
-                                                    "version_value": ">= 3.0.0, < 3.0.5"
-                                                },
-                                                {
-                                                    "version_value": "< 2.11.14"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "solidusio"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 5.3,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                    },
-                    {
-                        "name": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                        "refsource": "MISC",
-                        "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
-                    },
-                    {
-                        "name": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
-                        "refsource": "MISC",
-                        "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-h3fg-h5v3-vf8m",
-                "discovery": "UNKNOWN"
-            }
+      ],
+      "aliases": [
+        "CVE-2021-43846",
+        "GHSA-h3fg-h5v3-vf8m"
+      ],
+      "details": "### Impact\nCSRF vulnerability that allows a malicious site to add an item to the user's\ncart without their knowledge.\n\nAll `solidus_frontend` versions are affected. If you're using your own\nstorefront, please, follow along to make sure you're not affected.\n\nTo reproduce the issue:\n\n- Pick the id for a variant with available stock. From the rails console:\n\n```ruby\nSpree::Variant.in_stock.pluck(:id)\n```\n\nSay we pick variant id `2`.\n\n- Launch your application, for instance,\n  on `http://localhost:3000`:\n\n```bash\nbin/rails server\n```\n\n- Open your browser dev tools.\n\n- Click on whatever link in your store.\n\n- Copy the value of the `Cookie` request header sent for the previous request\nfrom your browser dev tools.\n\n- Execute the following, using your previously selected variant id and the\nvalue of the `Cookie` header (notice how it doesn't contain any authentication\ntoken):\n\n```bash\ncurl -X POST -d \"variant_id=2&quantity=1\" -H \"Cookie:\nguest_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrWlRVMWRQWnpKMVZVdFNXRzlPVW1aaWJHTjZZa0VpIiwiZXhwIjpudWxsLCJwdXIiOiJjb29raWUuZ3Vlc3RfdG9rZW4ifX0%3D--5006ba5d346f621c760a29b6a797bf351d17d1b8;\n_sandbox_session=vhutu5%2FL9NmWrUpGc3DxrFA%2FFsQD1dHn1cNsD7nvE84zcjWf17Af4%2F%2F2Vab3md71b6KTb9NP6WktdXktpwH4eU01jEGIBXG5%2BMzW5nL0nb4W269qk1io4LYljvoOg8%2BZVll7oJCVkJLKKh0sSoS0Kg8j%2FCHHs%2BsShohP%2BGnA%2Bfr9Ub8H6HofpSmloSpsfHHygmX0ho03fEgzHJ4DD5wJctaNKwg7NhVikHh5kgIPPHl84OGCgv3p2oe9jR19HTxOKq7BtyvDd7XZsecWhkcfS8BPnvDDUWZG6qpAEFI5kWo81KkpSJ%2Bp6Q1HOo8%3D--n3G2vgaDG7VS%2B%2FhF--ZTjxBAkfGG3hpr4GRQ2S1Q%3D%3D;\n__profilin=p%3Dt\" http://localhost:3000/orders/populate\n```\n\n- Reload your browser and look at how your cart got updated.\n\n### Patches\n\nPlease, upgrade `solidus` to versions `3.1.5`, `3.0.5` or `2.11.14`.\n\nAfter upgrading, make sure you read the \"Upgrade notes\"  section below.\n\n### Upgrade notes\n\nThe patch adds CSRF token verification to the \"Add to cart\" action. Adding\nforgery protection to a form that missed it can have some side effects.\n\n#### `InvalidAuthenticityToken` errors\n\nIf you're using the `:exception` strategy, it's likely that after upgrading,\nyou'll see more `ActionController::InvalidAuthenticityToken` errors popping out\nin your logs. Due to browser-side cache, a form can be re-rendered and sent without\nany attached request cookie (for instance, when re-opening a mobile browser). That\nwill cause an authentication error, as the sent token won't match with the one in\nthe session (none in this case). That's a known problem in the Rails community (see\nhttps://github.com/rails/rails/issues/21948), and, at this point, there's no perfect\nsolution.\n\nAny attempt to mitigate the issue should be seen at the application level.\nFor an excellent survey of all the available options, take a look at\nhttps://github.com/betagouv/demarches-simplifiees.fr/blob/5b4f7f9ae9eaf0ac94008b62f7047e4714626cf9/doc/adr-csrf-forgery.md.\nThe latter is a third-party link. As the information is relevant here, we're going\nto copy it below, but it should be clear that all the credit goes to @kemenaran:\n\n> # Protecting against request forgery using CRSF tokens\n>\n> ## Context\n>\n> Rails has CSRF protection enabled by default, to protect against POST-based CSRF attacks.\n>\n> To protect from this, Rails stores two copies of a random token (the so-named CSRF token) on each request:\n> - one copy embedded in each HTML page,\n> - another copy in the user session.\n>\n> When performing a POST request, Rails checks that the two copies match \u2013 and\n> otherwise denies the request. This protects against an attacker that would\n> generate a form secretly pointing to our website: the attacker can't read\n> the token in the session, and so can't post a form with a valid token.\n>\n> The problem is that, much more often, this has false positives.\n> There are several cases for that, including:\n>\n> 1. The web browser (often mobile) loads a page containing a form, then is\n> closed by the user. Later, when the browser is re-opened, it restores the\n> page from the cache. But the session cookie has expired, and so is not\n> restored \u2013 so the copy of the CSRF token stored in the session is missing.\n> When the user submits the form, they get an \"InvalidAuthenticityToken\"\n> exception.\n>\n> 2. The user attempts to fill a form, and gets an error message (usually in\n> response to a POST request). They close the browser. When the browser is\n> re-opened, it attempts to restore the page. On Chrome this is blocked by the\n> browser, because the browser denies retrying a (probably non-idempotent)\n> POST request. Safari however happily retries the POST request \u2013 but without\n> sending any cookies (in an attempt to avoid having unexpected side-effects).\n> So the copy of the CSRF token in the session is missing (because no cookie\n> was sent), and the user get an \"InvalidAuthenticityToken\" exception.\n>\n> ## Options considered\n>\n> ### Extend the session cookie duration\n>\n> We can configure the session cookie to be valid for a longer time (like 2\n> weeks).\n>\n> Pros:\n> - It solves 1., because when the browser restores the page, the session\n> cookie is still valid.\n>\n> Cons:\n> - Users would be signed-in for a much longer time by default, which has\n> unacceptable security implications.\n> - It doesn't solve 2. (because Safari doesn't send any cookie when restoring\n> a page from a POST request)\n>\n> ### Change the cache parameters\n>\n> We can send a HTTP cache header stating 'Cache-Control: no-store, no-cache'.\n> This instructs the browser to never keep any copy of the page, and to always\n> make a request to the server to restore it.\n>\n> This solution was attempted during a year in production, and solved 1.\n> \u2013 but also introduced another type of InvalidAuthenticityToken errors. In\n> that scenario, the user attempts to fill a form, and gets an error message\n> (usually in response to a POST request). They then navigate on another domain (like\n> France Connect), then hit the \"Back\" button. Crossing back the domain boundary\n> may cause the browser to either block the request or retry an invalid POST request.\n>\n> Pros:\n> - It solves 1., because on relaunch the browser requests a fresh page again\n> (instead of serving it from its cache), thus retrieving a fresh session and\n> a fresh matching CSRF token.\n>\n> Cons:\n> - It doesn't solve 2.\n> - It causes another type of InvalidAuthenticityToken errors.\n>\n> ### Using a null-session strategy\n>\n> We can change the default protect_from_forgery strategy to :null_session.\n> This makes the current request use an empty session for the request duration.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page\n> when a stale form is submitted.\n>\n> Cons:\n> - The user is asked to sign-in only after filling and submitting the form,\n> losing their time and data\n> - The user will not be redirected to their original page after signing-in\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null\n> session is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n>\n> ### Using a reset-session strategy\n>\n> We can change the default protect_from_forgery strategy to :reset_session.\n> This clears the user session permanently, logging them out until they log in\n> again.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted.\n>\n> Cons:\n> - A forgery error in a browser tab will disconnect the user in all its open\n> tabs\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null session\n> is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n> - It allows an attacker to disconnect an user on demand, which is not only\n> inconvenient, but also has security implication (the attacker could then log\n> the user on it's own attacker account, pretending to be the user account)\n>\n> ### Redirect to login form\n>\n> When a forgery error occurs, we can instead redirect to the login form.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted (but the user data is lost).\n> - It kind of solves 2., by redirecting to a \"Please sign-in\" page when a\n> previously POSTed form is reloaded.\n>\n> Cons:\n> - Not all forms require authentication \u2013 so for\n> public forms there is no point redirecting to the login form.\n> - The user will not be redirected to their original page after signing-in\n> (because setting the redirect path is a state-changing action, and it is\n> dangerous to let an unauthorized request changing the state \u2013 an attacker\n> could control the path where an user is automatically redirected to.)\n> - The implementation is finicky, and may introduce security errors.\n> For instance, a naive implementation that catches the exception and\n> redirect_to the sign-in page will prevent Devise from running a cleanup code\n> \u2013 which means the user will still be logged, and the CSRF protection is\n> bypassed. However a well-tested implementation that lets Devise code run\n> should avoid these pittfalls.\n>\n> ### Using a long-lived cookie for CSRF tokens\n>\n> Instead of storing the CSRF token in the session cookie (which is deleted\n> when the browser is closed), we can instead store it in a longer-lived\n> cookie. For this we need to patch Rails.\n>\n> Pros:\n> - It solves 1., because when the user submits a stale form, even if the\n> session cookie because stale, the long-lived CSRF cookie is still valid.\n>\n> Cons:\n> - It doesn't solve 2., because when Safari retries a POST request, it sends\n> none of the cookies (not even long-lived ones).\n> - Patching Rails may introduce security issues (now or in the future)\n\n#### Broken behavior due to session expiration + template cache\n\nAlthough pretty unlikely, you should make sure that your current setup for\ncache/session expiration is compatible. The upgrade can break the addition\nof products to the cart if both:\n\n- The \"Add to cart\" form is being cached (usually along with the variant\ninformation).\n\n- A user session is reset at every or every few requests.\n\nThe token validation depends on the issuing and consuming sessions\nbeing the same. If a product page is cached with the token in it, it can\nbecome stale on a subsequent rendering if the session changes.\n\nTo check that you're safe, after having upgraded locally, go through the\nfollowing steps:\n\n- Enable cache on dev mode:\n\n```bash\nbin/rails dev:cache\n```\n\n- Visit the page for a variant with stock.\n\n- Reload that page several times.\n\n- Click on the \"Add to cart\"  button.\n\n- Remember to rerun `bin/rails dev:cache` to turn off cache again.\n\nNo error or session reset should happen.\n\nOtherwise, you can try with:\n\n- Revisiting how your session gets expired.\n- Changing the caching strategy to exclude the token.\n\n#### Using weaker CSRF protection strategies\n\nIt's also important to understand that a complete fix will only be in place\nwhen using the `:exception` forgery protection strategy. The\n`solidus_frontend` engine can't do pretty much anything otherwise. Using\nweaker CSRF strategies should be an informed and limited decision made by the\napplication team. After the upgrade:\n\n- An app using `:null_session` should also be safe, but there will be side\neffects. That strategy runs with a null object session. As such, no order and\nno user is found on it. A new `cart` state order is created in the database,\nassociated with no user. Next time the user visits the site, they won't find\nany difference in its cart state.\n\n- An app using `:reset_session` is not entirely safe. That strategy resets the\nsession. That means that registered users will be logged out. Next time a user\nvisits, they'll see the cart with the items added during the CSRF attack,\nalthough it won't be associated with their account in the case of registered\nusers.\n\n#### Reversing the update\n\nIf you still want to deploy the upgraded version before changing your\napplication code (if the latter is needed), you can add the following\nworkaround to your `config/application.rb` (however, take into account that\nyou'll keep being vulnerable):\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.skip_before_action :verify_authenticity_token, only:\n    [:populate]\nend\n```\n\n### Workarounds\n\nIf an upgrade is not an option, you can work around the issue by adding the\nfollowing to `config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.protect_from_forgery with: ApplicationController.forgery_protection_strategy.name.demodulize.underscore.to_sym,\n    only: [:populate]\nend\n```\n\nHowever, go through the same safety check detailed on \"Upgrade notes\" above.\n\n### References\n\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [How CSRF tokens are generated and validated on Rails](https://medium.com/rubyinside/a-deep-dive-into-csrf-protection-in-rails-19fa0a42c0ef)\n- [Solidus security](https://solidus.io/security/)\n",
+      "id": "GSD-2021-43846",
+      "modified": "2022-01-06T00:00:00.000Z",
+      "published": "2022-01-06T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
         },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
-                    "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-29",
-                    "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
-                    "fixed_versions": [
-                        "2.11.14",
-                        "3.0.5",
-                        "3.1.5"
-                    ],
-                    "identifier": "CVE-2021-43846",
-                    "identifiers": [
-                        "CVE-2021-43846",
-                        "GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
-                    "package_slug": "gem/solidus_api",
-                    "pubdate": "2021-12-20",
-                    "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
-                    "title": "Cross-Site Request Forgery (CSRF)",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
-                        "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                        "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
-                        "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "uuid": "6ffab43a-cce4-4365-96b6-eb60f9222430"
-                },
-                {
-                    "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
-                    "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-29",
-                    "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
-                    "fixed_versions": [
-                        "2.11.14",
-                        "3.0.5",
-                        "3.1.5"
-                    ],
-                    "identifier": "CVE-2021-43846",
-                    "identifiers": [
-                        "CVE-2021-43846",
-                        "GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
-                    "package_slug": "gem/solidus_core",
-                    "pubdate": "2021-12-20",
-                    "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
-                    "title": "Cross-Site Request Forgery (CSRF)",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
-                        "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                        "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
-                        "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "uuid": "26343718-5888-4ce4-b111-7f0161f4cca1"
-                },
-                {
-                    "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
-                    "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2021-12-29",
-                    "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
-                    "fixed_versions": [
-                        "2.11.14",
-                        "3.0.5",
-                        "3.1.5"
-                    ],
-                    "identifier": "CVE-2021-43846",
-                    "identifiers": [
-                        "CVE-2021-43846",
-                        "GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
-                    "package_slug": "gem/solidus_frontend",
-                    "pubdate": "2021-12-20",
-                    "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
-                    "title": "Cross-Site Request Forgery (CSRF)",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
-                        "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                        "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
-                        "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                    ],
-                    "uuid": "307ae914-ff26-4a03-8d62-b1708dfe6804"
-                }
-            ]
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
         },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.11.14",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.0.5",
-                                "versionStartIncluding": "3.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.1.5",
-                                "versionStartIncluding": "3.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-43846"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-352"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
-                        },
-                        {
-                            "name": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
-                        },
-                        {
-                            "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2021-12-29T18:26Z",
-            "publishedDate": "2021-12-20T22:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "solidus_frontend",
-            "cve": "2021-43846",
-            "ghsa": "h3fg-h5v3-vf8m",
-            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m",
-            "title": "CSRF forgery protection bypass in solidus_frontend",
-            "date": "2022-01-06",
-            "description": "### Impact\nCSRF vulnerability that allows a malicious site to add an item to the user's\ncart without their knowledge.\n\nAll `solidus_frontend` versions are affected. If you're using your own\nstorefront, please, follow along to make sure you're not affected.\n\nTo reproduce the issue:\n\n- Pick the id for a variant with available stock. From the rails console:\n\n```ruby\nSpree::Variant.in_stock.pluck(:id)\n```\n\nSay we pick variant id `2`.\n\n- Launch your application, for instance,\n  on `http://localhost:3000`:\n\n```bash\nbin/rails server\n```\n\n- Open your browser dev tools.\n\n- Click on whatever link in your store.\n\n- Copy the value of the `Cookie` request header sent for the previous request\nfrom your browser dev tools.\n\n- Execute the following, using your previously selected variant id and the\nvalue of the `Cookie` header (notice how it doesn't contain any authentication\ntoken):\n\n```bash\ncurl -X POST -d \"variant_id=2&quantity=1\" -H \"Cookie:\nguest_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrWlRVMWRQWnpKMVZVdFNXRzlPVW1aaWJHTjZZa0VpIiwiZXhwIjpudWxsLCJwdXIiOiJjb29raWUuZ3Vlc3RfdG9rZW4ifX0%3D--5006ba5d346f621c760a29b6a797bf351d17d1b8;\n_sandbox_session=vhutu5%2FL9NmWrUpGc3DxrFA%2FFsQD1dHn1cNsD7nvE84zcjWf17Af4%2F%2F2Vab3md71b6KTb9NP6WktdXktpwH4eU01jEGIBXG5%2BMzW5nL0nb4W269qk1io4LYljvoOg8%2BZVll7oJCVkJLKKh0sSoS0Kg8j%2FCHHs%2BsShohP%2BGnA%2Bfr9Ub8H6HofpSmloSpsfHHygmX0ho03fEgzHJ4DD5wJctaNKwg7NhVikHh5kgIPPHl84OGCgv3p2oe9jR19HTxOKq7BtyvDd7XZsecWhkcfS8BPnvDDUWZG6qpAEFI5kWo81KkpSJ%2Bp6Q1HOo8%3D--n3G2vgaDG7VS%2B%2FhF--ZTjxBAkfGG3hpr4GRQ2S1Q%3D%3D;\n__profilin=p%3Dt\" http://localhost:3000/orders/populate\n```\n\n- Reload your browser and look at how your cart got updated.\n\n### Patches\n\nPlease, upgrade `solidus` to versions `3.1.5`, `3.0.5` or `2.11.14`.\n\nAfter upgrading, make sure you read the \"Upgrade notes\"  section below.\n\n### Upgrade notes\n\nThe patch adds CSRF token verification to the \"Add to cart\" action. Adding\nforgery protection to a form that missed it can have some side effects.\n\n#### `InvalidAuthenticityToken` errors\n\nIf you're using the `:exception` strategy, it's likely that after upgrading,\nyou'll see more `ActionController::InvalidAuthenticityToken` errors popping out\nin your logs. Due to browser-side cache, a form can be re-rendered and sent without\nany attached request cookie (for instance, when re-opening a mobile browser). That\nwill cause an authentication error, as the sent token won't match with the one in\nthe session (none in this case). That's a known problem in the Rails community (see\nhttps://github.com/rails/rails/issues/21948), and, at this point, there's no perfect\nsolution.\n\nAny attempt to mitigate the issue should be seen at the application level.\nFor an excellent survey of all the available options, take a look at\nhttps://github.com/betagouv/demarches-simplifiees.fr/blob/5b4f7f9ae9eaf0ac94008b62f7047e4714626cf9/doc/adr-csrf-forgery.md.\nThe latter is a third-party link. As the information is relevant here, we're going\nto copy it below, but it should be clear that all the credit goes to @kemenaran:\n\n> # Protecting against request forgery using CRSF tokens\n>\n> ## Context\n>\n> Rails has CSRF protection enabled by default, to protect against POST-based CSRF attacks.\n>\n> To protect from this, Rails stores two copies of a random token (the so-named CSRF token) on each request:\n> - one copy embedded in each HTML page,\n> - another copy in the user session.\n>\n> When performing a POST request, Rails checks that the two copies match – and\n> otherwise denies the request. This protects against an attacker that would\n> generate a form secretly pointing to our website: the attacker can't read\n> the token in the session, and so can't post a form with a valid token.\n>\n> The problem is that, much more often, this has false positives.\n> There are several cases for that, including:\n>\n> 1. The web browser (often mobile) loads a page containing a form, then is\n> closed by the user. Later, when the browser is re-opened, it restores the\n> page from the cache. But the session cookie has expired, and so is not\n> restored – so the copy of the CSRF token stored in the session is missing.\n> When the user submits the form, they get an \"InvalidAuthenticityToken\"\n> exception.\n>\n> 2. The user attempts to fill a form, and gets an error message (usually in\n> response to a POST request). They close the browser. When the browser is\n> re-opened, it attempts to restore the page. On Chrome this is blocked by the\n> browser, because the browser denies retrying a (probably non-idempotent)\n> POST request. Safari however happily retries the POST request – but without\n> sending any cookies (in an attempt to avoid having unexpected side-effects).\n> So the copy of the CSRF token in the session is missing (because no cookie\n> was sent), and the user get an \"InvalidAuthenticityToken\" exception.\n>\n> ## Options considered\n>\n> ### Extend the session cookie duration\n>\n> We can configure the session cookie to be valid for a longer time (like 2\n> weeks).\n>\n> Pros:\n> - It solves 1., because when the browser restores the page, the session\n> cookie is still valid.\n>\n> Cons:\n> - Users would be signed-in for a much longer time by default, which has\n> unacceptable security implications.\n> - It doesn't solve 2. (because Safari doesn't send any cookie when restoring\n> a page from a POST request)\n>\n> ### Change the cache parameters\n>\n> We can send a HTTP cache header stating 'Cache-Control: no-store, no-cache'.\n> This instructs the browser to never keep any copy of the page, and to always\n> make a request to the server to restore it.\n>\n> This solution was attempted during a year in production, and solved 1.\n> – but also introduced another type of InvalidAuthenticityToken errors. In\n> that scenario, the user attempts to fill a form, and gets an error message\n> (usually in response to a POST request). They then navigate on another domain (like\n> France Connect), then hit the \"Back\" button. Crossing back the domain boundary\n> may cause the browser to either block the request or retry an invalid POST request.\n>\n> Pros:\n> - It solves 1., because on relaunch the browser requests a fresh page again\n> (instead of serving it from its cache), thus retrieving a fresh session and\n> a fresh matching CSRF token.\n>\n> Cons:\n> - It doesn't solve 2.\n> - It causes another type of InvalidAuthenticityToken errors.\n>\n> ### Using a null-session strategy\n>\n> We can change the default protect_from_forgery strategy to :null_session.\n> This makes the current request use an empty session for the request duration.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page\n> when a stale form is submitted.\n>\n> Cons:\n> - The user is asked to sign-in only after filling and submitting the form,\n> losing their time and data\n> - The user will not be redirected to their original page after signing-in\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null\n> session is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n>\n> ### Using a reset-session strategy\n>\n> We can change the default protect_from_forgery strategy to :reset_session.\n> This clears the user session permanently, logging them out until they log in\n> again.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted.\n>\n> Cons:\n> - A forgery error in a browser tab will disconnect the user in all its open\n> tabs\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null session\n> is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n> - It allows an attacker to disconnect an user on demand, which is not only\n> inconvenient, but also has security implication (the attacker could then log\n> the user on it's own attacker account, pretending to be the user account)\n>\n> ### Redirect to login form\n>\n> When a forgery error occurs, we can instead redirect to the login form.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted (but the user data is lost).\n> - It kind of solves 2., by redirecting to a \"Please sign-in\" page when a\n> previously POSTed form is reloaded.\n>\n> Cons:\n> - Not all forms require authentication – so for\n> public forms there is no point redirecting to the login form.\n> - The user will not be redirected to their original page after signing-in\n> (because setting the redirect path is a state-changing action, and it is\n> dangerous to let an unauthorized request changing the state – an attacker\n> could control the path where an user is automatically redirected to.)\n> - The implementation is finicky, and may introduce security errors.\n> For instance, a naive implementation that catches the exception and\n> redirect_to the sign-in page will prevent Devise from running a cleanup code\n> – which means the user will still be logged, and the CSRF protection is\n> bypassed. However a well-tested implementation that lets Devise code run\n> should avoid these pittfalls.\n>\n> ### Using a long-lived cookie for CSRF tokens\n>\n> Instead of storing the CSRF token in the session cookie (which is deleted\n> when the browser is closed), we can instead store it in a longer-lived\n> cookie. For this we need to patch Rails.\n>\n> Pros:\n> - It solves 1., because when the user submits a stale form, even if the\n> session cookie because stale, the long-lived CSRF cookie is still valid.\n>\n> Cons:\n> - It doesn't solve 2., because when Safari retries a POST request, it sends\n> none of the cookies (not even long-lived ones).\n> - Patching Rails may introduce security issues (now or in the future)\n\n#### Broken behavior due to session expiration + template cache\n\nAlthough pretty unlikely, you should make sure that your current setup for\ncache/session expiration is compatible. The upgrade can break the addition\nof products to the cart if both:\n\n- The \"Add to cart\" form is being cached (usually along with the variant\ninformation).\n\n- A user session is reset at every or every few requests.\n\nThe token validation depends on the issuing and consuming sessions\nbeing the same. If a product page is cached with the token in it, it can\nbecome stale on a subsequent rendering if the session changes.\n\nTo check that you're safe, after having upgraded locally, go through the\nfollowing steps:\n\n- Enable cache on dev mode:\n\n```bash\nbin/rails dev:cache\n```\n\n- Visit the page for a variant with stock.\n\n- Reload that page several times.\n\n- Click on the \"Add to cart\"  button.\n\n- Remember to rerun `bin/rails dev:cache` to turn off cache again.\n\nNo error or session reset should happen.\n\nOtherwise, you can try with:\n\n- Revisiting how your session gets expired.\n- Changing the caching strategy to exclude the token.\n\n#### Using weaker CSRF protection strategies\n\nIt's also important to understand that a complete fix will only be in place\nwhen using the `:exception` forgery protection strategy. The\n`solidus_frontend` engine can't do pretty much anything otherwise. Using\nweaker CSRF strategies should be an informed and limited decision made by the\napplication team. After the upgrade:\n\n- An app using `:null_session` should also be safe, but there will be side\neffects. That strategy runs with a null object session. As such, no order and\nno user is found on it. A new `cart` state order is created in the database,\nassociated with no user. Next time the user visits the site, they won't find\nany difference in its cart state.\n\n- An app using `:reset_session` is not entirely safe. That strategy resets the\nsession. That means that registered users will be logged out. Next time a user\nvisits, they'll see the cart with the items added during the CSRF attack,\nalthough it won't be associated with their account in the case of registered\nusers.\n\n#### Reversing the update\n\nIf you still want to deploy the upgraded version before changing your\napplication code (if the latter is needed), you can add the following\nworkaround to your `config/application.rb` (however, take into account that\nyou'll keep being vulnerable):\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.skip_before_action :verify_authenticity_token, only:\n    [:populate]\nend\n```\n\n### Workarounds\n\nIf an upgrade is not an option, you can work around the issue by adding the\nfollowing to `config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.protect_from_forgery with: ApplicationController.forgery_protection_strategy.name.demodulize.underscore.to_sym,\n    only: [:populate]\nend\n```\n\nHowever, go through the same safety check detailed on \"Upgrade notes\" above.\n\n### References\n\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [How CSRF tokens are generated and validated on Rails](https://medium.com/rubyinside/a-deep-dive-into-csrf-protection-in-rails-19fa0a42c0ef)\n- [Solidus security](https://solidus.io/security/)\n",
-            "cvss_v3": 5.3,
-            "patched_versions": [
-                ">= 3.1.5",
-                "~> 3.0.5",
-                "~> 2.11.14"
-            ],
-            "related": {
-                "url": [
-                    "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
-                    "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
-                ]
-            }
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 5.3,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "CSRF forgery protection bypass in solidus_frontend"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-43846",
+        "STATE": "PUBLIC",
+        "TITLE": "CSRF forgery protection bypass for Spree::OrdersController#populate"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "solidus",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 3.1.0, < 3.1.5"
+                        },
+                        {
+                          "version_value": ">= 3.0.0, < 3.0.5"
+                        },
+                        {
+                          "version_value": "< 2.11.14"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "solidusio"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 5.3,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+          },
+          {
+            "name": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+            "refsource": "MISC",
+            "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
+          },
+          {
+            "name": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
+            "refsource": "MISC",
+            "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-h3fg-h5v3-vf8m",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-43846",
+      "cvss_v3": 5.3,
+      "date": "2022-01-06",
+      "description": "### Impact\nCSRF vulnerability that allows a malicious site to add an item to the user's\ncart without their knowledge.\n\nAll `solidus_frontend` versions are affected. If you're using your own\nstorefront, please, follow along to make sure you're not affected.\n\nTo reproduce the issue:\n\n- Pick the id for a variant with available stock. From the rails console:\n\n```ruby\nSpree::Variant.in_stock.pluck(:id)\n```\n\nSay we pick variant id `2`.\n\n- Launch your application, for instance,\n  on `http://localhost:3000`:\n\n```bash\nbin/rails server\n```\n\n- Open your browser dev tools.\n\n- Click on whatever link in your store.\n\n- Copy the value of the `Cookie` request header sent for the previous request\nfrom your browser dev tools.\n\n- Execute the following, using your previously selected variant id and the\nvalue of the `Cookie` header (notice how it doesn't contain any authentication\ntoken):\n\n```bash\ncurl -X POST -d \"variant_id=2&quantity=1\" -H \"Cookie:\nguest_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrWlRVMWRQWnpKMVZVdFNXRzlPVW1aaWJHTjZZa0VpIiwiZXhwIjpudWxsLCJwdXIiOiJjb29raWUuZ3Vlc3RfdG9rZW4ifX0%3D--5006ba5d346f621c760a29b6a797bf351d17d1b8;\n_sandbox_session=vhutu5%2FL9NmWrUpGc3DxrFA%2FFsQD1dHn1cNsD7nvE84zcjWf17Af4%2F%2F2Vab3md71b6KTb9NP6WktdXktpwH4eU01jEGIBXG5%2BMzW5nL0nb4W269qk1io4LYljvoOg8%2BZVll7oJCVkJLKKh0sSoS0Kg8j%2FCHHs%2BsShohP%2BGnA%2Bfr9Ub8H6HofpSmloSpsfHHygmX0ho03fEgzHJ4DD5wJctaNKwg7NhVikHh5kgIPPHl84OGCgv3p2oe9jR19HTxOKq7BtyvDd7XZsecWhkcfS8BPnvDDUWZG6qpAEFI5kWo81KkpSJ%2Bp6Q1HOo8%3D--n3G2vgaDG7VS%2B%2FhF--ZTjxBAkfGG3hpr4GRQ2S1Q%3D%3D;\n__profilin=p%3Dt\" http://localhost:3000/orders/populate\n```\n\n- Reload your browser and look at how your cart got updated.\n\n### Patches\n\nPlease, upgrade `solidus` to versions `3.1.5`, `3.0.5` or `2.11.14`.\n\nAfter upgrading, make sure you read the \"Upgrade notes\"  section below.\n\n### Upgrade notes\n\nThe patch adds CSRF token verification to the \"Add to cart\" action. Adding\nforgery protection to a form that missed it can have some side effects.\n\n#### `InvalidAuthenticityToken` errors\n\nIf you're using the `:exception` strategy, it's likely that after upgrading,\nyou'll see more `ActionController::InvalidAuthenticityToken` errors popping out\nin your logs. Due to browser-side cache, a form can be re-rendered and sent without\nany attached request cookie (for instance, when re-opening a mobile browser). That\nwill cause an authentication error, as the sent token won't match with the one in\nthe session (none in this case). That's a known problem in the Rails community (see\nhttps://github.com/rails/rails/issues/21948), and, at this point, there's no perfect\nsolution.\n\nAny attempt to mitigate the issue should be seen at the application level.\nFor an excellent survey of all the available options, take a look at\nhttps://github.com/betagouv/demarches-simplifiees.fr/blob/5b4f7f9ae9eaf0ac94008b62f7047e4714626cf9/doc/adr-csrf-forgery.md.\nThe latter is a third-party link. As the information is relevant here, we're going\nto copy it below, but it should be clear that all the credit goes to @kemenaran:\n\n> # Protecting against request forgery using CRSF tokens\n>\n> ## Context\n>\n> Rails has CSRF protection enabled by default, to protect against POST-based CSRF attacks.\n>\n> To protect from this, Rails stores two copies of a random token (the so-named CSRF token) on each request:\n> - one copy embedded in each HTML page,\n> - another copy in the user session.\n>\n> When performing a POST request, Rails checks that the two copies match \u2013 and\n> otherwise denies the request. This protects against an attacker that would\n> generate a form secretly pointing to our website: the attacker can't read\n> the token in the session, and so can't post a form with a valid token.\n>\n> The problem is that, much more often, this has false positives.\n> There are several cases for that, including:\n>\n> 1. The web browser (often mobile) loads a page containing a form, then is\n> closed by the user. Later, when the browser is re-opened, it restores the\n> page from the cache. But the session cookie has expired, and so is not\n> restored \u2013 so the copy of the CSRF token stored in the session is missing.\n> When the user submits the form, they get an \"InvalidAuthenticityToken\"\n> exception.\n>\n> 2. The user attempts to fill a form, and gets an error message (usually in\n> response to a POST request). They close the browser. When the browser is\n> re-opened, it attempts to restore the page. On Chrome this is blocked by the\n> browser, because the browser denies retrying a (probably non-idempotent)\n> POST request. Safari however happily retries the POST request \u2013 but without\n> sending any cookies (in an attempt to avoid having unexpected side-effects).\n> So the copy of the CSRF token in the session is missing (because no cookie\n> was sent), and the user get an \"InvalidAuthenticityToken\" exception.\n>\n> ## Options considered\n>\n> ### Extend the session cookie duration\n>\n> We can configure the session cookie to be valid for a longer time (like 2\n> weeks).\n>\n> Pros:\n> - It solves 1., because when the browser restores the page, the session\n> cookie is still valid.\n>\n> Cons:\n> - Users would be signed-in for a much longer time by default, which has\n> unacceptable security implications.\n> - It doesn't solve 2. (because Safari doesn't send any cookie when restoring\n> a page from a POST request)\n>\n> ### Change the cache parameters\n>\n> We can send a HTTP cache header stating 'Cache-Control: no-store, no-cache'.\n> This instructs the browser to never keep any copy of the page, and to always\n> make a request to the server to restore it.\n>\n> This solution was attempted during a year in production, and solved 1.\n> \u2013 but also introduced another type of InvalidAuthenticityToken errors. In\n> that scenario, the user attempts to fill a form, and gets an error message\n> (usually in response to a POST request). They then navigate on another domain (like\n> France Connect), then hit the \"Back\" button. Crossing back the domain boundary\n> may cause the browser to either block the request or retry an invalid POST request.\n>\n> Pros:\n> - It solves 1., because on relaunch the browser requests a fresh page again\n> (instead of serving it from its cache), thus retrieving a fresh session and\n> a fresh matching CSRF token.\n>\n> Cons:\n> - It doesn't solve 2.\n> - It causes another type of InvalidAuthenticityToken errors.\n>\n> ### Using a null-session strategy\n>\n> We can change the default protect_from_forgery strategy to :null_session.\n> This makes the current request use an empty session for the request duration.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page\n> when a stale form is submitted.\n>\n> Cons:\n> - The user is asked to sign-in only after filling and submitting the form,\n> losing their time and data\n> - The user will not be redirected to their original page after signing-in\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null\n> session is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n>\n> ### Using a reset-session strategy\n>\n> We can change the default protect_from_forgery strategy to :reset_session.\n> This clears the user session permanently, logging them out until they log in\n> again.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted.\n>\n> Cons:\n> - A forgery error in a browser tab will disconnect the user in all its open\n> tabs\n> - It has potential security implications: as the (potentically malicious)\n> request runs anyway, variables cached by a controller before the Null session\n> is created may allow the form submission to succeed anyway\n> (https://www.veracode.com/blog/managing-appsec/when-rails-protectfromforgery-fails)\n> - It allows an attacker to disconnect an user on demand, which is not only\n> inconvenient, but also has security implication (the attacker could then log\n> the user on it's own attacker account, pretending to be the user account)\n>\n> ### Redirect to login form\n>\n> When a forgery error occurs, we can instead redirect to the login form.\n>\n> Pros:\n> - It kind of solves 1., by redirecting to a \"Please sign-in\" page when a\n> stale form is submitted (but the user data is lost).\n> - It kind of solves 2., by redirecting to a \"Please sign-in\" page when a\n> previously POSTed form is reloaded.\n>\n> Cons:\n> - Not all forms require authentication \u2013 so for\n> public forms there is no point redirecting to the login form.\n> - The user will not be redirected to their original page after signing-in\n> (because setting the redirect path is a state-changing action, and it is\n> dangerous to let an unauthorized request changing the state \u2013 an attacker\n> could control the path where an user is automatically redirected to.)\n> - The implementation is finicky, and may introduce security errors.\n> For instance, a naive implementation that catches the exception and\n> redirect_to the sign-in page will prevent Devise from running a cleanup code\n> \u2013 which means the user will still be logged, and the CSRF protection is\n> bypassed. However a well-tested implementation that lets Devise code run\n> should avoid these pittfalls.\n>\n> ### Using a long-lived cookie for CSRF tokens\n>\n> Instead of storing the CSRF token in the session cookie (which is deleted\n> when the browser is closed), we can instead store it in a longer-lived\n> cookie. For this we need to patch Rails.\n>\n> Pros:\n> - It solves 1., because when the user submits a stale form, even if the\n> session cookie because stale, the long-lived CSRF cookie is still valid.\n>\n> Cons:\n> - It doesn't solve 2., because when Safari retries a POST request, it sends\n> none of the cookies (not even long-lived ones).\n> - Patching Rails may introduce security issues (now or in the future)\n\n#### Broken behavior due to session expiration + template cache\n\nAlthough pretty unlikely, you should make sure that your current setup for\ncache/session expiration is compatible. The upgrade can break the addition\nof products to the cart if both:\n\n- The \"Add to cart\" form is being cached (usually along with the variant\ninformation).\n\n- A user session is reset at every or every few requests.\n\nThe token validation depends on the issuing and consuming sessions\nbeing the same. If a product page is cached with the token in it, it can\nbecome stale on a subsequent rendering if the session changes.\n\nTo check that you're safe, after having upgraded locally, go through the\nfollowing steps:\n\n- Enable cache on dev mode:\n\n```bash\nbin/rails dev:cache\n```\n\n- Visit the page for a variant with stock.\n\n- Reload that page several times.\n\n- Click on the \"Add to cart\"  button.\n\n- Remember to rerun `bin/rails dev:cache` to turn off cache again.\n\nNo error or session reset should happen.\n\nOtherwise, you can try with:\n\n- Revisiting how your session gets expired.\n- Changing the caching strategy to exclude the token.\n\n#### Using weaker CSRF protection strategies\n\nIt's also important to understand that a complete fix will only be in place\nwhen using the `:exception` forgery protection strategy. The\n`solidus_frontend` engine can't do pretty much anything otherwise. Using\nweaker CSRF strategies should be an informed and limited decision made by the\napplication team. After the upgrade:\n\n- An app using `:null_session` should also be safe, but there will be side\neffects. That strategy runs with a null object session. As such, no order and\nno user is found on it. A new `cart` state order is created in the database,\nassociated with no user. Next time the user visits the site, they won't find\nany difference in its cart state.\n\n- An app using `:reset_session` is not entirely safe. That strategy resets the\nsession. That means that registered users will be logged out. Next time a user\nvisits, they'll see the cart with the items added during the CSRF attack,\nalthough it won't be associated with their account in the case of registered\nusers.\n\n#### Reversing the update\n\nIf you still want to deploy the upgraded version before changing your\napplication code (if the latter is needed), you can add the following\nworkaround to your `config/application.rb` (however, take into account that\nyou'll keep being vulnerable):\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.skip_before_action :verify_authenticity_token, only:\n    [:populate]\nend\n```\n\n### Workarounds\n\nIf an upgrade is not an option, you can work around the issue by adding the\nfollowing to `config/application.rb`:\n\n```ruby\nconfig.after_initialize do\n  Spree::OrdersController.protect_from_forgery with: ApplicationController.forgery_protection_strategy.name.demodulize.underscore.to_sym,\n    only: [:populate]\nend\n```\n\nHowever, go through the same safety check detailed on \"Upgrade notes\" above.\n\n### References\n\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [How CSRF tokens are generated and validated on Rails](https://medium.com/rubyinside/a-deep-dive-into-csrf-protection-in-rails-19fa0a42c0ef)\n- [Solidus security](https://solidus.io/security/)\n",
+      "gem": "solidus_frontend",
+      "ghsa": "h3fg-h5v3-vf8m",
+      "patched_versions": [
+        ">= 3.1.5",
+        "~> 3.0.5",
+        "~> 2.11.14"
+      ],
+      "related": {
+        "url": [
+          "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+          "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
+        ]
+      },
+      "title": "CSRF forgery protection bypass in solidus_frontend",
+      "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
+          "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2021-12-29",
+          "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
+          "fixed_versions": [
+            "2.11.14",
+            "3.0.5",
+            "3.1.5"
+          ],
+          "identifier": "CVE-2021-43846",
+          "identifiers": [
+            "CVE-2021-43846",
+            "GHSA-h3fg-h5v3-vf8m"
+          ],
+          "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
+          "package_slug": "gem/solidus_api",
+          "pubdate": "2021-12-20",
+          "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
+          "title": "Cross-Site Request Forgery (CSRF)",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
+            "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+            "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
+            "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+          ],
+          "uuid": "6ffab43a-cce4-4365-96b6-eb60f9222430"
+        },
+        {
+          "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
+          "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2021-12-29",
+          "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
+          "fixed_versions": [
+            "2.11.14",
+            "3.0.5",
+            "3.1.5"
+          ],
+          "identifier": "CVE-2021-43846",
+          "identifiers": [
+            "CVE-2021-43846",
+            "GHSA-h3fg-h5v3-vf8m"
+          ],
+          "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
+          "package_slug": "gem/solidus_core",
+          "pubdate": "2021-12-20",
+          "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
+          "title": "Cross-Site Request Forgery (CSRF)",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
+            "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+            "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
+            "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+          ],
+          "uuid": "26343718-5888-4ce4-b111-7f0161f4cca1"
+        },
+        {
+          "affected_range": "<2.11.14||>=3.0.0 <3.0.5||>=3.1.0 <3.1.5",
+          "affected_versions": "All versions before 2.11.14, all versions starting from 3.0.0 before 3.0.5, all versions starting from 3.1.0 before 3.1.5",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2021-12-29",
+          "description": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory.",
+          "fixed_versions": [
+            "2.11.14",
+            "3.0.5",
+            "3.1.5"
+          ],
+          "identifier": "CVE-2021-43846",
+          "identifiers": [
+            "CVE-2021-43846",
+            "GHSA-h3fg-h5v3-vf8m"
+          ],
+          "not_impacted": "All versions starting from 2.11.14 before 3.0.0, all versions starting from 3.0.5 before 3.1.0, all versions starting from 3.1.5",
+          "package_slug": "gem/solidus_frontend",
+          "pubdate": "2021-12-20",
+          "solution": "Upgrade to versions 2.11.14, 3.0.5, 3.1.5 or above.",
+          "title": "Cross-Site Request Forgery (CSRF)",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-43846",
+            "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+            "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
+            "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+          ],
+          "uuid": "307ae914-ff26-4a03-8d62-b1708dfe6804"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.11.14",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.0.5",
+                "versionStartIncluding": "3.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.1.5",
+                "versionStartIncluding": "3.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-43846"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "`solidus_frontend` is the cart and storefront for the Solidus e-commerce project. Versions of `solidus_frontend` prior to 3.1.5, 3.0.5, and 2.11.14 contain a cross-site request forgery (CSRF) vulnerability that allows a malicious site to add an item to the user's cart without their knowledge. Versions 3.1.5, 3.0.5, and 2.11.14 contain a patch for this issue. The patch adds CSRF token verification to the \"Add to cart\" action. Adding forgery protection to a form that missed it can have some side effects. Other CSRF protection strategies as well as a workaround involving modifcation to config/application.rb` are available. More details on these mitigations are available in the GitHub Security Advisory."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-352"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus/commit/4d17cacf066d9492fc04eb3a0b16084b47376d81"
+            },
+            {
+              "name": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus/commit/a1b9bf7f24f9b8684fc4d943eacb02b1926c77c6"
+            },
+            {
+              "name": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus/security/advisories/GHSA-h3fg-h5v3-vf8m"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2021-12-29T18:26Z",
+      "publishedDate": "2021-12-20T22:15Z"
+    }
+  }
 }

@@ -1,224 +1,241 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-28638",
-        "id": "GSD-2023-28638"
+  "GSD": {
+    "alias": "CVE-2023-28638",
+    "id": "GSD-2023-28638"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-28638",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "Snappier",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "= 1.1.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "brantburnett"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Snappier is a high performance C# implementation of the Snappy compression algorithm. This is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same. There are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer. This should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success. Note that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service. This issue has been patched in release 1.1.1. Users are advised to upgrade. Users unable to upgrade may pin buffers to a fixed location before using them for compression or decompression to mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-119",
-                                "lang": "eng",
-                                "value": "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
-                        "refsource": "MISC",
-                        "url": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w"
-                    },
-                    {
-                        "name": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
-                        "refsource": "MISC",
-                        "url": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-838x-pcvx-6p5w",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "[1.1.0]",
-                    "affected_versions": "Version 1.1.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-937"
-                    ],
-                    "date": "2023-03-27",
-                    "description": "### Impact\nThis is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same.\n\nThere are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer.\n\nThis should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success.\n\nNote that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service.\n\n### Patches\nThis is patched in release 1.1.1.\n\n### Workarounds\nPinning any buffers to a fixed location before using them for compression or decompression should mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned.\n",
-                    "fixed_versions": [
-                        "1.1.1"
-                    ],
-                    "identifier": "CVE-2023-28638",
-                    "identifiers": [
-                        "GHSA-838x-pcvx-6p5w",
-                        "CVE-2023-28638"
-                    ],
-                    "not_impacted": "All versions before 1.1.0, all versions after 1.1.0",
-                    "package_slug": "nuget/Snappier",
-                    "pubdate": "2023-03-27",
-                    "solution": "Upgrade to version 1.1.1 or above.",
-                    "title": "Snappier vulnerable to buffer overrun due to improper restriction of operations within the bounds of a memory buffer",
-                    "urls": [
-                        "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-28638",
-                        "https://github.com/brantburnett/Snappier/pull/73",
-                        "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
-                        "https://github.com/brantburnett/Snappier/releases/tag/release%2F1.1.1",
-                        "https://github.com/advisories/GHSA-838x-pcvx-6p5w"
-                    ],
-                    "uuid": "478eec62-20f8-4e74-9f7e-425e3f9599ee"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:snappier_project:snappier:1.1.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-28638"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Snappier is a high performance C# implementation of the Snappy compression algorithm. This is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same. There are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer. This should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success. Note that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service. This issue has been patched in release 1.1.1. Users are advised to upgrade. Users unable to upgrade may pin buffers to a fixed location before using them for compression or decompression to mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-119"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f"
-                        },
-                        {
-                            "name": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 5.9,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-04-03T13:19Z",
-            "publishedDate": "2023-03-27T21:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-28638"
+      ],
+      "details": "Snappier is a high performance C# implementation of the Snappy compression algorithm. This is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same. There are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer. This should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success. Note that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service. This issue has been patched in release 1.1.1. Users are advised to upgrade. Users unable to upgrade may pin buffers to a fixed location before using them for compression or decompression to mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned.",
+      "id": "GSD-2023-28638",
+      "modified": "2023-12-13T01:20:47.790171Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-28638",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Snappier",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "= 1.1.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "brantburnett"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Snappier is a high performance C# implementation of the Snappy compression algorithm. This is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same. There are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer. This should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success. Note that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service. This issue has been patched in release 1.1.1. Users are advised to upgrade. Users unable to upgrade may pin buffers to a fixed location before using them for compression or decompression to mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-119",
+                "lang": "eng",
+                "value": "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
+            "refsource": "MISC",
+            "url": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w"
+          },
+          {
+            "name": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
+            "refsource": "MISC",
+            "url": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-838x-pcvx-6p5w",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "[1.1.0]",
+          "affected_versions": "Version 1.1.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-937"
+          ],
+          "date": "2023-03-27",
+          "description": "### Impact\nThis is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same.\n\nThere are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer.\n\nThis should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success.\n\nNote that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service.\n\n### Patches\nThis is patched in release 1.1.1.\n\n### Workarounds\nPinning any buffers to a fixed location before using them for compression or decompression should mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned.\n",
+          "fixed_versions": [
+            "1.1.1"
+          ],
+          "identifier": "CVE-2023-28638",
+          "identifiers": [
+            "GHSA-838x-pcvx-6p5w",
+            "CVE-2023-28638"
+          ],
+          "not_impacted": "All versions before 1.1.0, all versions after 1.1.0",
+          "package_slug": "nuget/Snappier",
+          "pubdate": "2023-03-27",
+          "solution": "Upgrade to version 1.1.1 or above.",
+          "title": "Snappier vulnerable to buffer overrun due to improper restriction of operations within the bounds of a memory buffer",
+          "urls": [
+            "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-28638",
+            "https://github.com/brantburnett/Snappier/pull/73",
+            "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
+            "https://github.com/brantburnett/Snappier/releases/tag/release%2F1.1.1",
+            "https://github.com/advisories/GHSA-838x-pcvx-6p5w"
+          ],
+          "uuid": "478eec62-20f8-4e74-9f7e-425e3f9599ee"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:snappier_project:snappier:1.1.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-28638"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Snappier is a high performance C# implementation of the Snappy compression algorithm. This is a buffer overrun vulnerability that can affect any user of Snappier 1.1.0. In this release, much of the code was rewritten to use byte references rather than pointers to pinned buffers. This change generally improves performance and reduces workload on the garbage collector. However, when the garbage collector performs compaction and rearranges memory, it must update any byte references on the stack to refer to the updated location. The .NET garbage collector can only update these byte references if they still point within the buffer or to a point one byte past the end of the buffer. If they point outside this area, the buffer itself may be moved while the byte reference stays the same. There are several places in 1.1.0 where byte references very briefly point outside the valid areas of buffers. These are at locations in the code being used for buffer range checks. While the invalid references are never dereferenced directly, if a GC compaction were to occur during the brief window when they are on the stack then it could invalidate the buffer range check and allow other operations to overrun the buffer. This should be very difficult for an attacker to trigger intentionally. It would require a repetitive bulk attack with the hope that a GC compaction would occur at precisely the right moment during one of the requests. However, one of the range checks with this problem is a check based on input data in the decompression buffer, meaning malformed input data could be used to increase the chance of success. Note that any resulting buffer overrun is likely to cause access to protected memory, which will then cause an exception and the process to be terminated. Therefore, the most likely result of an attack is a denial of service. This issue has been patched in release 1.1.1. Users are advised to upgrade. Users unable to upgrade may pin buffers to a fixed location before using them for compression or decompression to mitigate some, but not all, of these cases. At least one temporary decompression buffer is internal to the library and never pinned."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-119"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/brantburnett/Snappier/commit/d7ac5267b5b18439e6d108f8138edf48c436b32f"
+            },
+            {
+              "name": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/brantburnett/Snappier/security/advisories/GHSA-838x-pcvx-6p5w"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-04-03T13:19Z",
+      "publishedDate": "2023-03-27T21:15Z"
+    }
+  }
 }

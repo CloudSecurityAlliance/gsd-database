@@ -1,213 +1,230 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-39347",
-        "id": "GSD-2023-39347"
+  "GSD": {
+    "alias": "CVE-2023-39347",
+    "id": "GSD-2023-39347"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-39347",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-39347"
+      ],
+      "details": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. An attacker with the ability to update pod labels can cause Cilium to apply incorrect network policies. This issue arises due to the fact that on pod update, Cilium incorrectly uses user-provided pod labels to select the policies which apply to the workload in question. This can affect Cilium network policies that use the namespace, service account or cluster constructs to restrict traffic, Cilium clusterwide network policies that use Cilium namespace labels to select the Pod and Kubernetes network policies. Non-existent construct names can be provided, which bypass all network policies applicable to the construct. For example, providing a pod with a non-existent namespace as the value of the `io.kubernetes.pod.namespace` label results in none of the namespaced CiliumNetworkPolicies applying to the pod in question. This attack requires the attacker to have Kubernetes API Server access, as described in the Cilium Threat Model. This issue has been resolved in: Cilium versions 1.14.2, 1.13.7, and 1.12.14. Users are advised to upgrade. As a workaround an admission webhook can be used to prevent pod label updates to the `k8s:io.kubernetes.pod.namespace` and `io.cilium.k8s.policy.*` keys.",
+      "id": "GSD-2023-39347",
+      "modified": "2023-12-13T01:20:33.361267Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-39347",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "cilium",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "cilium",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 1.14.0, < 1.14.2"
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 1.13.0, < 1.13.7 "
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.12.14"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "cilium"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. An attacker with the ability to update pod labels can cause Cilium to apply incorrect network policies. This issue arises due to the fact that on pod update, Cilium incorrectly uses user-provided pod labels to select the policies which apply to the workload in question. This can affect Cilium network policies that use the namespace, service account or cluster constructs to restrict traffic, Cilium clusterwide network policies that use Cilium namespace labels to select the Pod and Kubernetes network policies. Non-existent construct names can be provided, which bypass all network policies applicable to the construct. For example, providing a pod with a non-existent namespace as the value of the `io.kubernetes.pod.namespace` label results in none of the namespaced CiliumNetworkPolicies applying to the pod in question. This attack requires the attacker to have Kubernetes API Server access, as described in the Cilium Threat Model. This issue has been resolved in: Cilium versions 1.14.2, 1.13.7, and 1.12.14. Users are advised to upgrade. As a workaround an admission webhook can be used to prevent pod label updates to the `k8s:io.kubernetes.pod.namespace` and `io.cilium.k8s.policy.*` keys."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "ADJACENT_NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.6,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:L/I:N/A:H",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-345",
-                                "lang": "eng",
-                                "value": "CWE-345: Insufficient Verification of Data Authenticity"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww",
-                        "refsource": "MISC",
-                        "url": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww"
-                    },
-                    {
-                        "name": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker",
-                        "refsource": "MISC",
-                        "url": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-gj2r-phwg-6rww",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.12.14",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.14.2",
-                                "versionStartIncluding": "1.14.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.13.7",
-                                "versionStartIncluding": "1.13.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-39347"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. An attacker with the ability to update pod labels can cause Cilium to apply incorrect network policies. This issue arises due to the fact that on pod update, Cilium incorrectly uses user-provided pod labels to select the policies which apply to the workload in question. This can affect Cilium network policies that use the namespace, service account or cluster constructs to restrict traffic, Cilium clusterwide network policies that use Cilium namespace labels to select the Pod and Kubernetes network policies. Non-existent construct names can be provided, which bypass all network policies applicable to the construct. For example, providing a pod with a non-existent namespace as the value of the `io.kubernetes.pod.namespace` label results in none of the namespaced CiliumNetworkPolicies applying to the pod in question. This attack requires the attacker to have Kubernetes API Server access, as described in the Cilium Threat Model. This issue has been resolved in: Cilium versions 1.14.2, 1.13.7, and 1.12.14. Users are advised to upgrade. As a workaround an admission webhook can be used to prevent pod label updates to the `k8s:io.kubernetes.pod.namespace` and `io.cilium.k8s.policy.*` keys."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-345"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww"
+                          "version_affected": "=",
+                          "version_value": ">= 1.14.0, < 1.14.2"
                         },
                         {
-                            "name": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Technical Description",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker"
+                          "version_affected": "=",
+                          "version_value": ">= 1.13.0, < 1.13.7 "
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.12.14"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "ADJACENT_NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.0,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.3,
-                    "impactScore": 6.0
-                }
-            },
-            "lastModifiedDate": "2023-09-29T15:54Z",
-            "publishedDate": "2023-09-27T15:18Z"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "cilium"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. An attacker with the ability to update pod labels can cause Cilium to apply incorrect network policies. This issue arises due to the fact that on pod update, Cilium incorrectly uses user-provided pod labels to select the policies which apply to the workload in question. This can affect Cilium network policies that use the namespace, service account or cluster constructs to restrict traffic, Cilium clusterwide network policies that use Cilium namespace labels to select the Pod and Kubernetes network policies. Non-existent construct names can be provided, which bypass all network policies applicable to the construct. For example, providing a pod with a non-existent namespace as the value of the `io.kubernetes.pod.namespace` label results in none of the namespaced CiliumNetworkPolicies applying to the pod in question. This attack requires the attacker to have Kubernetes API Server access, as described in the Cilium Threat Model. This issue has been resolved in: Cilium versions 1.14.2, 1.13.7, and 1.12.14. Users are advised to upgrade. As a workaround an admission webhook can be used to prevent pod label updates to the `k8s:io.kubernetes.pod.namespace` and `io.cilium.k8s.policy.*` keys."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "ADJACENT_NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.6,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:L/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-345",
+                "lang": "eng",
+                "value": "CWE-345: Insufficient Verification of Data Authenticity"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww",
+            "refsource": "MISC",
+            "url": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww"
+          },
+          {
+            "name": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker",
+            "refsource": "MISC",
+            "url": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-gj2r-phwg-6rww",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.12.14",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.14.2",
+                "versionStartIncluding": "1.14.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:cilium:cilium:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.13.7",
+                "versionStartIncluding": "1.13.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-39347"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. An attacker with the ability to update pod labels can cause Cilium to apply incorrect network policies. This issue arises due to the fact that on pod update, Cilium incorrectly uses user-provided pod labels to select the policies which apply to the workload in question. This can affect Cilium network policies that use the namespace, service account or cluster constructs to restrict traffic, Cilium clusterwide network policies that use Cilium namespace labels to select the Pod and Kubernetes network policies. Non-existent construct names can be provided, which bypass all network policies applicable to the construct. For example, providing a pod with a non-existent namespace as the value of the `io.kubernetes.pod.namespace` label results in none of the namespaced CiliumNetworkPolicies applying to the pod in question. This attack requires the attacker to have Kubernetes API Server access, as described in the Cilium Threat Model. This issue has been resolved in: Cilium versions 1.14.2, 1.13.7, and 1.12.14. Users are advised to upgrade. As a workaround an admission webhook can be used to prevent pod label updates to the `k8s:io.kubernetes.pod.namespace` and `io.cilium.k8s.policy.*` keys."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-345"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/cilium/cilium/security/advisories/GHSA-gj2r-phwg-6rww"
+            },
+            {
+              "name": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Technical Description",
+                "Vendor Advisory"
+              ],
+              "url": "https://docs.cilium.io/en/latest/security/threat-model/#kubernetes-api-server-attacker"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "ADJACENT_NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.0,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.3,
+          "impactScore": 6.0
+        }
+      },
+      "lastModifiedDate": "2023-09-29T15:54Z",
+      "publishedDate": "2023-09-27T15:18Z"
     }
+  }
 }

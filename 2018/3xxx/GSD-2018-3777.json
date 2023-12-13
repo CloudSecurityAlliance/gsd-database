@@ -1,259 +1,265 @@
 {
-    "GSD": {
-        "alias": "CVE-2018-3777",
-        "description": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests.",
-        "id": "GSD-2018-3777"
+  "GSD": {
+    "alias": "CVE-2018-3777",
+    "description": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests.",
+    "id": "GSD-2018-3777"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2018-3777",
-            "modified": "2018-07-27T00:00:00.000Z",
-            "published": "2018-07-27T00:00:00.000Z",
-            "aliases": [
-                "CVE-2018-3777",
-                "GHSA-534w-937m-v7x3"
-            ],
-            "summary": "Insufficient URI encoding in restforce",
-            "details": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.8
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "restforce",
-                        "purl": "pkg:gem/restforce"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/restforce/restforce/pull/392"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "restforce",
+            "purl": "pkg:gem/restforce"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "DATE_PUBLIC": "2018-07-30T00:00:00",
-                "ID": "CVE-2018-3777",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "restforce ruby gem",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "3.0.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "https://github.com/restforce"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Improper Input Validation (CWE-20)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/restforce/restforce/pull/392",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/restforce/restforce/pull/392"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<3.0.0",
-                    "affected_versions": "All versions before 3.0.0",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-172",
-                        "CWE-937"
-                    ],
-                    "date": "2019-10-09",
-                    "description": "Insufficient URI encoding in restforce allows attacker to inject arbitrary parameters into Salesforce API requests.",
-                    "fixed_versions": [
-                        "3.0.0"
-                    ],
-                    "identifier": "CVE-2018-3777",
-                    "identifiers": [
-                        "CVE-2018-3777"
-                    ],
-                    "not_impacted": "All versions starting from 3.0.0",
-                    "package_slug": "gem/restforce",
-                    "pubdate": "2018-08-03",
-                    "solution": "Upgrade to version 3.0.0 or above.",
-                    "title": "Encoding Error",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2018-3777",
-                        "https://github.com/restforce/restforce/pull/392"
-                    ],
-                    "uuid": "7b3af806-5b4c-4523-86e0-4f4b6647b57d"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:restforce:restforce:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2018-3777"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-172"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/restforce/restforce/pull/392",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Issue Tracking",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/restforce/restforce/pull/392"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": true,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 7.5,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "HIGH",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 9.8,
-                        "baseSeverity": "CRITICAL",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-02-28T17:55Z",
-            "publishedDate": "2018-08-03T20:29Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "restforce",
-            "cve": "2018-3777",
-            "ghsa": "534w-937m-v7x3",
-            "url": "https://github.com/restforce/restforce/pull/392",
-            "title": "Insufficient URI encoding in restforce",
-            "date": "2018-07-27",
-            "description": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
-            "cvss_v3": 9.8,
-            "patched_versions": [
-                "~> 2.5.4",
-                ">= 3.0.0"
-            ]
+      ],
+      "aliases": [
+        "CVE-2018-3777",
+        "GHSA-534w-937m-v7x3"
+      ],
+      "details": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
+      "id": "GSD-2018-3777",
+      "modified": "2018-07-27T00:00:00.000Z",
+      "published": "2018-07-27T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/restforce/restforce/pull/392"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.8,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Insufficient URI encoding in restforce"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "DATE_PUBLIC": "2018-07-30T00:00:00",
+        "ID": "CVE-2018-3777",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "restforce ruby gem",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "3.0.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "https://github.com/restforce"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Improper Input Validation (CWE-20)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/restforce/restforce/pull/392",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/restforce/restforce/pull/392"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2018-3777",
+      "cvss_v3": 9.8,
+      "date": "2018-07-27",
+      "description": "A flaw in how restforce constructs URL's may allow an attacker to inject\nadditional parameters into Salesforce API requests.\n\nImpact\n------\nThis flaw is only exploitable in applications that pass user input directly\nto restforce's select, find, describe, update, upsert, and destroy methods.\nVulnerable code might look like:\n\n```ruby\nclient.select('SomeSalesForceObject', params[:some-id],\n   ...)\n```\n\nIn such an application, attackers could pass `0016000000MRatd/describe`\nas a request parameter, causing the server to make a request to a different\nendpoint than the server is designed to handle. Since the Salesforce REST\nAPI supports overriding HTTP methods via a request parameter, an attacker\ncould also cause the client's `select()` method to modify data, by passing\n`0016000000MRatd/?_HttpMethod=PATCH&other-query-params=...`.\n\nWorkarounds\n------\nIf possible, applications should track salesforce IDs internally, rather than\npassing user-supplied IDs to salesforce. Such practice mitigates this\nvulnerability, and in general is desirable for ensuring strong access control.\n",
+      "gem": "restforce",
+      "ghsa": "534w-937m-v7x3",
+      "patched_versions": [
+        "~> 2.5.4",
+        ">= 3.0.0"
+      ],
+      "title": "Insufficient URI encoding in restforce",
+      "url": "https://github.com/restforce/restforce/pull/392"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<3.0.0",
+          "affected_versions": "All versions before 3.0.0",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-172",
+            "CWE-937"
+          ],
+          "date": "2019-10-09",
+          "description": "Insufficient URI encoding in restforce allows attacker to inject arbitrary parameters into Salesforce API requests.",
+          "fixed_versions": [
+            "3.0.0"
+          ],
+          "identifier": "CVE-2018-3777",
+          "identifiers": [
+            "CVE-2018-3777"
+          ],
+          "not_impacted": "All versions starting from 3.0.0",
+          "package_slug": "gem/restforce",
+          "pubdate": "2018-08-03",
+          "solution": "Upgrade to version 3.0.0 or above.",
+          "title": "Encoding Error",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2018-3777",
+            "https://github.com/restforce/restforce/pull/392"
+          ],
+          "uuid": "7b3af806-5b4c-4523-86e0-4f4b6647b57d"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:restforce:restforce:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2018-3777"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Insufficient URI encoding in restforce before 3.0.0 allows attacker to inject arbitrary parameters into Salesforce API requests."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-172"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/restforce/restforce/pull/392",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Issue Tracking",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/restforce/restforce/pull/392"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": true,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 7.5,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "HIGH",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-02-28T17:55Z",
+      "publishedDate": "2018-08-03T20:29Z"
+    }
+  }
 }

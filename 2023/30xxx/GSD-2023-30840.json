@@ -1,277 +1,294 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-30840",
-        "id": "GSD-2023-30840"
+  "GSD": {
+    "alias": "CVE-2023-30840",
+    "id": "GSD-2023-30840"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-30840",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "fluid",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 0.7.0, < 0.8.6"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "fluid-cloudnative"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 5.8,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "HIGH",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:L",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-863",
-                                "lang": "eng",
-                                "value": "CWE-863: Incorrect Authorization"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v"
-                    },
-                    {
-                        "name": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550"
-                    },
-                    {
-                        "name": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149"
-                    },
-                    {
-                        "name": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-93xx-cvmc-9w3v",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=v0.7.0 <v0.8.6",
-                    "affected_versions": "All versions starting from 0.7.0 before 0.8.6",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-863",
-                        "CWE-937"
-                    ],
-                    "date": "2023-05-09",
-                    "description": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended.",
-                    "fixed_versions": [
-                        "v0.8.6"
-                    ],
-                    "identifier": "CVE-2023-30840",
-                    "identifiers": [
-                        "GHSA-93xx-cvmc-9w3v",
-                        "CVE-2023-30840"
-                    ],
-                    "not_impacted": "All versions before 0.7.0, all versions starting from 0.8.6",
-                    "package_slug": "go/github.com/fluid-cloudnative/fluid",
-                    "pubdate": "2023-05-09",
-                    "solution": "Upgrade to version 0.8.6 or above.",
-                    "title": "Incorrect Authorization",
-                    "urls": [
-                        "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-30840",
-                        "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
-                        "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
-                        "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
-                        "https://github.com/advisories/GHSA-93xx-cvmc-9w3v"
-                    ],
-                    "uuid": "cf69e2fb-9ac3-4a49-b42c-e187aca6ee87",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "a92a205a48609f4d51e654583c04d2c21745553e",
-                                "tags": [
-                                    "v0.7.0"
-                                ],
-                                "timestamp": "20220302140219"
-                            },
-                            "number": "v0.7.0"
-                        },
-                        {
-                            "commit": {
-                                "sha": "91c05c32db131997b5ca065e869c9918a125c149",
-                                "tags": [
-                                    "v0.8.6"
-                                ],
-                                "timestamp": "20230508064624"
-                            },
-                            "number": "v0.8.6"
-                        }
-                    ]
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:linuxfoundation:fluid:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.8.6",
-                                "versionStartIncluding": "0.7.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-30840"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-863"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149"
-                        },
-                        {
-                            "name": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6"
-                        },
-                        {
-                            "name": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550"
-                        },
-                        {
-                            "name": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "LOCAL",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 1.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2023-05-15T18:32Z",
-            "publishedDate": "2023-05-08T18:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-30840"
+      ],
+      "details": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended.",
+      "id": "GSD-2023-30840",
+      "modified": "2023-12-13T01:20:52.343630Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-30840",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "fluid",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 0.7.0, < 0.8.6"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "fluid-cloudnative"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "LOW",
+            "baseScore": 5.8,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "HIGH",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-863",
+                "lang": "eng",
+                "value": "CWE-863: Incorrect Authorization"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
+            "refsource": "MISC",
+            "url": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v"
+          },
+          {
+            "name": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
+            "refsource": "MISC",
+            "url": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550"
+          },
+          {
+            "name": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
+            "refsource": "MISC",
+            "url": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149"
+          },
+          {
+            "name": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
+            "refsource": "MISC",
+            "url": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-93xx-cvmc-9w3v",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=v0.7.0 <v0.8.6",
+          "affected_versions": "All versions starting from 0.7.0 before 0.8.6",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-863",
+            "CWE-937"
+          ],
+          "date": "2023-05-09",
+          "description": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended.",
+          "fixed_versions": [
+            "v0.8.6"
+          ],
+          "identifier": "CVE-2023-30840",
+          "identifiers": [
+            "GHSA-93xx-cvmc-9w3v",
+            "CVE-2023-30840"
+          ],
+          "not_impacted": "All versions before 0.7.0, all versions starting from 0.8.6",
+          "package_slug": "go/github.com/fluid-cloudnative/fluid",
+          "pubdate": "2023-05-09",
+          "solution": "Upgrade to version 0.8.6 or above.",
+          "title": "Incorrect Authorization",
+          "urls": [
+            "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-30840",
+            "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
+            "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
+            "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
+            "https://github.com/advisories/GHSA-93xx-cvmc-9w3v"
+          ],
+          "uuid": "cf69e2fb-9ac3-4a49-b42c-e187aca6ee87",
+          "versions": [
+            {
+              "commit": {
+                "sha": "a92a205a48609f4d51e654583c04d2c21745553e",
+                "tags": [
+                  "v0.7.0"
+                ],
+                "timestamp": "20220302140219"
+              },
+              "number": "v0.7.0"
+            },
+            {
+              "commit": {
+                "sha": "91c05c32db131997b5ca065e869c9918a125c149",
+                "tags": [
+                  "v0.8.6"
+                ],
+                "timestamp": "20230508064624"
+              },
+              "number": "v0.8.6"
+            }
+          ]
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:linuxfoundation:fluid:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.8.6",
+                "versionStartIncluding": "0.7.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-30840"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Fluid is an open source Kubernetes-native distributed dataset orchestrator and accelerator for data-intensive applications. Starting in version 0.7.0 and prior to version 0.8.6, if a malicious user gains control of a Kubernetes node running fluid csi pod (controlled by the `csi-nodeplugin-fluid` node-daemonset), they can leverage the fluid-csi service account to modify specs of all the nodes in the cluster. However, since this service account lacks `list node` permissions, the attacker may need to use other techniques to identify vulnerable nodes.\n\nOnce the attacker identifies and modifies the node specs, they can manipulate system-level-privileged components to access all secrets in the cluster or execute pods on other nodes. This allows them to elevate privileges beyond the compromised node and potentially gain full privileged access to the whole cluster.\n\nTo exploit this vulnerability, the attacker can make all other nodes unschedulable (for example, patch node with taints) and wait for system-critical components with high privilege to appear on the compromised node. However, this attack requires two prerequisites: a compromised node and identifying all vulnerable nodes through other means.\n\nVersion 0.8.6 contains a patch for this issue. As a workaround, delete the `csi-nodeplugin-fluid` daemonset in `fluid-system` namespace and avoid using CSI mode to mount FUSE file systems. Alternatively, using sidecar mode to mount FUSE file systems is recommended."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-863"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/fluid-cloudnative/fluid/commit/91c05c32db131997b5ca065e869c9918a125c149"
+            },
+            {
+              "name": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://github.com/fluid-cloudnative/fluid/releases/tag/v0.8.6"
+            },
+            {
+              "name": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/fluid-cloudnative/fluid/commit/77c8110a3d1ec077ae2bce6bd88d296505db1550"
+            },
+            {
+              "name": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/fluid-cloudnative/fluid/security/advisories/GHSA-93xx-cvmc-9w3v"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 1.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2023-05-15T18:32Z",
+      "publishedDate": "2023-05-08T18:15Z"
+    }
+  }
 }

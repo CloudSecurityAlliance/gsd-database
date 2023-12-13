@@ -1,298 +1,304 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-41274",
-        "description": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details.",
-        "id": "GSD-2021-41274"
+  "GSD": {
+    "alias": "CVE-2021-41274",
+    "description": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details.",
+    "id": "GSD-2021-41274"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-41274",
-            "modified": "2021-11-18T00:00:00.000Z",
-            "published": "2021-11-18T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-41274",
-                "GHSA-xm34-v85h-9pg2"
-            ],
-            "summary": "Authentication Bypass by CSRF Weakness",
-            "details": "### Impact\nCSRF vulnerability that allows user account takeover.\n\nAll applications using any version of the frontend component of `solidus_auth_devise`\nare affected if `protect_from_forgery` method is both:\n- Executed whether as:\n  - A `before_action` callback (the default)\n  - A `prepend_before_action` (option `prepend: true` given) before the\n    `:load_object` hook in `Spree::UserController` (most likely order to find).\n- Configured to use `:null_session` or `:reset_session` strategies\n  (`:null_session` is the default in case the no strategy is given, but\n  `rails --new` generated skeleton use `:exception`).\n\nThat means that applications that haven't been configured differently from\nwhat it's generated with Rails aren't affected.\n\n### Patches\nUsers should promptly update to `solidus_auth_devise` version `2.5.4`.\n\n### Workarounds\nA couple of options:\n\n- If possible, change your strategy to `:exception`:\n  ```ruby\n  class ApplicationController < ActionController::Base\n\n     protect_from_forgery with: :exception\n  end\n  ```\n\n- Add the following to `config/application.rb` to at least run the `:exception`\n  strategy on the affected controller:\n  ```ruby\n  config.after_initialize do\n    Spree::UsersController.protect_from_forgery\n  with: :exception\n  end\n  ```\n\n- We've also released new Solidus versions monkey patching `solidus_auth_devise`\n  with the quick fix. Those versions are `v3.1.3`, `v.3.0.3` & `v2.11.12`. See\n  [GHSA-5629-8855-gf4g](https://github.com/solidusio/solidus/security/advisories/GHSA-5629-8855-gf4g)\n  for details.\n\n### References\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [Solidus security](https://solidus.io/security/)\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 9.3
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "solidus_auth_devise",
-                        "purl": "pkg:gem/solidus_auth_devise"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "solidus_auth_devise",
+            "purl": "pkg:gem/solidus_auth_devise"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2021-41274",
-                "STATE": "PUBLIC",
-                "TITLE": "Authentication Bypass by CSRF Weakness"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "solidus_auth_devise",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": ">= 1.0.0, < 2.5.4"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "solidusio"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "LOW",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "NONE",
-                    "baseScore": 9.3,
-                    "baseSeverity": "CRITICAL",
-                    "confidentialityImpact": "HIGH",
-                    "integrityImpact": "HIGH",
-                    "privilegesRequired": "NONE",
-                    "scope": "CHANGED",
-                    "userInteraction": "REQUIRED",
-                    "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
-                    },
-                    {
-                        "name": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555",
-                        "refsource": "MISC",
-                        "url": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-xm34-v85h-9pg2",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=1.0.0 <2.5.4",
-                    "affected_versions": "All versions starting from 1.0.0 before 2.5.4",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2021-11-24",
-                    "description": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem.Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`).",
-                    "fixed_versions": [
-                        "2.5.4"
-                    ],
-                    "identifier": "CVE-2021-41274",
-                    "identifiers": [
-                        "CVE-2021-41274",
-                        "GHSA-xm34-v85h-9pg2"
-                    ],
-                    "not_impacted": "All versions before 1.0.0, all versions starting from 2.5.4",
-                    "package_slug": "gem/solidus_auth_devise",
-                    "pubdate": "2021-11-17",
-                    "solution": "Upgrade to version 2.5.4 or above.",
-                    "title": "Cross-Site Request Forgery (CSRF)",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-41274",
-                        "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
-                        "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
-                    ],
-                    "uuid": "13293296-6f7f-4f19-a2a3-edcbeb474128"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:nebulab:solidus_auth_devise:*:*:*:*:*:ruby:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.5.4",
-                                "versionStartIncluding": "1.0.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2021-41274"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-352"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Exploit",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
-                        },
-                        {
-                            "name": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 8.8,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 5.9
-                }
-            },
-            "lastModifiedDate": "2021-11-24T04:48Z",
-            "publishedDate": "2021-11-17T20:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "solidus_auth_devise",
-            "cve": "2021-41274",
-            "ghsa": "xm34-v85h-9pg2",
-            "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
-            "title": "Authentication Bypass by CSRF Weakness",
-            "date": "2021-11-18",
-            "description": "### Impact\nCSRF vulnerability that allows user account takeover.\n\nAll applications using any version of the frontend component of `solidus_auth_devise`\nare affected if `protect_from_forgery` method is both:\n- Executed whether as:\n  - A `before_action` callback (the default)\n  - A `prepend_before_action` (option `prepend: true` given) before the\n    `:load_object` hook in `Spree::UserController` (most likely order to find).\n- Configured to use `:null_session` or `:reset_session` strategies\n  (`:null_session` is the default in case the no strategy is given, but\n  `rails --new` generated skeleton use `:exception`).\n\nThat means that applications that haven't been configured differently from\nwhat it's generated with Rails aren't affected.\n\n### Patches\nUsers should promptly update to `solidus_auth_devise` version `2.5.4`.\n\n### Workarounds\nA couple of options:\n\n- If possible, change your strategy to `:exception`:\n  ```ruby\n  class ApplicationController < ActionController::Base\n\n     protect_from_forgery with: :exception\n  end\n  ```\n\n- Add the following to `config/application.rb` to at least run the `:exception`\n  strategy on the affected controller:\n  ```ruby\n  config.after_initialize do\n    Spree::UsersController.protect_from_forgery\n  with: :exception\n  end\n  ```\n\n- We've also released new Solidus versions monkey patching `solidus_auth_devise`\n  with the quick fix. Those versions are `v3.1.3`, `v.3.0.3` & `v2.11.12`. See\n  [GHSA-5629-8855-gf4g](https://github.com/solidusio/solidus/security/advisories/GHSA-5629-8855-gf4g)\n  for details.\n\n### References\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [Solidus security](https://solidus.io/security/)\n",
-            "cvss_v3": 9.3,
-            "unaffected_versions": [
-                "< 1.0.0"
-            ],
-            "patched_versions": [
-                ">= 2.5.4"
-            ]
+      ],
+      "aliases": [
+        "CVE-2021-41274",
+        "GHSA-xm34-v85h-9pg2"
+      ],
+      "details": "### Impact\nCSRF vulnerability that allows user account takeover.\n\nAll applications using any version of the frontend component of `solidus_auth_devise`\nare affected if `protect_from_forgery` method is both:\n- Executed whether as:\n  - A `before_action` callback (the default)\n  - A `prepend_before_action` (option `prepend: true` given) before the\n    `:load_object` hook in `Spree::UserController` (most likely order to find).\n- Configured to use `:null_session` or `:reset_session` strategies\n  (`:null_session` is the default in case the no strategy is given, but\n  `rails --new` generated skeleton use `:exception`).\n\nThat means that applications that haven't been configured differently from\nwhat it's generated with Rails aren't affected.\n\n### Patches\nUsers should promptly update to `solidus_auth_devise` version `2.5.4`.\n\n### Workarounds\nA couple of options:\n\n- If possible, change your strategy to `:exception`:\n  ```ruby\n  class ApplicationController < ActionController::Base\n\n     protect_from_forgery with: :exception\n  end\n  ```\n\n- Add the following to `config/application.rb` to at least run the `:exception`\n  strategy on the affected controller:\n  ```ruby\n  config.after_initialize do\n    Spree::UsersController.protect_from_forgery\n  with: :exception\n  end\n  ```\n\n- We've also released new Solidus versions monkey patching `solidus_auth_devise`\n  with the quick fix. Those versions are `v3.1.3`, `v.3.0.3` & `v2.11.12`. See\n  [GHSA-5629-8855-gf4g](https://github.com/solidusio/solidus/security/advisories/GHSA-5629-8855-gf4g)\n  for details.\n\n### References\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [Solidus security](https://solidus.io/security/)\n",
+      "id": "GSD-2021-41274",
+      "modified": "2021-11-18T00:00:00.000Z",
+      "published": "2021-11-18T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 9.3,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Authentication Bypass by CSRF Weakness"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2021-41274",
+        "STATE": "PUBLIC",
+        "TITLE": "Authentication Bypass by CSRF Weakness"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "solidus_auth_devise",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": ">= 1.0.0, < 2.5.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "solidusio"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "LOW",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "NONE",
+          "baseScore": 9.3,
+          "baseSeverity": "CRITICAL",
+          "confidentialityImpact": "HIGH",
+          "integrityImpact": "HIGH",
+          "privilegesRequired": "NONE",
+          "scope": "CHANGED",
+          "userInteraction": "REQUIRED",
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
+          },
+          {
+            "name": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555",
+            "refsource": "MISC",
+            "url": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-xm34-v85h-9pg2",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-41274",
+      "cvss_v3": 9.3,
+      "date": "2021-11-18",
+      "description": "### Impact\nCSRF vulnerability that allows user account takeover.\n\nAll applications using any version of the frontend component of `solidus_auth_devise`\nare affected if `protect_from_forgery` method is both:\n- Executed whether as:\n  - A `before_action` callback (the default)\n  - A `prepend_before_action` (option `prepend: true` given) before the\n    `:load_object` hook in `Spree::UserController` (most likely order to find).\n- Configured to use `:null_session` or `:reset_session` strategies\n  (`:null_session` is the default in case the no strategy is given, but\n  `rails --new` generated skeleton use `:exception`).\n\nThat means that applications that haven't been configured differently from\nwhat it's generated with Rails aren't affected.\n\n### Patches\nUsers should promptly update to `solidus_auth_devise` version `2.5.4`.\n\n### Workarounds\nA couple of options:\n\n- If possible, change your strategy to `:exception`:\n  ```ruby\n  class ApplicationController < ActionController::Base\n\n     protect_from_forgery with: :exception\n  end\n  ```\n\n- Add the following to `config/application.rb` to at least run the `:exception`\n  strategy on the affected controller:\n  ```ruby\n  config.after_initialize do\n    Spree::UsersController.protect_from_forgery\n  with: :exception\n  end\n  ```\n\n- We've also released new Solidus versions monkey patching `solidus_auth_devise`\n  with the quick fix. Those versions are `v3.1.3`, `v.3.0.3` & `v2.11.12`. See\n  [GHSA-5629-8855-gf4g](https://github.com/solidusio/solidus/security/advisories/GHSA-5629-8855-gf4g)\n  for details.\n\n### References\n- [CSRF on the Rails guides](https://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)\n- [Solidus security](https://solidus.io/security/)\n",
+      "gem": "solidus_auth_devise",
+      "ghsa": "xm34-v85h-9pg2",
+      "patched_versions": [
+        ">= 2.5.4"
+      ],
+      "title": "Authentication Bypass by CSRF Weakness",
+      "unaffected_versions": [
+        "< 1.0.0"
+      ],
+      "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=1.0.0 <2.5.4",
+          "affected_versions": "All versions starting from 1.0.0 before 2.5.4",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2021-11-24",
+          "description": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem.Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`).",
+          "fixed_versions": [
+            "2.5.4"
+          ],
+          "identifier": "CVE-2021-41274",
+          "identifiers": [
+            "CVE-2021-41274",
+            "GHSA-xm34-v85h-9pg2"
+          ],
+          "not_impacted": "All versions before 1.0.0, all versions starting from 2.5.4",
+          "package_slug": "gem/solidus_auth_devise",
+          "pubdate": "2021-11-17",
+          "solution": "Upgrade to version 2.5.4 or above.",
+          "title": "Cross-Site Request Forgery (CSRF)",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-41274",
+            "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
+            "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
+          ],
+          "uuid": "13293296-6f7f-4f19-a2a3-edcbeb474128"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:nebulab:solidus_auth_devise:*:*:*:*:*:ruby:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.5.4",
+                "versionStartIncluding": "1.0.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2021-41274"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "solidus_auth_devise provides authentication services for the Solidus webstore framework, using the Devise gem. In affected versions solidus_auth_devise is subject to a CSRF vulnerability that allows user account takeover. All applications using any version of the frontend component of `solidus_auth_devise` are affected if `protect_from_forgery` method is both: Executed whether as: A `before_action` callback (the default) or A `prepend_before_action` (option `prepend: true` given) before the `:load_object` hook in `Spree::UserController` (most likely order to find). Configured to use `:null_session` or `:reset_session` strategies (`:null_session` is the default in case the no strategy is given, but `rails --new` generated skeleton use `:exception`). Users should promptly update to `solidus_auth_devise` version `2.5.4`. Users unable to update should if possible, change their strategy to `:exception`. Please see the linked GHSA for more workaround details."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-352"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Exploit",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus_auth_devise/security/advisories/GHSA-xm34-v85h-9pg2"
+            },
+            {
+              "name": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555",
+              "refsource": "MISC",
+              "tags": [
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/solidusio/solidus_auth_devise/commit/731a6645e90ea9fd228f78ec53c6976c048a0555"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 5.9
+        }
+      },
+      "lastModifiedDate": "2021-11-24T04:48Z",
+      "publishedDate": "2021-11-17T20:15Z"
+    }
+  }
 }

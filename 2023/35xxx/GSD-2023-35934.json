@@ -1,438 +1,455 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-35934",
-        "id": "GSD-2023-35934"
+  "GSD": {
+    "alias": "CVE-2023-35934",
+    "id": "GSD-2023-35934"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-35934",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "yt-dlp",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "yt-dlp < 2023.07.06"
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "yt-dlp < nightly 2023.07.06.185519"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "yt-dlp"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.1,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-200",
-                                "lang": "eng",
-                                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519"
-                    },
-                    {
-                        "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
-                        "refsource": "MISC",
-                        "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/"
-                    },
-                    {
-                        "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/",
-                        "refsource": "MISC",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-v8mc-9377-rwjj",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=2015.01.25",
-                    "affected_versions": "All versions starting from 2015.01.25",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-601",
-                        "CWE-937"
-                    ],
-                    "date": "2023-07-13",
-                    "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2023-35934",
-                    "identifiers": [
-                        "CVE-2023-35934",
-                        "GHSA-v8mc-9377-rwjj"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "pypi/youtube-dl",
-                    "pubdate": "2023-07-06",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "URL Redirection to Untrusted Site ('Open Redirect')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
-                        "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
-                        "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
-                        "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
-                        "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
-                        "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
-                        "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
-                    ],
-                    "uuid": "1093c3fe-13f5-4550-8703-5a09075aa7b5"
-                },
-                {
-                    "affected_range": "",
-                    "affected_versions": "All versions",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-200",
-                        "CWE-937"
-                    ],
-                    "date": "2023-08-25",
-                    "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2023-35934",
-                    "identifiers": [
-                        "CVE-2023-35934",
-                        "GHSA-v8mc-9377-rwjj"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "pypi/youtube-dlc",
-                    "pubdate": "2023-07-06",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "URL Redirection to Untrusted Site ('Open Redirect')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
-                        "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
-                        "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
-                        "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
-                        "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
-                        "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
-                        "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
-                    ],
-                    "uuid": "d49fdc71-865d-4174-bbc8-c17b2ce16d3b"
-                },
-                {
-                    "affected_range": ">2023.07.06,<2023.07.06.185519",
-                    "affected_versions": "All versions after 2023.07.06 before 2023.07.06.185519",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-200",
-                        "CWE-937"
-                    ],
-                    "date": "2023-08-25",
-                    "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
-                    "fixed_versions": [
-                        "2023.07.06",
-                        "2023.07.06.185519"
-                    ],
-                    "identifier": "CVE-2023-35934",
-                    "identifiers": [
-                        "CVE-2023-35934",
-                        "GHSA-v8mc-9377-rwjj"
-                    ],
-                    "not_impacted": "All versions starting from 2023.07.06 before 2023.07.06.185519, all versions starting from 2023.07.06.185519",
-                    "package_slug": "pypi/yt-dlp",
-                    "pubdate": "2023-07-06",
-                    "solution": "Upgrade to 2023.07.06, 2023.07.06.185519 or above.",
-                    "title": "URL Redirection to Untrusted Site ('Open Redirect')",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
-                        "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
-                        "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
-                        "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
-                        "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
-                        "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
-                        "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
-                    ],
-                    "uuid": "2c01326a-af20-4de6-87f4-25961103dc6c"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:nightly:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2023.07.06.185519",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:-:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2023.07.06",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:youtube-dlc_project:youtube-dlc:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:yt-dl:youtube-dl:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionStartIncluding": "2015.01.25",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:38:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-35934"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-200"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729"
-                        },
-                        {
-                            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Release Notes"
-                            ],
-                            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mailing List"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/"
-                        },
-                        {
-                            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/",
-                            "refsource": "MISC",
-                            "tags": [],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 8.2,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "HIGH",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "CHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 4.7
-                }
-            },
-            "lastModifiedDate": "2023-08-25T03:15Z",
-            "publishedDate": "2023-07-06T20:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-35934"
+      ],
+      "details": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
+      "id": "GSD-2023-35934",
+      "modified": "2023-12-13T01:20:46.516350Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-35934",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "yt-dlp",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "yt-dlp < 2023.07.06"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "yt-dlp < nightly 2023.07.06.185519"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "yt-dlp"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-200",
+                "lang": "eng",
+                "value": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-v8mc-9377-rwjj",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=2015.01.25",
+          "affected_versions": "All versions starting from 2015.01.25",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-601",
+            "CWE-937"
+          ],
+          "date": "2023-07-13",
+          "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
+          "fixed_versions": [],
+          "identifier": "CVE-2023-35934",
+          "identifiers": [
+            "CVE-2023-35934",
+            "GHSA-v8mc-9377-rwjj"
+          ],
+          "not_impacted": "",
+          "package_slug": "pypi/youtube-dl",
+          "pubdate": "2023-07-06",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "URL Redirection to Untrusted Site ('Open Redirect')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
+            "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
+            "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
+            "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
+            "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
+            "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
+            "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
+          ],
+          "uuid": "1093c3fe-13f5-4550-8703-5a09075aa7b5"
+        },
+        {
+          "affected_range": "",
+          "affected_versions": "All versions",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-200",
+            "CWE-937"
+          ],
+          "date": "2023-08-25",
+          "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
+          "fixed_versions": [],
+          "identifier": "CVE-2023-35934",
+          "identifiers": [
+            "CVE-2023-35934",
+            "GHSA-v8mc-9377-rwjj"
+          ],
+          "not_impacted": "",
+          "package_slug": "pypi/youtube-dlc",
+          "pubdate": "2023-07-06",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "URL Redirection to Untrusted Site ('Open Redirect')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
+            "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
+            "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
+            "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
+            "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
+            "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
+            "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
+          ],
+          "uuid": "d49fdc71-865d-4174-bbc8-c17b2ce16d3b"
+        },
+        {
+          "affected_range": ">2023.07.06,<2023.07.06.185519",
+          "affected_versions": "All versions after 2023.07.06 before 2023.07.06.185519",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-200",
+            "CWE-937"
+          ],
+          "date": "2023-08-25",
+          "description": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM.",
+          "fixed_versions": [
+            "2023.07.06",
+            "2023.07.06.185519"
+          ],
+          "identifier": "CVE-2023-35934",
+          "identifiers": [
+            "CVE-2023-35934",
+            "GHSA-v8mc-9377-rwjj"
+          ],
+          "not_impacted": "All versions starting from 2023.07.06 before 2023.07.06.185519, all versions starting from 2023.07.06.185519",
+          "package_slug": "pypi/yt-dlp",
+          "pubdate": "2023-07-06",
+          "solution": "Upgrade to 2023.07.06, 2023.07.06.185519 or above.",
+          "title": "URL Redirection to Untrusted Site ('Open Redirect')",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-35934",
+            "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
+            "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
+            "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
+            "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
+            "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
+            "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
+          ],
+          "uuid": "2c01326a-af20-4de6-87f4-25961103dc6c"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:nightly:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2023.07.06.185519",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:yt-dlp_project:yt-dlp:*:*:*:*:-:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2023.07.06",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:youtube-dlc_project:youtube-dlc:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:yt-dl:youtube-dl:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionStartIncluding": "2015.01.25",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:37:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:38:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-35934"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "yt-dlp is a command-line program to download videos from video sites. During file downloads, yt-dlp or the external downloaders that yt-dlp employs may leak cookies on HTTP redirects to a different host, or leak them when the host for download fragments differs from their parent manifest's host. This vulnerable behavior is present in yt-dlp prior to 2023.07.06 and nightly 2023.07.06.185519. All native and external downloaders are affected, except for `curl` and `httpie` (version 3.1.0 or later).\n\nAt the file download stage, all cookies are passed by yt-dlp to the file downloader as a `Cookie` header, thereby losing their scope. This also occurs in yt-dlp's info JSON output, which may be used by external tools. As a result, the downloader or external tool may indiscriminately send cookies with requests to domains or paths for which the cookies are not scoped.\n\nyt-dlp version 2023.07.06 and nightly 2023.07.06.185519 fix this issue by removing the `Cookie` header upon HTTP redirects; having native downloaders calculate the `Cookie` header from the cookiejar, utilizing external downloaders' built-in support for cookies instead of passing them as header arguments, disabling HTTP redirectiong if the external downloader does not have proper cookie support, processing cookies passed as HTTP headers to limit their scope, and having a separate field for cookies in the info dict storing more information about scoping\n\nSome workarounds are available for those who are unable to upgrade. Avoid using cookies and user authentication methods. While extractors may set custom cookies, these usually do not contain sensitive information. Alternatively, avoid using `--load-info-json`. Or, if authentication is a must: verify the integrity of download links from unknown sources in browser (including redirects) before passing them to yt-dlp; use `curl` as external downloader, since it is not impacted; and/or avoid fragmented formats such as HLS/m3u8, DASH/mpd and ISM."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-200"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/tag/2023.07.06.185519"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/commit/3121512228487c9c690d3d39bfd2579addf96e07"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/commit/f8b4bcc0a791274223723488bfbfc23ea3276641"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-v8mc-9377-rwjj"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/commit/1ceb657bdd254ad961489e5060f2ccc7d556b729"
+            },
+            {
+              "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06",
+              "refsource": "MISC",
+              "tags": [
+                "Release Notes"
+              ],
+              "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2023.07.06"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IM44RJL2MR2WG3ZY354C5IUEEZUJGEVA/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/",
+              "refsource": "MISC",
+              "tags": [
+                "Mailing List"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5X6YT6AQE5FHM5VTQLKKJXSYBLLJF26W/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HEOKCGVONGHR2SYUIXU33A4MKXZBDP6L/"
+            },
+            {
+              "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/",
+              "refsource": "MISC",
+              "tags": [],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/M7E7CQ5S5KMZHAMCNU7V7KYNBVCPLBHG/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 8.2,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 4.7
+        }
+      },
+      "lastModifiedDate": "2023-08-25T03:15Z",
+      "publishedDate": "2023-07-06T20:15Z"
+    }
+  }
 }

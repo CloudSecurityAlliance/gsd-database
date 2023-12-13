@@ -1,407 +1,413 @@
 {
-    "GSD": {
-        "alias": "CVE-2021-22880",
-        "description": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
-        "id": "GSD-2021-22880",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2021-22880.html",
-            "https://www.debian.org/security/2021/dsa-4929"
-        ]
+  "GSD": {
+    "alias": "CVE-2021-22880",
+    "description": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
+    "id": "GSD-2021-22880",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2021-22880.html",
+      "https://www.debian.org/security/2021/dsa-4929"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2021-22880",
-            "modified": "2021-02-10T00:00:00.000Z",
-            "published": "2021-02-10T00:00:00.000Z",
-            "aliases": [
-                "CVE-2021-22880",
-                "GHSA-8hc4-xxm3-5ppp"
-            ],
-            "summary": "Possible DoS Vulnerability in Active Record PostgreSQL adapter",
-            "details": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
-            "severity": [
-                {
-                    "type": "CVSS_V3",
-                    "score": 5.3
-                }
-            ],
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "activerecord",
-                        "purl": "pkg:gem/activerecord"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "activerecord",
+            "purl": "pkg:gem/activerecord"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "support@hackerone.com",
-                "ID": "CVE-2021-22880",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "https://github.com/rails/rails",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "Fixed in 6.1.2.1, 6.0.3.5, 5.2.4.5"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "Denial of Service (CWE-400)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://hackerone.com/reports/1023899",
-                        "refsource": "MISC",
-                        "url": "https://hackerone.com/reports/1023899"
-                    },
-                    {
-                        "name": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
-                        "refsource": "MISC",
-                        "url": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
-                    },
-                    {
-                        "name": "FEDORA-2021-b571fca1b8",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
-                    },
-                    {
-                        "name": "FEDORA-2021-def0e32233",
-                        "refsource": "FEDORA",
-                        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/"
-                    },
-                    {
-                        "name": "DSA-4929",
-                        "refsource": "DEBIAN",
-                        "url": "https://www.debian.org/security/2021/dsa-4929"
-                    },
-                    {
-                        "name": "https://security.netapp.com/advisory/ntap-20210805-0009/",
-                        "refsource": "CONFIRM",
-                        "url": "https://security.netapp.com/advisory/ntap-20210805-0009/"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=4.2.0 <5.2.4.5||>=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
-                    "affected_versions": "All versions starting from 4.2.0 before 5.2.4.5, all versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1, all versions starting from 32 up to 33",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2021-08-05",
-                    "description": "The PostgreSQL adapter in Active Record suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
-                    "fixed_versions": [
-                        "5.2.4.5",
-                        "6.0.3.5",
-                        "6.1.2.1"
-                    ],
-                    "identifier": "CVE-2021-22880",
-                    "identifiers": [
-                        "CVE-2021-22880"
-                    ],
-                    "not_impacted": "All versions before 4.2.0, all versions starting from 5.2.4.5 before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1 before 32, all versions after 33",
-                    "package_slug": "gem/activerecord",
-                    "pubdate": "2021-02-11",
-                    "solution": "Upgrade to versions 5.2.4.5, 6.0.3.5, 6.1.2.1 or above.",
-                    "title": "Uncontrolled Resource Consumption",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-22880",
-                        "https://hackerone.com/reports/1023899",
-                        "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/",
-                        "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/",
-                        "https://www.debian.org/security/2021/dsa-4929",
-                        "https://security.netapp.com/advisory/ntap-20210805-0009/"
-                    ],
-                    "uuid": "780c63f4-18fd-49af-8aa6-4d68dac71c3d"
-                },
-                {
-                    "affected_range": ">=4.2.0 <5.2.4.5||>=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
-                    "affected_versions": "All versions starting from 4.2.0 before 5.2.4.5, all versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1",
-                    "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-400",
-                        "CWE-937"
-                    ],
-                    "date": "2022-01-04",
-                    "description": "The PostgreSQL adapter in Active Record suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
-                    "fixed_versions": [
-                        "5.2.4.5",
-                        "6.0.3.5",
-                        "6.1.2.1"
-                    ],
-                    "identifier": "CVE-2021-22880",
-                    "identifiers": [
-                        "CVE-2021-22880"
-                    ],
-                    "not_impacted": "All versions before 4.2.0, all versions starting from 5.2.4.5 before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1",
-                    "package_slug": "gem/rails",
-                    "pubdate": "2021-02-11",
-                    "solution": "Upgrade to versions 5.2.4.5, 6.0.3.5, 6.1.2.1 or above.",
-                    "title": "Uncontrolled Resource Consumption",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-22880",
-                        "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
-                    ],
-                    "uuid": "f9ac0d91-655f-4f1e-aa9d-f90acf30b097"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "5.2.4.5",
-                                "versionStartIncluding": "4.2.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.0.3.5",
-                                "versionStartIncluding": "6.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "6.1.2.1",
-                                "versionStartIncluding": "6.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    },
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:32:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "cve-assignments@hackerone.com",
-                    "ID": "CVE-2021-22880"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-400"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://hackerone.com/reports/1023899",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Exploit",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://hackerone.com/reports/1023899"
-                        },
-                        {
-                            "name": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Mitigation",
-                                "Patch",
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
-                        },
-                        {
-                            "name": "FEDORA-2021-b571fca1b8",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
-                        },
-                        {
-                            "name": "FEDORA-2021-def0e32233",
-                            "refsource": "FEDORA",
-                            "tags": [
-                                "Mailing List",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/"
-                        },
-                        {
-                            "name": "DSA-4929",
-                            "refsource": "DEBIAN",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://www.debian.org/security/2021/dsa-4929"
-                        },
-                        {
-                            "name": "https://security.netapp.com/advisory/ntap-20210805-0009/",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://security.netapp.com/advisory/ntap-20210805-0009/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "LOW",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 5.0,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 10.0,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "HIGH",
-                        "baseScore": 7.5,
-                        "baseSeverity": "HIGH",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "NONE",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 3.9,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2022-01-04T16:38Z",
-            "publishedDate": "2021-02-11T18:15Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activerecord",
-            "framework": "rails",
-            "cve": "2021-22880",
-            "ghsa": "8hc4-xxm3-5ppp",
-            "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI",
-            "title": "Possible DoS Vulnerability in Active Record PostgreSQL adapter",
-            "date": "2021-02-10",
-            "description": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
-            "cvss_v3": 5.3,
-            "unaffected_versions": [
-                "< 4.2.0"
-            ],
-            "patched_versions": [
-                "~> 5.2.4, >= 5.2.4.5",
-                "~> 6.0.3, >= 6.0.3.5",
-                ">= 6.1.2.1"
-            ]
+      ],
+      "aliases": [
+        "CVE-2021-22880",
+        "GHSA-8hc4-xxm3-5ppp"
+      ],
+      "details": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
+      "id": "GSD-2021-22880",
+      "modified": "2021-02-10T00:00:00.000Z",
+      "published": "2021-02-10T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI"
         }
+      ],
+      "schema_version": "1.4.0",
+      "severity": [
+        {
+          "score": 5.3,
+          "type": "CVSS_V3"
+        }
+      ],
+      "summary": "Possible DoS Vulnerability in Active Record PostgreSQL adapter"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "support@hackerone.com",
+        "ID": "CVE-2021-22880",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "https://github.com/rails/rails",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "Fixed in 6.1.2.1, 6.0.3.5, 5.2.4.5"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Denial of Service (CWE-400)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://hackerone.com/reports/1023899",
+            "refsource": "MISC",
+            "url": "https://hackerone.com/reports/1023899"
+          },
+          {
+            "name": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
+            "refsource": "MISC",
+            "url": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
+          },
+          {
+            "name": "FEDORA-2021-b571fca1b8",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
+          },
+          {
+            "name": "FEDORA-2021-def0e32233",
+            "refsource": "FEDORA",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/"
+          },
+          {
+            "name": "DSA-4929",
+            "refsource": "DEBIAN",
+            "url": "https://www.debian.org/security/2021/dsa-4929"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20210805-0009/",
+            "refsource": "CONFIRM",
+            "url": "https://security.netapp.com/advisory/ntap-20210805-0009/"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2021-22880",
+      "cvss_v3": 5.3,
+      "date": "2021-02-10",
+      "description": "There is a possible DoS vulnerability in the PostgreSQL adapter in Active\nRecord. This vulnerability has been assigned the CVE identifier CVE-2021-22880.\n\nVersions Affected:  >= 4.2.0\nNot affected:       < 4.2.0\nFixed Versions:     6.1.2.1, 6.0.3.5, 5.2.4.5\n\nImpact\n------\nCarefully crafted input can cause the input validation in the \"money\" type of\nthe PostgreSQL adapter in Active Record to spend too much time in a regular\nexpression, resulting in the potential for a DoS attack.\n\nThis only impacts Rails applications that are using PostgreSQL along with\nmoney type columns that take user input.\n\nWorkarounds\n-----------\nIn the case a patch can't be applied, the following monkey patch can be used\nin an initializer:\n\n```\nmodule ActiveRecord\n  module ConnectionAdapters\n    module PostgreSQL\n      module OID # :nodoc:\n        class Money < Type::Decimal # :nodoc:\n          def cast_value(value)\n            return value unless ::String === value\n\n            value = value.sub(/^\\((.+)\\)$/, '-\\1') # (4)\n            case value\n            when /^-?\\D*+[\\d,]+\\.\\d{2}$/  # (1)\n              value.gsub!(/[^-\\d.]/, \"\")\n            when /^-?\\D*+[\\d.]+,\\d{2}$/  # (2)\n              value.gsub!(/[^-\\d,]/, \"\").sub!(/,/, \".\")\n            end\n\n            super(value)\n          end\n        end\n      end\n    end\n  end\nend\n```\n",
+      "framework": "rails",
+      "gem": "activerecord",
+      "ghsa": "8hc4-xxm3-5ppp",
+      "patched_versions": [
+        "~> 5.2.4, >= 5.2.4.5",
+        "~> 6.0.3, >= 6.0.3.5",
+        ">= 6.1.2.1"
+      ],
+      "title": "Possible DoS Vulnerability in Active Record PostgreSQL adapter",
+      "unaffected_versions": [
+        "< 4.2.0"
+      ],
+      "url": "https://groups.google.com/g/rubyonrails-security/c/ZzUqCh9vyhI"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=4.2.0 <5.2.4.5||>=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
+          "affected_versions": "All versions starting from 4.2.0 before 5.2.4.5, all versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1, all versions starting from 32 up to 33",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2021-08-05",
+          "description": "The PostgreSQL adapter in Active Record suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
+          "fixed_versions": [
+            "5.2.4.5",
+            "6.0.3.5",
+            "6.1.2.1"
+          ],
+          "identifier": "CVE-2021-22880",
+          "identifiers": [
+            "CVE-2021-22880"
+          ],
+          "not_impacted": "All versions before 4.2.0, all versions starting from 5.2.4.5 before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1 before 32, all versions after 33",
+          "package_slug": "gem/activerecord",
+          "pubdate": "2021-02-11",
+          "solution": "Upgrade to versions 5.2.4.5, 6.0.3.5, 6.1.2.1 or above.",
+          "title": "Uncontrolled Resource Consumption",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-22880",
+            "https://hackerone.com/reports/1023899",
+            "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/",
+            "https://www.debian.org/security/2021/dsa-4929",
+            "https://security.netapp.com/advisory/ntap-20210805-0009/"
+          ],
+          "uuid": "780c63f4-18fd-49af-8aa6-4d68dac71c3d"
+        },
+        {
+          "affected_range": ">=4.2.0 <5.2.4.5||>=6.0.0 <6.0.3.5||>=6.1.0 <6.1.2.1",
+          "affected_versions": "All versions starting from 4.2.0 before 5.2.4.5, all versions starting from 6.0.0 before 6.0.3.5, all versions starting from 6.1.0 before 6.1.2.1",
+          "cvss_v2": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-400",
+            "CWE-937"
+          ],
+          "date": "2022-01-04",
+          "description": "The PostgreSQL adapter in Active Record suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input.",
+          "fixed_versions": [
+            "5.2.4.5",
+            "6.0.3.5",
+            "6.1.2.1"
+          ],
+          "identifier": "CVE-2021-22880",
+          "identifiers": [
+            "CVE-2021-22880"
+          ],
+          "not_impacted": "All versions before 4.2.0, all versions starting from 5.2.4.5 before 6.0.0, all versions starting from 6.0.3.5 before 6.1.0, all versions starting from 6.1.2.1",
+          "package_slug": "gem/rails",
+          "pubdate": "2021-02-11",
+          "solution": "Upgrade to versions 5.2.4.5, 6.0.3.5, 6.1.2.1 or above.",
+          "title": "Uncontrolled Resource Consumption",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2021-22880",
+            "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
+          ],
+          "uuid": "f9ac0d91-655f-4f1e-aa9d-f90acf30b097"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "5.2.4.5",
+                "versionStartIncluding": "4.2.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.0.3.5",
+                "versionStartIncluding": "6.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:*:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "6.1.2.1",
+                "versionStartIncluding": "6.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          },
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:32:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:33:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "cve-assignments@hackerone.com",
+          "ID": "CVE-2021-22880"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "The PostgreSQL adapter in Active Record before 6.1.2.1, 6.0.3.5, 5.2.4.5 suffers from a regular expression denial of service (REDoS) vulnerability. Carefully crafted input can cause the input validation in the `money` type of the PostgreSQL adapter in Active Record to spend too much time in a regular expression, resulting in the potential for a DoS attack. This only impacts Rails applications that are using PostgreSQL along with money type columns that take user input."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-400"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://hackerone.com/reports/1023899",
+              "refsource": "MISC",
+              "tags": [
+                "Exploit",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://hackerone.com/reports/1023899"
+            },
+            {
+              "name": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129",
+              "refsource": "MISC",
+              "tags": [
+                "Mitigation",
+                "Patch",
+                "Vendor Advisory"
+              ],
+              "url": "https://discuss.rubyonrails.org/t/cve-2021-22880-possible-dos-vulnerability-in-active-record-postgresql-adapter/77129"
+            },
+            {
+              "name": "FEDORA-2021-b571fca1b8",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XQ3NS4IBYE2I3MVMGAHFZBZBIZGHXHT3/"
+            },
+            {
+              "name": "FEDORA-2021-def0e32233",
+              "refsource": "FEDORA",
+              "tags": [
+                "Mailing List",
+                "Third Party Advisory"
+              ],
+              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MO5OJ3F4ZL3UXVLJO6ECANRVZBNRS2IH/"
+            },
+            {
+              "name": "DSA-4929",
+              "refsource": "DEBIAN",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://www.debian.org/security/2021/dsa-4929"
+            },
+            {
+              "name": "https://security.netapp.com/advisory/ntap-20210805-0009/",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://security.netapp.com/advisory/ntap-20210805-0009/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "LOW",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 5.0,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 10.0,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 3.9,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2022-01-04T16:38Z",
+      "publishedDate": "2021-02-11T18:15Z"
+    }
+  }
 }

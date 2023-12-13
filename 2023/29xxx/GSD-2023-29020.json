@@ -1,302 +1,319 @@
 {
-    "GSD": {
-        "alias": "CVE-2023-29020",
-        "id": "GSD-2023-29020"
+  "GSD": {
+    "alias": "CVE-2023-29020",
+    "id": "GSD-2023-29020"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2023-29020",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "fastify-passport",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": "< 1.1.0"
-                                                },
-                                                {
-                                                    "version_affected": "=",
-                                                    "version_value": ">= 2.0.0, < 2.3.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "fastify"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": [
-                    {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
-                        "version": "3.1"
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-384",
-                                "lang": "eng",
-                                "value": "CWE-384: Session Fixation"
-                            }
-                        ]
-                    },
-                    {
-                        "description": [
-                            {
-                                "cweId": "CWE-352",
-                                "lang": "eng",
-                                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw"
-                    },
-                    {
-                        "name": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
-                        "refsource": "MISC",
-                        "url": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d"
-                    },
-                    {
-                        "name": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
-                        "refsource": "MISC",
-                        "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern"
-                    },
-                    {
-                        "name": "https://owasp.org/www-community/attacks/csrf",
-                        "refsource": "MISC",
-                        "url": "https://owasp.org/www-community/attacks/csrf"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-2ccf-ffrj-m4qw",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<1.1.0||>=2.0.0 <2.3.0",
-                    "affected_versions": "All versions before 1.1.0, all versions starting from 2.0.0 before 2.3.0",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-352",
-                        "CWE-384",
-                        "CWE-937"
-                    ],
-                    "date": "2023-04-21",
-                    "description": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`.",
-                    "fixed_versions": [
-                        "1.1.0",
-                        "2.3.0"
-                    ],
-                    "identifier": "CVE-2023-29020",
-                    "identifiers": [
-                        "GHSA-2ccf-ffrj-m4qw",
-                        "CVE-2023-29020"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.0 before 2.0.0, all versions starting from 2.3.0",
-                    "package_slug": "npm/@fastify/passport",
-                    "pubdate": "2023-04-21",
-                    "solution": "Upgrade to versions 1.1.0, 2.3.0 or above.",
-                    "title": "Session Fixation",
-                    "urls": [
-                        "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
-                        "https://github.com/advisories/GHSA-2ccf-ffrj-m4qw"
-                    ],
-                    "uuid": "d4b454b0-1a92-41b0-928d-6bb1ce8d3d0f"
-                },
-                {
-                    "affected_range": "<0",
-                    "affected_versions": "All versions before 1.1.0, all versions starting from 2.0.0 before 2.3.0",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-352",
-                        "CWE-937"
-                    ],
-                    "date": "2023-05-23",
-                    "description": "This advisory has been marked as False Positive and removed.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2023-29020",
-                    "identifiers": [
-                        "CVE-2023-29020",
-                        "GHSA-2ccf-ffrj-m4qw"
-                    ],
-                    "not_impacted": "All versions starting from 1.1.0 before 2.0.0, all versions starting from 2.3.0",
-                    "package_slug": "npm/passport",
-                    "pubdate": "2023-04-21",
-                    "solution": "Upgrade to version 1.1.1, 2.3.0 or above.",
-                    "title": "False Positive",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2023-29020",
-                        "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
-                        "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
-                        "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
-                        "https://owasp.org/www-community/attacks/csrf"
-                    ],
-                    "uuid": "ec35bbc3-d8c7-4c40-b534-01b6c4097d7a"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fastify:passport:*:*:*:*:*:node.js:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "2.3.0",
-                                "versionStartIncluding": "2.0.0",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:fastify:passport:*:*:*:*:*:node.js:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "1.1.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2023-29020"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-352"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw"
-                        },
-                        {
-                            "name": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Technical Description"
-                            ],
-                            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern"
-                        },
-                        {
-                            "name": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Patch"
-                            ],
-                            "url": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d"
-                        },
-                        {
-                            "name": "https://owasp.org/www-community/attacks/csrf",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Technical Description"
-                            ],
-                            "url": "https://owasp.org/www-community/attacks/csrf"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "LOW",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 6.5,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "HIGH",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "REQUIRED",
-                        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.8,
-                    "impactScore": 3.6
-                }
-            },
-            "lastModifiedDate": "2023-05-03T14:42Z",
-            "publishedDate": "2023-04-21T23:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-29020"
+      ],
+      "details": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`.",
+      "id": "GSD-2023-29020",
+      "modified": "2023-12-13T01:20:57.068592Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2023-29020",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "fastify-passport",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.1.0"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.0.0, < 2.3.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "fastify"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-384",
+                "lang": "eng",
+                "value": "CWE-384: Session Fixation"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-352",
+                "lang": "eng",
+                "value": "CWE-352: Cross-Site Request Forgery (CSRF)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
+            "refsource": "MISC",
+            "url": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw"
+          },
+          {
+            "name": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
+            "refsource": "MISC",
+            "url": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d"
+          },
+          {
+            "name": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
+            "refsource": "MISC",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern"
+          },
+          {
+            "name": "https://owasp.org/www-community/attacks/csrf",
+            "refsource": "MISC",
+            "url": "https://owasp.org/www-community/attacks/csrf"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-2ccf-ffrj-m4qw",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<1.1.0||>=2.0.0 <2.3.0",
+          "affected_versions": "All versions before 1.1.0, all versions starting from 2.0.0 before 2.3.0",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-352",
+            "CWE-384",
+            "CWE-937"
+          ],
+          "date": "2023-04-21",
+          "description": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`.",
+          "fixed_versions": [
+            "1.1.0",
+            "2.3.0"
+          ],
+          "identifier": "CVE-2023-29020",
+          "identifiers": [
+            "GHSA-2ccf-ffrj-m4qw",
+            "CVE-2023-29020"
+          ],
+          "not_impacted": "All versions starting from 1.1.0 before 2.0.0, all versions starting from 2.3.0",
+          "package_slug": "npm/@fastify/passport",
+          "pubdate": "2023-04-21",
+          "solution": "Upgrade to versions 1.1.0, 2.3.0 or above.",
+          "title": "Session Fixation",
+          "urls": [
+            "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
+            "https://github.com/advisories/GHSA-2ccf-ffrj-m4qw"
+          ],
+          "uuid": "d4b454b0-1a92-41b0-928d-6bb1ce8d3d0f"
+        },
+        {
+          "affected_range": "<0",
+          "affected_versions": "All versions before 1.1.0, all versions starting from 2.0.0 before 2.3.0",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-352",
+            "CWE-937"
+          ],
+          "date": "2023-05-23",
+          "description": "This advisory has been marked as False Positive and removed.",
+          "fixed_versions": [],
+          "identifier": "CVE-2023-29020",
+          "identifiers": [
+            "CVE-2023-29020",
+            "GHSA-2ccf-ffrj-m4qw"
+          ],
+          "not_impacted": "All versions starting from 1.1.0 before 2.0.0, all versions starting from 2.3.0",
+          "package_slug": "npm/passport",
+          "pubdate": "2023-04-21",
+          "solution": "Upgrade to version 1.1.1, 2.3.0 or above.",
+          "title": "False Positive",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-29020",
+            "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
+            "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
+            "https://owasp.org/www-community/attacks/csrf"
+          ],
+          "uuid": "ec35bbc3-d8c7-4c40-b534-01b6c4097d7a"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:fastify:passport:*:*:*:*:*:node.js:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "2.3.0",
+                "versionStartIncluding": "2.0.0",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:fastify:passport:*:*:*:*:*:node.js:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "1.1.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2023-29020"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-352"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
+              "refsource": "MISC",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw"
+            },
+            {
+              "name": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
+              "refsource": "MISC",
+              "tags": [
+                "Technical Description"
+              ],
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern"
+            },
+            {
+              "name": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
+              "refsource": "MISC",
+              "tags": [
+                "Patch"
+              ],
+              "url": "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d"
+            },
+            {
+              "name": "https://owasp.org/www-community/attacks/csrf",
+              "refsource": "MISC",
+              "tags": [
+                "Technical Description"
+              ],
+              "url": "https://owasp.org/www-community/attacks/csrf"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.8,
+          "impactScore": 3.6
+        }
+      },
+      "lastModifiedDate": "2023-05-03T14:42Z",
+      "publishedDate": "2023-04-21T23:15Z"
+    }
+  }
 }

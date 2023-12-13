@@ -1,433 +1,439 @@
 {
-    "GSD": {
-        "alias": "CVE-2015-3226",
-        "description": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding.",
-        "id": "GSD-2015-3226",
-        "references": [
-            "https://www.suse.com/security/cve/CVE-2015-3226.html",
-            "https://www.debian.org/security/2016/dsa-3464"
-        ]
+  "GSD": {
+    "alias": "CVE-2015-3226",
+    "description": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding.",
+    "id": "GSD-2015-3226",
+    "references": [
+      "https://www.suse.com/security/cve/CVE-2015-3226.html",
+      "https://www.debian.org/security/2016/dsa-3464"
+    ]
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "gsd": {
-        "osvSchema": {
-            "schema_version": "1.4.0",
-            "id": "GSD-2015-3226",
-            "modified": "2015-06-16T00:00:00.000Z",
-            "published": "2015-06-16T00:00:00.000Z",
-            "aliases": [
-                "CVE-2015-3226",
-                "GHSA-vxvp-4xwc-jpp6"
-            ],
-            "summary": "XSS Vulnerability in ActiveSupport::JSON.encode",
-            "details": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
-            "affected": [
-                {
-                    "package": {
-                        "ecosystem": "RubyGems",
-                        "name": "activesupport",
-                        "purl": "pkg:gem/activesupport"
-                    }
-                }
-            ],
-            "references": [
-                {
-                    "type": "WEB",
-                    "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
-                }
-            ]
+    "osvSchema": {
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "RubyGems",
+            "name": "activesupport",
+            "purl": "pkg:gem/activesupport"
+          }
         }
-    },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "secalert@redhat.com",
-                "ID": "CVE-2015-3226",
-                "STATE": "PUBLIC"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "n/a",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": "n/a"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "n/a"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding."
-                    }
-                ]
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "n/a"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "1033755",
-                        "refsource": "SECTRACK",
-                        "url": "http://www.securitytracker.com/id/1033755"
-                    },
-                    {
-                        "name": "[rubyonrails-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
-                        "refsource": "MLIST",
-                        "url": "https://groups.google.com/forum/message/raw?msg=rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ"
-                    },
-                    {
-                        "name": "75231",
-                        "refsource": "BID",
-                        "url": "http://www.securityfocus.com/bid/75231"
-                    },
-                    {
-                        "name": "[oss-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
-                        "refsource": "MLIST",
-                        "url": "http://openwall.com/lists/oss-security/2015/06/16/17"
-                    },
-                    {
-                        "name": "DSA-3464",
-                        "refsource": "DEBIAN",
-                        "url": "http://www.debian.org/security/2016/dsa-3464"
-                    }
-                ]
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": ">=4.1.0a <4.1.11||>=4.2.0a <4.2.2",
-                    "affected_versions": "All versions starting from 4.1.0a before 4.1.11, all versions starting from 4.2.0a before 4.2.2",
-                    "credit": "Francois Chagnon of Shopify",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-79",
-                        "CWE-937"
-                    ],
-                    "date": "2019-08-08",
-                    "description": "When a `Hash` containing user-controlled data is encoded as JSON (either through `Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate escaping that matches the guarantee implied by the `escape_html_entities_in_json` option (which is enabled by default). If this resulting JSON string is subsequently inserted directly into an HTML page, the page will be vulnerable to XSS attacks.",
-                    "fixed_versions": [
-                        "4.1.11",
-                        "4.2.2"
-                    ],
-                    "identifier": "CVE-2015-3226",
-                    "identifiers": [
-                        "CVE-2015-3226"
-                    ],
-                    "not_impacted": "3.x and 4.0.x",
-                    "package_slug": "gem/activesupport",
-                    "pubdate": "2015-07-26",
-                    "solution": "Upgrade to latest, apply patch or use workaround; see provided link.",
-                    "title": "XSS Vulnerability in ActiveSupport::JSON.encode",
-                    "urls": [
-                        "https://groups.google.com/forum/#!searchin/rubyonrails-core/CVE-2015-3226/rubyonrails-core/qBUqVlXERag/kuH3wQk1kxUJ",
-                        "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
-                    ],
-                    "uuid": "4888d3dc-f4ac-4765-a7fb-f922bfbdae02"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.17:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.16:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.12:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.11:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.7:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.1.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.3:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.15:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:3.2.14:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.13:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.6:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.5:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.0.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.10:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.9:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.2:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.1:*:*:*:*:*:*:*",
-                                "cpe_name": [],
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "secalert@redhat.com",
-                    "ID": "CVE-2015-3226"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-79"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "[oss-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
-                            "refsource": "MLIST",
-                            "tags": [],
-                            "url": "http://openwall.com/lists/oss-security/2015/06/16/17"
-                        },
-                        {
-                            "name": "[rubyonrails-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
-                            "refsource": "MLIST",
-                            "tags": [
-                                "Vendor Advisory"
-                            ],
-                            "url": "https://groups.google.com/forum/message/raw?msg=rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ"
-                        },
-                        {
-                            "name": "75231",
-                            "refsource": "BID",
-                            "tags": [],
-                            "url": "http://www.securityfocus.com/bid/75231"
-                        },
-                        {
-                            "name": "DSA-3464",
-                            "refsource": "DEBIAN",
-                            "tags": [],
-                            "url": "http://www.debian.org/security/2016/dsa-3464"
-                        },
-                        {
-                            "name": "1033755",
-                            "refsource": "SECTRACK",
-                            "tags": [],
-                            "url": "http://www.securitytracker.com/id/1033755"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "NONE",
-                        "baseScore": 4.3,
-                        "confidentialityImpact": "NONE",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 2.9,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": true
-                }
-            },
-            "lastModifiedDate": "2019-08-08T15:43Z",
-            "publishedDate": "2015-07-26T22:59Z"
-        },
-        "github.com/rubysec/ruby-advisory-db": {
-            "gem": "activesupport",
-            "framework": "rails",
-            "cve": "2015-3226",
-            "ghsa": "vxvp-4xwc-jpp6",
-            "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU",
-            "title": "XSS Vulnerability in ActiveSupport::JSON.encode",
-            "date": "2015-06-16",
-            "description": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
-            "unaffected_versions": [
-                "< 4.1.0"
-            ],
-            "patched_versions": [
-                ">= 4.2.2",
-                "~> 4.1.11"
-            ]
+      ],
+      "aliases": [
+        "CVE-2015-3226",
+        "GHSA-vxvp-4xwc-jpp6"
+      ],
+      "details": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
+      "id": "GSD-2015-3226",
+      "modified": "2015-06-16T00:00:00.000Z",
+      "published": "2015-06-16T00:00:00.000Z",
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
         }
+      ],
+      "schema_version": "1.4.0",
+      "summary": "XSS Vulnerability in ActiveSupport::JSON.encode"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "secalert@redhat.com",
+        "ID": "CVE-2015-3226",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "n/a",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "n/a"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "n/a"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "1033755",
+            "refsource": "SECTRACK",
+            "url": "http://www.securitytracker.com/id/1033755"
+          },
+          {
+            "name": "[rubyonrails-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
+            "refsource": "MLIST",
+            "url": "https://groups.google.com/forum/message/raw?msg=rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ"
+          },
+          {
+            "name": "75231",
+            "refsource": "BID",
+            "url": "http://www.securityfocus.com/bid/75231"
+          },
+          {
+            "name": "[oss-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
+            "refsource": "MLIST",
+            "url": "http://openwall.com/lists/oss-security/2015/06/16/17"
+          },
+          {
+            "name": "DSA-3464",
+            "refsource": "DEBIAN",
+            "url": "http://www.debian.org/security/2016/dsa-3464"
+          }
+        ]
+      }
+    },
+    "github.com/rubysec/ruby-advisory-db": {
+      "cve": "2015-3226",
+      "date": "2015-06-16",
+      "description": "When a `Hash` containing user-controlled data is encode as JSON (either through\n`Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate\nescaping that matches the guarantee implied by the `escape_html_entities_in_json`\noption (which is enabled by default). If this resulting JSON string is subsequently\ninserted directly into an HTML page, the page will be vulnerable to XSS attacks.\n\nFor example, the following code snippet is vulnerable to this attack:\n\n    <%= javascript_tag \"var data = #{user_supplied_data.to_json};\" %>\n\nSimilarly, the following is also vulnerable:\n\n    <script>\n      var data = <%= ActiveSupport::JSON.encode(user_supplied_data).html_safe %>;\n    </script>\n\nAll applications that renders JSON-encoded strings that contains user-controlled\ndata in their views should either upgrade to one of the FIXED versions or use\nthe suggested workaround immediately.\n\nWorkarounds\n-----------\nTo work around this problem add an initializer with the following code:\n\n  module ActiveSupport\n    module JSON\n      module Encoding\n        private\n        class EscapedString\n          def to_s\n            self\n          end\n        end\n      end\n    end\n  end\n",
+      "framework": "rails",
+      "gem": "activesupport",
+      "ghsa": "vxvp-4xwc-jpp6",
+      "patched_versions": [
+        ">= 4.2.2",
+        "~> 4.1.11"
+      ],
+      "title": "XSS Vulnerability in ActiveSupport::JSON.encode",
+      "unaffected_versions": [
+        "< 4.1.0"
+      ],
+      "url": "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": ">=4.1.0a <4.1.11||>=4.2.0a <4.2.2",
+          "affected_versions": "All versions starting from 4.1.0a before 4.1.11, all versions starting from 4.2.0a before 4.2.2",
+          "credit": "Francois Chagnon of Shopify",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-79",
+            "CWE-937"
+          ],
+          "date": "2019-08-08",
+          "description": "When a `Hash` containing user-controlled data is encoded as JSON (either through `Hash#to_json` or `ActiveSupport::JSON.encode`), Rails does not perform adequate escaping that matches the guarantee implied by the `escape_html_entities_in_json` option (which is enabled by default). If this resulting JSON string is subsequently inserted directly into an HTML page, the page will be vulnerable to XSS attacks.",
+          "fixed_versions": [
+            "4.1.11",
+            "4.2.2"
+          ],
+          "identifier": "CVE-2015-3226",
+          "identifiers": [
+            "CVE-2015-3226"
+          ],
+          "not_impacted": "3.x and 4.0.x",
+          "package_slug": "gem/activesupport",
+          "pubdate": "2015-07-26",
+          "solution": "Upgrade to latest, apply patch or use workaround; see provided link.",
+          "title": "XSS Vulnerability in ActiveSupport::JSON.encode",
+          "urls": [
+            "https://groups.google.com/forum/#!searchin/rubyonrails-core/CVE-2015-3226/rubyonrails-core/qBUqVlXERag/kuH3wQk1kxUJ",
+            "https://groups.google.com/forum/#!topic/ruby-security-ann/7VlB_pck3hU"
+          ],
+          "uuid": "4888d3dc-f4ac-4765-a7fb-f922bfbdae02"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.17:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.16:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.12:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.11:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.7:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.1.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.3:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.4:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.15:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:ruby_on_rails:3.2.14:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.13:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.6:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.5:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.0.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.2.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.8:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:4.1.0:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.10:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.9:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.2:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails:3.2.1:*:*:*:*:*:*:*",
+                "cpe_name": [],
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "secalert@redhat.com",
+          "ID": "CVE-2015-3226"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Cross-site scripting (XSS) vulnerability in json/encoding.rb in Active Support in Ruby on Rails 3.x and 4.1.x before 4.1.11 and 4.2.x before 4.2.2 allows remote attackers to inject arbitrary web script or HTML via a crafted Hash that is mishandled during JSON encoding."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-79"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "[oss-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
+              "refsource": "MLIST",
+              "tags": [],
+              "url": "http://openwall.com/lists/oss-security/2015/06/16/17"
+            },
+            {
+              "name": "[rubyonrails-security] 20150616 [CVE-2015-3226] XSS Vulnerability in ActiveSupport::JSON.encode",
+              "refsource": "MLIST",
+              "tags": [
+                "Vendor Advisory"
+              ],
+              "url": "https://groups.google.com/forum/message/raw?msg=rubyonrails-security/7VlB_pck3hU/3QZrGIaQW6cJ"
+            },
+            {
+              "name": "75231",
+              "refsource": "BID",
+              "tags": [],
+              "url": "http://www.securityfocus.com/bid/75231"
+            },
+            {
+              "name": "DSA-3464",
+              "refsource": "DEBIAN",
+              "tags": [],
+              "url": "http://www.debian.org/security/2016/dsa-3464"
+            },
+            {
+              "name": "1033755",
+              "refsource": "SECTRACK",
+              "tags": [],
+              "url": "http://www.securitytracker.com/id/1033755"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.3,
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 2.9,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": true
+        }
+      },
+      "lastModifiedDate": "2019-08-08T15:43Z",
+      "publishedDate": "2015-07-26T22:59Z"
+    }
+  }
 }

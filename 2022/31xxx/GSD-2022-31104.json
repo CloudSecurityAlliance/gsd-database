@@ -1,432 +1,449 @@
 {
-    "GSD": {
-        "alias": "CVE-2022-31104",
-        "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
-        "id": "GSD-2022-31104"
+  "GSD": {
+    "alias": "CVE-2022-31104",
+    "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+    "id": "GSD-2022-31104"
+  },
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
     },
-    "namespaces": {
-        "cve.org": {
-            "CVE_data_meta": {
-                "ASSIGNER": "security-advisories@github.com",
-                "ID": "CVE-2022-31104",
-                "STATE": "PUBLIC",
-                "TITLE": "Miscompilation of `i8x16.swizzle` and `select` with v128 inputs in Wasmtime"
-            },
-            "affects": {
-                "vendor": {
-                    "vendor_data": [
-                        {
-                            "product": {
-                                "product_data": [
-                                    {
-                                        "product_name": "wasmtime",
-                                        "version": {
-                                            "version_data": [
-                                                {
-                                                    "version_value": " wasmtime: < 0.38.1"
-                                                },
-                                                {
-                                                    "version_value": "cranelift-codegen: < 0.85.0"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "vendor_name": "bytecodealliance"
-                        }
-                    ]
-                }
-            },
-            "data_format": "MITRE",
-            "data_type": "CVE",
-            "data_version": "4.0",
-            "description": {
-                "description_data": [
-                    {
-                        "lang": "eng",
-                        "value": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected."
-                    }
-                ]
-            },
-            "impact": {
-                "cvss": {
-                    "attackComplexity": "HIGH",
-                    "attackVector": "NETWORK",
-                    "availabilityImpact": "LOW",
-                    "baseScore": 4.8,
-                    "baseSeverity": "MEDIUM",
-                    "confidentialityImpact": "NONE",
-                    "integrityImpact": "LOW",
-                    "privilegesRequired": "NONE",
-                    "scope": "UNCHANGED",
-                    "userInteraction": "NONE",
-                    "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:L",
-                    "version": "3.1"
-                }
-            },
-            "problemtype": {
-                "problemtype_data": [
-                    {
-                        "description": [
-                            {
-                                "lang": "eng",
-                                "value": "CWE-682: Incorrect Calculation"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "references": {
-                "reference_data": [
-                    {
-                        "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                        "refsource": "CONFIRM",
-                        "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x"
-                    },
-                    {
-                        "name": "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                        "refsource": "MISC",
-                        "url": "https://github.com/bytecodealliance/wasmtime/pull/4317"
-                    },
-                    {
-                        "name": "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                        "refsource": "MISC",
-                        "url": "https://github.com/bytecodealliance/wasmtime/pull/4318"
-                    },
-                    {
-                        "name": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                        "refsource": "MISC",
-                        "url": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd"
-                    },
-                    {
-                        "name": "https://github.com/webassembly/simd",
-                        "refsource": "MISC",
-                        "url": "https://github.com/webassembly/simd"
-                    },
-                    {
-                        "name": "https://webassembly.github.io/spec/",
-                        "refsource": "MISC",
-                        "url": "https://webassembly.github.io/spec/"
-                    }
-                ]
-            },
-            "source": {
-                "advisory": "GHSA-jqwc-c49r-4w2x",
-                "discovery": "UNKNOWN"
-            }
-        },
-        "gitlab.com": {
-            "advisories": [
-                {
-                    "affected_range": "<0.38.1",
-                    "affected_versions": "All versions before 0.38.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-682",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-08",
-                    "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
-                    "fixed_versions": [],
-                    "identifier": "CVE-2022-31104",
-                    "identifiers": [
-                        "CVE-2022-31104",
-                        "GHSA-jqwc-c49r-4w2x"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "conan/wasmtime",
-                    "pubdate": "2022-06-28",
-                    "solution": "Unfortunately, there is no solution available yet.",
-                    "title": "Incorrect Calculation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
-                        "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                        "https://github.com/webassembly/simd",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                        "https://webassembly.github.io/spec/"
-                    ],
-                    "uuid": "cfce1b6b-360b-444a-8281-7b46b83ac07b"
-                },
-                {
-                    "affected_range": "<v0.38.1",
-                    "affected_versions": "All versions before 0.38.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-682",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-08",
-                    "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
-                    "fixed_versions": [
-                        "v0.38.1"
-                    ],
-                    "identifier": "CVE-2022-31104",
-                    "identifiers": [
-                        "CVE-2022-31104",
-                        "GHSA-jqwc-c49r-4w2x"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
-                    "pubdate": "2022-06-28",
-                    "solution": "Upgrade to version 0.38.1 or above.",
-                    "title": "Incorrect Calculation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
-                        "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                        "https://github.com/webassembly/simd",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                        "https://webassembly.github.io/spec/"
-                    ],
-                    "uuid": "226e2275-4c3f-4bb4-827c-ad708ee01013",
-                    "versions": [
-                        {
-                            "commit": {
-                                "sha": "60160d37d113ef1ec928703caecd37bcab9eb49e",
-                                "tags": [
-                                    "v0.38.1"
-                                ],
-                                "timestamp": "20220622150918"
-                            },
-                            "number": "v0.38.1"
-                        }
-                    ]
-                },
-                {
-                    "affected_range": "(,0.38.1)",
-                    "affected_versions": "All versions before 0.38.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-682",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-08",
-                    "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
-                    "fixed_versions": [
-                        "0.38.1"
-                    ],
-                    "identifier": "CVE-2022-31104",
-                    "identifiers": [
-                        "CVE-2022-31104",
-                        "GHSA-jqwc-c49r-4w2x"
-                    ],
-                    "not_impacted": "All versions starting from 0.38.1",
-                    "package_slug": "nuget/Wasmtime",
-                    "pubdate": "2022-06-28",
-                    "solution": "Upgrade to version 0.38.1 or above.",
-                    "title": "Incorrect Calculation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
-                        "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                        "https://github.com/webassembly/simd",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                        "https://webassembly.github.io/spec/"
-                    ],
-                    "uuid": "a678f012-adf7-4b52-bf98-b7b633fe9aee"
-                },
-                {
-                    "affected_range": "<0.38.1",
-                    "affected_versions": "All versions before 0.38.1",
-                    "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                    "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                    "cwe_ids": [
-                        "CWE-1035",
-                        "CWE-682",
-                        "CWE-937"
-                    ],
-                    "date": "2022-07-08",
-                    "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
-                    "fixed_versions": [
-                        "0.38.1"
-                    ],
-                    "identifier": "CVE-2022-31104",
-                    "identifiers": [
-                        "CVE-2022-31104",
-                        "GHSA-jqwc-c49r-4w2x"
-                    ],
-                    "not_impacted": "",
-                    "package_slug": "pypi/wasmtime",
-                    "pubdate": "2022-06-28",
-                    "solution": "Upgrade to version 0.38.1 or above.",
-                    "title": "Incorrect Calculation",
-                    "urls": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
-                        "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                        "https://github.com/webassembly/simd",
-                        "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                        "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                        "https://webassembly.github.io/spec/"
-                    ],
-                    "uuid": "0c7baf71-fd18-4738-8a93-e68f084fc8a7"
-                }
-            ]
-        },
-        "nvd.nist.gov": {
-            "configurations": {
-                "CVE_data_version": "4.0",
-                "nodes": [
-                    {
-                        "children": [],
-                        "cpe_match": [
-                            {
-                                "cpe23Uri": "cpe:2.3:a:bytecodealliance:wasmtime:*:*:*:*:*:rust:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.38.1",
-                                "vulnerable": true
-                            },
-                            {
-                                "cpe23Uri": "cpe:2.3:a:bytecodealliance:cranelift-codegen:*:*:*:*:*:rust:*:*",
-                                "cpe_name": [],
-                                "versionEndExcluding": "0.85.0",
-                                "vulnerable": true
-                            }
-                        ],
-                        "operator": "OR"
-                    }
-                ]
-            },
-            "cve": {
-                "CVE_data_meta": {
-                    "ASSIGNER": "security-advisories@github.com",
-                    "ID": "CVE-2022-31104"
-                },
-                "data_format": "MITRE",
-                "data_type": "CVE",
-                "data_version": "4.0",
-                "description": {
-                    "description_data": [
-                        {
-                            "lang": "en",
-                            "value": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected."
-                        }
-                    ]
-                },
-                "problemtype": {
-                    "problemtype_data": [
-                        {
-                            "description": [
-                                {
-                                    "lang": "en",
-                                    "value": "CWE-682"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "references": {
-                    "reference_data": [
-                        {
-                            "name": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd"
-                        },
-                        {
-                            "name": "https://github.com/webassembly/simd",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/webassembly/simd"
-                        },
-                        {
-                            "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
-                            "refsource": "CONFIRM",
-                            "tags": [
-                                "Mitigation",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x"
-                        },
-                        {
-                            "name": "https://github.com/bytecodealliance/wasmtime/pull/4318",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/bytecodealliance/wasmtime/pull/4318"
-                        },
-                        {
-                            "name": "https://github.com/bytecodealliance/wasmtime/pull/4317",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Issue Tracking",
-                                "Patch",
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://github.com/bytecodealliance/wasmtime/pull/4317"
-                        },
-                        {
-                            "name": "https://webassembly.github.io/spec/",
-                            "refsource": "MISC",
-                            "tags": [
-                                "Third Party Advisory"
-                            ],
-                            "url": "https://webassembly.github.io/spec/"
-                        }
-                    ]
-                }
-            },
-            "impact": {
-                "baseMetricV2": {
-                    "acInsufInfo": false,
-                    "cvssV2": {
-                        "accessComplexity": "MEDIUM",
-                        "accessVector": "NETWORK",
-                        "authentication": "NONE",
-                        "availabilityImpact": "PARTIAL",
-                        "baseScore": 6.8,
-                        "confidentialityImpact": "PARTIAL",
-                        "integrityImpact": "PARTIAL",
-                        "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-                        "version": "2.0"
-                    },
-                    "exploitabilityScore": 8.6,
-                    "impactScore": 6.4,
-                    "obtainAllPrivilege": false,
-                    "obtainOtherPrivilege": false,
-                    "obtainUserPrivilege": false,
-                    "severity": "MEDIUM",
-                    "userInteractionRequired": false
-                },
-                "baseMetricV3": {
-                    "cvssV3": {
-                        "attackComplexity": "HIGH",
-                        "attackVector": "NETWORK",
-                        "availabilityImpact": "LOW",
-                        "baseScore": 5.6,
-                        "baseSeverity": "MEDIUM",
-                        "confidentialityImpact": "LOW",
-                        "integrityImpact": "LOW",
-                        "privilegesRequired": "NONE",
-                        "scope": "UNCHANGED",
-                        "userInteraction": "NONE",
-                        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
-                        "version": "3.1"
-                    },
-                    "exploitabilityScore": 2.2,
-                    "impactScore": 3.4
-                }
-            },
-            "lastModifiedDate": "2022-07-08T18:29Z",
-            "publishedDate": "2022-06-28T00:15Z"
-        }
+    "osvSchema": {
+      "aliases": [
+        "CVE-2022-31104"
+      ],
+      "details": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+      "id": "GSD-2022-31104",
+      "modified": "2023-12-13T01:19:17.478700Z",
+      "schema_version": "1.4.0"
     }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security-advisories@github.com",
+        "ID": "CVE-2022-31104",
+        "STATE": "PUBLIC",
+        "TITLE": "Miscompilation of `i8x16.swizzle` and `select` with v128 inputs in Wasmtime"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "wasmtime",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": " wasmtime: < 0.38.1"
+                        },
+                        {
+                          "version_value": "cranelift-codegen: < 0.85.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "bytecodealliance"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": {
+          "attackComplexity": "HIGH",
+          "attackVector": "NETWORK",
+          "availabilityImpact": "LOW",
+          "baseScore": 4.8,
+          "baseSeverity": "MEDIUM",
+          "confidentialityImpact": "NONE",
+          "integrityImpact": "LOW",
+          "privilegesRequired": "NONE",
+          "scope": "UNCHANGED",
+          "userInteraction": "NONE",
+          "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:L",
+          "version": "3.1"
+        }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-682: Incorrect Calculation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+            "refsource": "CONFIRM",
+            "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x"
+          },
+          {
+            "name": "https://github.com/bytecodealliance/wasmtime/pull/4317",
+            "refsource": "MISC",
+            "url": "https://github.com/bytecodealliance/wasmtime/pull/4317"
+          },
+          {
+            "name": "https://github.com/bytecodealliance/wasmtime/pull/4318",
+            "refsource": "MISC",
+            "url": "https://github.com/bytecodealliance/wasmtime/pull/4318"
+          },
+          {
+            "name": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+            "refsource": "MISC",
+            "url": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd"
+          },
+          {
+            "name": "https://github.com/webassembly/simd",
+            "refsource": "MISC",
+            "url": "https://github.com/webassembly/simd"
+          },
+          {
+            "name": "https://webassembly.github.io/spec/",
+            "refsource": "MISC",
+            "url": "https://webassembly.github.io/spec/"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-jqwc-c49r-4w2x",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "gitlab.com": {
+      "advisories": [
+        {
+          "affected_range": "<0.38.1",
+          "affected_versions": "All versions before 0.38.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-682",
+            "CWE-937"
+          ],
+          "date": "2022-07-08",
+          "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+          "fixed_versions": [],
+          "identifier": "CVE-2022-31104",
+          "identifiers": [
+            "CVE-2022-31104",
+            "GHSA-jqwc-c49r-4w2x"
+          ],
+          "not_impacted": "",
+          "package_slug": "conan/wasmtime",
+          "pubdate": "2022-06-28",
+          "solution": "Unfortunately, there is no solution available yet.",
+          "title": "Incorrect Calculation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
+            "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+            "https://github.com/webassembly/simd",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+            "https://github.com/bytecodealliance/wasmtime/pull/4318",
+            "https://github.com/bytecodealliance/wasmtime/pull/4317",
+            "https://webassembly.github.io/spec/"
+          ],
+          "uuid": "cfce1b6b-360b-444a-8281-7b46b83ac07b"
+        },
+        {
+          "affected_range": "<v0.38.1",
+          "affected_versions": "All versions before 0.38.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-682",
+            "CWE-937"
+          ],
+          "date": "2022-07-08",
+          "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+          "fixed_versions": [
+            "v0.38.1"
+          ],
+          "identifier": "CVE-2022-31104",
+          "identifiers": [
+            "CVE-2022-31104",
+            "GHSA-jqwc-c49r-4w2x"
+          ],
+          "not_impacted": "",
+          "package_slug": "go/github.com/bytecodealliance/wasmtime-go",
+          "pubdate": "2022-06-28",
+          "solution": "Upgrade to version 0.38.1 or above.",
+          "title": "Incorrect Calculation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
+            "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+            "https://github.com/webassembly/simd",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+            "https://github.com/bytecodealliance/wasmtime/pull/4318",
+            "https://github.com/bytecodealliance/wasmtime/pull/4317",
+            "https://webassembly.github.io/spec/"
+          ],
+          "uuid": "226e2275-4c3f-4bb4-827c-ad708ee01013",
+          "versions": [
+            {
+              "commit": {
+                "sha": "60160d37d113ef1ec928703caecd37bcab9eb49e",
+                "tags": [
+                  "v0.38.1"
+                ],
+                "timestamp": "20220622150918"
+              },
+              "number": "v0.38.1"
+            }
+          ]
+        },
+        {
+          "affected_range": "(,0.38.1)",
+          "affected_versions": "All versions before 0.38.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-682",
+            "CWE-937"
+          ],
+          "date": "2022-07-08",
+          "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+          "fixed_versions": [
+            "0.38.1"
+          ],
+          "identifier": "CVE-2022-31104",
+          "identifiers": [
+            "CVE-2022-31104",
+            "GHSA-jqwc-c49r-4w2x"
+          ],
+          "not_impacted": "All versions starting from 0.38.1",
+          "package_slug": "nuget/Wasmtime",
+          "pubdate": "2022-06-28",
+          "solution": "Upgrade to version 0.38.1 or above.",
+          "title": "Incorrect Calculation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
+            "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+            "https://github.com/webassembly/simd",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+            "https://github.com/bytecodealliance/wasmtime/pull/4318",
+            "https://github.com/bytecodealliance/wasmtime/pull/4317",
+            "https://webassembly.github.io/spec/"
+          ],
+          "uuid": "a678f012-adf7-4b52-bf98-b7b633fe9aee"
+        },
+        {
+          "affected_range": "<0.38.1",
+          "affected_versions": "All versions before 0.38.1",
+          "cvss_v2": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+          "cvss_v3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+          "cwe_ids": [
+            "CWE-1035",
+            "CWE-682",
+            "CWE-937"
+          ],
+          "date": "2022-07-08",
+          "description": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected.",
+          "fixed_versions": [
+            "0.38.1"
+          ],
+          "identifier": "CVE-2022-31104",
+          "identifiers": [
+            "CVE-2022-31104",
+            "GHSA-jqwc-c49r-4w2x"
+          ],
+          "not_impacted": "",
+          "package_slug": "pypi/wasmtime",
+          "pubdate": "2022-06-28",
+          "solution": "Upgrade to version 0.38.1 or above.",
+          "title": "Incorrect Calculation",
+          "urls": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-31104",
+            "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+            "https://github.com/webassembly/simd",
+            "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+            "https://github.com/bytecodealliance/wasmtime/pull/4318",
+            "https://github.com/bytecodealliance/wasmtime/pull/4317",
+            "https://webassembly.github.io/spec/"
+          ],
+          "uuid": "0c7baf71-fd18-4738-8a93-e68f084fc8a7"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "children": [],
+            "cpe_match": [
+              {
+                "cpe23Uri": "cpe:2.3:a:bytecodealliance:wasmtime:*:*:*:*:*:rust:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.38.1",
+                "vulnerable": true
+              },
+              {
+                "cpe23Uri": "cpe:2.3:a:bytecodealliance:cranelift-codegen:*:*:*:*:*:rust:*:*",
+                "cpe_name": [],
+                "versionEndExcluding": "0.85.0",
+                "vulnerable": true
+              }
+            ],
+            "operator": "OR"
+          }
+        ]
+      },
+      "cve": {
+        "CVE_data_meta": {
+          "ASSIGNER": "security-advisories@github.com",
+          "ID": "CVE-2022-31104"
+        },
+        "data_format": "MITRE",
+        "data_type": "CVE",
+        "data_version": "4.0",
+        "description": {
+          "description_data": [
+            {
+              "lang": "en",
+              "value": "Wasmtime is a standalone runtime for WebAssembly. In affected versions wasmtime's implementation of the SIMD proposal for WebAssembly on x86_64 contained two distinct bugs in the instruction lowerings implemented in Cranelift. The aarch64 implementation of the simd proposal is not affected. The bugs were presented in the `i8x16.swizzle` and `select` WebAssembly instructions. The `select` instruction is only affected when the inputs are of `v128` type. The correspondingly affected Cranelift instructions were `swizzle` and `select`. The `swizzle` instruction lowering in Cranelift erroneously overwrote the mask input register which could corrupt a constant value, for example. This means that future uses of the same constant may see a different value than the constant itself. The `select` instruction lowering in Cranelift wasn't correctly implemented for vector types that are 128-bits wide. When the condition was 0 the wrong instruction was used to move the correct input to the output of the instruction meaning that only the low 32 bits were moved and the upper 96 bits of the result were left as whatever the register previously contained (instead of the input being moved from). The `select` instruction worked correctly if the condition was nonzero, however. This bug in Wasmtime's implementation of these instructions on x86_64 represents an incorrect implementation of the specified semantics of these instructions according to the WebAssembly specification. The impact of this is benign for hosts running WebAssembly but represents possible vulnerabilities within the execution of a guest program. For example a WebAssembly program could take unintended branches or materialize incorrect values internally which runs the risk of exposing the program itself to other related vulnerabilities which can occur from miscompilations. We have released Wasmtime 0.38.1 and cranelift-codegen (and other associated cranelift crates) 0.85.1 which contain the corrected implementations of these two instructions in Cranelift. If upgrading is not an option for you at this time, you can avoid the vulnerability by disabling the Wasm simd proposal. Additionally the bug is only present on x86_64 hosts. Other aarch64 hosts are not affected. Note that s390x hosts don't yet implement the simd proposal and are not affected."
+            }
+          ]
+        },
+        "problemtype": {
+          "problemtype_data": [
+            {
+              "description": [
+                {
+                  "lang": "en",
+                  "value": "CWE-682"
+                }
+              ]
+            }
+          ]
+        },
+        "references": {
+          "reference_data": [
+            {
+              "name": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://docs.rs/wasmtime/latest/wasmtime/struct.Config.html#method.wasm_simd"
+            },
+            {
+              "name": "https://github.com/webassembly/simd",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/webassembly/simd"
+            },
+            {
+              "name": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x",
+              "refsource": "CONFIRM",
+              "tags": [
+                "Mitigation",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-jqwc-c49r-4w2x"
+            },
+            {
+              "name": "https://github.com/bytecodealliance/wasmtime/pull/4318",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/bytecodealliance/wasmtime/pull/4318"
+            },
+            {
+              "name": "https://github.com/bytecodealliance/wasmtime/pull/4317",
+              "refsource": "MISC",
+              "tags": [
+                "Issue Tracking",
+                "Patch",
+                "Third Party Advisory"
+              ],
+              "url": "https://github.com/bytecodealliance/wasmtime/pull/4317"
+            },
+            {
+              "name": "https://webassembly.github.io/spec/",
+              "refsource": "MISC",
+              "tags": [
+                "Third Party Advisory"
+              ],
+              "url": "https://webassembly.github.io/spec/"
+            }
+          ]
+        }
+      },
+      "impact": {
+        "baseMetricV2": {
+          "acInsufInfo": false,
+          "cvssV2": {
+            "accessComplexity": "MEDIUM",
+            "accessVector": "NETWORK",
+            "authentication": "NONE",
+            "availabilityImpact": "PARTIAL",
+            "baseScore": 6.8,
+            "confidentialityImpact": "PARTIAL",
+            "integrityImpact": "PARTIAL",
+            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "version": "2.0"
+          },
+          "exploitabilityScore": 8.6,
+          "impactScore": 6.4,
+          "obtainAllPrivilege": false,
+          "obtainOtherPrivilege": false,
+          "obtainUserPrivilege": false,
+          "severity": "MEDIUM",
+          "userInteractionRequired": false
+        },
+        "baseMetricV3": {
+          "cvssV3": {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 5.6,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+            "version": "3.1"
+          },
+          "exploitabilityScore": 2.2,
+          "impactScore": 3.4
+        }
+      },
+      "lastModifiedDate": "2022-07-08T18:29Z",
+      "publishedDate": "2022-06-28T00:15Z"
+    }
+  }
 }
