@@ -158,71 +158,158 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": []
-      },
       "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "",
-          "ID": "CVE-2023-6245"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:dfinity:candid:*:*:*:*:*:rust:*:*",
+                    "matchCriteriaId": "F95D6602-30FA-4473-9660-F87B18A446FD",
+                    "versionEndExcluding": "0.9.10",
+                    "versionStartIncluding": "0.9.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "The Candid library causes a Denial of Service while \nparsing a specially crafted payload with 'empty' data type. For example,\n if the payload is `record { * ; empty }` and the canister interface expects `record { * }` then the Rust candid decoder treats empty as an extra field required by the type.  The problem with the type empty is that the candid Rust library wrongly categorizes empty as a recoverable error when skipping the field and thus causing an infinite decoding loop.\n\n\nCanisters using affected versions of candid\n are exposed to denial of service by causing the decoding to run \nindefinitely until the canister traps due to reaching maximum \ninstruction limit per execution round. Repeated exposure to the payload \nwill result in degraded performance of the canister. Note: Canisters written in Motoko are unaffected.\n\n\n\n"
+          },
+          {
+            "lang": "es",
+            "value": "La librer\u00eda Candid provoca una denegaci\u00f3n de servicio mientras analiza un payload especialmente manipulado con un tipo de datos \"vac\u00edo\". Por ejemplo, si el payload es `record { * ; empty }` y la interfaz del recipiente espera `record { * }`, entonces el decodificador sincero de Rust trata el vac\u00edo como un campo adicional requerido por el tipo. El problema con el tipo vac\u00edo es que la sincera librer\u00eda Rust clasifica err\u00f3neamente vac\u00edo como un error recuperable al omitir el campo y, por lo tanto, provoca un bucle de decodificaci\u00f3n infinito. Los contenedores que utilizan versiones afectadas de candid est\u00e1n expuestos a una denegaci\u00f3n de servicio al hacer que la decodificaci\u00f3n se ejecute indefinidamente hasta que el contenedor se bloquea debido a que alcanza el l\u00edmite m\u00e1ximo de instrucciones por ronda de ejecuci\u00f3n. La exposici\u00f3n repetida a el payload dar\u00e1 como resultado un rendimiento degradado del recipiente. Nota: Los botes escritos en Motoko no se ven afectados."
+          }
+        ],
+        "id": "CVE-2023-6245",
+        "lastModified": "2023-12-13T14:41:10.210",
+        "metrics": {
+          "cvssMetricV31": [
             {
-              "lang": "en",
-              "value": "The Candid library causes a Denial of Service while \nparsing a specially crafted payload with 'empty' data type. For example,\n if the payload is `record { * ; empty }` and the canister interface expects `record { * }` then the Rust candid decoder treats empty as an extra field required by the type.  The problem with the type empty is that the candid Rust library wrongly categorizes empty as a recoverable error when skipping the field and thus causing an infinite decoding loop.\n\n\nCanisters using affected versions of candid\n are exposed to denial of service by causing the decoding to run \nindefinitely until the canister traps due to reaching maximum \ninstruction limit per execution round. Repeated exposure to the payload \nwill result in degraded performance of the canister. Note: Canisters written in Motoko are unaffected.\n\n\n\n"
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+              "type": "Secondary"
             }
           ]
         },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": []
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/dfinity/candid/pull/478",
-              "refsource": "",
-              "tags": [],
-              "url": "https://github.com/dfinity/candid/pull/478"
-            },
-            {
-              "name": "https://internetcomputer.org/docs/current/references/candid-ref",
-              "refsource": "",
-              "tags": [],
-              "url": "https://internetcomputer.org/docs/current/references/candid-ref"
-            },
-            {
-              "name": "https://github.com/dfinity/candid/blob/master/spec/Candid.md",
-              "refsource": "",
-              "tags": [],
-              "url": "https://github.com/dfinity/candid/blob/master/spec/Candid.md"
-            },
-            {
-              "name": "https://github.com/dfinity/candid/security/advisories/GHSA-7787-p7x6-fq3j",
-              "refsource": "",
-              "tags": [],
-              "url": "https://github.com/dfinity/candid/security/advisories/GHSA-7787-p7x6-fq3j"
-            },
-            {
-              "name": "https://internetcomputer.org/docs/current/references/ic-interface-spec",
-              "refsource": "",
-              "tags": [],
-              "url": "https://internetcomputer.org/docs/current/references/ic-interface-spec"
-            }
-          ]
-        }
-      },
-      "impact": {},
-      "lastModifiedDate": "2023-12-08T16:37Z",
-      "publishedDate": "2023-12-08T15:15Z"
+        "published": "2023-12-08T15:15:08.233",
+        "references": [
+          {
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/dfinity/candid/blob/master/spec/Candid.md"
+          },
+          {
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "tags": [
+              "Patch"
+            ],
+            "url": "https://github.com/dfinity/candid/pull/478"
+          },
+          {
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/dfinity/candid/security/advisories/GHSA-7787-p7x6-fq3j"
+          },
+          {
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://internetcomputer.org/docs/current/references/candid-ref"
+          },
+          {
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://internetcomputer.org/docs/current/references/ic-interface-spec"
+          }
+        ],
+        "sourceIdentifier": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-835"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-1288"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-168"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-20"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-835"
+              }
+            ],
+            "source": "6b35d637-e00f-4228-858c-b20ad6e1d07b",
+            "type": "Secondary"
+          }
+        ]
+      }
     }
   }
 }

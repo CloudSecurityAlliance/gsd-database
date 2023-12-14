@@ -114,6 +114,11 @@
             "name": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/util/builtin.py#L110-L110",
             "refsource": "MISC",
             "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/util/builtin.py#L110-L110"
+          },
+          {
+            "name": "https://securitylab.github.com/advisories/GHSL-2023-190_Frigate/",
+            "refsource": "MISC",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-190_Frigate/"
           }
         ]
       },
@@ -123,121 +128,142 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:frigate:frigate:0.13.0:beta2:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:frigate:frigate:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "C4732404-ED83-4426-AAA2-7BA34EDDD6BD",
+                    "versionEndIncluding": "0.13.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:frigate:frigate:0.13.0:beta1:*:*:*:*:*:*",
+                    "matchCriteriaId": "C166CCC4-B65F-467C-B9C7-716181142D21",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:frigate:frigate:0.13.0:beta2:*:*:*:*:*:*",
+                    "matchCriteriaId": "950A7EE4-7B30-482E-824D-81BD4DC707F2",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Frigate is an open source network video recorder. Prior to version 0.13.0 Beta 3, an unsafe deserialization vulnerability was identified in the endpoints used to save configurations for Frigate. This can lead to unauthenticated remote code execution. This can be performed through the UI at `/config` or through a direct call to `/api/config/save`. Exploiting this vulnerability requires the attacker to both know very specific information about a user's Frigate server and requires an authenticated user to be tricked into clicking a specially crafted link to their Frigate instance. This vulnerability could exploited by an attacker under the following circumstances: Frigate publicly exposed to the internet (even with authentication); attacker knows the address of a user's Frigate instance; attacker crafts a specialized page which links to the user's Frigate instance; attacker finds a way to get an authenticated user to visit their specialized page and click the button/link. Input is initially accepted through `http.py`. The user-provided input is then parsed and loaded by `load_config_with_no_duplicates`. However, `load_config_with_no_duplicates` does not sanitize this input by merit of using `yaml.loader.Loader` which can instantiate custom constructors. A provided payload will be executed directly at `frigate/util/builtin.py:110`. This issue may lead to pre-authenticated Remote Code Execution. Version 0.13.0 Beta 3 contains a patch."
+          },
+          {
+            "lang": "es",
+            "value": "Frigate es una grabadora de v\u00eddeo en red de c\u00f3digo abierto. Antes de la versi\u00f3n 0.13.0 Beta 3, se identific\u00f3 una vulnerabilidad de deserializaci\u00f3n insegura en los endpoints utilizados para guardar configuraciones para Frigate. Esto puede provocar la ejecuci\u00f3n remota de c\u00f3digo no autenticado. Esto se puede realizar a trav\u00e9s de la interfaz de usuario en `/config` o mediante una llamada directa a `/api/config/save`. Explotar esta vulnerabilidad requiere que el atacante conozca informaci\u00f3n muy espec\u00edfica sobre el servidor Frigate de un usuario y requiere que se enga\u00f1e a un usuario autenticado para que haga clic en un enlace especialmente manipulado a su instancia de Frigate. Esta vulnerabilidad podr\u00eda ser aprovechada por un atacante en las siguientes circunstancias: Fragata expuesta p\u00fablicamente a Internet (incluso con autenticaci\u00f3n); el atacante conoce la direcci\u00f3n de la instancia de Frigate de un usuario; el atacante crea una p\u00e1gina especializada que enlaza con la instancia de Frigate del usuario; El atacante encuentra una manera de lograr que un usuario autenticado visite su p\u00e1gina especializada y haga clic en el bot\u00f3n/enlace. La entrada se acepta inicialmente a trav\u00e9s de `http.py`. Luego, la entrada proporcionada por el usuario se analiza y carga mediante `load_config_with_no_duplicates`. Sin embargo, `load_config_with_no_duplicates` no sanitiza esta entrada por el m\u00e9rito de usar `yaml.loader.Loader`, que puede crear instancias de constructores personalizados. Un payload proporcionado se ejecutar\u00e1 directamente en `frigate/util/builtin.py:110`. Este problema puede provocar una ejecuci\u00f3n remota de c\u00f3digo previamente autenticada. La versi\u00f3n 0.13.0 Beta 3 contiene un parche."
+          }
+        ],
+        "id": "CVE-2023-45672",
+        "lastModified": "2023-12-13T20:15:49.260",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+                "version": "3.1"
               },
-              {
-                "cpe23Uri": "cpe:2.3:a:frigate:frigate:0.13.0:beta1:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+              "exploitabilityScore": 1.6,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+                "version": "3.1"
               },
+              "exploitabilityScore": 1.6,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-10-30T23:15:08.697",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/config.py#L1244-L1244"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/http.py#L998-L998"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/util/builtin.py#L110-L110"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ],
+            "url": "https://github.com/blakeblackshear/frigate/security/advisories/GHSA-qp3h-4q62-p428"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-190_Frigate/"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:a:frigate:frigate:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndIncluding": "0.13.0",
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-502"
               }
             ],
-            "operator": "OR"
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security-advisories@github.com",
-          "ID": "CVE-2023-45672"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Frigate is an open source network video recorder. Prior to version 0.13.0 Beta 3, an unsafe deserialization vulnerability was identified in the endpoints used to save configurations for Frigate. This can lead to unauthenticated remote code execution. This can be performed through the UI at `/config` or through a direct call to `/api/config/save`. Exploiting this vulnerability requires the attacker to both know very specific information about a user's Frigate server and requires an authenticated user to be tricked into clicking a specially crafted link to their Frigate instance. This vulnerability could exploited by an attacker under the following circumstances: Frigate publicly exposed to the internet (even with authentication); attacker knows the address of a user's Frigate instance; attacker crafts a specialized page which links to the user's Frigate instance; attacker finds a way to get an authenticated user to visit their specialized page and click the button/link. Input is initially accepted through `http.py`. The user-provided input is then parsed and loaded by `load_config_with_no_duplicates`. However, `load_config_with_no_duplicates` does not sanitize this input by merit of using `yaml.loader.Loader` which can instantiate custom constructors. A provided payload will be executed directly at `frigate/util/builtin.py:110`. This issue may lead to pre-authenticated Remote Code Execution. Version 0.13.0 Beta 3 contains a patch."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-502"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/blakeblackshear/frigate/security/advisories/GHSA-qp3h-4q62-p428",
-              "refsource": "MISC",
-              "tags": [
-                "Exploit",
-                "Vendor Advisory"
-              ],
-              "url": "https://github.com/blakeblackshear/frigate/security/advisories/GHSA-qp3h-4q62-p428"
-            },
-            {
-              "name": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/config.py#L1244-L1244",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/config.py#L1244-L1244"
-            },
-            {
-              "name": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/http.py#L998-L998",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/http.py#L998-L998"
-            },
-            {
-              "name": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/util/builtin.py#L110-L110",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/blakeblackshear/frigate/blob/5658e5a4cc7376504af9de5e1eff178939a13e7f/frigate/util/builtin.py#L110-L110"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "HIGH",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.5,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "REQUIRED",
-            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 1.6,
-          "impactScore": 5.9
-        }
-      },
-      "lastModifiedDate": "2023-11-08T18:46Z",
-      "publishedDate": "2023-10-30T23:15Z"
+      }
     }
   }
 }

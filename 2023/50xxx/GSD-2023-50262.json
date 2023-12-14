@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-50262"
       ],
+      "details": "Dompdf is an HTML to PDF converter for PHP. When parsing SVG images Dompdf performs an initial validation to ensure that paths within the SVG are allowed. One of the validations is that the SVG document does not reference itself. However, prior to version 2.0.4, a recursive chained using two or more SVG documents is not correctly validated. Depending on the system configuration and attack pattern this could exhaust the memory available to the executing process and/or to the server itself.\n\nphp-svg-lib, when run in isolation, does not support SVG references for `image` elements. However, when used in combination with Dompdf, php-svg-lib will process SVG images referenced by an `image` element. Dompdf currently includes validation to prevent self-referential `image` references, but a chained reference is not checked. A malicious actor may thus trigger infinite recursion by chaining references between two or more SVG images.\n\nWhen Dompdf parses a malicious payload, it will crash due after exceeding the allowed execution time or memory usage. An attacker sending multiple request to a system can potentially cause resource exhaustion to the point that the system is unable to handle incoming request.\n\nVersion 2.0.4 contains a fix for this issue.",
       "id": "GSD-2023-50262",
       "modified": "2023-12-13T01:20:31.331752Z",
       "schema_version": "1.4.0"
@@ -22,9 +23,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2023-50262",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "dompdf",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 2.0.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "dompdf"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -33,7 +58,139 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Dompdf is an HTML to PDF converter for PHP. When parsing SVG images Dompdf performs an initial validation to ensure that paths within the SVG are allowed. One of the validations is that the SVG document does not reference itself. However, prior to version 2.0.4, a recursive chained using two or more SVG documents is not correctly validated. Depending on the system configuration and attack pattern this could exhaust the memory available to the executing process and/or to the server itself.\n\nphp-svg-lib, when run in isolation, does not support SVG references for `image` elements. However, when used in combination with Dompdf, php-svg-lib will process SVG images referenced by an `image` element. Dompdf currently includes validation to prevent self-referential `image` references, but a chained reference is not checked. A malicious actor may thus trigger infinite recursion by chaining references between two or more SVG images.\n\nWhen Dompdf parses a malicious payload, it will crash due after exceeding the allowed execution time or memory usage. An attacker sending multiple request to a system can potentially cause resource exhaustion to the point that the system is unable to handle incoming request.\n\nVersion 2.0.4 contains a fix for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-20",
+                "lang": "eng",
+                "value": "CWE-20: Improper Input Validation"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-674",
+                "lang": "eng",
+                "value": "CWE-674: Uncontrolled Recursion"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/dompdf/dompdf/security/advisories/GHSA-3qx2-6f78-w2j2",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/dompdf/security/advisories/GHSA-3qx2-6f78-w2j2"
+          },
+          {
+            "name": "https://github.com/dompdf/dompdf/commit/41cbac16f3cf56affa49f06e8dae66d0eac2b593",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/dompdf/commit/41cbac16f3cf56affa49f06e8dae66d0eac2b593"
+          },
+          {
+            "name": "https://github.com/dompdf/dompdf/blob/v2.0.3/src/Image/Cache.php#L136-L153",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/dompdf/blob/v2.0.3/src/Image/Cache.php#L136-L153"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-3qx2-6f78-w2j2",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Dompdf is an HTML to PDF converter for PHP. When parsing SVG images Dompdf performs an initial validation to ensure that paths within the SVG are allowed. One of the validations is that the SVG document does not reference itself. However, prior to version 2.0.4, a recursive chained using two or more SVG documents is not correctly validated. Depending on the system configuration and attack pattern this could exhaust the memory available to the executing process and/or to the server itself.\n\nphp-svg-lib, when run in isolation, does not support SVG references for `image` elements. However, when used in combination with Dompdf, php-svg-lib will process SVG images referenced by an `image` element. Dompdf currently includes validation to prevent self-referential `image` references, but a chained reference is not checked. A malicious actor may thus trigger infinite recursion by chaining references between two or more SVG images.\n\nWhen Dompdf parses a malicious payload, it will crash due after exceeding the allowed execution time or memory usage. An attacker sending multiple request to a system can potentially cause resource exhaustion to the point that the system is unable to handle incoming request.\n\nVersion 2.0.4 contains a fix for this issue."
+          }
+        ],
+        "id": "CVE-2023-50262",
+        "lastModified": "2023-12-13T21:25:53.887",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "LOW",
+                "baseScore": 5.3,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 1.4,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-12-13T21:15:09.117",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/dompdf/blob/v2.0.3/src/Image/Cache.php#L136-L153"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/dompdf/commit/41cbac16f3cf56affa49f06e8dae66d0eac2b593"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/dompdf/security/advisories/GHSA-3qx2-6f78-w2j2"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-20"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-674"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }

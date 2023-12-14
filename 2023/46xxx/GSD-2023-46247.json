@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-46247"
       ],
+      "details": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine (EVM). Contracts containing large arrays might underallocate the number of slots they need by 1. Prior to v0.3.8, the calculation to determine how many slots a storage variable needed used `math.ceil(type_.size_in_bytes / 32)`. The intermediate floating point step can produce a rounding error if there are enough bits set in the IEEE-754 mantissa. Roughly speaking, if `type_.size_in_bytes` is large (> 2**46), and slightly less than a power of 2, the calculation can overestimate how many slots are needed by 1. If `type_.size_in_bytes` is slightly more than a power of 2, the calculation can underestimate how many slots are needed by 1. This issue is patched in version 0.3.8.",
       "id": "GSD-2023-46247",
       "modified": "2023-12-13T01:20:52.746122Z",
       "schema_version": "1.4.0"
@@ -22,9 +23,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2023-46247",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "vyper",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 0.3.8"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "vyperlang"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -33,7 +58,139 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine (EVM). Contracts containing large arrays might underallocate the number of slots they need by 1. Prior to v0.3.8, the calculation to determine how many slots a storage variable needed used `math.ceil(type_.size_in_bytes / 32)`. The intermediate floating point step can produce a rounding error if there are enough bits set in the IEEE-754 mantissa. Roughly speaking, if `type_.size_in_bytes` is large (> 2**46), and slightly less than a power of 2, the calculation can overestimate how many slots are needed by 1. If `type_.size_in_bytes` is slightly more than a power of 2, the calculation can underestimate how many slots are needed by 1. This issue is patched in version 0.3.8."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-193",
+                "lang": "eng",
+                "value": "CWE-193: Off-by-one Error"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-682",
+                "lang": "eng",
+                "value": "CWE-682: Incorrect Calculation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/vyperlang/vyper/security/advisories/GHSA-6m97-7527-mh74",
+            "refsource": "MISC",
+            "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-6m97-7527-mh74"
+          },
+          {
+            "name": "https://github.com/vyperlang/vyper/commit/0bb7203b584e771b23536ba065a6efda457161bb",
+            "refsource": "MISC",
+            "url": "https://github.com/vyperlang/vyper/commit/0bb7203b584e771b23536ba065a6efda457161bb"
+          },
+          {
+            "name": "https://github.com/vyperlang/vyper/blob/6020b8bbf66b062d299d87bc7e4eddc4c9d1c157/vyper/semantics/validation/data_positions.py#L197",
+            "refsource": "MISC",
+            "url": "https://github.com/vyperlang/vyper/blob/6020b8bbf66b062d299d87bc7e4eddc4c9d1c157/vyper/semantics/validation/data_positions.py#L197"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-6m97-7527-mh74",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine (EVM). Contracts containing large arrays might underallocate the number of slots they need by 1. Prior to v0.3.8, the calculation to determine how many slots a storage variable needed used `math.ceil(type_.size_in_bytes / 32)`. The intermediate floating point step can produce a rounding error if there are enough bits set in the IEEE-754 mantissa. Roughly speaking, if `type_.size_in_bytes` is large (> 2**46), and slightly less than a power of 2, the calculation can overestimate how many slots are needed by 1. If `type_.size_in_bytes` is slightly more than a power of 2, the calculation can underestimate how many slots are needed by 1. This issue is patched in version 0.3.8."
+          }
+        ],
+        "id": "CVE-2023-46247",
+        "lastModified": "2023-12-13T21:25:53.887",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-12-13T20:15:49.360",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/vyperlang/vyper/blob/6020b8bbf66b062d299d87bc7e4eddc4c9d1c157/vyper/semantics/validation/data_positions.py#L197"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/vyperlang/vyper/commit/0bb7203b584e771b23536ba065a6efda457161bb"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-6m97-7527-mh74"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-193"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-682"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
