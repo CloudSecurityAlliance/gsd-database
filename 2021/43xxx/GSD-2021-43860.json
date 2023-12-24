@@ -152,6 +152,11 @@
             "name": "DSA-5049",
             "refsource": "DEBIAN",
             "url": "https://www.debian.org/security/2022/dsa-5049"
+          },
+          {
+            "name": "GLSA-202312-12",
+            "refsource": "GENTOO",
+            "url": "https://security.gentoo.org/glsa/202312-12"
           }
         ]
       },
@@ -161,237 +166,275 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:flatpak:flatpak:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "1.10.6",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:flatpak:flatpak:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndIncluding": "1.12.3",
-                "versionStartIncluding": "1.11.1",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:flatpak:flatpak:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "F18D4717-D920-439E-9D65-4D45CAFEA1DF",
+                    "versionEndExcluding": "1.10.6",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:flatpak:flatpak:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D9F7305E-5D9E-4BDB-B582-469DFA0AF0CF",
+                    "versionEndIncluding": "1.12.3",
+                    "versionStartIncluding": "1.11.1",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "80E516C0-98A4-4ADE-B69F-66A772E2BAAA",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:redhat:enterprise_linux:8.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:redhat:enterprise_linux:8.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "F4CFF558-3C47-480D-A2F0-BABF26042943",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "DEECE5FC-CACF-4496-A3E7-164736409252",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "07B237A9-69A3-4A9C-9DA0-4E06BD37AE73",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "FA6FEEC2-9F11-4643-8827-749718254FED",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Flatpak is a Linux application sandboxing and distribution framework. Prior to versions 1.12.3 and 1.10.6, Flatpak doesn't properly validate that the permissions displayed to the user for an app at install time match the actual permissions granted to the app at runtime, in the case that there's a null byte in the metadata file of an app. Therefore apps can grant themselves permissions without the consent of the user. Flatpak shows permissions to the user during install by reading them from the \"xa.metadata\" key in the commit metadata. This cannot contain a null terminator, because it is an untrusted GVariant. Flatpak compares these permissions to the *actual* metadata, from the \"metadata\" file to ensure it wasn't lied to. However, the actual metadata contents are loaded in several places where they are read as simple C-style strings. That means that, if the metadata file includes a null terminator, only the content of the file from *before* the terminator gets compared to xa.metadata. Thus, any permissions that appear in the metadata file after a null terminator are applied at runtime but not shown to the user. So maliciously crafted apps can give themselves hidden permissions. Users who have Flatpaks installed from untrusted sources are at risk in case the Flatpak has a maliciously crafted metadata file, either initially or in an update. This issue is patched in versions 1.12.3 and 1.10.6. As a workaround, users can manually check the permissions of installed apps by checking the metadata file or the xa.metadata key on the commit metadata."
+          },
+          {
+            "lang": "es",
+            "value": "Flatpak es un marco de distribuci\u00f3n y sandboxing de aplicaciones de Linux. Anterior a versiones 1.12.3 y 1.10.6, Flatpak no comprueba correctamente que los permisos mostrados al usuario para una aplicaci\u00f3n en el momento de la instalaci\u00f3n coincidan con los permisos reales concedidos a la aplicaci\u00f3n en tiempo de ejecuci\u00f3n, en el caso de que haya un byte nulo en el archivo de metadatos de una aplicaci\u00f3n. Por lo tanto, las aplicaciones pueden concederse a s\u00ed mismas permisos sin el consentimiento del usuario. Flatpak muestra los permisos al usuario durante la instalaci\u00f3n ley\u00e9ndolos de la clave \"xa.metadata\" en los metadatos de la confirmaci\u00f3n. Esta no puede contener un terminador nulo, porque es una GVariant no confiable. Flatpak compara estos permisos con los metadatos *reales*, del archivo \"metadata\" para asegurarse de que no le han mentido. Sin embargo, el contenido real de los metadatos es cargado en varios lugares donde son le\u00eddos como simples cadenas de estilo C. Esto significa que, si el archivo de metadatos incluye un terminador nulo, s\u00f3lo el contenido del archivo de *antes* del terminador se compara con xa.metadata. As\u00ed, cualquier permiso que aparezca en el archivo de metadatos despu\u00e9s de un terminador nulo es aplicado en tiempo de ejecuci\u00f3n pero no es mostrado al usuario. Por lo tanto, las aplicaciones dise\u00f1adas de forma maliciosa pueden otorgar permisos ocultos. Los usuarios que presentan Flatpaks instalados desde fuentes no confiables est\u00e1n en riesgo en caso de que el Flatpak tenga un archivo de metadatos maliciosamente dise\u00f1ado, ya sea inicialmente o en una actualizaci\u00f3n. Este problema est\u00e1 parcheado en las versiones 1.12.3 y 1.10.6. Como medida de mitigaci\u00f3n, los usuarios pueden comprobar manualmente los permisos de las aplicaciones instaladas al comprobar el archivo de metadatos o la clave xa.metadata en los metadatos de confirmaci\u00f3n"
+          }
+        ],
+        "id": "CVE-2021-43860",
+        "lastModified": "2023-12-23T10:15:08.917",
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "acInsufInfo": false,
+              "baseSeverity": "MEDIUM",
+              "cvssData": {
+                "accessComplexity": "MEDIUM",
+                "accessVector": "NETWORK",
+                "authentication": "NONE",
+                "availabilityImpact": "PARTIAL",
+                "baseScore": 6.8,
+                "confidentialityImpact": "PARTIAL",
+                "integrityImpact": "PARTIAL",
+                "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+                "version": "2.0"
               },
-              {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+              "exploitabilityScore": 8.6,
+              "impactScore": 6.4,
+              "obtainAllPrivilege": false,
+              "obtainOtherPrivilege": false,
+              "obtainUserPrivilege": false,
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "userInteractionRequired": true
+            }
+          ],
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.6,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+                "version": "3.1"
               },
+              "exploitabilityScore": 1.8,
+              "impactScore": 6.0,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "NONE",
+                "baseScore": 8.2,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.8,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2022-01-12T22:15:07.977",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/commit/54ec1a482dfc668127eaae57f135e6a8e0bc52da"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/commit/65cbfac982cb1c83993a9e19aa424daee8e9f042"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/commit/93357d357119093804df05acc32ff335839c6451"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/commit/ba818f504c926baaf6e362be8159cfacf994310e"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/commit/d9a8f9d8ccc0b7c1135d0ecde006a75d25f66aee"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/releases/tag/1.10.6"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/releases/tag/1.12.3"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/flatpak/flatpak/security/advisories/GHSA-qpjc-vq3c-572j"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/APFTBYGJJVJPFVHRXUW5PII5XOAFI4KH/"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://security.gentoo.org/glsa/202312-12"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://www.debian.org/security/2022/dsa-5049"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-276"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-269"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security-advisories@github.com",
-          "ID": "CVE-2021-43860"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Flatpak is a Linux application sandboxing and distribution framework. Prior to versions 1.12.3 and 1.10.6, Flatpak doesn't properly validate that the permissions displayed to the user for an app at install time match the actual permissions granted to the app at runtime, in the case that there's a null byte in the metadata file of an app. Therefore apps can grant themselves permissions without the consent of the user. Flatpak shows permissions to the user during install by reading them from the \"xa.metadata\" key in the commit metadata. This cannot contain a null terminator, because it is an untrusted GVariant. Flatpak compares these permissions to the *actual* metadata, from the \"metadata\" file to ensure it wasn't lied to. However, the actual metadata contents are loaded in several places where they are read as simple C-style strings. That means that, if the metadata file includes a null terminator, only the content of the file from *before* the terminator gets compared to xa.metadata. Thus, any permissions that appear in the metadata file after a null terminator are applied at runtime but not shown to the user. So maliciously crafted apps can give themselves hidden permissions. Users who have Flatpaks installed from untrusted sources are at risk in case the Flatpak has a maliciously crafted metadata file, either initially or in an update. This issue is patched in versions 1.12.3 and 1.10.6. As a workaround, users can manually check the permissions of installed apps by checking the metadata file or the xa.metadata key on the commit metadata."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-276"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/flatpak/flatpak/commit/d9a8f9d8ccc0b7c1135d0ecde006a75d25f66aee",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/commit/d9a8f9d8ccc0b7c1135d0ecde006a75d25f66aee"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/commit/65cbfac982cb1c83993a9e19aa424daee8e9f042",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/commit/65cbfac982cb1c83993a9e19aa424daee8e9f042"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/commit/93357d357119093804df05acc32ff335839c6451",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/commit/93357d357119093804df05acc32ff335839c6451"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/commit/ba818f504c926baaf6e362be8159cfacf994310e",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/commit/ba818f504c926baaf6e362be8159cfacf994310e"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/security/advisories/GHSA-qpjc-vq3c-572j",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/security/advisories/GHSA-qpjc-vq3c-572j"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/commit/54ec1a482dfc668127eaae57f135e6a8e0bc52da",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/commit/54ec1a482dfc668127eaae57f135e6a8e0bc52da"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/releases/tag/1.12.3",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/releases/tag/1.12.3"
-            },
-            {
-              "name": "https://github.com/flatpak/flatpak/releases/tag/1.10.6",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/flatpak/flatpak/releases/tag/1.10.6"
-            },
-            {
-              "name": "FEDORA-2022-825ca6bf2b",
-              "refsource": "FEDORA",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/APFTBYGJJVJPFVHRXUW5PII5XOAFI4KH/"
-            },
-            {
-              "name": "DSA-5049",
-              "refsource": "DEBIAN",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://www.debian.org/security/2022/dsa-5049"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV2": {
-          "acInsufInfo": false,
-          "cvssV2": {
-            "accessComplexity": "MEDIUM",
-            "accessVector": "NETWORK",
-            "authentication": "NONE",
-            "availabilityImpact": "PARTIAL",
-            "baseScore": 6.8,
-            "confidentialityImpact": "PARTIAL",
-            "integrityImpact": "PARTIAL",
-            "vectorString": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-            "version": "2.0"
-          },
-          "exploitabilityScore": 8.6,
-          "impactScore": 6.4,
-          "obtainAllPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "obtainUserPrivilege": false,
-          "severity": "MEDIUM",
-          "userInteractionRequired": true
-        },
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "LOCAL",
-            "availabilityImpact": "HIGH",
-            "baseScore": 8.6,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "NONE",
-            "scope": "CHANGED",
-            "userInteraction": "REQUIRED",
-            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 1.8,
-          "impactScore": 6.0
-        }
-      },
-      "lastModifiedDate": "2022-02-10T15:03Z",
-      "publishedDate": "2022-01-12T22:15Z"
+      }
     }
   }
 }

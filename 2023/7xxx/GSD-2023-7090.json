@@ -8,11 +8,11 @@
     },
     "osvSchema": {
       "aliases": [
-        "CVE-2023-7008"
+        "CVE-2023-7090"
       ],
-      "details": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records.",
-      "id": "GSD-2023-7008",
-      "modified": "2023-12-21T06:01:24.592982Z",
+      "details": "A flaw was found in sudo in the handling of ipa_hostname, where ipa_hostname from /etc/sssd/sssd.conf was not propagated in sudo. Therefore, it leads to privilege mismanagement vulnerability in applications, where client hosts retain privileges even after retracting them.",
+      "id": "GSD-2023-7090",
+      "modified": "2023-12-24T06:01:20.791555Z",
       "schema_version": "1.4.0"
     }
   },
@@ -20,7 +20,7 @@
     "cve.org": {
       "CVE_data_meta": {
         "ASSIGNER": "secalert@redhat.com",
-        "ID": "CVE-2023-7008",
+        "ID": "CVE-2023-7090",
         "STATE": "PUBLIC"
       },
       "affects": {
@@ -30,7 +30,7 @@
               "product": {
                 "product_data": [
                   {
-                    "product_name": "systemd",
+                    "product_name": "sudo",
                     "version": {
                       "version_data": [
                         {
@@ -39,7 +39,7 @@
                             "versions": [
                               {
                                 "status": "unaffected",
-                                "version": "25X"
+                                "version": "1.8.28"
                               }
                             ]
                           }
@@ -55,7 +55,20 @@
               "product": {
                 "product_data": [
                   {
-                    "product_name": "Cryostat 2",
+                    "product_name": "Red Hat Enterprise Linux 6",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "product_name": "Red Hat Enterprise Linux 7",
                     "version": {
                       "version_data": [
                         {
@@ -74,7 +87,7 @@
                         {
                           "version_value": "not down converted",
                           "x_cve_json_5_version_data": {
-                            "defaultStatus": "affected"
+                            "defaultStatus": "unaffected"
                           }
                         }
                       ]
@@ -82,19 +95,6 @@
                   },
                   {
                     "product_name": "Red Hat Enterprise Linux 9",
-                    "version": {
-                      "version_data": [
-                        {
-                          "version_value": "not down converted",
-                          "x_cve_json_5_version_data": {
-                            "defaultStatus": "affected"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "product_name": "Red Hat OpenShift Container Platform 4",
                     "version": {
                       "version_data": [
                         {
@@ -109,10 +109,42 @@
                 ]
               },
               "vendor_name": "Red Hat"
+            },
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Fedora",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected"
+                          }
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Fedora"
             }
           ]
         }
       },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "This issue was discovered by Mohammad Tausif Siddiqui (Red Hat Product Security)."
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -120,24 +152,24 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records."
+            "value": "A flaw was found in sudo in the handling of ipa_hostname, where ipa_hostname from /etc/sssd/sssd.conf was not propagated in sudo. Therefore, it leads to privilege mismanagement vulnerability in applications, where client hosts retain privileges even after retracting them."
           }
         ]
       },
       "impact": {
         "cvss": [
           {
-            "attackComplexity": "HIGH",
+            "attackComplexity": "LOW",
             "attackVector": "NETWORK",
-            "availabilityImpact": "NONE",
-            "baseScore": 5.9,
+            "availabilityImpact": "LOW",
+            "baseScore": 6.6,
             "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "HIGH",
+            "scope": "CHANGED",
             "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:L/I:L/A:L",
             "version": "3.1"
           }
         ]
@@ -147,9 +179,9 @@
           {
             "description": [
               {
-                "cweId": "CWE-300",
+                "cweId": "CWE-269",
                 "lang": "eng",
-                "value": "Channel Accessible by Non-Endpoint"
+                "value": "Improper Privilege Management"
               }
             ]
           }
@@ -158,85 +190,70 @@
       "references": {
         "reference_data": [
           {
-            "name": "https://access.redhat.com/security/cve/CVE-2023-7008",
+            "name": "https://access.redhat.com/security/cve/CVE-2023-7090",
             "refsource": "MISC",
-            "url": "https://access.redhat.com/security/cve/CVE-2023-7008"
+            "url": "https://access.redhat.com/security/cve/CVE-2023-7090"
           },
           {
-            "name": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261",
+            "name": "https://bugzilla.redhat.com/show_bug.cgi?id=2255723",
             "refsource": "MISC",
-            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261"
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2255723"
           },
           {
-            "name": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672",
+            "name": "https://www.sudo.ws/releases/legacy/#1.8.28",
             "refsource": "MISC",
-            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672"
-          },
-          {
-            "name": "https://github.com/systemd/systemd/issues/25676",
-            "refsource": "MISC",
-            "url": "https://github.com/systemd/systemd/issues/25676"
+            "url": "https://www.sudo.ws/releases/legacy/#1.8.28"
           }
         ]
-      },
-      "work_around": [
-        {
-          "lang": "en",
-          "value": "Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability."
-        }
-      ]
+      }
     },
     "nvd.nist.gov": {
       "cve": {
         "descriptions": [
           {
             "lang": "en",
-            "value": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records."
+            "value": "A flaw was found in sudo in the handling of ipa_hostname, where ipa_hostname from /etc/sssd/sssd.conf was not propagated in sudo. Therefore, it leads to privilege mismanagement vulnerability in applications, where client hosts retain privileges even after retracting them."
           }
         ],
-        "id": "CVE-2023-7008",
-        "lastModified": "2023-12-23T13:15:07.573",
+        "id": "CVE-2023-7090",
+        "lastModified": "2023-12-23T23:15:07.560",
         "metrics": {
           "cvssMetricV31": [
             {
               "cvssData": {
-                "attackComplexity": "HIGH",
+                "attackComplexity": "LOW",
                 "attackVector": "NETWORK",
-                "availabilityImpact": "NONE",
-                "baseScore": 5.9,
+                "availabilityImpact": "LOW",
+                "baseScore": 6.6,
                 "baseSeverity": "MEDIUM",
-                "confidentialityImpact": "NONE",
-                "integrityImpact": "HIGH",
-                "privilegesRequired": "NONE",
-                "scope": "UNCHANGED",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "HIGH",
+                "scope": "CHANGED",
                 "userInteraction": "NONE",
-                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:L/I:L/A:L",
                 "version": "3.1"
               },
-              "exploitabilityScore": 2.2,
-              "impactScore": 3.6,
+              "exploitabilityScore": 2.3,
+              "impactScore": 3.7,
               "source": "secalert@redhat.com",
               "type": "Secondary"
             }
           ]
         },
-        "published": "2023-12-23T13:15:07.573",
+        "published": "2023-12-23T23:15:07.560",
         "references": [
           {
             "source": "secalert@redhat.com",
-            "url": "https://access.redhat.com/security/cve/CVE-2023-7008"
+            "url": "https://access.redhat.com/security/cve/CVE-2023-7090"
           },
           {
             "source": "secalert@redhat.com",
-            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261"
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2255723"
           },
           {
             "source": "secalert@redhat.com",
-            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672"
-          },
-          {
-            "source": "secalert@redhat.com",
-            "url": "https://github.com/systemd/systemd/issues/25676"
+            "url": "https://www.sudo.ws/releases/legacy/#1.8.28"
           }
         ],
         "sourceIdentifier": "secalert@redhat.com",
@@ -246,7 +263,7 @@
             "description": [
               {
                 "lang": "en",
-                "value": "CWE-300"
+                "value": "CWE-269"
               }
             ],
             "source": "secalert@redhat.com",
