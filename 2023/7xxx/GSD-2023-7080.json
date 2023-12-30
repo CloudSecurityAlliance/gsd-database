@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-7080"
       ],
+      "details": "The V8 inspector intentionally allows arbitrary code execution within the Workers sandbox for debugging. wrangler dev would previously start an inspector server listening on all network interfaces. This would allow an attacker on the local network to connect to the inspector and run arbitrary code. Additionally, the inspector server did not validate Origin/Host headers, granting an attacker that can trick any user on the local network into opening a malicious website the ability to run code. If wrangler dev --remote was being used, an attacker could access production resources if they were bound to the worker.\n\nThis issue was fixed in wrangler@3.19.0 and wrangler@2.20.2. Whilst wrangler dev's inspector server listens on local interfaces by default as of wrangler@3.16.0, an  SSRF vulnerability in miniflare https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-fwvg-2739-22v7 \u00a0(CVE-2023-7078) allowed access from the local network until wrangler@3.18.0. wrangler@3.19.0 and wrangler@2.20.2 introduced validation for the Origin/Host headers.\n",
       "id": "GSD-2023-7080",
       "modified": "2023-12-23T06:01:21.047971Z",
       "schema_version": "1.4.0"
@@ -18,10 +19,92 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cna@cloudflare.com",
         "ID": "CVE-2023-7080",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "wrangler",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected",
+                            "versions": [
+                              {
+                                "changes": [
+                                  {
+                                    "at": "3.19.0",
+                                    "status": "unaffected"
+                                  }
+                                ],
+                                "lessThanOrEqual": "3.0.0",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "patch"
+                              },
+                              {
+                                "changes": [
+                                  {
+                                    "at": "3.19.0",
+                                    "status": "unaffected"
+                                  }
+                                ],
+                                "lessThan": "3.19.0",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "patch"
+                              },
+                              {
+                                "changes": [
+                                  {
+                                    "at": "2.20.2",
+                                    "status": "unaffected"
+                                  }
+                                ],
+                                "lessThanOrEqual": "2.0.0",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "patch"
+                              },
+                              {
+                                "changes": [
+                                  {
+                                    "at": "2.20.2",
+                                    "status": "unaffected"
+                                  }
+                                ],
+                                "lessThan": "2.20.2",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "patch"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Cloudflare"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": " Peter Wu (Lekensteyn)"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -29,7 +112,163 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "The V8 inspector intentionally allows arbitrary code execution within the Workers sandbox for debugging. wrangler dev would previously start an inspector server listening on all network interfaces. This would allow an attacker on the local network to connect to the inspector and run arbitrary code. Additionally, the inspector server did not validate Origin/Host headers, granting an attacker that can trick any user on the local network into opening a malicious website the ability to run code. If wrangler dev --remote was being used, an attacker could access production resources if they were bound to the worker.\n\nThis issue was fixed in wrangler@3.19.0 and wrangler@2.20.2. Whilst wrangler dev's inspector server listens on local interfaces by default as of wrangler@3.16.0, an  SSRF vulnerability in miniflare https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-fwvg-2739-22v7 \u00a0(CVE-2023-7078) allowed access from the local network until wrangler@3.18.0. wrangler@3.19.0 and wrangler@2.20.2 introduced validation for the Origin/Host headers.\n"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "ADJACENT_NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 8.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-269",
+                "lang": "eng",
+                "value": "CWE-269 Improper Privilege Management"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-f8mp-x433-5wpf",
+            "refsource": "MISC",
+            "url": "https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-f8mp-x433-5wpf"
+          },
+          {
+            "name": "https://github.com/cloudflare/workers-sdk/issues/4430",
+            "refsource": "MISC",
+            "url": "https://github.com/cloudflare/workers-sdk/issues/4430"
+          },
+          {
+            "name": "https://github.com/cloudflare/workers-sdk/pull/4437",
+            "refsource": "MISC",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4437"
+          },
+          {
+            "name": "https://github.com/cloudflare/workers-sdk/pull/4535",
+            "refsource": "MISC",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4535"
+          },
+          {
+            "name": "https://github.com/cloudflare/workers-sdk/pull/4550",
+            "refsource": "MISC",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4550"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "INTERNAL"
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "Unfortunately, Wrangler doesn't provide any configuration for which host that inspector server should listen on. Please upgrade to at least <b>wrangler@3.16.0</b>, and configure Wrangler to listen on local interfaces instead with <b>wrangler dev --ip 127.0.0.1</b> to prevent SSRF. This removes the local network as an attack vector, but does not prevent an attack from visiting a malicious website."
+            }
+          ],
+          "value": "Unfortunately, Wrangler doesn't provide any configuration for which host that inspector server should listen on. Please upgrade to at least wrangler@3.16.0, and configure Wrangler to listen on local interfaces instead with wrangler dev --ip 127.0.0.1 to prevent SSRF. This removes the local network as an attack vector, but does not prevent an attack from visiting a malicious website."
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "The V8 inspector intentionally allows arbitrary code execution within the Workers sandbox for debugging. wrangler dev would previously start an inspector server listening on all network interfaces. This would allow an attacker on the local network to connect to the inspector and run arbitrary code. Additionally, the inspector server did not validate Origin/Host headers, granting an attacker that can trick any user on the local network into opening a malicious website the ability to run code. If wrangler dev --remote was being used, an attacker could access production resources if they were bound to the worker.\n\nThis issue was fixed in wrangler@3.19.0 and wrangler@2.20.2. Whilst wrangler dev's inspector server listens on local interfaces by default as of wrangler@3.16.0, an  SSRF vulnerability in miniflare https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-fwvg-2739-22v7 \u00a0(CVE-2023-7078) allowed access from the local network until wrangler@3.18.0. wrangler@3.19.0 and wrangler@2.20.2 introduced validation for the Origin/Host headers.\n"
+          },
+          {
+            "lang": "es",
+            "value": "V8 inspector permite intencionalmente la ejecuci\u00f3n de c\u00f3digo arbitrario dentro de la sandbox de Workers para su depuraci\u00f3n. wrangler dev previamente iniciar\u00eda un servidor inspector escuchando en todas las interfaces de red. Esto permitir\u00eda a un atacante en la red local conectarse al inspector y ejecutar c\u00f3digo arbitrario. Adem\u00e1s, el servidor inspector no valid\u00f3 los encabezados Origin/Host, lo que le otorga a un atacante que puede enga\u00f1ar a cualquier usuario de la red local para que abra un sitio web malicioso la capacidad de ejecutar c\u00f3digo. Si se usaba wrangler dev --remote, un atacante podr\u00eda acceder a los recursos de producci\u00f3n si estuvieran vinculados al trabajador. Este problema se solucion\u00f3 en wrangler@3.19.0 y wrangler@2.20.2. Si bien el servidor inspector de wrangler dev escucha en las interfaces locales de forma predeterminada a partir de wrangler@3.16.0, se ha detectado una vulnerabilidad SSRF en miniflare https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-fwvg-2739-22v7&#xa0;( CVE-2023-7078) permit\u00eda el acceso desde la red local hasta wrangler@3.18.0. wrangler@3.19.0 y wrangler@2.20.2 introdujeron la validaci\u00f3n para los encabezados Origen/Host."
+          }
+        ],
+        "id": "CVE-2023-7080",
+        "lastModified": "2023-12-29T13:56:17.293",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "ADJACENT_NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 8.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.1,
+              "impactScore": 5.8,
+              "source": "cna@cloudflare.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-12-29T12:15:47.970",
+        "references": [
+          {
+            "source": "cna@cloudflare.com",
+            "url": "https://github.com/cloudflare/workers-sdk/issues/4430"
+          },
+          {
+            "source": "cna@cloudflare.com",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4437"
+          },
+          {
+            "source": "cna@cloudflare.com",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4535"
+          },
+          {
+            "source": "cna@cloudflare.com",
+            "url": "https://github.com/cloudflare/workers-sdk/pull/4550"
+          },
+          {
+            "source": "cna@cloudflare.com",
+            "url": "https://github.com/cloudflare/workers-sdk/security/advisories/GHSA-f8mp-x433-5wpf"
+          }
+        ],
+        "sourceIdentifier": "cna@cloudflare.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-269"
+              }
+            ],
+            "source": "cna@cloudflare.com",
+            "type": "Secondary"
           }
         ]
       }
