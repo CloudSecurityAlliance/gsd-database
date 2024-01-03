@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-51652"
       ],
+      "details": "OWASP AntiSamy .NET is a library for performing cleansing of HTML coming from untrusted sources. Prior to version 1.2.0, there is a potential for a mutation cross-site scripting (mXSS) vulnerability in AntiSamy caused by flawed parsing of the HTML being sanitized. To be subject to this vulnerability the `preserveComments` directive must be enabled in your policy file and also allow for certain tags at the same time. As a result, certain crafty inputs can result in elements in comment tags being interpreted as executable when using AntiSamy's sanitized output. This is patched in OWASP AntiSamy .NET 1.2.0 and later. See important remediation details in the reference given below. As a workaround, manually edit the AntiSamy policy file (e.g., antisamy.xml) by deleting the `preserveComments` directive or setting its value to `false`,  if present. Also it would be useful to make AntiSamy remove the `noscript` tag by adding a line described in the GitHub Security Advisory to the tag definitions under the `<tagrules>` node, or deleting it entirely if present. As the previously mentioned policy settings are preconditions for the mXSS attack to work, changing them as recommended should be sufficient to protect you against this vulnerability when using a vulnerable version of this library. However, the existing bug would still be present in AntiSamy or its parser dependency (HtmlAgilityPack). The safety of this workaround relies on configurations that may change in the future and don't address the root cause of the vulnerability. As such, it is strongly recommended to upgrade to a fixed version of AntiSamy.",
       "id": "GSD-2023-51652",
       "modified": "2023-12-21T06:01:31.575110Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2023-51652",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "antisamy-dotnet",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.2.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "spassarop"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,126 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "OWASP AntiSamy .NET is a library for performing cleansing of HTML coming from untrusted sources. Prior to version 1.2.0, there is a potential for a mutation cross-site scripting (mXSS) vulnerability in AntiSamy caused by flawed parsing of the HTML being sanitized. To be subject to this vulnerability the `preserveComments` directive must be enabled in your policy file and also allow for certain tags at the same time. As a result, certain crafty inputs can result in elements in comment tags being interpreted as executable when using AntiSamy's sanitized output. This is patched in OWASP AntiSamy .NET 1.2.0 and later. See important remediation details in the reference given below. As a workaround, manually edit the AntiSamy policy file (e.g., antisamy.xml) by deleting the `preserveComments` directive or setting its value to `false`,  if present. Also it would be useful to make AntiSamy remove the `noscript` tag by adding a line described in the GitHub Security Advisory to the tag definitions under the `<tagrules>` node, or deleting it entirely if present. As the previously mentioned policy settings are preconditions for the mXSS attack to work, changing them as recommended should be sufficient to protect you against this vulnerability when using a vulnerable version of this library. However, the existing bug would still be present in AntiSamy or its parser dependency (HtmlAgilityPack). The safety of this workaround relies on configurations that may change in the future and don't address the root cause of the vulnerability. As such, it is strongly recommended to upgrade to a fixed version of AntiSamy."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 6.1,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-79",
+                "lang": "eng",
+                "value": "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/spassarop/antisamy-dotnet/security/advisories/GHSA-8x6f-956f-q43w",
+            "refsource": "MISC",
+            "url": "https://github.com/spassarop/antisamy-dotnet/security/advisories/GHSA-8x6f-956f-q43w"
+          },
+          {
+            "name": "https://github.com/spassarop/antisamy-dotnet/commit/7e500daef6ad9c10e97c68feab78f4cb6e3083c6",
+            "refsource": "MISC",
+            "url": "https://github.com/spassarop/antisamy-dotnet/commit/7e500daef6ad9c10e97c68feab78f4cb6e3083c6"
+          },
+          {
+            "name": "https://github.com/spassarop/antisamy-dotnet/commit/8117911933e75a25cd0054ef017577486338444a",
+            "refsource": "MISC",
+            "url": "https://github.com/spassarop/antisamy-dotnet/commit/8117911933e75a25cd0054ef017577486338444a"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-8x6f-956f-q43w",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "OWASP AntiSamy .NET is a library for performing cleansing of HTML coming from untrusted sources. Prior to version 1.2.0, there is a potential for a mutation cross-site scripting (mXSS) vulnerability in AntiSamy caused by flawed parsing of the HTML being sanitized. To be subject to this vulnerability the `preserveComments` directive must be enabled in your policy file and also allow for certain tags at the same time. As a result, certain crafty inputs can result in elements in comment tags being interpreted as executable when using AntiSamy's sanitized output. This is patched in OWASP AntiSamy .NET 1.2.0 and later. See important remediation details in the reference given below. As a workaround, manually edit the AntiSamy policy file (e.g., antisamy.xml) by deleting the `preserveComments` directive or setting its value to `false`,  if present. Also it would be useful to make AntiSamy remove the `noscript` tag by adding a line described in the GitHub Security Advisory to the tag definitions under the `<tagrules>` node, or deleting it entirely if present. As the previously mentioned policy settings are preconditions for the mXSS attack to work, changing them as recommended should be sufficient to protect you against this vulnerability when using a vulnerable version of this library. However, the existing bug would still be present in AntiSamy or its parser dependency (HtmlAgilityPack). The safety of this workaround relies on configurations that may change in the future and don't address the root cause of the vulnerability. As such, it is strongly recommended to upgrade to a fixed version of AntiSamy."
+          }
+        ],
+        "id": "CVE-2023-51652",
+        "lastModified": "2024-01-02T20:15:10.453",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 6.1,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 2.7,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-01-02T20:15:10.453",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/spassarop/antisamy-dotnet/commit/7e500daef6ad9c10e97c68feab78f4cb6e3083c6"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/spassarop/antisamy-dotnet/commit/8117911933e75a25cd0054ef017577486338444a"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/spassarop/antisamy-dotnet/security/advisories/GHSA-8x6f-956f-q43w"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-79"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
