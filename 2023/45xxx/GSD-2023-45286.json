@@ -38,18 +38,9 @@
                     "version": {
                       "version_data": [
                         {
-                          "version_value": "not down converted",
-                          "x_cve_json_5_version_data": {
-                            "defaultStatus": "affected",
-                            "versions": [
-                              {
-                                "lessThan": "2.10.0",
-                                "status": "unaffected",
-                                "version": "0",
-                                "versionType": "semver"
-                              }
-                            ]
-                          }
+                          "version_affected": "<",
+                          "version_name": "2.10.0",
+                          "version_value": "2.11.0"
                         }
                       ]
                     }
@@ -108,6 +99,11 @@
             "url": "https://github.com/go-resty/resty/pull/745"
           },
           {
+            "name": "https://github.com/go-resty/resty/commit/577fed8730d79f583eb48dfc81674164e1fc471e",
+            "refsource": "MISC",
+            "url": "https://github.com/go-resty/resty/commit/577fed8730d79f583eb48dfc81674164e1fc471e"
+          },
+          {
             "name": "https://pkg.go.dev/vuln/GO-2023-2328",
             "refsource": "MISC",
             "url": "https://pkg.go.dev/vuln/GO-2023-2328"
@@ -116,112 +112,113 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:resty_project:resty:*:*:*:*:*:go:*:*",
-                "cpe_name": [],
-                "versionEndIncluding": "2.10.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:resty_project:resty:*:*:*:*:*:go:*:*",
+                    "matchCriteriaId": "433974E8-CB64-4BBB-BB5A-9F072275B86F",
+                    "versionEndIncluding": "2.10.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "A race condition in go-resty can result in HTTP request body disclosure across requests. This condition can be triggered by calling sync.Pool.Put with the same *bytes.Buffer more than once, when request retries are enabled and a retry occurs. The call to sync.Pool.Get will then return a bytes.Buffer that hasn't had bytes.Buffer.Reset called on it. This dirty buffer will contain the HTTP request body from an unrelated request, and go-resty will append the current HTTP request body to it, sending two bodies in one request. The sync.Pool in question is defined at package level scope, so a completely unrelated server could receive the request body."
+          },
+          {
+            "lang": "es",
+            "value": "Una condici\u00f3n de ejecuci\u00f3n en go-resty puede dar como resultado la divulgaci\u00f3n del cuerpo de la solicitud HTTP entre solicitudes. Esta condici\u00f3n se puede desencadenar llamando a sync.Pool.Put con el mismo *bytes.Buffer m\u00e1s de una vez, cuando los reintentos de solicitud est\u00e1n habilitados y se produce un reintento. La llamada a sync.Pool.Get devolver\u00e1 un bytes.Buffer al que no se le ha llamado bytes.Buffer.Reset. Este b\u00fafer sucio contendr\u00e1 el cuerpo de la solicitud HTTP de una solicitud no relacionada, y go-resty le agregar\u00e1 el cuerpo de la solicitud HTTP actual, enviando dos cuerpos en una solicitud. El sync.Pool en cuesti\u00f3n se define a nivel de paquete, por lo que un servidor completamente ajeno podr\u00eda recibir el cuerpo de la solicitud."
+          }
+        ],
+        "id": "CVE-2023-45286",
+        "lastModified": "2024-01-04T19:15:08.737",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 5.9,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.2,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2023-11-28T17:15:08.280",
+        "references": [
+          {
+            "source": "security@golang.org",
+            "url": "https://github.com/go-resty/resty/commit/577fed8730d79f583eb48dfc81674164e1fc471e"
+          },
+          {
+            "source": "security@golang.org",
+            "tags": [
+              "Exploit",
+              "Issue Tracking"
+            ],
+            "url": "https://github.com/go-resty/resty/issues/739"
+          },
+          {
+            "source": "security@golang.org",
+            "tags": [
+              "Issue Tracking"
+            ],
+            "url": "https://github.com/go-resty/resty/issues/743"
+          },
+          {
+            "source": "security@golang.org",
+            "tags": [
+              "Issue Tracking",
+              "Patch"
+            ],
+            "url": "https://github.com/go-resty/resty/pull/745"
+          },
+          {
+            "source": "security@golang.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://pkg.go.dev/vuln/GO-2023-2328"
+          }
+        ],
+        "sourceIdentifier": "security@golang.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-362"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security@golang.org",
-          "ID": "CVE-2023-45286"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "A race condition in go-resty can result in HTTP request body disclosure across requests. This condition can be triggered by calling sync.Pool.Put with the same *bytes.Buffer more than once, when request retries are enabled and a retry occurs. The call to sync.Pool.Get will then return a bytes.Buffer that hasn't had bytes.Buffer.Reset called on it. This dirty buffer will contain the HTTP request body from an unrelated request, and go-resty will append the current HTTP request body to it, sending two bodies in one request. The sync.Pool in question is defined at package level scope, so a completely unrelated server could receive the request body."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-362"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/go-resty/resty/issues/743",
-              "refsource": "",
-              "tags": [
-                "Issue Tracking"
-              ],
-              "url": "https://github.com/go-resty/resty/issues/743"
-            },
-            {
-              "name": "https://github.com/go-resty/resty/issues/739",
-              "refsource": "",
-              "tags": [
-                "Exploit",
-                "Issue Tracking"
-              ],
-              "url": "https://github.com/go-resty/resty/issues/739"
-            },
-            {
-              "name": "https://github.com/go-resty/resty/pull/745",
-              "refsource": "",
-              "tags": [
-                "Issue Tracking",
-                "Patch"
-              ],
-              "url": "https://github.com/go-resty/resty/pull/745"
-            },
-            {
-              "name": "https://pkg.go.dev/vuln/GO-2023-2328",
-              "refsource": "",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://pkg.go.dev/vuln/GO-2023-2328"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "HIGH",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "NONE",
-            "baseScore": 5.9,
-            "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 2.2,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2023-12-05T21:06Z",
-      "publishedDate": "2023-11-28T17:15Z"
+      }
     }
   }
 }
