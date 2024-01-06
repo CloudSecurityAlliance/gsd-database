@@ -124,16 +124,58 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:mindsdb:mindsdb:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "C6B06EE4-0DFA-4550-AC4A-E16005231E2B",
+                    "versionEndExcluding": "23.11.4.1",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "MindsDB is a SQL Server for artificial intelligence. Prior to version 23.11.4.1, the `put` method in `mindsdb/mindsdb/api/http/namespaces/file.py` does not validate the user-controlled name value, which is used in a temporary file name, which is afterwards opened for writing on lines 122-125, which leads to path injection. Later in the method, the temporary directory is deleted on line 151, but since we can write outside of the directory using the path injection vulnerability, the potentially dangerous file is not deleted. Arbitrary file contents can be written due to `f.write(chunk)` on line 125. Mindsdb does check later on line 149 in the `save_file` method in `file-controller.py` which calls the `_handle_source` method in `file_handler.py` if a file is of one of the types `csv`, `json`, `parquet`, `xls`, or `xlsx`. However, since the check happens after the file has already been written, the files will still exist (and will not be removed due to the path injection described earlier), just the `_handle_source` method will return an error. The same user-controlled source source is used also in another path injection sink on line 138. This leads to another path injection, which allows an attacker to delete any `zip` or `tar.gz` files on the server."
+          },
+          {
+            "lang": "es",
+            "value": "MindsDB es un servidor SQL para inteligencia artificial. Antes de la versi\u00f3n 23.11.4.1, el m\u00e9todo `put` en `mindsdb/mindsdb/api/http/namespaces/file.py` no valida el valor del nombre controlado por el usuario, que se usa en un nombre de archivo temporal, que se muestra posteriormente. abierto para escritura en las l\u00edneas 122-125, lo que conduce a inyecci\u00f3n de ruta. M\u00e1s adelante en el m\u00e9todo, el directorio temporal se elimina en la l\u00ednea 151, pero como podemos escribir fuera del directorio utilizando la vulnerabilidad de inyecci\u00f3n de ruta, el archivo potencialmente peligroso no se elimina. Se pueden escribir contenidos de archivos arbitrarios debido a `f.write(chunk)` en la l\u00ednea 125. Mindsdb verifica m\u00e1s adelante en la l\u00ednea 149 en el m\u00e9todo `save_file` en `file-controller.py` que llama al m\u00e9todo `_handle_source` en ` file_handler.py` si un archivo es de uno de los tipos `csv`, `json`, `parquet`, `xls` o `xlsx`. Sin embargo, dado que la verificaci\u00f3n se realiza despu\u00e9s de que el archivo ya se haya escrito, los archivos seguir\u00e1n existiendo (y no se eliminar\u00e1n debido a la inyecci\u00f3n de ruta descrito anteriormente), solo el m\u00e9todo `_handle_source` devolver\u00e1 un error. La misma fuente controlada por el usuario tambi\u00e9n se utiliza en otro receptor de inyecci\u00f3n de ruta en la l\u00ednea 138. Esto conduce a otra inyecci\u00f3n de ruta, que permite a un atacante eliminar cualquier archivo `zip` o `tar.gz` en el servidor."
           }
         ],
         "id": "CVE-2023-50731",
-        "lastModified": "2023-12-25T03:08:20.540",
+        "lastModified": "2024-01-05T12:08:43.567",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.1,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.2,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -160,24 +202,47 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/mindsdb/mindsdb/blob/1821da719f34c022890c9ff25810218e71c5abbc/mindsdb/api/http/namespaces/file.py#L122-L125"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/mindsdb/mindsdb/blob/1821da719f34c022890c9ff25810218e71c5abbc/mindsdb/api/http/namespaces/file.py#L138"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
             "url": "https://github.com/mindsdb/mindsdb/security/advisories/GHSA-j8w6-2r9h-cxhj"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
+            ],
             "url": "https://securitylab.github.com/advisories/GHSL-2023-182_GHSL-2023-184_mindsdb_mindsdb/"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-22"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -186,7 +251,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }

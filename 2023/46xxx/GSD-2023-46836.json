@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-46836"
       ],
+      "details": "The fixes for XSA-422 (Branch Type Confusion) and XSA-434 (Speculative\nReturn Stack Overflow) are not IRQ-safe.  It was believed that the\nmitigations always operated in contexts with IRQs disabled.\n\nHowever, the original XSA-254 fix for Meltdown (XPTI) deliberately left\ninterrupts enabled on two entry paths; one unconditionally, and one\nconditionally on whether XPTI was active.\n\nAs BTC/SRSO and Meltdown affect different CPU vendors, the mitigations\nare not active together by default.  Therefore, there is a race\ncondition whereby a malicious PV guest can bypass BTC/SRSO protections\nand launch a BTC/SRSO attack against Xen.\n",
       "id": "GSD-2023-46836",
       "modified": "2023-12-13T01:20:52.977466Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,54 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@xen.org",
         "ID": "CVE-2023-46836",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Xen",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unknown",
+                            "versions": [
+                              {
+                                "status": "unknown",
+                                "version": "consult Xen advisory XSA-446"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Xen"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "value": "All versions of Xen are vulnerable.\n\nXen is only vulnerable in default configurations on AMD and Hygon CPUs.\n\nXen is not believed to be vulnerable in default configurations on CPUs\nfrom other hardware vendors.\n\nOnly PV guests can leverage the vulnerability.\n"
+        }
+      ],
+      "credits": [
+        {
+          "lang": "en",
+          "value": "This issue was discovered by Andrew Cooper of XenServer.\n"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,9 +78,58 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "The fixes for XSA-422 (Branch Type Confusion) and XSA-434 (Speculative\nReturn Stack Overflow) are not IRQ-safe.  It was believed that the\nmitigations always operated in contexts with IRQs disabled.\n\nHowever, the original XSA-254 fix for Meltdown (XPTI) deliberately left\ninterrupts enabled on two entry paths; one unconditionally, and one\nconditionally on whether XPTI was active.\n\nAs BTC/SRSO and Meltdown affect different CPU vendors, the mitigations\nare not active together by default.  Therefore, there is a race\ncondition whereby a malicious PV guest can bypass BTC/SRSO protections\nand launch a BTC/SRSO attack against Xen.\n"
           }
         ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://xenbits.xenproject.org/xsa/advisory-446.html",
+            "refsource": "MISC",
+            "url": "https://xenbits.xenproject.org/xsa/advisory-446.html"
+          }
+        ]
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "value": "Running only HVM or PVH VMs will avoid the vulnerability.\n"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "The fixes for XSA-422 (Branch Type Confusion) and XSA-434 (Speculative\nReturn Stack Overflow) are not IRQ-safe.  It was believed that the\nmitigations always operated in contexts with IRQs disabled.\n\nHowever, the original XSA-254 fix for Meltdown (XPTI) deliberately left\ninterrupts enabled on two entry paths; one unconditionally, and one\nconditionally on whether XPTI was active.\n\nAs BTC/SRSO and Meltdown affect different CPU vendors, the mitigations\nare not active together by default.  Therefore, there is a race\ncondition whereby a malicious PV guest can bypass BTC/SRSO protections\nand launch a BTC/SRSO attack against Xen.\n"
+          }
+        ],
+        "id": "CVE-2023-46836",
+        "lastModified": "2024-01-05T18:23:40.387",
+        "metrics": {},
+        "published": "2024-01-05T17:15:11.197",
+        "references": [
+          {
+            "source": "security@xen.org",
+            "url": "https://xenbits.xenproject.org/xsa/advisory-446.html"
+          }
+        ],
+        "sourceIdentifier": "security@xen.org",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
