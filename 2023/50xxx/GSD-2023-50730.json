@@ -128,16 +128,58 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:typelevel:grackle:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "7CDE45B5-5A5B-487E-87ED-A62DCD8DD851",
+                    "versionEndExcluding": "0.18.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Grackle is a GraphQL server written in functional Scala, built on the Typelevel stack. The GraphQL specification requires that GraphQL fragments must not form cycles, either directly or indirectly. Prior to Grackle version 0.18.0, that requirement wasn't checked, and queries with cyclic fragments would have been accepted for type checking and compilation. The attempted compilation of such fragments would result in a JVM `StackOverflowError` being thrown. Some knowledge of an applications GraphQL schema would be required to construct such a query, however no knowledge of any application-specific performance or other behavioural characteristics would be needed.\n\nGrackle uses the cats-parse library for parsing GraphQL queries. Prior to version 0.18.0, Grackle made use of the cats-parse `recursive` operator. However, `recursive` is not currently stack safe. `recursive` was used in three places in the parser: nested selection sets, nested input values (lists and objects), and nested list type declarations. Consequently, queries with deeply nested selection sets, input values or list types could be constructed which exploited this, causing a JVM `StackOverflowException` to be thrown during parsing. Because this happens very early in query processing, no specific knowledge of an applications GraphQL schema would be required to construct such a query.\n\nThe possibility of small queries resulting in stack overflow is a potential denial of service vulnerability. This potentially affects all applications using Grackle which have untrusted users. Both stack overflow issues have been resolved in the v0.18.0 release of Grackle. As a workaround, users could interpose a sanitizing layer in between untrusted input and Grackle query processing."
+          },
+          {
+            "lang": "es",
+            "value": "Grackle es un servidor GraphQL escrito en functional Scala, construido en la pila Typelevel. La especificaci\u00f3n GraphQL requiere que los fragmentos de GraphQL no formen ciclos, ni directa ni indirectamente. Antes de la versi\u00f3n 0.18.0 de Grackle, ese requisito no se verificaba y las consultas con fragmentos c\u00edclicos se habr\u00edan aceptado para la verificaci\u00f3n y compilaci\u00f3n de tipos. El intento de compilaci\u00f3n de dichos fragmentos dar\u00eda como resultado que se generara un \"StackOverflowError\" de JVM. Se necesitar\u00eda cierto conocimiento del esquema GraphQL de una aplicaci\u00f3n para construir dicha consulta; sin embargo, no se necesitar\u00eda ning\u00fan conocimiento del rendimiento espec\u00edfico de la aplicaci\u00f3n ni de otras caracter\u00edsticas de comportamiento. Grackle usa la librer\u00eda cats-parse para analizar consultas GraphQL. Antes de la versi\u00f3n 0.18.0, Grackle hac\u00eda uso del operador \"recursive\" de cats-parse. Sin embargo, \"recursive\" actualmente no es seguro para pilas. \"recursive\" se us\u00f3 en tres lugares del analizador: conjuntos de selecci\u00f3n anidados, valores de entrada anidados (listas y objetos) y declaraciones de tipos de listas anidadas. En consecuencia, se podr\u00edan construir consultas con conjuntos de selecci\u00f3n, valores de entrada o tipos de listas profundamente anidados que explotaran esto, provocando que se lanzara una `StackOverflowException` de JVM durante el an\u00e1lisis. Debido a que esto sucede muy temprano en el procesamiento de consultas, no se requerir\u00eda ning\u00fan conocimiento espec\u00edfico del esquema GraphQL de una aplicaci\u00f3n para construir dicha consulta. La posibilidad de que peque\u00f1as consultas provoquen un desbordamiento de la pila es una posible vulnerabilidad de denegaci\u00f3n de servicio. Esto afecta potencialmente a todas las aplicaciones que utilizan Grackle y que tienen usuarios que no son de confianza. Ambos problemas de desbordamiento de pila se resolvieron en la versi\u00f3n v0.18.0 de Grackle. Como workaround, los usuarios podr\u00edan interponer una capa de sanitizaci\u00f3n entre las entradas que no son de confianza y el procesamiento de consultas de Grackle."
           }
         ],
         "id": "CVE-2023-50730",
-        "lastModified": "2023-12-25T03:08:20.540",
+        "lastModified": "2024-01-08T12:57:18.850",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -164,19 +206,28 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/typelevel/grackle/commit/56e244b91659cf385df590fc6c46695b6f36cbfd"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ],
             "url": "https://github.com/typelevel/grackle/releases/tag/v0.18.0"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/typelevel/grackle/security/advisories/GHSA-g56x-7j6w-g8r8"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
           {
             "description": [
