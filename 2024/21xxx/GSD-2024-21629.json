@@ -120,6 +120,24 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:evm_project:evm:*:*:*:*:*:rust:*:*",
+                    "matchCriteriaId": "40939BAA-57AE-4D36-B0EE-C900BA72F55A",
+                    "versionEndExcluding": "0.41.1",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
@@ -127,13 +145,33 @@
           },
           {
             "lang": "es",
-            "value": "Rust EVM es un int\u00e9rprete de m\u00e1quina virtual Ethereum. En \"rust-evm\", se introdujo una funci\u00f3n llamada \"record_external_operation\", que permite a los usuarios de la librer\u00eda registrar cambios de gas personalizados. Esta caracter\u00edstica puede tener algunas interacciones falsas con la pila de llamadas. En particular, durante la finalizaci\u00f3n de `CREATE` o `CREATE2`, en el caso de que la ejecuci\u00f3n de la subpila se realice exitosamente, `rust-evm` primero confirmar\u00e1 el subestado y luego llamar\u00e1 a `record_external_operation(Write(out_code.len()) )`. Si `record_external_operation` falla posteriormente, este error se devuelve a la pila de llamadas principal, en lugar de `Succeeded`. Sin embargo, el compromiso subestatal ya se produjo. Esto hace que los contratos inteligentes puedan realizar cambios de estado, cuando el contrato principal de la persona que llama recibe una direcci\u00f3n cero (lo que generalmente indica que la ejecuci\u00f3n ha fallado). Este problema solo afecta a los usuarios de la biblioteca con `record_external_operative` personalizado que devuelve errores. El problema se solucion\u00f3 en la versi\u00f3n 0.41.1. No hay soluciones conocidas disponibles."
+            "value": "Rust EVM es un int\u00e9rprete de m\u00e1quina virtual Ethereum. En \"rust-evm\", se introdujo una funci\u00f3n llamada \"record_external_operation\", que permite a los usuarios de la librer\u00eda registrar cambios de gas personalizados. Esta caracter\u00edstica puede tener algunas interacciones falsas con la pila de llamadas. En particular, durante la finalizaci\u00f3n de `CREATE` o `CREATE2`, en el caso de que la ejecuci\u00f3n de la subpila se realice exitosamente, `rust-evm` primero confirmar\u00e1 el subestado y luego llamar\u00e1 a `record_external_operation(Write(out_code.len()) )`. Si `record_external_operation` falla posteriormente, este error se devuelve a la pila de llamadas principal, en lugar de `Succeeded`. Sin embargo, el compromiso subestatal ya se produjo. Esto hace que los contratos inteligentes puedan realizar cambios de estado, cuando el contrato principal de la persona que llama recibe una direcci\u00f3n cero (lo que generalmente indica que la ejecuci\u00f3n ha fallado). Este problema solo afecta a los usuarios de la librer\u00eda con `record_external_operative` personalizado que devuelve errores. El problema se solucion\u00f3 en la versi\u00f3n 0.41.1. No hay workarounds disponibles."
           }
         ],
         "id": "CVE-2024-21629",
-        "lastModified": "2024-01-03T13:48:00.677",
+        "lastModified": "2024-01-09T16:37:01.450",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "HIGH",
@@ -160,24 +198,46 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/rust-ethereum/evm/blob/release-v041/src/executor/stack/executor.rs#L1012C25-L1012C69"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/rust-ethereum/evm/commit/d8991ec727ad0fb64fe9957a3cd307387a6701e4"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/rust-ethereum/evm/pull/264"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/rust-ethereum/evm/security/advisories/GHSA-27wg-99g8-2v4v"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "NVD-CWE-noinfo"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {

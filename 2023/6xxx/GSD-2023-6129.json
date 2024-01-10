@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-6129"
       ],
+      "details": "Issue summary: The POLY1305 MAC (message authentication code) implementation\ncontains a bug that might corrupt the internal state of applications running\non PowerPC CPU based platforms if the CPU provides vector instructions.\n\nImpact summary: If an attacker can influence whether the POLY1305 MAC\nalgorithm is used, the application state might be corrupted with various\napplication dependent consequences.\n\nThe POLY1305 MAC (message authentication code) implementation in OpenSSL for\nPowerPC CPUs restores the contents of vector registers in a different order\nthan they are saved. Thus the contents of some of these vector registers\nare corrupted when returning to the caller. The vulnerable code is used only\non newer PowerPC processors supporting the PowerISA 2.07 instructions.\n\nThe consequences of this kind of internal application state corruption can\nbe various - from no consequences, if the calling application does not\ndepend on the contents of non-volatile XMM registers at all, to the worst\nconsequences, where the attacker could get complete control of the application\nprocess. However unless the compiler uses the vector registers for storing\npointers, the most likely consequence, if any, would be an incorrect result\nof some application dependent calculations or a crash leading to a denial of\nservice.\n\nThe POLY1305 MAC algorithm is most frequently used as part of the\nCHACHA20-POLY1305 AEAD (authenticated encryption with associated data)\nalgorithm. The most common usage of this AEAD cipher is with TLS protocol\nversions 1.2 and 1.3. If this cipher is enabled on the server a malicious\nclient can influence whether this AEAD cipher is used. This implies that\nTLS server applications using OpenSSL can be potentially impacted. However\nwe are currently not aware of any concrete application that would be affected\nby this issue therefore we consider this a Low severity security issue.",
       "id": "GSD-2023-6129",
       "modified": "2023-12-13T01:20:32.640821Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,55 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "openssl-security@openssl.org",
         "ID": "CVE-2023-6129",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "OpenSSL",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.2.0",
+                          "version_value": "3.2.1"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.1.0",
+                          "version_value": "3.1.5"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.0.0",
+                          "version_value": "3.0.12"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "OpenSSL"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Sverker Eriksson"
+        },
+        {
+          "lang": "en",
+          "value": "Rohan McLure"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,9 +79,94 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Issue summary: The POLY1305 MAC (message authentication code) implementation\ncontains a bug that might corrupt the internal state of applications running\non PowerPC CPU based platforms if the CPU provides vector instructions.\n\nImpact summary: If an attacker can influence whether the POLY1305 MAC\nalgorithm is used, the application state might be corrupted with various\napplication dependent consequences.\n\nThe POLY1305 MAC (message authentication code) implementation in OpenSSL for\nPowerPC CPUs restores the contents of vector registers in a different order\nthan they are saved. Thus the contents of some of these vector registers\nare corrupted when returning to the caller. The vulnerable code is used only\non newer PowerPC processors supporting the PowerISA 2.07 instructions.\n\nThe consequences of this kind of internal application state corruption can\nbe various - from no consequences, if the calling application does not\ndepend on the contents of non-volatile XMM registers at all, to the worst\nconsequences, where the attacker could get complete control of the application\nprocess. However unless the compiler uses the vector registers for storing\npointers, the most likely consequence, if any, would be an incorrect result\nof some application dependent calculations or a crash leading to a denial of\nservice.\n\nThe POLY1305 MAC algorithm is most frequently used as part of the\nCHACHA20-POLY1305 AEAD (authenticated encryption with associated data)\nalgorithm. The most common usage of this AEAD cipher is with TLS protocol\nversions 1.2 and 1.3. If this cipher is enabled on the server a malicious\nclient can influence whether this AEAD cipher is used. This implies that\nTLS server applications using OpenSSL can be potentially impacted. However\nwe are currently not aware of any concrete application that would be affected\nby this issue therefore we consider this a Low severity security issue."
           }
         ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Passing Mutable Objects to an Untrusted Method"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.openssl.org/news/secadv/20240109.txt",
+            "refsource": "MISC",
+            "url": "https://www.openssl.org/news/secadv/20240109.txt"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/5b139f95c9a47a55a0c54100f3837b1eee942b04",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/5b139f95c9a47a55a0c54100f3837b1eee942b04"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/f3fc5808fe9ff74042d639839610d03b8fdcc015",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/f3fc5808fe9ff74042d639839610d03b8fdcc015"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/050d26383d4e264966fb83428e72d5d48f402d35",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/050d26383d4e264966fb83428e72d5d48f402d35"
+          },
+          {
+            "name": "http://www.openwall.com/lists/oss-security/2024/01/09/1",
+            "refsource": "MISC",
+            "url": "http://www.openwall.com/lists/oss-security/2024/01/09/1"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Issue summary: The POLY1305 MAC (message authentication code) implementation\ncontains a bug that might corrupt the internal state of applications running\non PowerPC CPU based platforms if the CPU provides vector instructions.\n\nImpact summary: If an attacker can influence whether the POLY1305 MAC\nalgorithm is used, the application state might be corrupted with various\napplication dependent consequences.\n\nThe POLY1305 MAC (message authentication code) implementation in OpenSSL for\nPowerPC CPUs restores the contents of vector registers in a different order\nthan they are saved. Thus the contents of some of these vector registers\nare corrupted when returning to the caller. The vulnerable code is used only\non newer PowerPC processors supporting the PowerISA 2.07 instructions.\n\nThe consequences of this kind of internal application state corruption can\nbe various - from no consequences, if the calling application does not\ndepend on the contents of non-volatile XMM registers at all, to the worst\nconsequences, where the attacker could get complete control of the application\nprocess. However unless the compiler uses the vector registers for storing\npointers, the most likely consequence, if any, would be an incorrect result\nof some application dependent calculations or a crash leading to a denial of\nservice.\n\nThe POLY1305 MAC algorithm is most frequently used as part of the\nCHACHA20-POLY1305 AEAD (authenticated encryption with associated data)\nalgorithm. The most common usage of this AEAD cipher is with TLS protocol\nversions 1.2 and 1.3. If this cipher is enabled on the server a malicious\nclient can influence whether this AEAD cipher is used. This implies that\nTLS server applications using OpenSSL can be potentially impacted. However\nwe are currently not aware of any concrete application that would be affected\nby this issue therefore we consider this a Low severity security issue."
+          }
+        ],
+        "id": "CVE-2023-6129",
+        "lastModified": "2024-01-09T19:56:14.023",
+        "metrics": {},
+        "published": "2024-01-09T17:15:12.147",
+        "references": [
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "http://www.openwall.com/lists/oss-security/2024/01/09/1"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/050d26383d4e264966fb83428e72d5d48f402d35"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/5b139f95c9a47a55a0c54100f3837b1eee942b04"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/f3fc5808fe9ff74042d639839610d03b8fdcc015"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://www.openssl.org/news/secadv/20240109.txt"
+          }
+        ],
+        "sourceIdentifier": "openssl-security@openssl.org",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
