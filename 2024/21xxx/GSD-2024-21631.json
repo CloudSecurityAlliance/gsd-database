@@ -128,16 +128,58 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:vapor:vapor:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D7A4A9F5-B5B1-480E-9922-AF35861D75AF",
+                    "versionEndExcluding": "4.90.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Vapor is an HTTP web framework for Swift. Prior to version 4.90.0, Vapor's `vapor_urlparser_parse` function uses `uint16_t` indexes when parsing a URI's components, which may cause integer overflows when parsing untrusted inputs. This vulnerability does not affect Vapor directly but could impact applications relying on the URI type for validating user input. The URI type is used in several places in Vapor. A developer may decide to use URI to represent a URL in their application (especially if that URL is then passed to the HTTP Client) and rely on its public properties and methods. However, URI may fail to properly parse a valid (albeit abnormally long) URL, due to string ranges being converted to 16-bit integers. An attacker may use this behavior to trick the application into accepting a URL to an untrusted destination. By padding the port number with zeros, an attacker can cause an integer overflow to occur when the URL authority is parsed and, as a result, spoof the host. Version 4.90.0 contains a patch for this issue. As a workaround, validate user input before parsing as a URI or, if possible, use Foundation's `URL` and `URLComponents` utilities.\n"
+          },
+          {
+            "lang": "es",
+            "value": "Vapor es un framework web HTTP para Swift. Antes de la versi\u00f3n 4.90.0, la funci\u00f3n `vapor_urlparser_parse` de Vapor utiliza \u00edndices `uint16_t` al analizar los componentes de un URI, lo que puede causar desbordamientos de enteros al analizar entradas que no son de confianza. Esta vulnerabilidad no afecta a Vapor directamente, pero podr\u00eda afectar a las aplicaciones que dependen del tipo de URI para validar la entrada del usuario. El tipo URI se utiliza en varios lugares de Vapor. Un desarrollador puede decidir utilizar URI para representar una URL en su aplicaci\u00f3n (especialmente si esa URL luego se pasa al Cliente HTTP) y confiar en sus propiedades y m\u00e9todos p\u00fablicos. Sin embargo, es posible que el URI no pueda analizar correctamente una URL v\u00e1lida (aunque anormalmente larga), debido a que los rangos de cadenas se convierten a enteros de 16 bits. Un atacante puede utilizar este comportamiento para enga\u00f1ar a la aplicaci\u00f3n para que acepte una URL a un destino que no es de confianza. Al rellenar el n\u00famero de puerto con ceros, un atacante puede provocar un desbordamiento de enteros cuando se analiza la autoridad de la URL y, como resultado, falsificar el host. La versi\u00f3n 4.90.0 contiene un parche para este problema. Como workaround, valide la entrada del usuario antes de analizarla como URI o, si es posible, utilice las utilidades `URL` y `URLComponents` de Foundation."
           }
         ],
         "id": "CVE-2024-21631",
-        "lastModified": "2024-01-03T17:26:57.957",
+        "lastModified": "2024-01-10T18:40:48.587",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 6.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -164,16 +206,32 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/vapor/vapor/commit/6db3d917b5ce5024a84eb265ef65691383305d70"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/vapor/vapor/security/advisories/GHSA-r6r4-5pr8-gjcp"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-190"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -190,7 +248,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }
