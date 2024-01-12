@@ -105,6 +105,11 @@
             "name": "http://packetstormsecurity.com/files/175963/Kernel-Live-Patch-Security-Notice-LSN-0099-1.html",
             "refsource": "MISC",
             "url": "http://packetstormsecurity.com/files/175963/Kernel-Live-Patch-Security-Notice-LSN-0099-1.html"
+          },
+          {
+            "name": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html",
+            "refsource": "MISC",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html"
           }
         ]
       },
@@ -116,105 +121,111 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
-                "cpe_name": [],
-                "versionStartIncluding": "3.2.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
+                    "matchCriteriaId": "07AD4949-CFD3-4551-B63D-B307F8EB10FC",
+                    "versionStartIncluding": "3.2.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "07B237A9-69A3-4A9C-9DA0-4E06BD37AE73",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "The fix for XSA-423 added logic to Linux'es netback driver to deal with\na frontend splitting a packet in a way such that not all of the headers\nwould come in one piece.  Unfortunately the logic introduced there\ndidn't account for the extreme case of the entire packet being split\ninto as many pieces as permitted by the protocol, yet still being\nsmaller than the area that's specially dealt with to keep all (possible)\nheaders together.  Such an unusual packet would therefore trigger a\nbuffer overrun in the driver.\n"
+          },
+          {
+            "lang": "es",
+            "value": "La soluci\u00f3n para XSA-423 agreg\u00f3 l\u00f3gica al controlador netback de Linux para lidiar con una interfaz que divide un paquete de tal manera que no todos los encabezados vengan en una sola pieza. Desafortunadamente, la l\u00f3gica introducida all\u00ed no tuvo en cuenta el caso extremo de que todo el paquete se divida en tantas partes como lo permita el protocolo, pero a\u00fan as\u00ed sea m\u00e1s peque\u00f1o que el \u00e1rea que se trata especialmente para mantener todos los (posibles) encabezados juntos. Por lo tanto, un paquete tan inusual provocar\u00eda un Desbordamiento del B\u00fafer en el controlador."
+          }
+        ],
+        "id": "CVE-2023-34319",
+        "lastModified": "2024-01-11T19:15:09.340",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2023-09-22T14:15:45.627",
+        "references": [
+          {
+            "source": "security@xen.org",
+            "url": "http://packetstormsecurity.com/files/175963/Kernel-Live-Patch-Security-Notice-LSN-0099-1.html"
+          },
+          {
+            "source": "security@xen.org",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html"
+          },
+          {
+            "source": "security@xen.org",
+            "tags": [
+              "Mitigation",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://xenbits.xenproject.org/xsa/advisory-432.html"
+          }
+        ],
+        "sourceIdentifier": "security@xen.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-787"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security@xen.org",
-          "ID": "CVE-2023-34319"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "The fix for XSA-423 added logic to Linux'es netback driver to deal with\na frontend splitting a packet in a way such that not all of the headers\nwould come in one piece.  Unfortunately the logic introduced there\ndidn't account for the extreme case of the entire packet being split\ninto as many pieces as permitted by the protocol, yet still being\nsmaller than the area that's specially dealt with to keep all (possible)\nheaders together.  Such an unusual packet would therefore trigger a\nbuffer overrun in the driver.\n"
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-787"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://xenbits.xenproject.org/xsa/advisory-432.html",
-              "refsource": "MISC",
-              "tags": [
-                "Mitigation",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://xenbits.xenproject.org/xsa/advisory-432.html"
-            },
-            {
-              "name": "http://packetstormsecurity.com/files/175963/Kernel-Live-Patch-Security-Notice-LSN-0099-1.html",
-              "refsource": "",
-              "tags": [],
-              "url": "http://packetstormsecurity.com/files/175963/Kernel-Live-Patch-Security-Notice-LSN-0099-1.html"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "LOCAL",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.8,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "LOW",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 1.8,
-          "impactScore": 5.9
-        }
-      },
-      "lastModifiedDate": "2023-11-29T15:15Z",
-      "publishedDate": "2023-09-22T14:15Z"
+      }
     }
   }
 }

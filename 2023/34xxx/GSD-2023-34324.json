@@ -100,6 +100,16 @@
             "name": "https://xenbits.xenproject.org/xsa/advisory-441.html",
             "refsource": "MISC",
             "url": "https://xenbits.xenproject.org/xsa/advisory-441.html"
+          },
+          {
+            "name": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html",
+            "refsource": "MISC",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html"
+          },
+          {
+            "name": "https://lists.debian.org/debian-lts-announce/2024/01/msg00005.html",
+            "refsource": "MISC",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00005.html"
           }
         ]
       },
@@ -112,24 +122,98 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D61CA62B-157A-4415-B8FD-7C3C1208315D",
+                    "versionEndExcluding": "5.10",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:xen:xen:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BFA1950D-1D9F-4401-AA86-CF3028EFD286",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Closing of an event channel in the Linux kernel can result in a deadlock.\nThis happens when the close is being performed in parallel to an unrelated\nXen console action and the handling of a Xen console interrupt in an\nunprivileged guest.\n\nThe closing of an event channel is e.g. triggered by removal of a\nparavirtual device on the other side. As this action will cause console\nmessages to be issued on the other side quite often, the chance of\ntriggering the deadlock is not neglectable.\n\nNote that 32-bit Arm-guests are not affected, as the 32-bit Linux kernel\non Arm doesn't use queued-RW-locks, which are required to trigger the\nissue (on Arm32 a waiting writer doesn't block further readers to get\nthe lock).\n"
+          },
+          {
+            "lang": "es",
+            "value": "El cierre de un canal de eventos en el kernel de Linux puede provocar un punto muerto. Esto sucede cuando el cierre se realiza en paralelo a una acci\u00f3n de la consola Xen no relacionada y al manejo de una interrupci\u00f3n de la consola Xen en un invitado sin privilegios. El cierre de un canal de eventos se desencadena, por ejemplo, al retirar un dispositivo paravirtual del otro lado. Como esta acci\u00f3n har\u00e1 que se emitan mensajes de la consola en el otro lado con bastante frecuencia, la posibilidad de desencadenar el punto muerto no es despreciable. Tenga en cuenta que los invitados de Arm de 32 bits no se ven afectados, ya que el kernel de Linux de 32 bits en Arm no utiliza bloqueos de RW en cola, que son necesarios para desencadenar el problema (en Arm32, un escritor en espera no bloquea m\u00e1s lectores para conseguir el candado)."
           }
         ],
         "id": "CVE-2023-34324",
-        "lastModified": "2024-01-05T18:23:44.497",
-        "metrics": {},
+        "lastModified": "2024-01-11T21:15:10.120",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 4.9,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "HIGH",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.2,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-01-05T17:15:08.540",
         "references": [
           {
             "source": "security@xen.org",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00004.html"
+          },
+          {
+            "source": "security@xen.org",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00005.html"
+          },
+          {
+            "source": "security@xen.org",
+            "tags": [
+              "Patch",
+              "Vendor Advisory"
+            ],
             "url": "https://xenbits.xenproject.org/xsa/advisory-441.html"
           }
         ],
         "sourceIdentifier": "security@xen.org",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-400"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }
