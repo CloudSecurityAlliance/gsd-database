@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-23340"
       ],
+      "details": "@hono/node-server is an adapter that allows users to run Hono applications on Node.js. Since v1.3.0, @hono/node-server has used its own Request object with `url` behavior that is unexpected. In the standard API, if the URL contains `..`, here called \"double dots\", the URL string returned by Request will be in the resolved path. However, the `url` in @hono/node-server's Request as does not resolve double dots, so `http://localhost/static/.. /foo.txt` is returned. This causes vulnerabilities when using `serveStatic`. Modern web browsers and a latest `curl` command resolve double dots on the client side, so this issue doesn't affect those using either of those tools. However, problems may occur if accessed by a client that does not resolve them. Version 1.4.1 includes the change to fix this issue. As a workaround, don't use `serveStatic`.\n\n",
       "id": "GSD-2024-23340",
       "modified": "2024-01-16T06:02:04.282686Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-23340",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "node-server",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 1.3.0, < 1.4.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "honojs"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,126 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "@hono/node-server is an adapter that allows users to run Hono applications on Node.js. Since v1.3.0, @hono/node-server has used its own Request object with `url` behavior that is unexpected. In the standard API, if the URL contains `..`, here called \"double dots\", the URL string returned by Request will be in the resolved path. However, the `url` in @hono/node-server's Request as does not resolve double dots, so `http://localhost/static/.. /foo.txt` is returned. This causes vulnerabilities when using `serveStatic`. Modern web browsers and a latest `curl` command resolve double dots on the client side, so this issue doesn't affect those using either of those tools. However, problems may occur if accessed by a client that does not resolve them. Version 1.4.1 includes the change to fix this issue. As a workaround, don't use `serveStatic`.\n\n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-22",
+                "lang": "eng",
+                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/honojs/node-server/security/advisories/GHSA-rjq5-w47x-x359",
+            "refsource": "MISC",
+            "url": "https://github.com/honojs/node-server/security/advisories/GHSA-rjq5-w47x-x359"
+          },
+          {
+            "name": "https://github.com/honojs/node-server/commit/dd9b9a9b23e3896403c90a740e7f1f0892feb402",
+            "refsource": "MISC",
+            "url": "https://github.com/honojs/node-server/commit/dd9b9a9b23e3896403c90a740e7f1f0892feb402"
+          },
+          {
+            "name": "https://github.com/honojs/node-server/blob/8cea466fd05e6d2e99c28011fc0e2c2d3f3397c9/src/request.ts#L43-L45",
+            "refsource": "MISC",
+            "url": "https://github.com/honojs/node-server/blob/8cea466fd05e6d2e99c28011fc0e2c2d3f3397c9/src/request.ts#L43-L45"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-rjq5-w47x-x359",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "@hono/node-server is an adapter that allows users to run Hono applications on Node.js. Since v1.3.0, @hono/node-server has used its own Request object with `url` behavior that is unexpected. In the standard API, if the URL contains `..`, here called \"double dots\", the URL string returned by Request will be in the resolved path. However, the `url` in @hono/node-server's Request as does not resolve double dots, so `http://localhost/static/.. /foo.txt` is returned. This causes vulnerabilities when using `serveStatic`. Modern web browsers and a latest `curl` command resolve double dots on the client side, so this issue doesn't affect those using either of those tools. However, problems may occur if accessed by a client that does not resolve them. Version 1.4.1 includes the change to fix this issue. As a workaround, don't use `serveStatic`.\n\n"
+          }
+        ],
+        "id": "CVE-2024-23340",
+        "lastModified": "2024-01-22T23:15:08.637",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 5.3,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 1.4,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-01-22T23:15:08.637",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/honojs/node-server/blob/8cea466fd05e6d2e99c28011fc0e2c2d3f3397c9/src/request.ts#L43-L45"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/honojs/node-server/commit/dd9b9a9b23e3896403c90a740e7f1f0892feb402"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/honojs/node-server/security/advisories/GHSA-rjq5-w47x-x359"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-22"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
