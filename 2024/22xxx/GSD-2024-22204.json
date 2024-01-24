@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-22204"
       ],
+      "details": "Whoogle Search is a self-hosted metasearch engine. Versions 0.8.3 and prior have a limited file write vulnerability when the configuration options in Whoogle are enabled. The `config` function in `app/routes.py` does not validate the user-controlled `name` variable on line 447 and `config_data` variable on line 437. The `name` variable is insecurely concatenated in `os.path.join`, leading to path manipulation. The POST data from the `config_data` variable is saved with `pickle.dump` which leads to a limited file write. However, the data that is saved is earlier transformed into a dictionary and the `url` key value pair is added before the file is saved on the system. All in all, the issue allows us to save and overwrite files on the system that the application has permissions to, with a dictionary containing arbitrary data and the `url` key value, which is a limited file write. Version 0.8.4 contains a patch for this issue.",
       "id": "GSD-2024-22204",
       "modified": "2024-01-08T06:02:13.817025Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-22204",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "whoogle-search",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 0.8.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "benbusby"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,153 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Whoogle Search is a self-hosted metasearch engine. Versions 0.8.3 and prior have a limited file write vulnerability when the configuration options in Whoogle are enabled. The `config` function in `app/routes.py` does not validate the user-controlled `name` variable on line 447 and `config_data` variable on line 437. The `name` variable is insecurely concatenated in `os.path.join`, leading to path manipulation. The POST data from the `config_data` variable is saved with `pickle.dump` which leads to a limited file write. However, the data that is saved is earlier transformed into a dictionary and the `url` key value pair is added before the file is saved on the system. All in all, the issue allows us to save and overwrite files on the system that the application has permissions to, with a dictionary containing arbitrary data and the `url` key value, which is a limited file write. Version 0.8.4 contains a patch for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.3,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-22",
+                "lang": "eng",
+                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://securitylab.github.com/advisories/GHSL-2023-186_GHSL-2023-189_benbusby_whoogle-search/",
+            "refsource": "MISC",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-186_GHSL-2023-189_benbusby_whoogle-search/"
+          },
+          {
+            "name": "https://github.com/benbusby/whoogle-search/commit/3a2e0b262e4a076a20416b45e6b6f23fd265aeda",
+            "refsource": "MISC",
+            "url": "https://github.com/benbusby/whoogle-search/commit/3a2e0b262e4a076a20416b45e6b6f23fd265aeda"
+          },
+          {
+            "name": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L419-L452",
+            "refsource": "MISC",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L419-L452"
+          },
+          {
+            "name": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L437",
+            "refsource": "MISC",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L437"
+          },
+          {
+            "name": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L444",
+            "refsource": "MISC",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L444"
+          },
+          {
+            "name": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L447",
+            "refsource": "MISC",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L447"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-hh2q-qv66-jcqg",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Whoogle Search is a self-hosted metasearch engine. Versions 0.8.3 and prior have a limited file write vulnerability when the configuration options in Whoogle are enabled. The `config` function in `app/routes.py` does not validate the user-controlled `name` variable on line 447 and `config_data` variable on line 437. The `name` variable is insecurely concatenated in `os.path.join`, leading to path manipulation. The POST data from the `config_data` variable is saved with `pickle.dump` which leads to a limited file write. However, the data that is saved is earlier transformed into a dictionary and the `url` key value pair is added before the file is saved on the system. All in all, the issue allows us to save and overwrite files on the system that the application has permissions to, with a dictionary containing arbitrary data and the `url` key value, which is a limited file write. Version 0.8.4 contains a patch for this issue."
+          }
+        ],
+        "id": "CVE-2024-22204",
+        "lastModified": "2024-01-23T19:40:11.110",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 5.3,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 1.4,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-01-23T18:15:18.467",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L419-L452"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L437"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L444"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/benbusby/whoogle-search/blob/92e8ede24e9277a5440d403f75877209f1269884/app/routes.py#L447"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/benbusby/whoogle-search/commit/3a2e0b262e4a076a20416b45e6b6f23fd265aeda"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-186_GHSL-2023-189_benbusby_whoogle-search/"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-22"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
