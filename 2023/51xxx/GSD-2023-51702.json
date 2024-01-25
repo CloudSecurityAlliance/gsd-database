@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-51702"
       ],
+      "details": "Since version 5.2.0, when using deferrable mode with the path of a Kubernetes configuration file for authentication, the Airflow worker serializes this configuration file as a dictionary and sends it to the triggerer by storing it in metadata without any encryption. Additionally, if used with an Airflow version between 2.3.0 and 2.6.0, the configuration dictionary will be logged as plain text in the triggerer service without masking. This allows anyone with access to the metadata or triggerer log to obtain the configuration file and use it to access the Kubernetes cluster.\n\nThis behavior was changed in version 7.0.0, which stopped serializing the file contents and started providing the file path instead to read the contents into the trigger. Users are recommended to upgrade to version 7.0.0, which fixes this issue.",
       "id": "GSD-2023-51702",
       "modified": "2023-12-22T06:01:25.350392Z",
       "schema_version": "1.4.0"
@@ -18,10 +19,57 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@apache.org",
         "ID": "CVE-2023-51702",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Apache Airflow CNCF Kubernetes provider",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5.2.0",
+                          "version_value": "7.0.0"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "product_name": "Apache Airflow",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "2.3.0",
+                          "version_value": "2.6.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Apache Software Foundation"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Hussein Awala"
+        },
+        {
+          "lang": "en",
+          "value": "Hussein Awala"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -29,7 +77,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Since version 5.2.0, when using deferrable mode with the path of a Kubernetes configuration file for authentication, the Airflow worker serializes this configuration file as a dictionary and sends it to the triggerer by storing it in metadata without any encryption. Additionally, if used with an Airflow version between 2.3.0 and 2.6.0, the configuration dictionary will be logged as plain text in the triggerer service without masking. This allows anyone with access to the metadata or triggerer log to obtain the configuration file and use it to access the Kubernetes cluster.\n\nThis behavior was changed in version 7.0.0, which stopped serializing the file contents and started providing the file path instead to read the contents into the trigger. Users are recommended to upgrade to version 7.0.0, which fixes this issue."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-532",
+                "lang": "eng",
+                "value": "CWE-532 Insertion of Sensitive Information into Log File"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-312",
+                "lang": "eng",
+                "value": "CWE-312 Cleartext Storage of Sensitive Information"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/apache/airflow/pull/29498",
+            "refsource": "MISC",
+            "url": "https://github.com/apache/airflow/pull/29498"
+          },
+          {
+            "name": "https://github.com/apache/airflow/pull/30110",
+            "refsource": "MISC",
+            "url": "https://github.com/apache/airflow/pull/30110"
+          },
+          {
+            "name": "https://github.com/apache/airflow/pull/36492",
+            "refsource": "MISC",
+            "url": "https://github.com/apache/airflow/pull/36492"
+          },
+          {
+            "name": "https://lists.apache.org/thread/89x3q6lz5pykrkr1fkr04k4rfn9pvnv9",
+            "refsource": "MISC",
+            "url": "https://lists.apache.org/thread/89x3q6lz5pykrkr1fkr04k4rfn9pvnv9"
+          },
+          {
+            "name": "http://www.openwall.com/lists/oss-security/2024/01/24/3",
+            "refsource": "MISC",
+            "url": "http://www.openwall.com/lists/oss-security/2024/01/24/3"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "INTERNAL"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Since version 5.2.0, when using deferrable mode with the path of a Kubernetes configuration file for authentication, the Airflow worker serializes this configuration file as a dictionary and sends it to the triggerer by storing it in metadata without any encryption. Additionally, if used with an Airflow version between 2.3.0 and 2.6.0, the configuration dictionary will be logged as plain text in the triggerer service without masking. This allows anyone with access to the metadata or triggerer log to obtain the configuration file and use it to access the Kubernetes cluster.\n\nThis behavior was changed in version 7.0.0, which stopped serializing the file contents and started providing the file path instead to read the contents into the trigger. Users are recommended to upgrade to version 7.0.0, which fixes this issue."
+          },
+          {
+            "lang": "es",
+            "value": "Desde la versi\u00f3n 5.2.0, cuando se utiliza el modo diferible con la ruta de un archivo de configuraci\u00f3n de Kubernetes para la autenticaci\u00f3n, el trabajador de Airflow serializa este archivo de configuraci\u00f3n como un diccionario y lo env\u00eda al activador almacen\u00e1ndolo en metadatos sin ning\u00fan cifrado. Adem\u00e1s, si se utiliza con una versi\u00f3n de Airflow entre 2.3.0 y 2.6.0, el diccionario de configuraci\u00f3n se registrar\u00e1 como texto plano en el servicio activador sin enmascaramiento. Esto permite que cualquier persona con acceso a los metadatos o al registro del activador obtenga el archivo de configuraci\u00f3n y lo utilice para acceder al cl\u00faster de Kubernetes. Este comportamiento se cambi\u00f3 en la versi\u00f3n 7.0.0, que dej\u00f3 de serializar el contenido del archivo y comenz\u00f3 a proporcionar la ruta del archivo para leer el contenido en el activador. Se recomienda a los usuarios actualizar a la versi\u00f3n 7.0.0, que soluciona este problema."
+          }
+        ],
+        "id": "CVE-2023-51702",
+        "lastModified": "2024-01-24T15:15:08.663",
+        "metrics": {},
+        "published": "2024-01-24T13:15:08.150",
+        "references": [
+          {
+            "source": "security@apache.org",
+            "url": "http://www.openwall.com/lists/oss-security/2024/01/24/3"
+          },
+          {
+            "source": "security@apache.org",
+            "url": "https://github.com/apache/airflow/pull/29498"
+          },
+          {
+            "source": "security@apache.org",
+            "url": "https://github.com/apache/airflow/pull/30110"
+          },
+          {
+            "source": "security@apache.org",
+            "url": "https://github.com/apache/airflow/pull/36492"
+          },
+          {
+            "source": "security@apache.org",
+            "url": "https://lists.apache.org/thread/89x3q6lz5pykrkr1fkr04k4rfn9pvnv9"
+          }
+        ],
+        "sourceIdentifier": "security@apache.org",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-312"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-532"
+              }
+            ],
+            "source": "security@apache.org",
+            "type": "Primary"
           }
         ]
       }
