@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-23656"
       ],
+      "details": "Dex is an identity service that uses OpenID Connect to drive authentication for other apps. Dex 2.37.0 serves HTTPS with insecure TLS 1.0 and TLS 1.1. `cmd/dex/serve.go` line 425 seemingly sets TLS 1.2 as minimum version, but the whole `tlsConfig` is ignored after `TLS cert reloader` was introduced in v2.37.0. Configured cipher suites are not respected either. This issue is fixed in Dex 2.38.0.",
       "id": "GSD-2024-23656",
       "modified": "2024-01-19T06:02:13.327418Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-23656",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "dex",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "= 2.37.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "dexidp"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,157 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Dex is an identity service that uses OpenID Connect to drive authentication for other apps. Dex 2.37.0 serves HTTPS with insecure TLS 1.0 and TLS 1.1. `cmd/dex/serve.go` line 425 seemingly sets TLS 1.2 as minimum version, but the whole `tlsConfig` is ignored after `TLS cert reloader` was introduced in v2.37.0. Configured cipher suites are not respected either. This issue is fixed in Dex 2.38.0."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-326",
+                "lang": "eng",
+                "value": "CWE-326: Inadequate Encryption Strength"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-757",
+                "lang": "eng",
+                "value": "CWE-757: Selection of Less-Secure Algorithm During Negotiation ('Algorithm Downgrade')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/dexidp/dex/security/advisories/GHSA-gr79-9v6v-gc9r",
+            "refsource": "MISC",
+            "url": "https://github.com/dexidp/dex/security/advisories/GHSA-gr79-9v6v-gc9r"
+          },
+          {
+            "name": "https://github.com/dexidp/dex/issues/2848",
+            "refsource": "MISC",
+            "url": "https://github.com/dexidp/dex/issues/2848"
+          },
+          {
+            "name": "https://github.com/dexidp/dex/pull/2964",
+            "refsource": "MISC",
+            "url": "https://github.com/dexidp/dex/pull/2964"
+          },
+          {
+            "name": "https://github.com/dexidp/dex/commit/5bbdb4420254ba73b9c4df4775fe7bdacf233b17",
+            "refsource": "MISC",
+            "url": "https://github.com/dexidp/dex/commit/5bbdb4420254ba73b9c4df4775fe7bdacf233b17"
+          },
+          {
+            "name": "https://github.com/dexidp/dex/blob/70d7a2c7c1bb2646b1a540e49616cbc39622fb83/cmd/dex/serve.go#L425",
+            "refsource": "MISC",
+            "url": "https://github.com/dexidp/dex/blob/70d7a2c7c1bb2646b1a540e49616cbc39622fb83/cmd/dex/serve.go#L425"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-gr79-9v6v-gc9r",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Dex is an identity service that uses OpenID Connect to drive authentication for other apps. Dex 2.37.0 serves HTTPS with insecure TLS 1.0 and TLS 1.1. `cmd/dex/serve.go` line 425 seemingly sets TLS 1.2 as minimum version, but the whole `tlsConfig` is ignored after `TLS cert reloader` was introduced in v2.37.0. Configured cipher suites are not respected either. This issue is fixed in Dex 2.38.0."
+          }
+        ],
+        "id": "CVE-2024-23656",
+        "lastModified": "2024-01-25T21:52:01.053",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-01-25T20:15:41.107",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dexidp/dex/blob/70d7a2c7c1bb2646b1a540e49616cbc39622fb83/cmd/dex/serve.go#L425"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dexidp/dex/commit/5bbdb4420254ba73b9c4df4775fe7bdacf233b17"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dexidp/dex/issues/2848"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dexidp/dex/pull/2964"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dexidp/dex/security/advisories/GHSA-gr79-9v6v-gc9r"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-326"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-757"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
