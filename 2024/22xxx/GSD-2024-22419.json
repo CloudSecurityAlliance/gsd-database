@@ -115,16 +115,58 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:vyperlang:vyper:*:*:*:*:*:python:*:*",
+                    "matchCriteriaId": "832C489D-4288-46B4-A29E-0E7168748042",
+                    "versionEndIncluding": "0.3.10",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine. The `concat` built-in can write over the bounds of the memory buffer that was allocated for it and thus overwrite existing valid data. The root cause is that the `build_IR` for `concat` doesn't properly adhere to the API of copy functions (for `>=0.3.2` the `copy_bytes` function). A contract search was performed and no vulnerable contracts were found in production. The buffer overflow can result in the change of semantics of the contract. The overflow is length-dependent and thus it might go unnoticed during contract testing. However, certainly not all usages of concat will result in overwritten valid data as we require it to be in an internal function and close to the return statement where other memory allocations don't occur. This issue has been addressed in commit `55e18f6d1` which will be included in future releases. Users are advised to update when possible."
+          },
+          {
+            "lang": "es",
+            "value": "Vyper es un lenguaje de contrato inteligente pit\u00f3nico para la m\u00e1quina virtual Ethereum. El `concat` integrado puede escribir sobre los l\u00edmites del b\u00fafer de memoria que se le asign\u00f3 y as\u00ed sobrescribir los datos v\u00e1lidos existentes. La causa principal es que `build_IR` para `concat` no se adhiere correctamente a la API de funciones de copia (para `&gt;=0.3.2` la funci\u00f3n `copy_bytes`). Se realiz\u00f3 una b\u00fasqueda de contratos y no se encontraron contratos vulnerables en producci\u00f3n. El desbordamiento de b\u00fafer puede provocar un cambio en la sem\u00e1ntica del contrato. El desbordamiento depende de la longitud y, por lo tanto, puede pasar desapercibido durante las pruebas del contrato. Sin embargo, ciertamente no todos los usos de concat dar\u00e1n como resultado la sobrescritura de datos v\u00e1lidos, ya que requerimos que est\u00e9n en una funci\u00f3n interna y cerca de la declaraci\u00f3n de devoluci\u00f3n donde no ocurren otras asignaciones de memoria. Este problema se solucion\u00f3 en el commit `55e18f6d1` que se incluir\u00e1 en versiones futuras. Se recomienda a los usuarios que actualicen cuando sea posible."
           }
         ],
         "id": "CVE-2024-22419",
-        "lastModified": "2024-01-18T19:25:46.623",
+        "lastModified": "2024-01-26T18:10:24.747",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.8,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -151,20 +193,42 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/vyperlang/vyper/commit/55e18f6d128b2da8986adbbcccf1cd59a4b9ad6f"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Issue Tracking",
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/vyperlang/vyper/issues/3737"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-2q8v-3gqq-4f8p"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-787"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -173,7 +237,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }
