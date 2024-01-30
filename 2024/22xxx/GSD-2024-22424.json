@@ -127,16 +127,78 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D7E1C1DF-F7F5-472D-A429-797D45E1492D",
+                    "versionEndExcluding": "2.7.16",
+                    "versionStartIncluding": "0.1.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "CD960A01-17B6-4898-9DD2-6EF300AC2ECD",
+                    "versionEndExcluding": "2.8.8",
+                    "versionStartIncluding": "2.8.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:linuxfoundation:argo-cd:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "7CAE51AB-775C-4A7F-B747-55E7412A921B",
+                    "versionEndExcluding": "2.9.4",
+                    "versionStartIncluding": "2.9.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:linuxfoundation:argo-cd:2.10.0:rc1:*:*:*:*:*:*",
+                    "matchCriteriaId": "8006BF15-444F-4E23-9EF7-82AEC9C6CBED",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. The Argo CD API prior to versions 2.10-rc2, 2.9.4, 2.8.8, and 2.7.15 are vulnerable to a cross-server request forgery (CSRF) attack when the attacker has the ability to write HTML to a page on the same parent domain as Argo CD. A CSRF attack works by tricking an authenticated Argo CD user into loading a web page which contains code to call Argo CD API endpoints on the victim\u2019s behalf. For example, an attacker could send an Argo CD user a link to a page which looks harmless but in the background calls an Argo CD API endpoint to create an application running malicious code. Argo CD uses the \u201cLax\u201d SameSite cookie policy to prevent CSRF attacks where the attacker controls an external domain. The malicious external website can attempt to call the Argo CD API, but the web browser will refuse to send the Argo CD auth token with the request. Many companies host Argo CD on an internal subdomain. If an attacker can place malicious code on, for example, https://test.internal.example.com/, they can still perform a CSRF attack. In this case, the \u201cLax\u201d SameSite cookie does not prevent the browser from sending the auth cookie, because the destination is a parent domain of the Argo CD API. Browsers generally block such attacks by applying CORS policies to sensitive requests with sensitive content types. Specifically, browsers will send a \u201cpreflight request\u201d for POSTs with content type \u201capplication/json\u201d asking the destination API \u201care you allowed to accept requests from my domain?\u201d If the destination API does not answer \u201cyes,\u201d the browser will block the request. Before the patched versions, Argo CD did not validate that requests contained the correct content type header. So an attacker could bypass the browser\u2019s CORS check by setting the content type to something which is considered \u201cnot sensitive\u201d such as \u201ctext/plain.\u201d The browser wouldn\u2019t send the preflight request, and Argo CD would happily accept the contents (which are actually still JSON) and perform the requested action (such as running malicious code). A patch for this vulnerability has been released in the following Argo CD versions: 2.10-rc2, 2.9.4, 2.8.8, and 2.7.15. The patch contains a breaking API change. The Argo CD API will no longer accept non-GET requests which do not specify application/json as their Content-Type. The accepted content types list is configurable, and it is possible (but discouraged) to disable the content type check completely. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+          },
+          {
+            "lang": "es",
+            "value": "Argo CD es una herramienta declarativa de entrega continua de GitOps para Kubernetes. La API de Argo CD anterior a las versiones 2.10-rc2, 2.9.4, 2.8.8 y 2.7.15 es vulnerable a un ataque de cross-server request forgery (CSRF) cuando el atacante tiene la capacidad de escribir HTML en una p\u00e1gina del mismo dominio principal que Argo CD. Un ataque CSRF funciona enga\u00f1ando a un usuario autenticado de Argo CD para que cargue una p\u00e1gina web que contiene c\u00f3digo para llamar a los endpoints de la API de Argo CD en nombre de la v\u00edctima. Por ejemplo, un atacante podr\u00eda enviar a un usuario de Argo CD un enlace a una p\u00e1gina que parece inofensiva pero que en segundo plano llama a un endpoint de la API de Argo CD para crear una aplicaci\u00f3n que ejecute c\u00f3digo malicioso. Argo CD utiliza la pol\u00edtica de cookies \"Lax\" de SameSite para evitar ataques CSRF en los que el atacante controla un dominio externo. El sitio web externo malicioso puede intentar llamar a la API de Argo CD, pero el navegador web se negar\u00e1 a enviar el token de autenticaci\u00f3n de Argo CD con la solicitud. Muchas empresas alojan Argo CD en un subdominio interno. Si un atacante puede colocar c\u00f3digo malicioso, por ejemplo, en https://test.internal.example.com/, a\u00fan puede realizar un ataque CSRF. En este caso, la cookie SameSite \"Lax\" no impide que el navegador env\u00ede la cookie de autenticaci\u00f3n, porque el destino es un dominio principal de la API de Argo CD. Los navegadores generalmente bloquean este tipo de ataques aplicando pol\u00edticas CORS a solicitudes confidenciales con tipos de contenido confidenciales. Espec\u00edficamente, los navegadores enviar\u00e1n una \"solicitud de verificaci\u00f3n previa\" para POST con tipo de contenido \"application/json\" preguntando a la API de destino \"\u00bfpuede aceptar solicitudes de mi dominio?\" Si la API de destino no responde \"s\u00ed\", el navegador bloquear\u00e1 la solicitud. Antes de las versiones parcheadas, Argo CD no validaba que las solicitudes incluyeran el encabezado del tipo de contenido correcto. Por lo tanto, un atacante podr\u00eda eludir la verificaci\u00f3n CORS del navegador configurando el tipo de contenido en algo que se considere \"no sensible\", como \"texto/plano\". El navegador no enviar\u00eda la solicitud de verificaci\u00f3n previa y Argo CD aceptar\u00eda felizmente el contenido (que en realidad sigue siendo JSON) y realizar\u00eda la acci\u00f3n solicitada (como ejecutar c\u00f3digo malicioso). Se lanz\u00f3 un parche para esta vulnerabilidad en las siguientes versiones de Argo CD: 2.10-rc2, 2.9.4, 2.8.8 y 2.7.15. El parche contiene un cambio importante en la API. La API de Argo CD ya no aceptar\u00e1 solicitudes que no sean GET y que no especifiquen application/json como tipo de contenido. La lista de tipos de contenido aceptados es configurable y es posible (pero desaconsejado) desactivar completamente la verificaci\u00f3n del tipo de contenido. Se recomienda a los usuarios que actualicen. No se conocen workarounds para esta vulnerabilidad."
           }
         ],
         "id": "CVE-2024-22424",
-        "lastModified": "2024-01-19T01:51:14.027",
+        "lastModified": "2024-01-29T15:35:13.463",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.6,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 6.0,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "HIGH",
@@ -163,20 +225,41 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Issue Tracking",
+              "Third Party Advisory"
+            ],
             "url": "https://github.com/argoproj/argo-cd/issues/2496"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/argoproj/argo-cd/pull/16860"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-92mw-q256-5vwg"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-352"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
