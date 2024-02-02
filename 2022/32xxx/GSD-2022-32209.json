@@ -177,162 +177,181 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:rubyonrails:rails_html_sanitizers:*:*:*:*:*:rails:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "1.4.3",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:rubyonrails:rails_html_sanitizers:*:*:*:*:*:rails:*:*",
+                    "matchCriteriaId": "2A94FBF3-C2F8-4479-88CA-864656B1E034",
+                    "versionEndExcluding": "1.4.3",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:fedoraproject:fedora:35:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "80E516C0-98A4-4ADE-B69F-66A772E2BAAA",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5C675112-476C-4D7C-BCB9-A2FB2D0BC9FD",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          },
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "07B237A9-69A3-4A9C-9DA0-4E06BD37AE73",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
+          },
+          {
+            "lang": "es",
+            "value": "# Una Posible vulnerabilidad XSS en Rails::Html::Sanitizer Se presenta una posible vulnerabilidad XSS con determinadas configuraciones de Rails::Html::Sanitizer. Esta vulnerabilidad le ha sido asignada el identificador CVE CVE-2022-32209. Versiones afectadas: TODAS No se han visto afectadas: NONE Versiones Corregidas: v1.4.3## Impacto Una posible vulnerabilidad de tipo XSS con determinadas configuraciones de Rails::Html::Sanitizer puede permitir a un atacante inyectar contenido si el desarrollador de la aplicaci\u00f3n ha anulado las etiquetas permitidas del saneador para permitir tanto los elementos \"select\" como \"style\". El c\u00f3digo s\u00f3lo est\u00e1 afectado si son anuladas las etiquetas permitidas. Esto puede hacerse por medio de la configuraci\u00f3n de la aplicaci\u00f3n: \"\"ruby# En config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]\"\" vea https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr puede hacerse con una opci\u00f3n \":tags\" al ayudante de la Visualizaci\u00f3n de Acci\u00f3n \"sanitize\":\"\"(%= sanitize @comment.body, tags: [\"select\", \"style\"] %)\"\" vea https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr puede hacerse con Rails::Html::SafeListSanitizer directamente:\" ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]\"\"\"o\"\"\"ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article. body, tags: [\"select\", \"style\"])\"\"\"Todos los usuarios que sobrescriban las etiquetas permitidas por cualquiera de los mecanismos anteriores para incluir tanto \"select\" como \"style\" deben actualizar o usar una de las mitigaciones inmediatamente. ## Versiones Las versiones CORREGIDAS est\u00e1n disponibles en las ubicaciones habituales. ## Soluciones Eliminar \"select\" o \"style\" de las etiquetas permitidas sobre establecidas. ## Cr\u00e9ditos Esta vulnerabilidad fue reportada responsablemente por [windshock](https://hackerone.com/windshock?type=user)"
+          }
+        ],
+        "id": "CVE-2022-32209",
+        "lastModified": "2024-02-01T16:22:15.683",
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "acInsufInfo": false,
+              "baseSeverity": "MEDIUM",
+              "cvssData": {
+                "accessComplexity": "MEDIUM",
+                "accessVector": "NETWORK",
+                "authentication": "NONE",
+                "availabilityImpact": "NONE",
+                "baseScore": 4.3,
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "PARTIAL",
+                "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+                "version": "2.0"
               },
-              {
-                "cpe23Uri": "cpe:2.3:o:fedoraproject:fedora:36:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
-              }
+              "exploitabilityScore": 8.6,
+              "impactScore": 2.9,
+              "obtainAllPrivilege": false,
+              "obtainOtherPrivilege": false,
+              "obtainUserPrivilege": false,
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "userInteractionRequired": true
+            }
+          ],
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 6.1,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 2.7,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2022-06-24T15:15:11.153",
+        "references": [
+          {
+            "source": "support@hackerone.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
             ],
-            "operator": "OR"
+            "url": "https://hackerone.com/reports/1530898"
           },
           {
-            "children": [],
-            "cpe_match": [
+            "source": "support@hackerone.com",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
+          },
+          {
+            "source": "support@hackerone.com",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
+          },
+          {
+            "source": "support@hackerone.com",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
+          }
+        ],
+        "sourceIdentifier": "support@hackerone.com",
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-79"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-79"
+              }
+            ],
+            "source": "support@hackerone.com",
+            "type": "Secondary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "cve-assignments@hackerone.com",
-          "ID": "CVE-2022-32209"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "# Possible XSS Vulnerability in Rails::Html::SanitizerThere is a possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer.This vulnerability has been assigned the CVE identifier CVE-2022-32209.Versions Affected: ALLNot affected: NONEFixed Versions: v1.4.3## ImpactA possible XSS vulnerability with certain configurations of Rails::Html::Sanitizer may allow an attacker to inject content if the application developer has overridden the sanitizer's allowed tags to allow both `select` and `style` elements.Code is only impacted if allowed tags are being overridden. This may be done via application configuration:```ruby# In config/application.rbconfig.action_view.sanitized_allowed_tags = [\"select\", \"style\"]```see https://guides.rubyonrails.org/configuring.html#configuring-action-viewOr it may be done with a `:tags` option to the Action View helper `sanitize`:```<%= sanitize @comment.body, tags: [\"select\", \"style\"] %>```see https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html#method-i-sanitizeOr it may be done with Rails::Html::SafeListSanitizer directly:```ruby# class-level optionRails::Html::SafeListSanitizer.allowed_tags = [\"select\", \"style\"]```or```ruby# instance-level optionRails::Html::SafeListSanitizer.new.sanitize(@article.body, tags: [\"select\", \"style\"])```All users overriding the allowed tags by any of the above mechanisms to include both \"select\" and \"style\" should either upgrade or use one of the workarounds immediately.## ReleasesThe FIXED releases are available at the normal locations.## WorkaroundsRemove either `select` or `style` from the overridden allowed tags.## CreditsThis vulnerability was responsibly reported by [windshock](https://hackerone.com/windshock?type=user)."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-79"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://hackerone.com/reports/1530898",
-              "refsource": "MISC",
-              "tags": [
-                "Exploit",
-                "Third Party Advisory"
-              ],
-              "url": "https://hackerone.com/reports/1530898"
-            },
-            {
-              "name": "FEDORA-2022-974fffb418",
-              "refsource": "FEDORA",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NHDACMCLWE32BZZTSNWQPIFUAD5I6Q47/"
-            },
-            {
-              "name": "FEDORA-2022-ce4719993c",
-              "refsource": "FEDORA",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AGRLWBEB3S5AU3D4TTROIS7O6QPHDTRH/"
-            },
-            {
-              "name": "[debian-lts-announce] 20221206 [SECURITY] [DLA 3227-1] ruby-rails-html-sanitizer security update",
-              "refsource": "MLIST",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.debian.org/debian-lts-announce/2022/12/msg00012.html"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV2": {
-          "acInsufInfo": false,
-          "cvssV2": {
-            "accessComplexity": "MEDIUM",
-            "accessVector": "NETWORK",
-            "authentication": "NONE",
-            "availabilityImpact": "NONE",
-            "baseScore": 4.3,
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "PARTIAL",
-            "vectorString": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-            "version": "2.0"
-          },
-          "exploitabilityScore": 8.6,
-          "impactScore": 2.9,
-          "obtainAllPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "obtainUserPrivilege": false,
-          "severity": "MEDIUM",
-          "userInteractionRequired": true
-        },
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "NONE",
-            "baseScore": 6.1,
-            "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "LOW",
-            "integrityImpact": "LOW",
-            "privilegesRequired": "NONE",
-            "scope": "CHANGED",
-            "userInteraction": "REQUIRED",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 2.8,
-          "impactScore": 2.7
-        }
-      },
-      "lastModifiedDate": "2023-02-03T19:14Z",
-      "publishedDate": "2022-06-24T15:15Z"
+      }
     }
   }
 }
