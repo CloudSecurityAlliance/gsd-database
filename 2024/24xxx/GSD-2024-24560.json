@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-24560"
       ],
+      "details": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine. When calls to external contracts are made, we write the input buffer starting at byte 28, and allocate the return buffer to start at byte 0 (overlapping with the input buffer). When checking RETURNDATASIZE for dynamic types, the size is compared only to the minimum allowed size for that type, and not to the returned value's length. As a result, malformed return data can cause the contract to mistake data from the input buffer for returndata.  When the called contract returns invalid ABIv2 encoded data, the calling contract can read different invalid data (from the dirty buffer) than the called contract returned.",
       "id": "GSD-2024-24560",
       "modified": "2024-01-26T06:02:26.045241Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-24560",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "vyper",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "<= 0.3.10"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "vyperlang"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,108 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine. When calls to external contracts are made, we write the input buffer starting at byte 28, and allocate the return buffer to start at byte 0 (overlapping with the input buffer). When checking RETURNDATASIZE for dynamic types, the size is compared only to the minimum allowed size for that type, and not to the returned value's length. As a result, malformed return data can cause the contract to mistake data from the input buffer for returndata.  When the called contract returns invalid ABIv2 encoded data, the calling contract can read different invalid data (from the dirty buffer) than the called contract returned."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 3.7,
+            "baseSeverity": "LOW",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-119",
+                "lang": "eng",
+                "value": "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/vyperlang/vyper/security/advisories/GHSA-gp3w-2v2m-p686",
+            "refsource": "MISC",
+            "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-gp3w-2v2m-p686"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-gp3w-2v2m-p686",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine. When calls to external contracts are made, we write the input buffer starting at byte 28, and allocate the return buffer to start at byte 0 (overlapping with the input buffer). When checking RETURNDATASIZE for dynamic types, the size is compared only to the minimum allowed size for that type, and not to the returned value's length. As a result, malformed return data can cause the contract to mistake data from the input buffer for returndata.  When the called contract returns invalid ABIv2 encoded data, the calling contract can read different invalid data (from the dirty buffer) than the called contract returned."
+          }
+        ],
+        "id": "CVE-2024-24560",
+        "lastModified": "2024-02-02T21:13:53.920",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 3.7,
+                "baseSeverity": "LOW",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.2,
+              "impactScore": 1.4,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-02T17:15:11.720",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-gp3w-2v2m-p686"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-119"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }

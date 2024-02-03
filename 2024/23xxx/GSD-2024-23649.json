@@ -119,16 +119,59 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:join-lemmy:lemmy:*:*:*:*:*:rust:*:*",
+                    "matchCriteriaId": "934C8D15-0F2A-42C0-B574-D350377870B4",
+                    "versionEndExcluding": "0.19.1",
+                    "versionStartIncluding": "0.17.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Lemmy is a link aggregator and forum for the fediverse. Starting in version 0.17.0 and prior to version 0.19.1, users can report private messages, even when they're neither sender nor recipient of the message. The API response to creating a private message report contains the private message itself, which means any user can just iterate over message ids to (loudly) obtain all private messages of an instance. A user with instance admin privileges can also abuse this if the private message is removed from the response, as they're able to see the resulting reports.\n\nCreating a private message report by POSTing to `/api/v3/private_message/report` does not validate whether the reporter is the recipient of the message. lemmy-ui does not allow the sender to report the message; the API method should likely be restricted to accessible to recipients only. The API response when creating a report contains the `private_message_report_view` with all the details of the report, including the private message that has been reported:\n\nAny authenticated user can obtain arbitrary (untargeted) private message contents. Privileges required depend on the instance configuration; when registrations are enabled without application system, the privileges required are practically none. When registration applications are required, privileges required could be considered low, but this assessment heavily varies by instance.\n\nVersion 0.19.1 contains a patch for this issue. A workaround is available. If an update to a fixed Lemmy version is not immediately possible, the API route can be blocked in the reverse proxy. This will prevent anyone from reporting private messages, but it will also prevent exploitation before the update has been applied."
+          },
+          {
+            "lang": "es",
+            "value": "Lemmy es un agregador de enlaces y un foro para la diversidad. A partir de la versi\u00f3n 0.17.0 y anteriores a la versi\u00f3n 0.19.1, los usuarios pueden reportar mensajes privados, incluso cuando no son ni el remitente ni el destinatario del mensaje. La respuesta de la API para crear un informe de mensajes privados contiene el mensaje privado en s\u00ed, lo que significa que cualquier usuario puede simplemente iterar sobre los ID de los mensajes para obtener (en voz alta) todos los mensajes privados de una instancia. Un usuario con privilegios de administrador de instancias tambi\u00e9n puede abusar de esto si el mensaje privado se elimina de la respuesta, ya que puede ver los informes resultantes. La creaci\u00f3n de un informe de mensaje privado mediante PUBLICACI\u00d3N en `/api/v3/private_message/report` no valida si el informante es el destinatario del mensaje. lemmy-ui no permite que el remitente informe el mensaje; Es probable que el m\u00e9todo API deba estar restringido al acceso \u00fanicamente a los destinatarios. La respuesta de la API al crear un informe contiene `private_message_report_view` con todos los detalles del informe, incluido el mensaje privado que se ha informado: cualquier usuario autenticado puede obtener contenidos de mensajes privados arbitrarios (no dirigidos). Los privilegios necesarios dependen de la configuraci\u00f3n de la instancia; cuando los registros se habilitan sin sistema de aplicaci\u00f3n, los privilegios requeridos son pr\u00e1cticamente nulos. Cuando se requieren solicitudes de registro, los privilegios requeridos podr\u00edan considerarse bajos, pero esta evaluaci\u00f3n var\u00eda mucho seg\u00fan el caso. La versi\u00f3n 0.19.1 contiene un parche para este problema. Hay una soluci\u00f3n disponible. Si no es posible actualizar inmediatamente a una versi\u00f3n fija de Lemmy, la ruta API se puede bloquear en el proxy inverso. Esto evitar\u00e1 que alguien denuncie mensajes privados, pero tambi\u00e9n evitar\u00e1 la explotaci\u00f3n antes de que se haya aplicado la actualizaci\u00f3n."
           }
         ],
         "id": "CVE-2024-23649",
-        "lastModified": "2024-01-24T18:45:30.823",
+        "lastModified": "2024-02-02T15:46:30.623",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 6.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -155,16 +198,32 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/LemmyNet/lemmy/commit/bc32b408b523b9b64aa57b8e47748f96cce0dae5"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/LemmyNet/lemmy/security/advisories/GHSA-r64r-5h43-26qv"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "NVD-CWE-noinfo"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -177,7 +236,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }

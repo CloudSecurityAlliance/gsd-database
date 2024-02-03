@@ -119,16 +119,64 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:trillium:trillium:*:*:*:*:*:rust:*:*",
+                    "matchCriteriaId": "B9D4B68B-390B-44A9-9CD5-8F9AACBA405B",
+                    "versionEndExcluding": "0.5.4",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:trillium:trillium-http:*:*:*:*:*:rust:*:*",
+                    "matchCriteriaId": "8F925466-08CC-423B-90AD-32C54782A302",
+                    "versionEndExcluding": "0.3.12",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Trillium is a composable toolkit for building internet applications with async rust. In `trillium-http` prior to 0.3.12 and `trillium-client` prior to 0.5.4, insufficient validation of outbound header values may lead to request splitting or response splitting attacks in scenarios where attackers have sufficient control over headers. This only affects use cases where attackers have control of request headers, and can insert \"\\r\\n\" sequences. Specifically, if untrusted and unvalidated input is inserted into header names or values.\n\nOutbound `trillium_http::HeaderValue` and `trillium_http::HeaderName` can be constructed infallibly and were not checked for illegal bytes when sending requests from the client or responses from the server. Thus, if an attacker has sufficient control over header values (or names) in a request or response that they could inject `\\r\\n` sequences, they could get the client and server out of sync, and then pivot to gain control over other parts of requests or responses. (i.e. exfiltrating data from other requests, SSRF, etc.)\n\nIn `trillium-http` versions 0.3.12 and later, if a header name is invalid in server response headers, the specific header and any associated values are omitted from network transmission. Additionally, if a header value is invalid in server response headers, the individual header value is omitted from network transmission. Other headers values with the same header name will still be sent. In `trillium-client` versions 0.5.4 and later, if any header name or header value is invalid in the client request headers, awaiting the client Conn returns an `Error::MalformedHeader` prior to any network access. As a workaround, Trillium services and client applications should sanitize or validate untrusted input that is included in header values and header names. Carriage return, newline, and null characters are not allowed."
+          },
+          {
+            "lang": "es",
+            "value": "Trillium es un conjunto de herramientas componibles para crear aplicaciones de Internet con \u00f3xido as\u00edncrono. En `trillium-http` anterior a 0.3.12 y `trillium-client` anterior a 0.5.4, la validaci\u00f3n insuficiente de los valores de encabezado salientes puede llevar a ataques de divisi\u00f3n de solicitudes o de divisi\u00f3n de respuestas en escenarios donde los atacantes tienen suficiente control sobre los encabezados. Esto solo afecta a los casos de uso en los que los atacantes tienen control de los encabezados de las solicitudes y pueden insertar secuencias \"\\r\\n\". Espec\u00edficamente, si se inserta entrada que no es de confianza y no validada en nombres o valores de encabezado. Los `trillium_http::HeaderValue` y `trillium_http::HeaderName` salientes se pueden construir de manera infalible y no se verificaron en busca de bytes ilegales al enviar solicitudes del cliente o respuestas del servidor. Por lo tanto, si un atacante tiene suficiente control sobre los valores de encabezado (o nombres) en una solicitud o respuesta como para poder inyectar secuencias `\\r\\n`, podr\u00eda desincronizar el cliente y el servidor y luego girar para obtener control sobre otras partes de solicitudes o respuestas. (es decir, filtrar datos de otras solicitudes, SSRF, etc.) En las versiones 0.3.12 y posteriores de `trillium-http`, si un nombre de encabezado no es v\u00e1lido en los encabezados de respuesta del servidor, el encabezado espec\u00edfico y cualquier valor asociado se omiten de la transmisi\u00f3n de red. Adem\u00e1s, si un valor de encabezado no es v\u00e1lido en los encabezados de respuesta del servidor, el valor del encabezado individual se omite de la transmisi\u00f3n de la red. Se seguir\u00e1n enviando otros valores de encabezado con el mismo nombre de encabezado. En las versiones 0.5.4 y posteriores de `trillium-client`, si alg\u00fan nombre o valor de encabezado no es v\u00e1lido en los encabezados de solicitud del cliente, en espera, el cliente Conn devuelve un `Error::MalformedHeader` antes de cualquier acceso a la red. Como workaround, los servicios de Trillium y las aplicaciones cliente deben desinfectar o validar las entradas que no son de confianza incluidas en los valores y nombres de los encabezados. No se permiten caracteres de carriage return, nueva l\u00ednea, ni nulos."
           }
         ],
         "id": "CVE-2024-23644",
-        "lastModified": "2024-01-25T01:59:45.643",
+        "lastModified": "2024-02-02T15:47:26.253",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.1,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.2,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "HIGH",
@@ -155,20 +203,39 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/trillium-rs/trillium/commit/16a42b3f8378a3fa4e61ece3e3e37e6a530df51d"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/trillium-rs/trillium/commit/8d468f85e27b8d0943d6f43ce9f8c7397141a999"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/trillium-rs/trillium/security/advisories/GHSA-9f9p-cp3c-72jf"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-436"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -177,7 +244,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }
