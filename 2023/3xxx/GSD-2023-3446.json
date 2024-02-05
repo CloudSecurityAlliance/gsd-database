@@ -159,6 +159,11 @@
             "name": "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html",
             "refsource": "MISC",
             "url": "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html"
+          },
+          {
+            "name": "https://security.gentoo.org/glsa/202402-08",
+            "refsource": "MISC",
+            "url": "https://security.gentoo.org/glsa/202402-08"
           }
         ]
       },
@@ -208,197 +213,187 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:1.0.2:-:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:1.0.2:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "CF0E6EB1-D656-458E-82B6-8C1ABDC13CB9",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:1.1.1:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "A8C84061-63BE-49F6-B2F0-D96847E755E0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:3.0.0:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "07D64A21-359E-40B7-8636-7E76D7466263",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:3.1.0:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "0CAAEE49-4FD0-4162-B635-4488BEC5DDC9",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:3.1.1:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "69EAFE3B-C2C7-4092-92A8-529512438B06",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. One of those\nchecks confirms that the modulus ('p' parameter) is not too large. Trying to use\na very large modulus is slow and OpenSSL will not normally use a modulus which\nis over 10,000 bits in length.\n\nHowever the DH_check() function checks numerous aspects of the key or parameters\nthat have been supplied. Some of those checks use the supplied modulus value\neven if it has already been found to be too large.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulernable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the '-check' option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
+          }
+        ],
+        "id": "CVE-2023-3446",
+        "lastModified": "2024-02-04T09:15:09.900",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "LOW",
+                "baseScore": 5.3,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "version": "3.1"
               },
+              "exploitabilityScore": 3.9,
+              "impactScore": 1.4,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2023-07-19T12:15:10.003",
+        "references": [
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/07/19/4"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/07/19/5"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/07/19/6"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/07/31/1"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=1fa20cf2f506113c761777127a38bce5068740eb"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8780a896543a654e757db1b9396383f9d8095528"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Broken Link",
+              "Vendor Advisory"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9a0a4d3c1e7138915563c0df4fe6a3f9377b839c"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=fc9867c1e03c22ebf56943be205202e576aabf23"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://security.gentoo.org/glsa/202402-08"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://security.netapp.com/advisory/ntap-20230803-0011/"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://www.openssl.org/news/secadv/20230719.txt"
+          }
+        ],
+        "sourceIdentifier": "openssl-security@openssl.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:1.1.1:-:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.0.0:-:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.1.1:-:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:3.1.0:-:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-1333"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "openssl-security@openssl.org",
-          "ID": "CVE-2023-3446"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. One of those\nchecks confirms that the modulus ('p' parameter) is not too large. Trying to use\na very large modulus is slow and OpenSSL will not normally use a modulus which\nis over 10,000 bits in length.\n\nHowever the DH_check() function checks numerous aspects of the key or parameters\nthat have been supplied. Some of those checks use the supplied modulus value\neven if it has already been found to be too large.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulernable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the '-check' option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-1333"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=fc9867c1e03c22ebf56943be205202e576aabf23",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=fc9867c1e03c22ebf56943be205202e576aabf23"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8780a896543a654e757db1b9396383f9d8095528",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8780a896543a654e757db1b9396383f9d8095528"
-            },
-            {
-              "name": "https://www.openssl.org/news/secadv/20230719.txt",
-              "refsource": "MISC",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://www.openssl.org/news/secadv/20230719.txt"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9a0a4d3c1e7138915563c0df4fe6a3f9377b839c",
-              "refsource": "MISC",
-              "tags": [
-                "Broken Link",
-                "Vendor Advisory"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9a0a4d3c1e7138915563c0df4fe6a3f9377b839c"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=1fa20cf2f506113c761777127a38bce5068740eb",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=1fa20cf2f506113c761777127a38bce5068740eb"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/07/19/5",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/07/19/5"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/07/19/4",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/07/19/4"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/07/19/6",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/07/19/6"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/07/31/1",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/07/31/1"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20230803-0011/",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://security.netapp.com/advisory/ntap-20230803-0011/"
-            },
-            {
-              "name": "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "LOW",
-            "baseScore": 5.3,
-            "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 3.9,
-          "impactScore": 1.4
-        }
-      },
-      "lastModifiedDate": "2023-10-03T15:48Z",
-      "publishedDate": "2023-07-19T12:15Z"
+      }
     }
   }
 }

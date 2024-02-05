@@ -136,6 +136,11 @@
             "name": "https://xenbits.xenproject.org/xsa/advisory-387.txt",
             "refsource": "MISC",
             "url": "https://xenbits.xenproject.org/xsa/advisory-387.txt"
+          },
+          {
+            "name": "GLSA-202402-07",
+            "refsource": "GENTOO",
+            "url": "https://security.gentoo.org/glsa/202402-07"
           }
         ]
       },
@@ -153,107 +158,115 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
-                "cpe_name": [],
-                "versionEndExcluding": "14.4",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:xen:xen:*:*:*:*:*:*:x86:*",
+                    "matchCriteriaId": "2716918D-050D-407D-BFA4-66F62628AB7D",
+                    "versionEndExcluding": "14.4",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "grant table v2 status pages may remain accessible after de-allocation (take two) Guest get permitted access to certain Xen-owned pages of memory. The majority of such pages remain allocated / associated with a guest for its entire lifetime. Grant table v2 status pages, however, get de-allocated when a guest switched (back) from v2 to v1. The freeing of such pages requires that the hypervisor know where in the guest these pages were mapped. The hypervisor tracks only one use within guest space, but racing requests from the guest to insert mappings of these pages may result in any of them to become mapped in multiple locations. Upon switching back from v2 to v1, the guest would then retain access to a page that was freed and perhaps re-used for other purposes. This bug was fortuitously fixed by code cleanup in Xen 4.14, and backported to security-supported Xen branches as a prerequisite of the fix for XSA-378."
+          },
+          {
+            "lang": "es",
+            "value": "Las p\u00e1ginas de estado de la tabla de concesi\u00f3n v2 pueden seguir siendo accesibles despu\u00e9s de la desasignaci\u00f3n (toma dos) Los hu\u00e9spedes obtienen acceso permitido a determinadas p\u00e1ginas de memoria propiedad de Xen. La mayor\u00eda de estas p\u00e1ginas permanecen asignadas / asociadas a un hu\u00e9sped durante toda su vida. Las p\u00e1ginas de estado de la tabla de concesi\u00f3n v2, sin embargo, se desasignan cuando un hu\u00e9sped cambia (de nuevo) de v2 a v1. La liberaci\u00f3n de estas p\u00e1ginas requiere que el hipervisor sepa en qu\u00e9 parte del hu\u00e9sped se asignaron estas p\u00e1ginas. El hipervisor rastrea s\u00f3lo un uso dentro del espacio del hu\u00e9sped, pero las peticiones de carrera del hu\u00e9sped para insertar mapeos de estas p\u00e1ginas pueden hacer que cualquiera de ellas se mapee en m\u00faltiples ubicaciones. Al volver a pasar de v2 a v1, el hu\u00e9sped conservar\u00eda el acceso a una p\u00e1gina que se hab\u00eda liberado y quiz\u00e1s reusarlo para otros fines. Este error fue fortuitamente corregido por la limpieza de c\u00f3digo en Xen versi\u00f3n 4.14, y retrocedido a las ramas de Xen soportadas por la seguridad como un prerrequisito de la correcci\u00f3n de XSA-378"
+          }
+        ],
+        "id": "CVE-2021-28703",
+        "lastModified": "2024-02-04T08:15:08.090",
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "acInsufInfo": false,
+              "baseSeverity": "MEDIUM",
+              "cvssData": {
+                "accessComplexity": "MEDIUM",
+                "accessVector": "LOCAL",
+                "authentication": "NONE",
+                "availabilityImpact": "COMPLETE",
+                "baseScore": 6.9,
+                "confidentialityImpact": "COMPLETE",
+                "integrityImpact": "COMPLETE",
+                "vectorString": "AV:L/AC:M/Au:N/C:C/I:C/A:C",
+                "version": "2.0"
+              },
+              "exploitabilityScore": 3.4,
+              "impactScore": 10.0,
+              "obtainAllPrivilege": false,
+              "obtainOtherPrivilege": false,
+              "obtainUserPrivilege": false,
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "userInteractionRequired": false
+            }
+          ],
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.0,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.0,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2021-12-07T12:15:08.610",
+        "references": [
+          {
+            "source": "security@xen.org",
+            "url": "https://security.gentoo.org/glsa/202402-07"
+          },
+          {
+            "source": "security@xen.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://xenbits.xenproject.org/xsa/advisory-387.txt"
+          }
+        ],
+        "sourceIdentifier": "security@xen.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "NVD-CWE-Other"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security@xen.org",
-          "ID": "CVE-2021-28703"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "grant table v2 status pages may remain accessible after de-allocation (take two) Guest get permitted access to certain Xen-owned pages of memory. The majority of such pages remain allocated / associated with a guest for its entire lifetime. Grant table v2 status pages, however, get de-allocated when a guest switched (back) from v2 to v1. The freeing of such pages requires that the hypervisor know where in the guest these pages were mapped. The hypervisor tracks only one use within guest space, but racing requests from the guest to insert mappings of these pages may result in any of them to become mapped in multiple locations. Upon switching back from v2 to v1, the guest would then retain access to a page that was freed and perhaps re-used for other purposes. This bug was fortuitously fixed by code cleanup in Xen 4.14, and backported to security-supported Xen branches as a prerequisite of the fix for XSA-378."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "NVD-CWE-Other"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://xenbits.xenproject.org/xsa/advisory-387.txt",
-              "refsource": "MISC",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://xenbits.xenproject.org/xsa/advisory-387.txt"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV2": {
-          "acInsufInfo": false,
-          "cvssV2": {
-            "accessComplexity": "MEDIUM",
-            "accessVector": "LOCAL",
-            "authentication": "NONE",
-            "availabilityImpact": "COMPLETE",
-            "baseScore": 6.9,
-            "confidentialityImpact": "COMPLETE",
-            "integrityImpact": "COMPLETE",
-            "vectorString": "AV:L/AC:M/Au:N/C:C/I:C/A:C",
-            "version": "2.0"
-          },
-          "exploitabilityScore": 3.4,
-          "impactScore": 10.0,
-          "obtainAllPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "obtainUserPrivilege": false,
-          "severity": "MEDIUM",
-          "userInteractionRequired": false
-        },
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "HIGH",
-            "attackVector": "LOCAL",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.0,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "LOW",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 1.0,
-          "impactScore": 5.9
-        }
-      },
-      "lastModifiedDate": "2021-12-09T16:17Z",
-      "publishedDate": "2021-12-07T12:15Z"
+      }
     }
   }
 }

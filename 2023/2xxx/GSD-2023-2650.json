@@ -163,6 +163,11 @@
             "name": "https://security.netapp.com/advisory/ntap-20231027-0009/",
             "refsource": "MISC",
             "url": "https://security.netapp.com/advisory/ntap-20231027-0009/"
+          },
+          {
+            "name": "https://security.gentoo.org/glsa/202402-08",
+            "refsource": "MISC",
+            "url": "https://security.gentoo.org/glsa/202402-08"
           }
         ]
       },
@@ -213,206 +218,199 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "3.1.1",
-                "versionStartIncluding": "3.1.0",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "3.0.9",
-                "versionStartIncluding": "3.0.0",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "1.1.1u",
-                "versionStartIncluding": "1.1.1",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "1.0.2zh",
-                "versionStartIncluding": "1.0.2",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "23F912E9-9126-4D16-8F77-BD41CED6774D",
+                    "versionEndExcluding": "1.0.2zh",
+                    "versionStartIncluding": "1.0.2",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "7D99C2F8-BE74-4912-8653-A2AEE387AAF9",
+                    "versionEndExcluding": "1.1.1u",
+                    "versionStartIncluding": "1.1.1",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "4C637E94-F5EC-4D4B-836F-8C8219F1ECEC",
+                    "versionEndExcluding": "3.0.9",
+                    "versionStartIncluding": "3.0.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "68821BE0-7889-48B0-888D-CEC8BB9BDEA9",
+                    "versionEndExcluding": "3.1.1",
+                    "versionStartIncluding": "3.1.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "07B237A9-69A3-4A9C-9DA0-4E06BD37AE73",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "FA6FEEC2-9F11-4643-8827-749718254FED",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Issue summary: Processing some specially crafted ASN.1 object identifiers or\ndata containing them may be very slow.\n\nImpact summary: Applications that use OBJ_obj2txt() directly, or use any of\nthe OpenSSL subsystems OCSP, PKCS7/SMIME, CMS, CMP/CRMF or TS with no message\nsize limit may experience notable to very long delays when processing those\nmessages, which may lead to a Denial of Service.\n\nAn OBJECT IDENTIFIER is composed of a series of numbers - sub-identifiers -\nmost of which have no size limit.  OBJ_obj2txt() may be used to translate\nan ASN.1 OBJECT IDENTIFIER given in DER encoding form (using the OpenSSL\ntype ASN1_OBJECT) to its canonical numeric text form, which are the\nsub-identifiers of the OBJECT IDENTIFIER in decimal form, separated by\nperiods.\n\nWhen one of the sub-identifiers in the OBJECT IDENTIFIER is very large\n(these are sizes that are seen as absurdly large, taking up tens or hundreds\nof KiBs), the translation to a decimal number in text may take a very long\ntime.  The time complexity is O(n^2) with 'n' being the size of the\nsub-identifiers in bytes (*).\n\nWith OpenSSL 3.0, support to fetch cryptographic algorithms using names /\nidentifiers in string form was introduced.  This includes using OBJECT\nIDENTIFIERs in canonical numeric text form as identifiers for fetching\nalgorithms.\n\nSuch OBJECT IDENTIFIERs may be received through the ASN.1 structure\nAlgorithmIdentifier, which is commonly used in multiple protocols to specify\nwhat cryptographic algorithm should be used to sign or verify, encrypt or\ndecrypt, or digest passed data.\n\nApplications that call OBJ_obj2txt() directly with untrusted data are\naffected, with any version of OpenSSL.  If the use is for the mere purpose\nof display, the severity is considered low.\n\nIn OpenSSL 3.0 and newer, this affects the subsystems OCSP, PKCS7/SMIME,\nCMS, CMP/CRMF or TS.  It also impacts anything that processes X.509\ncertificates, including simple things like verifying its signature.\n\nThe impact on TLS is relatively low, because all versions of OpenSSL have a\n100KiB limit on the peer's certificate chain.  Additionally, this only\nimpacts clients, or servers that have explicitly enabled client\nauthentication.\n\nIn OpenSSL 1.1.1 and 1.0.2, this only affects displaying diverse objects,\nsuch as X.509 certificates.  This is assumed to not happen in such a way\nthat it would cause a Denial of Service, so these versions are considered\nnot affected by this issue in such a way that it would be cause for concern,\nand the severity is therefore considered low."
+          }
+        ],
+        "id": "CVE-2023-2650",
+        "lastModified": "2024-02-04T09:15:09.643",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 6.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+                "version": "3.1"
               },
+              "exploitabilityScore": 2.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2023-05-30T14:15:09.683",
+        "references": [
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/05/30/1"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=423a2bc737a908ad0c77bda470b2b59dc879936b"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Broken Link"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=853c5e56ee0b8650c73140816bb8b91d6163422c"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9e209944b35cf82368071f160a744b6178f9b098"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Patch"
+            ],
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=db779b0e10b047f2585615e0b8f2acdf21f8544a"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "https://lists.debian.org/debian-lts-announce/2023/06/msg00011.html"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0009"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://security.gentoo.org/glsa/202402-08"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://security.netapp.com/advisory/ntap-20230703-0001/"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://security.netapp.com/advisory/ntap-20231027-0009/"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://www.debian.org/security/2023/dsa-5417"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://www.openssl.org/news/secadv/20230530.txt"
+          }
+        ],
+        "sourceIdentifier": "openssl-security@openssl.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-770"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "openssl-security@openssl.org",
-          "ID": "CVE-2023-2650"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Issue summary: Processing some specially crafted ASN.1 object identifiers or\ndata containing them may be very slow.\n\nImpact summary: Applications that use OBJ_obj2txt() directly, or use any of\nthe OpenSSL subsystems OCSP, PKCS7/SMIME, CMS, CMP/CRMF or TS with no message\nsize limit may experience notable to very long delays when processing those\nmessages, which may lead to a Denial of Service.\n\nAn OBJECT IDENTIFIER is composed of a series of numbers - sub-identifiers -\nmost of which have no size limit.  OBJ_obj2txt() may be used to translate\nan ASN.1 OBJECT IDENTIFIER given in DER encoding form (using the OpenSSL\ntype ASN1_OBJECT) to its canonical numeric text form, which are the\nsub-identifiers of the OBJECT IDENTIFIER in decimal form, separated by\nperiods.\n\nWhen one of the sub-identifiers in the OBJECT IDENTIFIER is very large\n(these are sizes that are seen as absurdly large, taking up tens or hundreds\nof KiBs), the translation to a decimal number in text may take a very long\ntime.  The time complexity is O(n^2) with 'n' being the size of the\nsub-identifiers in bytes (*).\n\nWith OpenSSL 3.0, support to fetch cryptographic algorithms using names /\nidentifiers in string form was introduced.  This includes using OBJECT\nIDENTIFIERs in canonical numeric text form as identifiers for fetching\nalgorithms.\n\nSuch OBJECT IDENTIFIERs may be received through the ASN.1 structure\nAlgorithmIdentifier, which is commonly used in multiple protocols to specify\nwhat cryptographic algorithm should be used to sign or verify, encrypt or\ndecrypt, or digest passed data.\n\nApplications that call OBJ_obj2txt() directly with untrusted data are\naffected, with any version of OpenSSL.  If the use is for the mere purpose\nof display, the severity is considered low.\n\nIn OpenSSL 3.0 and newer, this affects the subsystems OCSP, PKCS7/SMIME,\nCMS, CMP/CRMF or TS.  It also impacts anything that processes X.509\ncertificates, including simple things like verifying its signature.\n\nThe impact on TLS is relatively low, because all versions of OpenSSL have a\n100KiB limit on the peer's certificate chain.  Additionally, this only\nimpacts clients, or servers that have explicitly enabled client\nauthentication.\n\nIn OpenSSL 1.1.1 and 1.0.2, this only affects displaying diverse objects,\nsuch as X.509 certificates.  This is assumed to not happen in such a way\nthat it would cause a Denial of Service, so these versions are considered\nnot affected by this issue in such a way that it would be cause for concern,\nand the severity is therefore considered low."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-770"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=423a2bc737a908ad0c77bda470b2b59dc879936b",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=423a2bc737a908ad0c77bda470b2b59dc879936b"
-            },
-            {
-              "name": "https://www.openssl.org/news/secadv/20230530.txt",
-              "refsource": "MISC",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://www.openssl.org/news/secadv/20230530.txt"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=853c5e56ee0b8650c73140816bb8b91d6163422c",
-              "refsource": "MISC",
-              "tags": [
-                "Broken Link"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=853c5e56ee0b8650c73140816bb8b91d6163422c"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9e209944b35cf82368071f160a744b6178f9b098",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9e209944b35cf82368071f160a744b6178f9b098"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=db779b0e10b047f2585615e0b8f2acdf21f8544a",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Patch"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=db779b0e10b047f2585615e0b8f2acdf21f8544a"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/05/30/1",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/05/30/1"
-            },
-            {
-              "name": "https://www.debian.org/security/2023/dsa-5417",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://www.debian.org/security/2023/dsa-5417"
-            },
-            {
-              "name": "https://lists.debian.org/debian-lts-announce/2023/06/msg00011.html",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "https://lists.debian.org/debian-lts-announce/2023/06/msg00011.html"
-            },
-            {
-              "name": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0009",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0009"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20230703-0001/",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://security.netapp.com/advisory/ntap-20230703-0001/"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20231027-0009/",
-              "refsource": "MISC",
-              "tags": [],
-              "url": "https://security.netapp.com/advisory/ntap-20231027-0009/"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 6.5,
-            "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "REQUIRED",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 2.8,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2023-10-27T15:15Z",
-      "publishedDate": "2023-05-30T14:15Z"
+      }
     }
   }
 }

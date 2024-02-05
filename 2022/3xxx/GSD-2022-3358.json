@@ -112,6 +112,11 @@
             "name": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2022-0023",
             "refsource": "CONFIRM",
             "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2022-0023"
+          },
+          {
+            "name": "GLSA-202402-08",
+            "refsource": "GENTOO",
+            "url": "https://security.gentoo.org/glsa/202402-08"
           }
         ]
       }
@@ -151,113 +156,109 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "3.0.6",
-                "versionStartIncluding": "3.0.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "C368158F-6701-4FC7-A627-DC77E7D76D2A",
+                    "versionEndExcluding": "3.0.6",
+                    "versionStartIncluding": "3.0.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "OpenSSL supports creating a custom cipher via the legacy EVP_CIPHER_meth_new() function and associated function calls. This function was deprecated in OpenSSL 3.0 and application authors are instead encouraged to use the new provider mechanism in order to implement custom ciphers. OpenSSL versions 3.0.0 to 3.0.5 incorrectly handle legacy custom ciphers passed to the EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2() and EVP_CipherInit_ex2() functions (as well as other similarly named encryption and decryption initialisation functions). Instead of using the custom cipher directly it incorrectly tries to fetch an equivalent cipher from the available providers. An equivalent cipher is found based on the NID passed to EVP_CIPHER_meth_new(). This NID is supposed to represent the unique NID for a given cipher. However it is possible for an application to incorrectly pass NID_undef as this value in the call to EVP_CIPHER_meth_new(). When NID_undef is used in this way the OpenSSL encryption/decryption initialisation function will match the NULL cipher as being equivalent and will fetch this from the available providers. This will succeed if the default provider has been loaded (or if a third party provider has been loaded that offers this cipher). Using the NULL cipher means that the plaintext is emitted as the ciphertext. Applications are only affected by this issue if they call EVP_CIPHER_meth_new() using NID_undef and subsequently use it in a call to an encryption/decryption initialisation function. Applications that only use SSL/TLS are not impacted by this issue. Fixed in OpenSSL 3.0.6 (Affected 3.0.0-3.0.5)."
+          },
+          {
+            "lang": "es",
+            "value": "OpenSSL admite la creaci\u00f3n de un cifrado personalizado por medio de la funci\u00f3n EVP_CIPHER_meth_new() heredada y las llamadas a funciones asociadas. Esta funci\u00f3n qued\u00f3 obsoleta en OpenSSL versi\u00f3n 3.0 y, en su lugar, es alentado a autores de aplicaciones a usar el nuevo mecanismo de proveedores para implementar cifrados personalizados. Las versiones 3.0.0 a 3.0.5 de OpenSSL manejan incorrectamente los cifrados personalizados heredados pasados a las funciones EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2() y EVP_CipherInit_ex2() (as\u00ed como otras funciones de inicializaci\u00f3n de cifrado y descifrado de nombre similar). En lugar de usar el cifrado personalizado directamente, intenta incorrectamente obtener un cifrado equivalente de los proveedores disponibles. Un cifrado equivalente es encontrado basado en el NID pasado a EVP_CIPHER_meth_new(). Este NID es supuesto que representa el \u00fanico NID para un cifrado dado. Sin embargo, es posible que una aplicaci\u00f3n pase incorrectamente NID_undef como este valor en la llamada a EVP_CIPHER_meth_new(). Cuando NID_undef es usado de esta manera, la funci\u00f3n de inicializaci\u00f3n de encriptaci\u00f3n/desencriptaci\u00f3n de OpenSSL har\u00e1 coincidir el cifrado NULL como equivalente y lo obtendr\u00e1 de los proveedores disponibles. Esto tendr\u00e1 \u00e9xito si ha sido cargado el proveedor por defecto (o si ha sido cargado un proveedor de terceros que ofrece este cifrado). usar el cifrado NULL significa que el texto plano es emitido como el texto cifrado. Las aplicaciones s\u00f3lo est\u00e1n afectadas por este problema si llaman a EVP_CIPHER_meth_new() usando NID_undef y posteriormente lo usan en una llamada a una funci\u00f3n de inicializaci\u00f3n de cifrado/descifrado. Las aplicaciones que s\u00f3lo usan SSL/TLS no est\u00e1n afectadas por este problema. Corregido en OpenSSL versi\u00f3n 3.0.6 (Afectado versiones 3.0.0-3.0.5)"
+          }
+        ],
+        "id": "CVE-2022-3358",
+        "lastModified": "2024-02-04T09:15:08.427",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2022-10-11T15:15:10.233",
+        "references": [
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://git.openssl.org/gitweb/?p=openssl.git%3Ba=commitdiff%3Bh=5485c56679d7c49b96e8fc8ca708b0b7e7c03c4b"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2022-0023"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://security.gentoo.org/glsa/202402-08"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://security.netapp.com/advisory/ntap-20221028-0014/"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://www.openssl.org/news/secadv/20221011.txt"
+          }
+        ],
+        "sourceIdentifier": "openssl-security@openssl.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-476"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "openssl-security@openssl.org",
-          "ID": "CVE-2022-3358"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "OpenSSL supports creating a custom cipher via the legacy EVP_CIPHER_meth_new() function and associated function calls. This function was deprecated in OpenSSL 3.0 and application authors are instead encouraged to use the new provider mechanism in order to implement custom ciphers. OpenSSL versions 3.0.0 to 3.0.5 incorrectly handle legacy custom ciphers passed to the EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2() and EVP_CipherInit_ex2() functions (as well as other similarly named encryption and decryption initialisation functions). Instead of using the custom cipher directly it incorrectly tries to fetch an equivalent cipher from the available providers. An equivalent cipher is found based on the NID passed to EVP_CIPHER_meth_new(). This NID is supposed to represent the unique NID for a given cipher. However it is possible for an application to incorrectly pass NID_undef as this value in the call to EVP_CIPHER_meth_new(). When NID_undef is used in this way the OpenSSL encryption/decryption initialisation function will match the NULL cipher as being equivalent and will fetch this from the available providers. This will succeed if the default provider has been loaded (or if a third party provider has been loaded that offers this cipher). Using the NULL cipher means that the plaintext is emitted as the ciphertext. Applications are only affected by this issue if they call EVP_CIPHER_meth_new() using NID_undef and subsequently use it in a call to an encryption/decryption initialisation function. Applications that only use SSL/TLS are not impacted by this issue. Fixed in OpenSSL 3.0.6 (Affected 3.0.0-3.0.5)."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-476"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://www.openssl.org/news/secadv/20221011.txt",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://www.openssl.org/news/secadv/20221011.txt"
-            },
-            {
-              "name": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=5485c56679d7c49b96e8fc8ca708b0b7e7c03c4b",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Mailing List",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=5485c56679d7c49b96e8fc8ca708b0b7e7c03c4b"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20221028-0014/",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://security.netapp.com/advisory/ntap-20221028-0014/"
-            },
-            {
-              "name": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2022-0023",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2022-0023"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "NONE",
-            "baseScore": 7.5,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 3.9,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2022-12-13T20:44Z",
-      "publishedDate": "2022-10-11T15:15Z"
+      }
     }
   }
 }
