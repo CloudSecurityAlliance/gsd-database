@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-24823"
       ],
+      "details": "Graylog is a free and open log management platform. Starting in version 4.3.0 and prior to versions 5.1.11 and 5.2.4, reauthenticating with an existing session cookie would re-use that session id, even if for different user credentials. In this case, the pre-existing session could be used to gain elevated access to an existing Graylog login session, provided the malicious user could successfully inject their session cookie into someone else's browser. The complexity of such an attack is high, because it requires presenting a spoofed login screen and injection of a session cookie into an existing browser, potentially through a cross-site scripting attack. No such attack has been discovered. Graylog 5.1.11 and 5.2.4, and any versions of the 6.0 development branch, contain patches to not re-use sessions under any circumstances. Some workarounds are available. Using short session expiration and explicit log outs of unused sessions can help limiting the attack vector. Unpatched this vulnerability exists, but is relatively hard to exploit. A proxy could be leveraged to clear the `authentication` cookie for the Graylog server URL for the `/api/system/sessions` endpoint, as that is the only one vulnerable.",
       "id": "GSD-2024-24823",
       "modified": "2024-02-01T06:02:24.469758Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,37 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-24823",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "graylog2-server",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 4.3.0, < 5.1.11"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 5.2.0, < 5.2.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Graylog2"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +58,126 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Graylog is a free and open log management platform. Starting in version 4.3.0 and prior to versions 5.1.11 and 5.2.4, reauthenticating with an existing session cookie would re-use that session id, even if for different user credentials. In this case, the pre-existing session could be used to gain elevated access to an existing Graylog login session, provided the malicious user could successfully inject their session cookie into someone else's browser. The complexity of such an attack is high, because it requires presenting a spoofed login screen and injection of a session cookie into an existing browser, potentially through a cross-site scripting attack. No such attack has been discovered. Graylog 5.1.11 and 5.2.4, and any versions of the 6.0 development branch, contain patches to not re-use sessions under any circumstances. Some workarounds are available. Using short session expiration and explicit log outs of unused sessions can help limiting the attack vector. Unpatched this vulnerability exists, but is relatively hard to exploit. A proxy could be leveraged to clear the `authentication` cookie for the Graylog server URL for the `/api/system/sessions` endpoint, as that is the only one vulnerable."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 5.7,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "HIGH",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-384",
+                "lang": "eng",
+                "value": "CWE-384: Session Fixation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-3xf8-g8gr-g7rh",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-3xf8-g8gr-g7rh"
+          },
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/commit/1596b749db86368ba476662f23a0f0c5ec2b5097",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/1596b749db86368ba476662f23a0f0c5ec2b5097"
+          },
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/commit/b93a66353f35a94a4e8f3f75ac4f5cdc5a2d4a6a",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/b93a66353f35a94a4e8f3f75ac4f5cdc5a2d4a6a"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-3xf8-g8gr-g7rh",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Graylog is a free and open log management platform. Starting in version 4.3.0 and prior to versions 5.1.11 and 5.2.4, reauthenticating with an existing session cookie would re-use that session id, even if for different user credentials. In this case, the pre-existing session could be used to gain elevated access to an existing Graylog login session, provided the malicious user could successfully inject their session cookie into someone else's browser. The complexity of such an attack is high, because it requires presenting a spoofed login screen and injection of a session cookie into an existing browser, potentially through a cross-site scripting attack. No such attack has been discovered. Graylog 5.1.11 and 5.2.4, and any versions of the 6.0 development branch, contain patches to not re-use sessions under any circumstances. Some workarounds are available. Using short session expiration and explicit log outs of unused sessions can help limiting the attack vector. Unpatched this vulnerability exists, but is relatively hard to exploit. A proxy could be leveraged to clear the `authentication` cookie for the Graylog server URL for the `/api/system/sessions` endpoint, as that is the only one vulnerable."
+          }
+        ],
+        "id": "CVE-2024-24823",
+        "lastModified": "2024-02-07T18:16:22.930",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 5.7,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "HIGH",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 0.5,
+              "impactScore": 5.2,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-07T18:15:54.870",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/1596b749db86368ba476662f23a0f0c5ec2b5097"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/b93a66353f35a94a4e8f3f75ac4f5cdc5a2d4a6a"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-3xf8-g8gr-g7rh"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-384"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }

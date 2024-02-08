@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-24824"
       ],
+      "details": "Graylog is a free and open log management platform. Starting in version 2.0.0 and prior to versions 5.1.11 and 5.2.4, arbitrary classes can be loaded and instantiated using a HTTP PUT request to the `/api/system/cluster_config/` endpoint. Graylog's cluster config system uses fully qualified class names as config keys. To validate the existence of the requested class before using them, Graylog loads the class using the class loader. If a user with the appropriate permissions performs the request, arbitrary classes with 1-arg String constructors can be instantiated. This will execute arbitrary code that is run during class instantiation. In the specific use case of `java.io.File`, the behavior of the internal web-server stack will lead to information exposure by including the entire file content in the response to the REST request. Versions 5.1.11 and 5.2.4 contain a fix for this issue.",
       "id": "GSD-2024-24824",
       "modified": "2024-02-01T06:02:24.344844Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,37 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-24824",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "graylog2-server",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.0.0, < 5.1.11"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 5.2.0, < 5.2.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Graylog2"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +58,148 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Graylog is a free and open log management platform. Starting in version 2.0.0 and prior to versions 5.1.11 and 5.2.4, arbitrary classes can be loaded and instantiated using a HTTP PUT request to the `/api/system/cluster_config/` endpoint. Graylog's cluster config system uses fully qualified class names as config keys. To validate the existence of the requested class before using them, Graylog loads the class using the class loader. If a user with the appropriate permissions performs the request, arbitrary classes with 1-arg String constructors can be instantiated. This will execute arbitrary code that is run during class instantiation. In the specific use case of `java.io.File`, the behavior of the internal web-server stack will lead to information exposure by including the entire file content in the response to the REST request. Versions 5.1.11 and 5.2.4 contain a fix for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-284",
+                "lang": "eng",
+                "value": "CWE-284: Improper Access Control"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-863",
+                "lang": "eng",
+                "value": "CWE-863: Incorrect Authorization"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-p6gg-5hf4-4rgj",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-p6gg-5hf4-4rgj"
+          },
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/commit/75ef2b8d60e7d67f859b79fe712c8ae7b2e861d8",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/75ef2b8d60e7d67f859b79fe712c8ae7b2e861d8"
+          },
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/commit/7f8ef7fa8edf493106d5ef6f777d4da02c5194d9",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/7f8ef7fa8edf493106d5ef6f777d4da02c5194d9"
+          },
+          {
+            "name": "https://github.com/Graylog2/graylog2-server/blob/e458db8bf4f789d4d19f1b37f0263f910c8d036c/graylog2-server/src/main/java/org/graylog2/rest/resources/system/ClusterConfigResource.java#L208-L214",
+            "refsource": "MISC",
+            "url": "https://github.com/Graylog2/graylog2-server/blob/e458db8bf4f789d4d19f1b37f0263f910c8d036c/graylog2-server/src/main/java/org/graylog2/rest/resources/system/ClusterConfigResource.java#L208-L214"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-p6gg-5hf4-4rgj",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Graylog is a free and open log management platform. Starting in version 2.0.0 and prior to versions 5.1.11 and 5.2.4, arbitrary classes can be loaded and instantiated using a HTTP PUT request to the `/api/system/cluster_config/` endpoint. Graylog's cluster config system uses fully qualified class names as config keys. To validate the existence of the requested class before using them, Graylog loads the class using the class loader. If a user with the appropriate permissions performs the request, arbitrary classes with 1-arg String constructors can be instantiated. This will execute arbitrary code that is run during class instantiation. In the specific use case of `java.io.File`, the behavior of the internal web-server stack will lead to information exposure by including the entire file content in the response to the REST request. Versions 5.1.11 and 5.2.4 contain a fix for this issue."
+          }
+        ],
+        "id": "CVE-2024-24824",
+        "lastModified": "2024-02-07T18:16:22.930",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-07T18:15:55.330",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/blob/e458db8bf4f789d4d19f1b37f0263f910c8d036c/graylog2-server/src/main/java/org/graylog2/rest/resources/system/ClusterConfigResource.java#L208-L214"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/75ef2b8d60e7d67f859b79fe712c8ae7b2e861d8"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/commit/7f8ef7fa8edf493106d5ef6f777d4da02c5194d9"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-p6gg-5hf4-4rgj"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-284"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-863"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }

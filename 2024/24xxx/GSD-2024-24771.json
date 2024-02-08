@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-24771"
       ],
+      "details": "Open Forms allows users create and publish smart forms. Versions prior to 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain a non-exploitable multi-factor authentication weakness. Superusers who have their credentials (username + password) compromised could potentially have the second-factor authentication bypassed if an attacker somehow managed to authenticate to Open Forms. The maintainers of Open Forms do not believe it is or has been possible to perform this login. However, if this were possible, the victim's account may be abused to view (potentially sensitive) submission data or have been used to impersonate other staff accounts to view and/or modify data. Three mitigating factors to help prevent exploitation include: the usual login page (at `/admin/login/`) does not fully log in the user until the second factor was succesfully provided; the additional non-MFA protected login page at `/api/v2/api-authlogin/` was misconfigured and could not be used to log in; and there are no additional ways to log in. This also requires credentials of a superuser to be compromised to be exploitable. Versions 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain the following patches to address these weaknesses: Move and only enable the API auth endpoints (`/api/v2/api-auth/login/`) with `settings.DEBUG = True`. `settings.DEBUG = True` is insecure and should never be applied in production settings. Additionally, apply a custom permission check to the hijack flow to only allow second-factor-verified superusers to perform user hijacking.",
       "id": "GSD-2024-24771",
       "modified": "2024-01-30T06:03:12.544958Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,45 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-24771",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "open-forms",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 2.2.9"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.3.0, < 2.3.7"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.4.0, < 2.4.4"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.5.0, < 2.5.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "open-formulieren"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +66,170 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Open Forms allows users create and publish smart forms. Versions prior to 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain a non-exploitable multi-factor authentication weakness. Superusers who have their credentials (username + password) compromised could potentially have the second-factor authentication bypassed if an attacker somehow managed to authenticate to Open Forms. The maintainers of Open Forms do not believe it is or has been possible to perform this login. However, if this were possible, the victim's account may be abused to view (potentially sensitive) submission data or have been used to impersonate other staff accounts to view and/or modify data. Three mitigating factors to help prevent exploitation include: the usual login page (at `/admin/login/`) does not fully log in the user until the second factor was succesfully provided; the additional non-MFA protected login page at `/api/v2/api-authlogin/` was misconfigured and could not be used to log in; and there are no additional ways to log in. This also requires credentials of a superuser to be compromised to be exploitable. Versions 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain the following patches to address these weaknesses: Move and only enable the API auth endpoints (`/api/v2/api-auth/login/`) with `settings.DEBUG = True`. `settings.DEBUG = True` is insecure and should never be applied in production settings. Additionally, apply a custom permission check to the hijack flow to only allow second-factor-verified superusers to perform user hijacking."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.7,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "HIGH",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-284",
+                "lang": "eng",
+                "value": "CWE-284: Improper Access Control"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-287",
+                "lang": "eng",
+                "value": "CWE-287: Improper Authentication"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-654",
+                "lang": "eng",
+                "value": "CWE-654: Reliance on a Single Factor in a Security Decision"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/open-formulieren/open-forms/security/advisories/GHSA-64r3-x3gf-vp63",
+            "refsource": "MISC",
+            "url": "https://github.com/open-formulieren/open-forms/security/advisories/GHSA-64r3-x3gf-vp63"
+          },
+          {
+            "name": "https://github.com/open-formulieren/open-forms/releases/tag/2.2.9",
+            "refsource": "MISC",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.2.9"
+          },
+          {
+            "name": "https://github.com/open-formulieren/open-forms/releases/tag/2.3.7",
+            "refsource": "MISC",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.3.7"
+          },
+          {
+            "name": "https://github.com/open-formulieren/open-forms/releases/tag/2.4.5",
+            "refsource": "MISC",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.4.5"
+          },
+          {
+            "name": "https://github.com/open-formulieren/open-forms/releases/tag/2.5.2",
+            "refsource": "MISC",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.5.2"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-64r3-x3gf-vp63",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Open Forms allows users create and publish smart forms. Versions prior to 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain a non-exploitable multi-factor authentication weakness. Superusers who have their credentials (username + password) compromised could potentially have the second-factor authentication bypassed if an attacker somehow managed to authenticate to Open Forms. The maintainers of Open Forms do not believe it is or has been possible to perform this login. However, if this were possible, the victim's account may be abused to view (potentially sensitive) submission data or have been used to impersonate other staff accounts to view and/or modify data. Three mitigating factors to help prevent exploitation include: the usual login page (at `/admin/login/`) does not fully log in the user until the second factor was succesfully provided; the additional non-MFA protected login page at `/api/v2/api-authlogin/` was misconfigured and could not be used to log in; and there are no additional ways to log in. This also requires credentials of a superuser to be compromised to be exploitable. Versions 2.2.9, 2.3.7, 2.4.5, and 2.5.2 contain the following patches to address these weaknesses: Move and only enable the API auth endpoints (`/api/v2/api-auth/login/`) with `settings.DEBUG = True`. `settings.DEBUG = True` is insecure and should never be applied in production settings. Additionally, apply a custom permission check to the hijack flow to only allow second-factor-verified superusers to perform user hijacking."
+          }
+        ],
+        "id": "CVE-2024-24771",
+        "lastModified": "2024-02-07T17:04:54.407",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.7,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "HIGH",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.3,
+              "impactScore": 5.8,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-07T15:15:08.283",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.2.9"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.3.7"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.4.5"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-formulieren/open-forms/releases/tag/2.5.2"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-formulieren/open-forms/security/advisories/GHSA-64r3-x3gf-vp63"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-284"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-287"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-654"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
