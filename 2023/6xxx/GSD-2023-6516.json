@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-6516"
       ],
+      "details": "To keep its cache database efficient, `named` running as a recursive resolver occasionally attempts to clean up the database. It uses several methods, including some that are asynchronous: a small chunk of memory pointing to the cache element that can be cleaned up is first allocated and then queued for later processing. It was discovered that if the resolver is continuously processing query patterns triggering this type of cache-database maintenance, `named` may not be able to handle the cleanup events in a timely manner. This in turn enables the list of queued cleanup events to grow infinitely large over time, allowing the configured `max-cache-size` limit to be significantly exceeded.\nThis issue affects BIND 9 versions 9.16.0 through 9.16.45 and 9.16.8-S1 through 9.16.45-S1.",
       "id": "GSD-2023-6516",
       "modified": "2023-12-13T01:20:32.972993Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,46 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-officer@isc.org",
         "ID": "CVE-2023-6516",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "BIND 9",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<=",
+                          "version_name": "9.16.0",
+                          "version_value": "9.16.45"
+                        },
+                        {
+                          "version_affected": "<=",
+                          "version_name": "9.16.8-S1",
+                          "version_value": "9.16.45-S1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "ISC"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "ISC would like to thank Infoblox for bringing this vulnerability to our attention."
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,9 +70,123 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "To keep its cache database efficient, `named` running as a recursive resolver occasionally attempts to clean up the database. It uses several methods, including some that are asynchronous: a small chunk of memory pointing to the cache element that can be cleaned up is first allocated and then queued for later processing. It was discovered that if the resolver is continuously processing query patterns triggering this type of cache-database maintenance, `named` may not be able to handle the cleanup events in a timely manner. This in turn enables the list of queued cleanup events to grow infinitely large over time, allowing the configured `max-cache-size` limit to be significantly exceeded.\nThis issue affects BIND 9 versions 9.16.0 through 9.16.45 and 9.16.8-S1 through 9.16.45-S1."
           }
         ]
+      },
+      "exploit": [
+        {
+          "lang": "en",
+          "value": "We are not aware of any active exploits."
+        }
+      ],
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://kb.isc.org/docs/cve-2023-6516",
+            "refsource": "MISC",
+            "url": "https://kb.isc.org/docs/cve-2023-6516"
+          },
+          {
+            "name": "http://www.openwall.com/lists/oss-security/2024/02/13/1",
+            "refsource": "MISC",
+            "url": "http://www.openwall.com/lists/oss-security/2024/02/13/1"
+          }
+        ]
+      },
+      "solution": [
+        {
+          "lang": "en",
+          "value": "Upgrade to the patched release most closely related to your current version of BIND 9: 9.16.48 or 9.16.48-S1."
+        }
+      ],
+      "source": {
+        "discovery": "EXTERNAL"
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "value": "No workarounds known."
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "To keep its cache database efficient, `named` running as a recursive resolver occasionally attempts to clean up the database. It uses several methods, including some that are asynchronous: a small chunk of memory pointing to the cache element that can be cleaned up is first allocated and then queued for later processing. It was discovered that if the resolver is continuously processing query patterns triggering this type of cache-database maintenance, `named` may not be able to handle the cleanup events in a timely manner. This in turn enables the list of queued cleanup events to grow infinitely large over time, allowing the configured `max-cache-size` limit to be significantly exceeded.\nThis issue affects BIND 9 versions 9.16.0 through 9.16.45 and 9.16.8-S1 through 9.16.45-S1."
+          }
+        ],
+        "id": "CVE-2023-6516",
+        "lastModified": "2024-02-13T16:15:08.743",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "security-officer@isc.org",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2024-02-13T14:15:46.030",
+        "references": [
+          {
+            "source": "security-officer@isc.org",
+            "url": "http://www.openwall.com/lists/oss-security/2024/02/13/1"
+          },
+          {
+            "source": "security-officer@isc.org",
+            "url": "https://kb.isc.org/docs/cve-2023-6516"
+          }
+        ],
+        "sourceIdentifier": "security-officer@isc.org",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
