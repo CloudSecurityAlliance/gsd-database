@@ -115,16 +115,58 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:vyperlang:vyper:*:*:*:*:*:python:*:*",
+                    "matchCriteriaId": "832C489D-4288-46B4-A29E-0E7168748042",
+                    "versionEndIncluding": "0.3.10",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Vyper is a Pythonic Smart Contract Language for the Ethereum Virtual Machine. Arrays can be keyed by a signed integer, while they are defined for unsigned integers only. The typechecker doesn't throw when spotting the usage of an `int` as an index for an array. The typechecker allows the usage of signed integers to be used as indexes to arrays. The vulnerability is present in different forms in all versions, including `0.3.10`. For ints, the 2's complement representation is used. Because the array was declared very large, the bounds checking will pass Negative values will simply be represented as very large numbers. As of time of publication, a fixed version does not exist.\n\nThere are three potential vulnerability classes: unpredictable behavior, accessing inaccessible elements and denial of service. Class 1: If it is possible to index an array with a negative integer without reverting, this is most likely not anticipated by the developer and such accesses can cause unpredictable behavior for the contract. Class 2: If a contract has an invariant in the form `assert index < x`, the developer will suppose that no elements on indexes `y | y >= x` are accessible. However, by using negative indexes, this can be bypassed. Class 3: If the index is dependent on the state of the contract, this poses a risk of denial of service. If the state of the contract can be manipulated in such way that the index will be forced to be negative, the array access can always revert (because most likely the array won't be declared extremely large). However, all these the scenarios are highly unlikely. Most likely behavior is a revert on the bounds check."
+          },
+          {
+            "lang": "es",
+            "value": "Vyper es un lenguaje de contrato inteligente pit\u00f3nico para la m\u00e1quina virtual Ethereum. Las matrices pueden codificarse mediante un entero con signo, mientras que est\u00e1n definidas solo para enteros sin signo. El verificador de tipos no arroja datos al detectar el uso de un `int` como \u00edndice para una matriz. El verificador de tipos permite el uso de n\u00fameros enteros con signo como \u00edndices de matrices. La vulnerabilidad est\u00e1 presente en diferentes formas en todas las versiones, incluida la \"0.3.10\". Para enteros, se utiliza la representaci\u00f3n en complemento a 2. Debido a que la matriz fue declarada muy grande, la verificaci\u00f3n de los l\u00edmites pasar\u00e1. Los valores negativos simplemente se representar\u00e1n como n\u00fameros muy grandes. Al momento de la publicaci\u00f3n, no existe una versi\u00f3n fija. Hay tres clases potenciales de vulnerabilidad: comportamiento impredecible, acceso a elementos inaccesibles y denegaci\u00f3n de servicio. Clase 1: si es posible indexar una matriz con un n\u00famero entero negativo sin revertirla, lo m\u00e1s probable es que el desarrollador no lo anticipe y dichos accesos pueden causar un comportamiento impredecible para el contrato. Clase 2: si un contrato tiene una invariante en la forma \"afirmar \u00edndice = x` son accesibles. Sin embargo, al utilizar \u00edndices negativos, esto se puede evitar. Clase 3: Si el \u00edndice depende del estado del contrato, esto plantea un riesgo de denegaci\u00f3n de servicio. Si el estado del contrato se puede manipular de tal manera que el \u00edndice se vea obligado a ser negativo, el acceso a la matriz siempre se puede revertir (porque lo m\u00e1s probable es que la matriz no se declare extremadamente grande). Sin embargo, todos estos escenarios son muy improbables. El comportamiento m\u00e1s probable es revertir la comprobaci\u00f3n de los l\u00edmites."
           }
         ],
         "id": "CVE-2024-24563",
-        "lastModified": "2024-02-07T17:38:33.990",
+        "lastModified": "2024-02-15T05:02:12.977",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.8,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -151,19 +193,29 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/vyperlang/vyper/blob/a1fd228cb9936c3e4bbca6f3ee3fb4426ef45490/vyper/codegen/core.py#L534-L541"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/vyperlang/vyper/blob/c150fc49ee9375a930d177044559b83cb95f7963/vyper/semantics/types/subscriptable.py#L127-L137"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/vyperlang/vyper/security/advisories/GHSA-52xq-j7v9-v4v2"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
           {
             "description": [
