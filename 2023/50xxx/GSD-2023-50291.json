@@ -113,28 +113,87 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:apache:solr:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "21D17629-7025-4DB8-936C-2C074AC00515",
+                    "versionEndExcluding": "8.11.3",
+                    "versionStartIncluding": "6.0.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:apache:solr:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E1EF37F2-A898-4CF3-A122-1EEA13E6DDA4",
+                    "versionEndExcluding": "9.3.0",
+                    "versionStartIncluding": "9.0.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Insufficiently Protected Credentials vulnerability in Apache Solr.\n\nThis issue affects Apache Solr: from 6.0.0 through 8.11.2, from 9.0.0 before 9.3.0.\nOne of the two endpoints that publishes the Solr process' Java system properties, /admin/info/properties, was only setup to hide system properties that had \"password\" contained in the name.\nThere are a number of sensitive system properties, such as \"basicauth\" and \"aws.secretKey\" do not contain \"password\", thus their values were published via the \"/admin/info/properties\" endpoint.\nThis endpoint populates the list of System Properties on the home screen of the Solr Admin page, making the exposed credentials visible in the UI.\n\nThis /admin/info/properties endpoint is protected under the \"config-read\" permission.\nTherefore, Solr Clouds with Authorization enabled will only be vulnerable through logged-in users that have the \"config-read\" permission.\nUsers are recommended to upgrade to version 9.3.0 or 8.11.3, which fixes the issue.\nA single option now controls hiding Java system property for all endpoints, \"-Dsolr.hiddenSysProps\".\nBy default all known sensitive properties are hidden (including \"-Dbasicauth\"), as well as any property with a name containing \"secret\" or \"password\".\n\nUsers who cannot upgrade can also use the following Java system property to fix the issue:\n\u00a0 '-Dsolr.redaction.system.pattern=.*(password|secret|basicauth).*'\n\n"
+          },
+          {
+            "lang": "es",
+            "value": "Vulnerabilidad de credenciales insuficientemente protegidas en Apache Solr. Este problema afecta a Apache Solr: desde 6.0.0 hasta 8.11.2, desde 9.0.0 antes de 9.3.0. Uno de los dos endpoints que publica las propiedades del sistema Java del proceso Solr, /admin/info/properties, solo se configur\u00f3 para ocultar las propiedades del sistema que ten\u00edan \"password\" en el nombre. Hay una serie de propiedades confidenciales del sistema, como \"basicauth\" y \"aws.secretKey\" que no contienen \"password\", por lo que sus valores se publicaron a trav\u00e9s del endpoint \"/admin/info/properties\". Este endpoint completa la lista de System Properties en la pantalla de inicio de la p\u00e1gina de administraci\u00f3n de Solr, lo que hace que las credenciales expuestas sean visibles en la interfaz de usuario. Este endpoint /admin/info/properties est\u00e1 protegido bajo el permiso \"config-read\". Por lo tanto, las nubes Solr con autorizaci\u00f3n habilitada solo ser\u00e1n vulnerables a trav\u00e9s de usuarios registrados que tengan el permiso \"config-read\". Se recomienda a los usuarios actualizar a la versi\u00f3n 9.3.0 u 8.11.3, que soluciona el problema. Una \u00fanica opci\u00f3n ahora controla la ocultaci\u00f3n de la propiedad del sistema Java para todos los endpoints, \"-Dsolr.hiddenSysProps\". De forma predeterminada, todas las propiedades confidenciales conocidas est\u00e1n ocultas (incluido \"-Dbasicauth\"), as\u00ed como cualquier propiedad cuyo nombre contenga \"secret\" o \"password\". Los usuarios que no pueden actualizar tambi\u00e9n pueden utilizar la siguiente propiedad del sistema Java para solucionar el problema: '-Dsolr.redaction.system.pattern=.*(password|secret|basicauth).*'"
           }
         ],
         "id": "CVE-2023-50291",
-        "lastModified": "2024-02-11T22:29:15.837",
-        "metrics": {},
+        "lastModified": "2024-02-15T18:41:12.893",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-09T18:15:08.240",
         "references": [
           {
             "source": "security@apache.org",
+            "tags": [
+              "Mailing List"
+            ],
             "url": "http://www.openwall.com/lists/oss-security/2024/02/09/4"
           },
           {
             "source": "security@apache.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
             "url": "https://solr.apache.org/security.html#cve-2023-50291-apache-solr-can-leak-certain-passwords-due-to-system-property-redaction-logic-inconsistencies"
           }
         ],
         "sourceIdentifier": "security@apache.org",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
           {
             "description": [

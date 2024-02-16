@@ -133,16 +133,66 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:graylog:graylog:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "4FF51673-2704-4414-B5D1-2B49F75635B1",
+                    "versionEndExcluding": "5.1.11",
+                    "versionStartIncluding": "2.0.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:graylog:graylog:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "4A343880-1202-4534-AE60-F314473EABD9",
+                    "versionEndExcluding": "5.2.4",
+                    "versionStartIncluding": "5.2.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "Graylog is a free and open log management platform. Starting in version 2.0.0 and prior to versions 5.1.11 and 5.2.4, arbitrary classes can be loaded and instantiated using a HTTP PUT request to the `/api/system/cluster_config/` endpoint. Graylog's cluster config system uses fully qualified class names as config keys. To validate the existence of the requested class before using them, Graylog loads the class using the class loader. If a user with the appropriate permissions performs the request, arbitrary classes with 1-arg String constructors can be instantiated. This will execute arbitrary code that is run during class instantiation. In the specific use case of `java.io.File`, the behavior of the internal web-server stack will lead to information exposure by including the entire file content in the response to the REST request. Versions 5.1.11 and 5.2.4 contain a fix for this issue."
+          },
+          {
+            "lang": "es",
+            "value": "Graylog es una plataforma de gesti\u00f3n de registros abierta y gratuita. A partir de la versi\u00f3n 2.0.0 y anteriores a las versiones 5.1.11 y 5.2.4, se pueden cargar y crear instancias de clases arbitrarias mediante una solicitud HTTP PUT al endpoint `/api/system/cluster_config/`. El sistema de configuraci\u00f3n del cl\u00faster de Graylog utiliza nombres de clases completos como claves de configuraci\u00f3n. Para validar la existencia de la clase solicitada antes de usarlas, Graylog carga la clase usando el cargador de clases. Si un usuario con los permisos adecuados realiza la solicitud, se pueden crear instancias de clases arbitrarias con constructores String de 1 argumento. Esto ejecutar\u00e1 c\u00f3digo arbitrario que se ejecuta durante la creaci\u00f3n de instancias de clase. En el caso de uso espec\u00edfico de `java.io.File`, el comportamiento de la pila interna del servidor web provocar\u00e1 la exposici\u00f3n de la informaci\u00f3n al incluir todo el contenido del archivo en la respuesta a la solicitud REST. Las versiones 5.1.11 y 5.2.4 contienen una soluci\u00f3n para este problema."
           }
         ],
         "id": "CVE-2024-24824",
-        "lastModified": "2024-02-07T18:16:22.930",
+        "lastModified": "2024-02-15T15:40:51.680",
         "metrics": {
           "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -169,24 +219,47 @@
         "references": [
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
             "url": "https://github.com/Graylog2/graylog2-server/blob/e458db8bf4f789d4d19f1b37f0263f910c8d036c/graylog2-server/src/main/java/org/graylog2/rest/resources/system/ClusterConfigResource.java#L208-L214"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/Graylog2/graylog2-server/commit/75ef2b8d60e7d67f859b79fe712c8ae7b2e861d8"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://github.com/Graylog2/graylog2-server/commit/7f8ef7fa8edf493106d5ef6f777d4da02c5194d9"
           },
           {
             "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ],
             "url": "https://github.com/Graylog2/graylog2-server/security/advisories/GHSA-p6gg-5hf4-4rgj"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Awaiting Analysis",
+        "vulnStatus": "Analyzed",
         "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-863"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
           {
             "description": [
               {
@@ -199,7 +272,7 @@
               }
             ],
             "source": "security-advisories@github.com",
-            "type": "Primary"
+            "type": "Secondary"
           }
         ]
       }
