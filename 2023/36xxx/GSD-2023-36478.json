@@ -165,184 +165,241 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "11.0.16",
-                "versionStartIncluding": "11.0.0",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "10.0.16",
-                "versionStartIncluding": "10.0.0",
-                "vulnerable": true
-              },
-              {
-                "cpe23Uri": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "9.4.53",
-                "versionStartIncluding": "9.3.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0780793A-2F4A-452B-BCC8-1945E57C3C49",
+                    "versionEndExcluding": "9.4.53",
+                    "versionStartIncluding": "9.3.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "1D15B5CF-CDFA-4303-8A9F-CF2FAD8E10CC",
+                    "versionEndExcluding": "10.0.16",
+                    "versionStartIncluding": "10.0.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:eclipse:jetty:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "9153C468-135C-49C4-B33B-1828E37AF483",
+                    "versionEndExcluding": "11.0.16",
+                    "versionStartIncluding": "11.0.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:jenkins:jenkins:*:*:*:*:-:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "2.428",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:jenkins:jenkins:*:*:*:*:lts:*:*:*",
+                    "matchCriteriaId": "16B24AD0-318F-4E5D-B2BF-DD61A7C033CF",
+                    "versionEndExcluding": "2.414.3",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:jenkins:jenkins:*:*:*:*:-:*:*:*",
+                    "matchCriteriaId": "156AD017-ABC8-49EC-BB4F-79C55D6B2BC1",
+                    "versionEndExcluding": "2.428",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          },
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:10.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "07B237A9-69A3-4A9C-9DA0-4E06BD37AE73",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:11.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "FA6FEEC2-9F11-4643-8827-749718254FED",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:12.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "46D69DCC-AE4D-4EA5-861C-D60951444C6C",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Eclipse Jetty provides a web server and servlet container. In versions 11.0.0 through 11.0.15, 10.0.0 through 10.0.15, and 9.0.0 through 9.4.52, an integer overflow in `MetaDataBuilder.checkSize` allows for HTTP/2 HPACK header values to\nexceed their size limit. `MetaDataBuilder.java` determines if a header name or value exceeds the size limit, and throws an exception if the limit is exceeded. However, when length is very large and huffman is true, the multiplication by 4 in line 295\nwill overflow, and length will become negative. `(_size+length)` will now be negative, and the check on line 296 will not be triggered. Furthermore, `MetaDataBuilder.checkSize` allows for user-entered HPACK header value sizes to be negative, potentially leading to a very large buffer allocation later on when the user-entered size is multiplied by 2. This means that if a user provides a negative length value (or, more precisely, a length value which, when multiplied by the 4/3 fudge factor, is negative), and this length value is a very large positive number when multiplied by 2, then the user can cause a very large buffer to be allocated on the server. Users of HTTP/2 can be impacted by a remote denial of service attack. The issue has been fixed in versions 11.0.16, 10.0.16, and 9.4.53. There are no known workarounds."
+          },
+          {
+            "lang": "es",
+            "value": "Eclipse Jetty proporciona un servidor web y un contenedor de servlets. En las versiones 11.0.0 a 11.0.15, 10.0.0 a 10.0.15 y 9.0.0 a 9.4.52, un desbordamiento de enteros en `MetaDataBuilder.checkSize` permite que los valores del encabezado HTTP/2 HPACK excedan su l\u00edmite de tama\u00f1o. `MetaDataBuilder.java` determina si el nombre o valor de un encabezado excede el l\u00edmite de tama\u00f1o y genera una excepci\u00f3n si se excede el l\u00edmite. Sin embargo, cuando la longitud es muy grande y Huffman es verdadera, la multiplicaci\u00f3n por 4 en la l\u00ednea 295 se desbordar\u00e1 y la longitud se volver\u00e1 negativa. `(_size+length)` ahora ser\u00e1 negativo y la verificaci\u00f3n en la l\u00ednea 296 no se activar\u00e1. Adem\u00e1s, `MetaDataBuilder.checkSize` permite que los tama\u00f1os de los valores del encabezado HPACK ingresados por el usuario sean negativos, lo que podr\u00eda generar una asignaci\u00f3n de b\u00fafer muy grande m\u00e1s adelante cuando el tama\u00f1o ingresado por el usuario se multiplique por 2. Esto significa que si un usuario proporciona un tama\u00f1o con valor de longitud negativo (o, m\u00e1s precisamente, un valor de longitud que, cuando se multiplica por el factor de manipulaci\u00f3n 4/3, es negativo), y este valor de longitud es un n\u00famero positivo muy grande cuando se multiplica por 2, entonces el usuario puede causar un valor de longitud muy grande de b\u00fafer que se asignar\u00e1 en el servidor. Los usuarios de HTTP/2 pueden verse afectados por un ataque remoto de denegaci\u00f3n de servicio. El problema se solucion\u00f3 en las versiones 11.0.16, 10.0.16 y 9.4.53. No se conocen workarounds."
+          }
+        ],
+        "id": "CVE-2023-36478",
+        "lastModified": "2024-02-16T18:40:20.290",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-10-10T17:15:11.737",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/10/18/4"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Issue Tracking",
+              "Patch"
+            ],
+            "url": "https://github.com/eclipse/jetty.project/pull/9634"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ],
+            "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-10.0.16"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ],
+            "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-11.0.16"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ],
+            "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-9.4.53.v20231009"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ],
+            "url": "https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgh7-54f2-x98r"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Mailing List"
+            ],
+            "url": "https://lists.debian.org/debian-lts-announce/2023/10/msg00045.html"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://security.netapp.com/advisory/ntap-20231116-0011/"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://www.debian.org/security/2023/dsa-5540"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-190"
               },
               {
-                "cpe23Uri": "cpe:2.3:a:jenkins:jenkins:*:*:*:*:lts:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "2.414.3",
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-400"
               }
             ],
-            "operator": "OR"
+            "source": "security-advisories@github.com",
+            "type": "Primary"
+          },
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-190"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Secondary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security-advisories@github.com",
-          "ID": "CVE-2023-36478"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Eclipse Jetty provides a web server and servlet container. In versions 11.0.0 through 11.0.15, 10.0.0 through 10.0.15, and 9.0.0 through 9.4.52, an integer overflow in `MetaDataBuilder.checkSize` allows for HTTP/2 HPACK header values to\nexceed their size limit. `MetaDataBuilder.java` determines if a header name or value exceeds the size limit, and throws an exception if the limit is exceeded. However, when length is very large and huffman is true, the multiplication by 4 in line 295\nwill overflow, and length will become negative. `(_size+length)` will now be negative, and the check on line 296 will not be triggered. Furthermore, `MetaDataBuilder.checkSize` allows for user-entered HPACK header value sizes to be negative, potentially leading to a very large buffer allocation later on when the user-entered size is multiplied by 2. This means that if a user provides a negative length value (or, more precisely, a length value which, when multiplied by the 4/3 fudge factor, is negative), and this length value is a very large positive number when multiplied by 2, then the user can cause a very large buffer to be allocated on the server. Users of HTTP/2 can be impacted by a remote denial of service attack. The issue has been fixed in versions 11.0.16, 10.0.16, and 9.4.53. There are no known workarounds."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-190"
-                },
-                {
-                  "lang": "en",
-                  "value": "CWE-400"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/eclipse/jetty.project/pull/9634",
-              "refsource": "MISC",
-              "tags": [
-                "Issue Tracking",
-                "Patch"
-              ],
-              "url": "https://github.com/eclipse/jetty.project/pull/9634"
-            },
-            {
-              "name": "https://github.com/eclipse/jetty.project/releases/tag/jetty-11.0.16",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes"
-              ],
-              "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-11.0.16"
-            },
-            {
-              "name": "https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgh7-54f2-x98r",
-              "refsource": "MISC",
-              "tags": [
-                "Exploit",
-                "Vendor Advisory"
-              ],
-              "url": "https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgh7-54f2-x98r"
-            },
-            {
-              "name": "https://github.com/eclipse/jetty.project/releases/tag/jetty-9.4.53.v20231009",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes"
-              ],
-              "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-9.4.53.v20231009"
-            },
-            {
-              "name": "https://github.com/eclipse/jetty.project/releases/tag/jetty-10.0.16",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes"
-              ],
-              "url": "https://github.com/eclipse/jetty.project/releases/tag/jetty-10.0.16"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/10/18/4",
-              "refsource": "MISC",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/10/18/4"
-            },
-            {
-              "name": "https://lists.debian.org/debian-lts-announce/2023/10/msg00045.html",
-              "refsource": "MISC",
-              "tags": [],
-              "url": "https://lists.debian.org/debian-lts-announce/2023/10/msg00045.html"
-            },
-            {
-              "name": "https://www.debian.org/security/2023/dsa-5540",
-              "refsource": "MISC",
-              "tags": [],
-              "url": "https://www.debian.org/security/2023/dsa-5540"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20231116-0011/",
-              "refsource": "",
-              "tags": [],
-              "url": "https://security.netapp.com/advisory/ntap-20231116-0011/"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.5,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 3.9,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2023-11-16T16:15Z",
-      "publishedDate": "2023-10-10T17:15Z"
+      }
     }
   }
 }

@@ -132,6 +132,11 @@
             "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
             "refsource": "MISC",
             "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
+          },
+          {
+            "name": "https://security.netapp.com/advisory/ntap-20240216-0004/",
+            "refsource": "MISC",
+            "url": "https://security.netapp.com/advisory/ntap-20240216-0004/"
           }
         ]
       },
@@ -143,111 +148,113 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "5.17.4",
-                "versionStartIncluding": "5.17.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2CD766F1-F0C9-4CFE-85F5-308248C6E44C",
+                    "versionEndExcluding": "5.16.6",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "B0D4F2D0-6707-47EA-BE24-D1B273EF5122",
+                    "versionEndExcluding": "5.17.4",
+                    "versionStartIncluding": "5.17.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
+          },
+          {
+            "lang": "es",
+            "value": "Una vez que un usuario se autentica en Jolokia, potencialmente puede desencadenar la ejecuci\u00f3n de c\u00f3digo arbitrario. En detalles, en las configuraciones de ActiveMQ, jetty permite que org.jolokia.http.AgentServlet maneje la solicitud a /api/jolokia org.jolokia.http.HttpRequestHandler#handlePostRequest puede crear JmxRequest a trav\u00e9s de JSONObject. Y llamadas a org.jolokia.http.HttpRequestHandler#executeRequest. En pilas de llamadas m\u00e1s profundas, org.jolokia.handler.ExecHandler#doHandleRequest puede invocar mediante reflexi\u00f3n. Y luego, RCE se puede lograr a trav\u00e9s de jdk.management.jfr.FlightRecorderMXBeanImpl que existe en la versi\u00f3n de Java superior a 11. 1 Call newRecording. 2 Call setConfiguration. Y en \u00e9l se esconden datos de un webshell. 3 Call startRecording. 4 Call copyTo method. El webshell se escribir\u00e1 en un archivo .jsp. La mitigaci\u00f3n es restringir (de forma predeterminada) las acciones autorizadas en Jolokia o desactivar Jolokia. Se ha definido una configuraci\u00f3n de Jolokia m\u00e1s restrictiva en la distribuci\u00f3n predeterminada de ActiveMQ. Alentamos a los usuarios a actualizar a la versi\u00f3n de distribuciones ActiveMQ, incluida la configuraci\u00f3n actualizada de Jolokia: 5.16.6, 5.17.4, 5.18.0, 6.0.0."
+          }
+        ],
+        "id": "CVE-2022-41678",
+        "lastModified": "2024-02-16T13:15:09.380",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
               },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
+        "published": "2023-11-28T16:15:06.840",
+        "references": [
+          {
+            "source": "security@apache.org",
+            "tags": [
+              "Mailing List",
+              "Third Party Advisory"
+            ],
+            "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
+          },
+          {
+            "source": "security@apache.org",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
+          },
+          {
+            "source": "security@apache.org",
+            "tags": [
+              "Mailing List",
+              "Vendor Advisory"
+            ],
+            "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
+          },
+          {
+            "source": "security@apache.org",
+            "url": "https://security.netapp.com/advisory/ntap-20240216-0004/"
+          }
+        ],
+        "sourceIdentifier": "security@apache.org",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:a:apache:activemq:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "5.16.6",
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-502"
               }
             ],
-            "operator": "OR"
+            "source": "security@apache.org",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security@apache.org",
-          "ID": "CVE-2022-41678"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "Once an user is authenticated on Jolokia, he can potentially trigger arbitrary code execution.\u00a0\n\nIn details, in ActiveMQ configurations, jetty allows\norg.jolokia.http.AgentServlet to handler request to /api/jolokia\n\norg.jolokia.http.HttpRequestHandler#handlePostRequest is able to\ncreate JmxRequest through JSONObject. And calls to\norg.jolokia.http.HttpRequestHandler#executeRequest.\n\nInto deeper calling stacks,\norg.jolokia.handler.ExecHandler#doHandleRequest is able to invoke\nthrough refection.\n\nAnd then, RCE is able to be achieved via\njdk.management.jfr.FlightRecorderMXBeanImpl which exists on Java version above 11.\n\n1 Call newRecording.\n\n2 Call setConfiguration. And a webshell data hides in it.\n\n3 Call startRecording.\n\n4 Call copyTo method. The webshell will be written to a .jsp file.\n\nThe mitigation is to restrict (by default) the actions authorized on Jolokia, or disable Jolokia.\nA more restrictive Jolokia configuration has been defined in default ActiveMQ distribution. We encourage users to upgrade to ActiveMQ distributions version including updated Jolokia configuration: 5.16.6, 5.17.4, 5.18.0, 6.0.0.\n"
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-502"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt",
-              "refsource": "",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://activemq.apache.org/security-advisories.data/CVE-2022-41678-announcement.txt"
-            },
-            {
-              "name": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl",
-              "refsource": "",
-              "tags": [
-                "Mailing List",
-                "Vendor Advisory"
-              ],
-              "url": "https://lists.apache.org/thread/7g17kwbtjl011mm4tr8bn1vnoq9wh4sl"
-            },
-            {
-              "name": "http://www.openwall.com/lists/oss-security/2023/11/28/1",
-              "refsource": "",
-              "tags": [
-                "Mailing List",
-                "Third Party Advisory"
-              ],
-              "url": "http://www.openwall.com/lists/oss-security/2023/11/28/1"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 8.8,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "HIGH",
-            "integrityImpact": "HIGH",
-            "privilegesRequired": "LOW",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 2.8,
-          "impactScore": 5.9
-        }
-      },
-      "lastModifiedDate": "2023-12-04T19:08Z",
-      "publishedDate": "2023-11-28T16:15Z"
+      }
     }
   }
 }
