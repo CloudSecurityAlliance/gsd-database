@@ -134,6 +134,11 @@
             "name": "https://github.com/open-telemetry/opentelemetry-go/blob/v1.12.0/semconv/internal/v2/http.go#L159",
             "refsource": "MISC",
             "url": "https://github.com/open-telemetry/opentelemetry-go/blob/v1.12.0/semconv/internal/v2/http.go#L159"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/2UTRJ54INZG3OC2FTAN6AFB2RYNY2GAD/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/2UTRJ54INZG3OC2FTAN6AFB2RYNY2GAD/"
           }
         ]
       },
@@ -143,142 +148,159 @@
       }
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:opentelemetry:opentelemetry:*:*:*:*:*:go:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "0.44.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:opentelemetry:opentelemetry:*:*:*:*:*:go:*:*",
+                    "matchCriteriaId": "2E7726FA-0421-40C6-B36B-3B6618D81880",
+                    "versionEndExcluding": "0.44.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "OpenTelemetry-Go Contrib is a collection of third-party packages for OpenTelemetry-Go. A handler wrapper out of the box adds labels `http.user_agent` and `http.method` that have unbound cardinality. It leads to the server's potential memory exhaustion when many malicious requests are sent to it. HTTP header User-Agent or HTTP method for requests can be easily set by an attacker to be random and long. The library internally uses `httpconv.ServerRequest` that records every value for HTTP `method` and `User-Agent`. In order to be affected, a program has to use the `otelhttp.NewHandler` wrapper and not filter any unknown HTTP methods or User agents on the level of CDN, LB, previous middleware, etc. Version 0.44.0 fixed this issue when the values collected for attribute `http.request.method` were changed to be restricted to a set of well-known values and other high cardinality attributes were removed. As a workaround to stop being affected, `otelhttp.WithFilter()` can be used, but it requires manual careful configuration to not log certain requests entirely. For convenience and safe usage of this library, it should by default mark with the label `unknown` non-standard HTTP methods and User agents to show that such requests were made but do not increase cardinality. In case someone wants to stay with the current behavior, library API should allow to enable it."
+          },
+          {
+            "lang": "es",
+            "value": "OpenTelemetry-Go Contrib es una colecci\u00f3n de paquetes de terceros para OpenTelemetry-Go. Un contenedor de controlador listo para usar agrega etiquetas `http.user_agent` y `http.method` que tienen cardinalidad independiente. Conduce al posible agotamiento de la memoria del servidor cuando se le env\u00edan muchas solicitudes maliciosas. Un atacante puede configurar f\u00e1cilmente el encabezado HTTP User-Agent o el m\u00e9todo HTTP para solicitudes para que sea aleatorio y largo. La librer\u00eda utiliza internamente `httpconv.ServerRequest` que registra cada valor para el `method` HTTP y el `User-Agent`. Para verse afectado, un programa debe utilizar el contenedor `otelhttp.NewHandler` y no filtrar ning\u00fan m\u00e9todo HTTP desconocido o agentes de usuario en el nivel de CDN, LB, middleware anterior, etc. La versi\u00f3n 0.44.0 solucion\u00f3 este problema cuando el Los valores recopilados para el atributo `http.request.method` se cambiaron para restringirlos a un conjunto de valores conocidos y se eliminaron otros atributos de alta cardinalidad. Como workaround para dejar de verse afectado, se puede utilizar `otelhttp.WithFilter()`, pero requiere una configuraci\u00f3n manual cuidadosa para no registrar ciertas solicitudes por completo. Para mayor comodidad y uso seguro de esta librer\u00eda, deber\u00eda marcar de forma predeterminada con la etiqueta \"unknown\" los m\u00e9todos HTTP no est\u00e1ndar y los agentes de usuario para mostrar que dichas solicitudes se realizaron pero no aumentan la cardinalidad. En caso de que alguien quiera seguir con el comportamiento actual, la API de la librer\u00eda deber\u00eda permitir habilitarlo."
+          }
+        ],
+        "id": "CVE-2023-45142",
+        "lastModified": "2024-02-19T03:15:07.697",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2023-10-12T17:15:09.990",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/advisories/GHSA-cg3q-j54f-5p7p"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/blob/5f7e6ad5a49b45df45f61a1deb29d7f1158032df/instrumentation/net/http/otelhttp/handler.go#L63-L65"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Issue Tracking"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/pull/4277"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/releases/tag/v1.19.0"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-5r5m-65gx-7vrh"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-rcjv-mgp8-qvmr"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go/blob/38e1b499c3da3107694ad2660b3888eee9c8b896/semconv/internal/v2/http.go#L223"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Product"
+            ],
+            "url": "https://github.com/open-telemetry/opentelemetry-go/blob/v1.12.0/semconv/internal/v2/http.go#L159"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/2UTRJ54INZG3OC2FTAN6AFB2RYNY2GAD/"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-770"
               }
             ],
-            "operator": "OR"
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security-advisories@github.com",
-          "ID": "CVE-2023-45142"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "OpenTelemetry-Go Contrib is a collection of third-party packages for OpenTelemetry-Go. A handler wrapper out of the box adds labels `http.user_agent` and `http.method` that have unbound cardinality. It leads to the server's potential memory exhaustion when many malicious requests are sent to it. HTTP header User-Agent or HTTP method for requests can be easily set by an attacker to be random and long. The library internally uses `httpconv.ServerRequest` that records every value for HTTP `method` and `User-Agent`. In order to be affected, a program has to use the `otelhttp.NewHandler` wrapper and not filter any unknown HTTP methods or User agents on the level of CDN, LB, previous middleware, etc. Version 0.44.0 fixed this issue when the values collected for attribute `http.request.method` were changed to be restricted to a set of well-known values and other high cardinality attributes were removed. As a workaround to stop being affected, `otelhttp.WithFilter()` can be used, but it requires manual careful configuration to not log certain requests entirely. For convenience and safe usage of this library, it should by default mark with the label `unknown` non-standard HTTP methods and User agents to show that such requests were made but do not increase cardinality. In case someone wants to stay with the current behavior, library API should allow to enable it."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-770"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go-contrib/blob/5f7e6ad5a49b45df45f61a1deb29d7f1158032df/instrumentation/net/http/otelhttp/handler.go#L63-L65",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/blob/5f7e6ad5a49b45df45f61a1deb29d7f1158032df/instrumentation/net/http/otelhttp/handler.go#L63-L65"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go-contrib/releases/tag/v1.19.0",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/releases/tag/v1.19.0"
-            },
-            {
-              "name": "https://github.com/advisories/GHSA-cg3q-j54f-5p7p",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/advisories/GHSA-cg3q-j54f-5p7p"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go-contrib/pull/4277",
-              "refsource": "MISC",
-              "tags": [
-                "Issue Tracking"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/pull/4277"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go/blob/v1.12.0/semconv/internal/v2/http.go#L159",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go/blob/v1.12.0/semconv/internal/v2/http.go#L159"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go/blob/38e1b499c3da3107694ad2660b3888eee9c8b896/semconv/internal/v2/http.go#L223",
-              "refsource": "MISC",
-              "tags": [
-                "Product"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go/blob/38e1b499c3da3107694ad2660b3888eee9c8b896/semconv/internal/v2/http.go#L223"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-rcjv-mgp8-qvmr",
-              "refsource": "MISC",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-rcjv-mgp8-qvmr"
-            },
-            {
-              "name": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-5r5m-65gx-7vrh",
-              "refsource": "MISC",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://github.com/open-telemetry/opentelemetry-go-contrib/security/advisories/GHSA-5r5m-65gx-7vrh"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.5,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 3.9,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2023-10-18T18:27Z",
-      "publishedDate": "2023-10-12T17:15Z"
+      }
     }
   }
 }

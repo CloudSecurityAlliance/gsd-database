@@ -128,6 +128,11 @@
             "name": "[debian-lts-announce] 20211206 [SECURITY] [DLA 2841-1] runc security update",
             "refsource": "MLIST",
             "url": "https://lists.debian.org/debian-lts-announce/2021/12/msg00005.html"
+          },
+          {
+            "name": "[debian-lts-announce] 20240219 [SECURITY] [DLA 3735-1] runc security update",
+            "refsource": "MLIST",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/02/msg00005.html"
           }
         ]
       },
@@ -226,163 +231,190 @@
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:linuxfoundation:runc:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "1.0.3",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:linuxfoundation:runc:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EDE92EF-36C3-48E0-ADCF-FFAB45F903F2",
+                    "versionEndExcluding": "1.0.3",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
               }
-            ],
-            "operator": "OR"
+            ]
           },
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:debian:debian_linux:9.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "DEECE5FC-CACF-4496-A3E7-164736409252",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "runc is a CLI tool for spawning and running containers on Linux according to the OCI specification. In runc, netlink is used internally as a serialization system for specifying the relevant container configuration to the `C` portion of the code (responsible for the based namespace setup of containers). In all versions of runc prior to 1.0.3, the encoder did not handle the possibility of an integer overflow in the 16-bit length field for the byte array attribute type, meaning that a large enough malicious byte array attribute could result in the length overflowing and the attribute contents being parsed as netlink messages for container configuration. This vulnerability requires the attacker to have some control over the configuration of the container and would allow the attacker to bypass the namespace restrictions of the container by simply adding their own netlink payload which disables all namespaces. The main users impacted are those who allow untrusted images with untrusted configurations to run on their machines (such as with shared cloud infrastructure). runc version 1.0.3 contains a fix for this bug. As a workaround, one may try disallowing untrusted namespace paths from your container. It should be noted that untrusted namespace paths would allow the attacker to disable namespace protections entirely even in the absence of this bug."
+          },
+          {
+            "lang": "es",
+            "value": "runc es una herramienta CLI para generar y ejecutar contenedores en Linux seg\u00fan la especificaci\u00f3n OCI. En runc, netlink es usado internamente como un sistema de serializaci\u00f3n para especificar la configuraci\u00f3n relevante del contenedor a la porci\u00f3n \"C\" del c\u00f3digo (responsable de la configuraci\u00f3n del espacio de nombres basado en los contenedores). En todas las versiones de runc anteriores a la 1.0.3, el codificador no manejaba la posibilidad de un desbordamiento de enteros en el campo de longitud de 16 bits para el tipo de atributo de matriz de bytes, lo que significaba que un atributo de matriz de bytes suficientemente grande y malicioso pod\u00eda provocar el desbordamiento de la longitud y que el contenido del atributo fuera analizado como mensajes netlink para la configuraci\u00f3n del contenedor. Esta vulnerabilidad requiere que el atacante tenga cierto control sobre la configuraci\u00f3n del contenedor y le permitir\u00eda saltarse las restricciones de espacio de nombres del contenedor simplemente a\u00f1adiendo su propia carga \u00fatil de netlink que deshabilita todos los espacios de nombres. Los principales usuarios afectados son aquellos que permiten la ejecuci\u00f3n de im\u00e1genes no confiables con configuraciones no confiables en sus m\u00e1quinas (como en el caso de la infraestructura de nube compartida). runc versi\u00f3n 1.0.3 contiene una correcci\u00f3n para este bug. Como soluci\u00f3n, puede intentarse deshabilitar las rutas de espacios de nombres no confiables de su contenedor. Tenga en cuenta que las rutas de espacios de nombres no confiables permitir\u00edan al atacante deshabilitar las protecciones de espacios de nombres por completo incluso en ausencia de este bug"
+          }
+        ],
+        "id": "CVE-2021-43784",
+        "lastModified": "2024-02-19T03:15:07.330",
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "acInsufInfo": false,
+              "baseSeverity": "MEDIUM",
+              "cvssData": {
+                "accessComplexity": "MEDIUM",
+                "accessVector": "NETWORK",
+                "authentication": "SINGLE",
+                "availabilityImpact": "PARTIAL",
+                "baseScore": 6.0,
+                "confidentialityImpact": "PARTIAL",
+                "integrityImpact": "PARTIAL",
+                "vectorString": "AV:N/AC:M/Au:S/C:P/I:P/A:P",
+                "version": "2.0"
+              },
+              "exploitabilityScore": 6.8,
+              "impactScore": 6.4,
+              "obtainAllPrivilege": false,
+              "obtainOtherPrivilege": false,
+              "obtainUserPrivilege": false,
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "userInteractionRequired": false
+            }
+          ],
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "LOW",
+                "baseScore": 5.0,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.6,
+              "impactScore": 3.4,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "LOW",
+                "baseScore": 6.0,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "LOW",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:L/A:L",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 3.7,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2021-12-06T18:15:08.240",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
+            ],
+            "url": "https://bugs.chromium.org/p/project-zero/issues/detail?id=2241"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/opencontainers/runc/commit/9c444070ec7bb83995dbc0185da68284da71c554"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/opencontainers/runc/commit/d72d057ba794164c3cce9451a00b72a78b25e1ae"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/opencontainers/runc/commit/f50369af4b571e358f20b139eea52d612eb55eed"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch",
+              "Third Party Advisory"
+            ],
+            "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-v95c-p5hm-xq8f"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ],
+            "url": "https://lists.debian.org/debian-lts-announce/2021/12/msg00005.html"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://lists.debian.org/debian-lts-announce/2024/02/msg00005.html"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-190"
               }
             ],
-            "operator": "OR"
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "security-advisories@github.com",
-          "ID": "CVE-2021-43784"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "runc is a CLI tool for spawning and running containers on Linux according to the OCI specification. In runc, netlink is used internally as a serialization system for specifying the relevant container configuration to the `C` portion of the code (responsible for the based namespace setup of containers). In all versions of runc prior to 1.0.3, the encoder did not handle the possibility of an integer overflow in the 16-bit length field for the byte array attribute type, meaning that a large enough malicious byte array attribute could result in the length overflowing and the attribute contents being parsed as netlink messages for container configuration. This vulnerability requires the attacker to have some control over the configuration of the container and would allow the attacker to bypass the namespace restrictions of the container by simply adding their own netlink payload which disables all namespaces. The main users impacted are those who allow untrusted images with untrusted configurations to run on their machines (such as with shared cloud infrastructure). runc version 1.0.3 contains a fix for this bug. As a workaround, one may try disallowing untrusted namespace paths from your container. It should be noted that untrusted namespace paths would allow the attacker to disable namespace protections entirely even in the absence of this bug."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-190"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://github.com/opencontainers/runc/commit/d72d057ba794164c3cce9451a00b72a78b25e1ae",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/opencontainers/runc/commit/d72d057ba794164c3cce9451a00b72a78b25e1ae"
-            },
-            {
-              "name": "https://github.com/opencontainers/runc/commit/9c444070ec7bb83995dbc0185da68284da71c554",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/opencontainers/runc/commit/9c444070ec7bb83995dbc0185da68284da71c554"
-            },
-            {
-              "name": "https://github.com/opencontainers/runc/commit/f50369af4b571e358f20b139eea52d612eb55eed",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/opencontainers/runc/commit/f50369af4b571e358f20b139eea52d612eb55eed"
-            },
-            {
-              "name": "https://github.com/opencontainers/runc/security/advisories/GHSA-v95c-p5hm-xq8f",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ],
-              "url": "https://github.com/opencontainers/runc/security/advisories/GHSA-v95c-p5hm-xq8f"
-            },
-            {
-              "name": "https://bugs.chromium.org/p/project-zero/issues/detail?id=2241",
-              "refsource": "MISC",
-              "tags": [
-                "Exploit",
-                "Third Party Advisory"
-              ],
-              "url": "https://bugs.chromium.org/p/project-zero/issues/detail?id=2241"
-            },
-            {
-              "name": "[debian-lts-announce] 20211206 [SECURITY] [DLA 2841-1] runc security update",
-              "refsource": "MLIST",
-              "tags": [
-                "Vendor Advisory"
-              ],
-              "url": "https://lists.debian.org/debian-lts-announce/2021/12/msg00005.html"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV2": {
-          "acInsufInfo": false,
-          "cvssV2": {
-            "accessComplexity": "MEDIUM",
-            "accessVector": "NETWORK",
-            "authentication": "SINGLE",
-            "availabilityImpact": "PARTIAL",
-            "baseScore": 6.0,
-            "confidentialityImpact": "PARTIAL",
-            "integrityImpact": "PARTIAL",
-            "vectorString": "AV:N/AC:M/Au:S/C:P/I:P/A:P",
-            "version": "2.0"
-          },
-          "exploitabilityScore": 6.8,
-          "impactScore": 6.4,
-          "obtainAllPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "obtainUserPrivilege": false,
-          "severity": "MEDIUM",
-          "userInteractionRequired": false
-        },
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "HIGH",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "LOW",
-            "baseScore": 5.0,
-            "baseSeverity": "MEDIUM",
-            "confidentialityImpact": "LOW",
-            "integrityImpact": "LOW",
-            "privilegesRequired": "LOW",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 1.6,
-          "impactScore": 3.4
-        }
-      },
-      "lastModifiedDate": "2021-12-08T18:05Z",
-      "publishedDate": "2021-12-06T18:15Z"
+      }
     }
   }
 }
