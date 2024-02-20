@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-1597"
       ],
+      "details": "pgjdbc, the PostgreSQL JDBC Driver, allows attacker to inject SQL if using PreferQueryMode=SIMPLE. Note this is not the default. In the default mode there is no vulnerability. A placeholder for a numeric value must be immediately preceded by a minus. There must be a second placeholder for a string value after the first placeholder; both must be on the same line. By constructing a matching string payload, the attacker can inject SQL to alter the query,bypassing the protections that parameterized queries bring against SQL Injection attacks. Versions before 42.7.2, 42.6.1, 42.5.5, 42.4.4, 42.3.9, and 42.2.8 are affected.",
       "id": "GSD-2024-1597",
       "modified": "2024-02-17T06:02:26.789374Z",
       "schema_version": "1.4.0"
@@ -18,10 +19,66 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cna@postgresql.org",
         "ID": "CVE-2024-1597",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "pgjdbc",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.7.2"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.6.1"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.5.5"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.4.4"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.3.9"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 42.2.8"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "pgjdbc"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "value": "Client must run code with PreferQueryMode=Simple"
+        }
+      ],
+      "credits": [
+        {
+          "lang": "en",
+          "value": "The pgjdbc project thanks Paul Gerste for reporting this problem."
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -29,7 +86,114 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "pgjdbc, the PostgreSQL JDBC Driver, allows attacker to inject SQL if using PreferQueryMode=SIMPLE. Note this is not the default. In the default mode there is no vulnerability. A placeholder for a numeric value must be immediately preceded by a minus. There must be a second placeholder for a string value after the first placeholder; both must be on the same line. By constructing a matching string payload, the attacker can inject SQL to alter the query,bypassing the protections that parameterized queries bring against SQL Injection attacks. Versions before 42.7.2, 42.6.1, 42.5.5, 42.4.4, 42.3.9, and 42.2.8 are affected."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 10,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-89",
+                "lang": "eng",
+                "value": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-24rp-q3w6-vc56",
+            "refsource": "MISC",
+            "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-24rp-q3w6-vc56"
+          }
+        ]
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "value": "Don't use SimpleQuery mode"
+        }
+      ]
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "pgjdbc, the PostgreSQL JDBC Driver, allows attacker to inject SQL if using PreferQueryMode=SIMPLE. Note this is not the default. In the default mode there is no vulnerability. A placeholder for a numeric value must be immediately preceded by a minus. There must be a second placeholder for a string value after the first placeholder; both must be on the same line. By constructing a matching string payload, the attacker can inject SQL to alter the query,bypassing the protections that parameterized queries bring against SQL Injection attacks. Versions before 42.7.2, 42.6.1, 42.5.5, 42.4.4, 42.3.9, and 42.2.8 are affected."
+          },
+          {
+            "lang": "es",
+            "value": "pgjdbc, el controlador JDBC de PostgreSQL, permite al atacante inyectar SQL si usa PreferQueryMode=SIMPLE. Tenga en cuenta que este no es el valor predeterminado. En el modo predeterminado no hay vulnerabilidad. Un comod\u00edn para un valor num\u00e9rico debe ir precedido inmediatamente de un signo menos. Debe haber un segundo marcador de posici\u00f3n para un valor de cadena despu\u00e9s del primer marcador de posici\u00f3n; ambos deben estar en la misma l\u00ednea. Al construir un payload de cadena coincidente, el atacante puede inyectar SQL para alterar la consulta, evitando las protecciones que las consultas parametrizadas brindan contra los ataques de inyecci\u00f3n SQL. Las versiones anteriores a 42.7.2, 42.6.1, 42.5.5, 42.4.4, 42.3.9 y 42.2.8 se ven afectadas."
+          }
+        ],
+        "id": "CVE-2024-1597",
+        "lastModified": "2024-02-19T13:15:07.740",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 10.0,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 6.0,
+              "source": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-19T13:15:07.740",
+        "references": [
+          {
+            "source": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+            "url": "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-24rp-q3w6-vc56"
+          }
+        ],
+        "sourceIdentifier": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-89"
+              }
+            ],
+            "source": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+            "type": "Secondary"
           }
         ]
       }

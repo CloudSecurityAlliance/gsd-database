@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-25636"
       ],
+      "details": "Misskey is an open source, decentralized social media platform with ActivityPub support. Prior to version 2024.2.0, when fetching remote Activity Streams objects, Misskey doesn't check that the response from the remote server has a `Content-Type` header value of the Activity Streams media type, which allows a threat actor to upload a crafted Activity Streams document to a remote server and make a Misskey instance fetch it, if the remote server accepts arbitrary user uploads. The vulnerability allows a threat actor to impersonate and take over an account on a remote server that satisfies all of the following properties: allows the threat actor to register an account; accepts arbitrary user-uploaded documents and places them on the same domain as legitimate Activity Streams actors; and serves user-uploaded document in response to requests with an `Accept` header value of the Activity Streams media type. Version 2024.2.0 contains a patch for the issue.",
       "id": "GSD-2024-25636",
       "modified": "2024-02-09T06:02:34.488961Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-25636",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "misskey",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 2024.2.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "misskey-dev"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,144 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Misskey is an open source, decentralized social media platform with ActivityPub support. Prior to version 2024.2.0, when fetching remote Activity Streams objects, Misskey doesn't check that the response from the remote server has a `Content-Type` header value of the Activity Streams media type, which allows a threat actor to upload a crafted Activity Streams document to a remote server and make a Misskey instance fetch it, if the remote server accepts arbitrary user uploads. The vulnerability allows a threat actor to impersonate and take over an account on a remote server that satisfies all of the following properties: allows the threat actor to register an account; accepts arbitrary user-uploaded documents and places them on the same domain as legitimate Activity Streams actors; and serves user-uploaded document in response to requests with an `Accept` header value of the Activity Streams media type. Version 2024.2.0 contains a patch for the issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.1,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-434",
+                "lang": "eng",
+                "value": "CWE-434: Unrestricted Upload of File with Dangerous Type"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/misskey-dev/misskey/security/advisories/GHSA-qqrm-9grj-6v32",
+            "refsource": "MISC",
+            "url": "https://github.com/misskey-dev/misskey/security/advisories/GHSA-qqrm-9grj-6v32"
+          },
+          {
+            "name": "https://github.com/misskey-dev/misskey/commit/9a70ce8f5ea9df00001894809f5ce7bc69b14c8a",
+            "refsource": "MISC",
+            "url": "https://github.com/misskey-dev/misskey/commit/9a70ce8f5ea9df00001894809f5ce7bc69b14c8a"
+          },
+          {
+            "name": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/ApResolverService.ts#L69-L119",
+            "refsource": "MISC",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/ApResolverService.ts#L69-L119"
+          },
+          {
+            "name": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/models/ApNoteService.ts#L112-L308",
+            "refsource": "MISC",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/models/ApNoteService.ts#L112-L308"
+          },
+          {
+            "name": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/server/api/endpoints/ap/show.ts#L125-L143",
+            "refsource": "MISC",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/server/api/endpoints/ap/show.ts#L125-L143"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-qqrm-9grj-6v32",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Misskey is an open source, decentralized social media platform with ActivityPub support. Prior to version 2024.2.0, when fetching remote Activity Streams objects, Misskey doesn't check that the response from the remote server has a `Content-Type` header value of the Activity Streams media type, which allows a threat actor to upload a crafted Activity Streams document to a remote server and make a Misskey instance fetch it, if the remote server accepts arbitrary user uploads. The vulnerability allows a threat actor to impersonate and take over an account on a remote server that satisfies all of the following properties: allows the threat actor to register an account; accepts arbitrary user-uploaded documents and places them on the same domain as legitimate Activity Streams actors; and serves user-uploaded document in response to requests with an `Accept` header value of the Activity Streams media type. Version 2024.2.0 contains a patch for the issue."
+          }
+        ],
+        "id": "CVE-2024-25636",
+        "lastModified": "2024-02-19T20:15:46.077",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.1,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 4.2,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-19T20:15:46.077",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/ApResolverService.ts#L69-L119"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/core/activitypub/models/ApNoteService.ts#L112-L308"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/misskey-dev/misskey/blob/2024.2.0-beta.10/packages/backend/src/server/api/endpoints/ap/show.ts#L125-L143"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/misskey-dev/misskey/commit/9a70ce8f5ea9df00001894809f5ce7bc69b14c8a"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/misskey-dev/misskey/security/advisories/GHSA-qqrm-9grj-6v32"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-434"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Primary"
           }
         ]
       }
