@@ -1,0 +1,239 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-52439"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nuio: Fix use-after-free in uio_open\n\ncore-1\t\t\t\tcore-2\n-------------------------------------------------------\nuio_unregister_device\t\tuio_open\n\t\t\t\tidev = idr_find()\ndevice_unregister(&idev->dev)\nput_device(&idev->dev)\nuio_device_release\n\t\t\t\tget_device(&idev->dev)\nkfree(idev)\nuio_free_minor(minor)\n\t\t\t\tuio_release\n\t\t\t\tput_device(&idev->dev)\n\t\t\t\tkfree(idev)\n-------------------------------------------------------\n\nIn the core-1 uio_unregister_device(), the device_unregister will kfree\nidev when the idev->dev kobject ref is 1. But after core-1\ndevice_unregister, put_device and before doing kfree, the core-2 may\nget_device. Then:\n1. After core-1 kfree idev, the core-2 will do use-after-free for idev.\n2. When core-2 do uio_release and put_device, the idev will be double\n   freed.\n\nTo address this issue, we can get idev atomic & inc idev reference with\nminor_lock.",
+      "id": "GSD-2023-52439",
+      "modified": "2024-02-21T06:01:53.492110Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2023-52439",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "57c5f4df0a5a",
+                          "version_value": "3174e0f7de1b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.18"
+                              },
+                              {
+                                "lessThan": "4.18",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.306",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.74",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.13",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.1",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nuio: Fix use-after-free in uio_open\n\ncore-1\t\t\t\tcore-2\n-------------------------------------------------------\nuio_unregister_device\t\tuio_open\n\t\t\t\tidev = idr_find()\ndevice_unregister(&idev->dev)\nput_device(&idev->dev)\nuio_device_release\n\t\t\t\tget_device(&idev->dev)\nkfree(idev)\nuio_free_minor(minor)\n\t\t\t\tuio_release\n\t\t\t\tput_device(&idev->dev)\n\t\t\t\tkfree(idev)\n-------------------------------------------------------\n\nIn the core-1 uio_unregister_device(), the device_unregister will kfree\nidev when the idev->dev kobject ref is 1. But after core-1\ndevice_unregister, put_device and before doing kfree, the core-2 may\nget_device. Then:\n1. After core-1 kfree idev, the core-2 will do use-after-free for idev.\n2. When core-2 do uio_release and put_device, the idev will be double\n   freed.\n\nTo address this issue, we can get idev atomic & inc idev reference with\nminor_lock."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-03f60121d1f8"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/3174e0f7de1ba392dc191625da83df02d695b60c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3174e0f7de1ba392dc191625da83df02d695b60c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e93da893d52d82d57fc0db2ca566024e0f26ff50",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e93da893d52d82d57fc0db2ca566024e0f26ff50"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5e0be1229ae199ebb90b33102f74a0f22d152570",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5e0be1229ae199ebb90b33102f74a0f22d152570"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5cf604ee538ed0c467abe3b4cda5308a6398f0f7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5cf604ee538ed0c467abe3b4cda5308a6398f0f7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/17a8519cb359c3b483fb5c7367efa9a8a508bdea",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/17a8519cb359c3b483fb5c7367efa9a8a508bdea"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/35f102607054faafe78d2a6994b18d5d9d6e92ad",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/35f102607054faafe78d2a6994b18d5d9d6e92ad"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/913205930da6213305616ac539447702eaa85e41",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/913205930da6213305616ac539447702eaa85e41"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0c9ae0b8605078eafc3bea053cc78791e97ba2e2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0c9ae0b8605078eafc3bea053cc78791e97ba2e2"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nuio: Fix use-after-free in uio_open\n\ncore-1\t\t\t\tcore-2\n-------------------------------------------------------\nuio_unregister_device\t\tuio_open\n\t\t\t\tidev = idr_find()\ndevice_unregister(&idev->dev)\nput_device(&idev->dev)\nuio_device_release\n\t\t\t\tget_device(&idev->dev)\nkfree(idev)\nuio_free_minor(minor)\n\t\t\t\tuio_release\n\t\t\t\tput_device(&idev->dev)\n\t\t\t\tkfree(idev)\n-------------------------------------------------------\n\nIn the core-1 uio_unregister_device(), the device_unregister will kfree\nidev when the idev->dev kobject ref is 1. But after core-1\ndevice_unregister, put_device and before doing kfree, the core-2 may\nget_device. Then:\n1. After core-1 kfree idev, the core-2 will do use-after-free for idev.\n2. When core-2 do uio_release and put_device, the idev will be double\n   freed.\n\nTo address this issue, we can get idev atomic & inc idev reference with\nminor_lock."
+          }
+        ],
+        "id": "CVE-2023-52439",
+        "lastModified": "2024-02-20T21:52:55.187",
+        "metrics": {},
+        "published": "2024-02-20T21:15:08.213",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0c9ae0b8605078eafc3bea053cc78791e97ba2e2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/17a8519cb359c3b483fb5c7367efa9a8a508bdea"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3174e0f7de1ba392dc191625da83df02d695b60c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/35f102607054faafe78d2a6994b18d5d9d6e92ad"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5cf604ee538ed0c467abe3b4cda5308a6398f0f7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5e0be1229ae199ebb90b33102f74a0f22d152570"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/913205930da6213305616ac539447702eaa85e41"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e93da893d52d82d57fc0db2ca566024e0f26ff50"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
+    }
+  }
+}
