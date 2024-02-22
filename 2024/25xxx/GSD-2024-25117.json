@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-25117"
       ],
+      "details": "php-svg-lib is a scalable vector graphics (SVG) file parsing/rendering library. Prior to version 0.5.2, php-svg-lib fails to validate that font-family doesn't contain a PHAR url, which might leads to RCE on PHP < 8.0, and doesn't validate if external references are allowed. This might leads to bypass of restrictions or RCE on projects that are using it, if they do not strictly revalidate the fontName that is passed by php-svg-lib. The `Style::fromAttributes(`), or the `Style::parseCssStyle()` should check the content of the `font-family` and prevents it to use a PHAR url, to avoid passing an invalid and dangerous `fontName` value to other libraries. The same check as done in the `Style::fromStyleSheets` might be reused. Libraries using this library as a dependency might be vulnerable to some bypass of restrictions, or even remote code execution, if they do not double check the value of the `fontName` that is passed by php-svg-lib. Version 0.5.2 contains a fix for this issue.",
       "id": "GSD-2024-25117",
       "modified": "2024-02-06T06:02:56.125023Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-25117",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "php-svg-lib",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 0.5.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "dompdf"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,139 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "php-svg-lib is a scalable vector graphics (SVG) file parsing/rendering library. Prior to version 0.5.2, php-svg-lib fails to validate that font-family doesn't contain a PHAR url, which might leads to RCE on PHP < 8.0, and doesn't validate if external references are allowed. This might leads to bypass of restrictions or RCE on projects that are using it, if they do not strictly revalidate the fontName that is passed by php-svg-lib. The `Style::fromAttributes(`), or the `Style::parseCssStyle()` should check the content of the `font-family` and prevents it to use a PHAR url, to avoid passing an invalid and dangerous `fontName` value to other libraries. The same check as done in the `Style::fromStyleSheets` might be reused. Libraries using this library as a dependency might be vulnerable to some bypass of restrictions, or even remote code execution, if they do not double check the value of the `fontName` that is passed by php-svg-lib. Version 0.5.2 contains a fix for this issue."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "LOW",
+            "baseScore": 6.8,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-73",
+                "lang": "eng",
+                "value": "CWE-73: External Control of File Name or Path"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-502",
+                "lang": "eng",
+                "value": "CWE-502: Deserialization of Untrusted Data"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/dompdf/php-svg-lib/security/advisories/GHSA-f3qr-qr4x-j273",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/php-svg-lib/security/advisories/GHSA-f3qr-qr4x-j273"
+          },
+          {
+            "name": "https://github.com/dompdf/php-svg-lib/commit/732faa9fb4309221e2bd9b2fda5de44f947133aa",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/php-svg-lib/commit/732faa9fb4309221e2bd9b2fda5de44f947133aa"
+          },
+          {
+            "name": "https://github.com/dompdf/php-svg-lib/commit/8ffcc41bbde39f09f94b9760768086f12bbdce42",
+            "refsource": "MISC",
+            "url": "https://github.com/dompdf/php-svg-lib/commit/8ffcc41bbde39f09f94b9760768086f12bbdce42"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-f3qr-qr4x-j273",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "php-svg-lib is a scalable vector graphics (SVG) file parsing/rendering library. Prior to version 0.5.2, php-svg-lib fails to validate that font-family doesn't contain a PHAR url, which might leads to RCE on PHP < 8.0, and doesn't validate if external references are allowed. This might leads to bypass of restrictions or RCE on projects that are using it, if they do not strictly revalidate the fontName that is passed by php-svg-lib. The `Style::fromAttributes(`), or the `Style::parseCssStyle()` should check the content of the `font-family` and prevents it to use a PHAR url, to avoid passing an invalid and dangerous `fontName` value to other libraries. The same check as done in the `Style::fromStyleSheets` might be reused. Libraries using this library as a dependency might be vulnerable to some bypass of restrictions, or even remote code execution, if they do not double check the value of the `fontName` that is passed by php-svg-lib. Version 0.5.2 contains a fix for this issue."
+          }
+        ],
+        "id": "CVE-2024-25117",
+        "lastModified": "2024-02-21T17:15:09.617",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "LOW",
+                "baseScore": 6.8,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "NONE",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.5,
+              "impactScore": 3.7,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-02-21T17:15:09.617",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/php-svg-lib/commit/732faa9fb4309221e2bd9b2fda5de44f947133aa"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/php-svg-lib/commit/8ffcc41bbde39f09f94b9760768086f12bbdce42"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/dompdf/php-svg-lib/security/advisories/GHSA-f3qr-qr4x-j273"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-502"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-73"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }
