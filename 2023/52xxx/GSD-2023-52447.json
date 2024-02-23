@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52447"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Defer the free of inner map when necessary\n\nWhen updating or deleting an inner map in map array or map htab, the map\nmay still be accessed by non-sleepable program or sleepable program.\nHowever bpf_map_fd_put_ptr() decreases the ref-counter of the inner map\ndirectly through bpf_map_put(), if the ref-counter is the last one\n(which is true for most cases), the inner map will be freed by\nops->map_free() in a kworker. But for now, most .map_free() callbacks\ndon't use synchronize_rcu() or its variants to wait for the elapse of a\nRCU grace period, so after the invocation of ops->map_free completes,\nthe bpf program which is accessing the inner map may incur\nuse-after-free problem.\n\nFix the free of inner map by invoking bpf_map_free_deferred() after both\none RCU grace period and one tasks trace RCU grace period if the inner\nmap has been removed from the outer map before. The deferment is\naccomplished by using call_rcu() or call_rcu_tasks_trace() when\nreleasing the last ref-counter of bpf map. The newly-added rcu_head\nfield in bpf_map shares the same storage space with work field to\nreduce the size of bpf_map.",
       "id": "GSD-2023-52447",
       "modified": "2024-02-21T06:01:53.254808Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52447",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "638e4b825d52",
+                          "version_value": "62fca83303d6"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.9"
+                              },
+                              {
+                                "lessThan": "5.9",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Defer the free of inner map when necessary\n\nWhen updating or deleting an inner map in map array or map htab, the map\nmay still be accessed by non-sleepable program or sleepable program.\nHowever bpf_map_fd_put_ptr() decreases the ref-counter of the inner map\ndirectly through bpf_map_put(), if the ref-counter is the last one\n(which is true for most cases), the inner map will be freed by\nops->map_free() in a kworker. But for now, most .map_free() callbacks\ndon't use synchronize_rcu() or its variants to wait for the elapse of a\nRCU grace period, so after the invocation of ops->map_free completes,\nthe bpf program which is accessing the inner map may incur\nuse-after-free problem.\n\nFix the free of inner map by invoking bpf_map_free_deferred() after both\none RCU grace period and one tasks trace RCU grace period if the inner\nmap has been removed from the outer map before. The deferment is\naccomplished by using call_rcu() or call_rcu_tasks_trace() when\nreleasing the last ref-counter of bpf map. The newly-added rcu_head\nfield in bpf_map shares the same storage space with work field to\nreduce the size of bpf_map."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-1d0b2ea67d2d"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/62fca83303d608ad4fec3f7428c8685680bb01b0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/62fca83303d608ad4fec3f7428c8685680bb01b0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f91cd728b10c51f6d4a39957ccd56d1e802fc8ee",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f91cd728b10c51f6d4a39957ccd56d1e802fc8ee"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bfd9b20c4862f41d4590fde11d70a5eeae53dcc5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bfd9b20c4862f41d4590fde11d70a5eeae53dcc5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/876673364161da50eed6b472d746ef88242b2368",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/876673364161da50eed6b472d746ef88242b2368"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Defer the free of inner map when necessary\n\nWhen updating or deleting an inner map in map array or map htab, the map\nmay still be accessed by non-sleepable program or sleepable program.\nHowever bpf_map_fd_put_ptr() decreases the ref-counter of the inner map\ndirectly through bpf_map_put(), if the ref-counter is the last one\n(which is true for most cases), the inner map will be freed by\nops->map_free() in a kworker. But for now, most .map_free() callbacks\ndon't use synchronize_rcu() or its variants to wait for the elapse of a\nRCU grace period, so after the invocation of ops->map_free completes,\nthe bpf program which is accessing the inner map may incur\nuse-after-free problem.\n\nFix the free of inner map by invoking bpf_map_free_deferred() after both\none RCU grace period and one tasks trace RCU grace period if the inner\nmap has been removed from the outer map before. The deferment is\naccomplished by using call_rcu() or call_rcu_tasks_trace() when\nreleasing the last ref-counter of bpf map. The newly-added rcu_head\nfield in bpf_map shares the same storage space with work field to\nreduce the size of bpf_map."
+          }
+        ],
+        "id": "CVE-2023-52447",
+        "lastModified": "2024-02-22T19:07:27.197",
+        "metrics": {},
+        "published": "2024-02-22T17:15:08.580",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/62fca83303d608ad4fec3f7428c8685680bb01b0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/876673364161da50eed6b472d746ef88242b2368"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bfd9b20c4862f41d4590fde11d70a5eeae53dcc5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f91cd728b10c51f6d4a39957ccd56d1e802fc8ee"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

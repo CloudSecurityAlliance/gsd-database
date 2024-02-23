@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52449"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmtd: Fix gluebi NULL pointer dereference caused by ftl notifier\n\nIf both ftl.ko and gluebi.ko are loaded, the notifier of ftl\ntriggers NULL pointer dereference when trying to access\n\u2018gluebi->desc\u2019 in gluebi_read().\n\nubi_gluebi_init\n  ubi_register_volume_notifier\n    ubi_enumerate_volumes\n      ubi_notify_all\n        gluebi_notify    nb->notifier_call()\n          gluebi_create\n            mtd_device_register\n              mtd_device_parse_register\n                add_mtd_device\n                  blktrans_notify_add   not->add()\n                    ftl_add_mtd         tr->add_mtd()\n                      scan_header\n                        mtd_read\n                          mtd_read_oob\n                            mtd_read_oob_std\n                              gluebi_read   mtd->read()\n                                gluebi->desc - NULL\n\nDetailed reproduction information available at the Link [1],\n\nIn the normal case, obtain gluebi->desc in the gluebi_get_device(),\nand access gluebi->desc in the gluebi_read(). However,\ngluebi_get_device() is not executed in advance in the\nftl_add_mtd() process, which leads to NULL pointer dereference.\n\nThe solution for the gluebi module is to run jffs2 on the UBI\nvolume without considering working with ftl or mtdblock [2].\nTherefore, this problem can be avoided by preventing gluebi from\ncreating the mtdblock device after creating mtd partition of the\ntype MTD_UBIVOLUME.",
       "id": "GSD-2023-52449",
       "modified": "2024-02-21T06:01:53.385555Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52449",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "2ba3d76a1e29",
+                          "version_value": "aeba358bcc8f"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.31"
+                              },
+                              {
+                                "lessThan": "2.6.31",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.306",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmtd: Fix gluebi NULL pointer dereference caused by ftl notifier\n\nIf both ftl.ko and gluebi.ko are loaded, the notifier of ftl\ntriggers NULL pointer dereference when trying to access\n\u2018gluebi->desc\u2019 in gluebi_read().\n\nubi_gluebi_init\n  ubi_register_volume_notifier\n    ubi_enumerate_volumes\n      ubi_notify_all\n        gluebi_notify    nb->notifier_call()\n          gluebi_create\n            mtd_device_register\n              mtd_device_parse_register\n                add_mtd_device\n                  blktrans_notify_add   not->add()\n                    ftl_add_mtd         tr->add_mtd()\n                      scan_header\n                        mtd_read\n                          mtd_read_oob\n                            mtd_read_oob_std\n                              gluebi_read   mtd->read()\n                                gluebi->desc - NULL\n\nDetailed reproduction information available at the Link [1],\n\nIn the normal case, obtain gluebi->desc in the gluebi_get_device(),\nand access gluebi->desc in the gluebi_read(). However,\ngluebi_get_device() is not executed in advance in the\nftl_add_mtd() process, which leads to NULL pointer dereference.\n\nThe solution for the gluebi module is to run jffs2 on the UBI\nvolume without considering working with ftl or mtdblock [2].\nTherefore, this problem can be avoided by preventing gluebi from\ncreating the mtdblock device after creating mtd partition of the\ntype MTD_UBIVOLUME."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-1d0b2ea67d2d"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/aeba358bcc8ffddf9b4a9bd0e5ec9eb338d46022",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/aeba358bcc8ffddf9b4a9bd0e5ec9eb338d46022"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1bf4fe14e97cda621522eb2f28b0a4e87c5b0745",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1bf4fe14e97cda621522eb2f28b0a4e87c5b0745"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/001a3f59d8c914ef8273461d4bf495df384cc5f8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/001a3f59d8c914ef8273461d4bf495df384cc5f8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d8ac2537763b54d278b80b2b080e1652523c7d4c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d8ac2537763b54d278b80b2b080e1652523c7d4c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5389407bba1eab1266c6d83e226fb0840cb98dd5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5389407bba1eab1266c6d83e226fb0840cb98dd5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cfd7c9d260dc0a3baaea05a122a19ab91e193c65",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cfd7c9d260dc0a3baaea05a122a19ab91e193c65"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b36aaa64d58aaa2f2cbc8275e89bae76a2b6c3dc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b36aaa64d58aaa2f2cbc8275e89bae76a2b6c3dc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a43bdc376deab5fff1ceb93dca55bcab8dbdc1d6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a43bdc376deab5fff1ceb93dca55bcab8dbdc1d6"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmtd: Fix gluebi NULL pointer dereference caused by ftl notifier\n\nIf both ftl.ko and gluebi.ko are loaded, the notifier of ftl\ntriggers NULL pointer dereference when trying to access\n\u2018gluebi->desc\u2019 in gluebi_read().\n\nubi_gluebi_init\n  ubi_register_volume_notifier\n    ubi_enumerate_volumes\n      ubi_notify_all\n        gluebi_notify    nb->notifier_call()\n          gluebi_create\n            mtd_device_register\n              mtd_device_parse_register\n                add_mtd_device\n                  blktrans_notify_add   not->add()\n                    ftl_add_mtd         tr->add_mtd()\n                      scan_header\n                        mtd_read\n                          mtd_read_oob\n                            mtd_read_oob_std\n                              gluebi_read   mtd->read()\n                                gluebi->desc - NULL\n\nDetailed reproduction information available at the Link [1],\n\nIn the normal case, obtain gluebi->desc in the gluebi_get_device(),\nand access gluebi->desc in the gluebi_read(). However,\ngluebi_get_device() is not executed in advance in the\nftl_add_mtd() process, which leads to NULL pointer dereference.\n\nThe solution for the gluebi module is to run jffs2 on the UBI\nvolume without considering working with ftl or mtdblock [2].\nTherefore, this problem can be avoided by preventing gluebi from\ncreating the mtdblock device after creating mtd partition of the\ntype MTD_UBIVOLUME."
+          }
+        ],
+        "id": "CVE-2023-52449",
+        "lastModified": "2024-02-22T19:07:27.197",
+        "metrics": {},
+        "published": "2024-02-22T17:15:08.677",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/001a3f59d8c914ef8273461d4bf495df384cc5f8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1bf4fe14e97cda621522eb2f28b0a4e87c5b0745"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5389407bba1eab1266c6d83e226fb0840cb98dd5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a43bdc376deab5fff1ceb93dca55bcab8dbdc1d6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/aeba358bcc8ffddf9b4a9bd0e5ec9eb338d46022"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b36aaa64d58aaa2f2cbc8275e89bae76a2b6c3dc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cfd7c9d260dc0a3baaea05a122a19ab91e193c65"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d8ac2537763b54d278b80b2b080e1652523c7d4c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

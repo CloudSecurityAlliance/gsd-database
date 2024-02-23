@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52451"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\npowerpc/pseries/memhp: Fix access beyond end of drmem array\n\ndlpar_memory_remove_by_index() may access beyond the bounds of the\ndrmem lmb array when the LMB lookup fails to match an entry with the\ngiven DRC index. When the search fails, the cursor is left pointing to\n&drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the\nlast valid entry in the array. The debug message at the end of the\nfunction then dereferences this pointer:\n\n        pr_debug(\"Failed to hot-remove memory at %llx\\n\",\n                 lmb->base_addr);\n\nThis was found by inspection and confirmed with KASAN:\n\n  pseries-hotplug-mem: Attempting to hot-remove LMB, drc index 1234\n  ==================================================================\n  BUG: KASAN: slab-out-of-bounds in dlpar_memory+0x298/0x1658\n  Read of size 8 at addr c000000364e97fd0 by task bash/949\n\n  dump_stack_lvl+0xa4/0xfc (unreliable)\n  print_report+0x214/0x63c\n  kasan_report+0x140/0x2e0\n  __asan_load8+0xa8/0xe0\n  dlpar_memory+0x298/0x1658\n  handle_dlpar_errorlog+0x130/0x1d0\n  dlpar_store+0x18c/0x3e0\n  kobj_attr_store+0x68/0xa0\n  sysfs_kf_write+0xc4/0x110\n  kernfs_fop_write_iter+0x26c/0x390\n  vfs_write+0x2d4/0x4e0\n  ksys_write+0xac/0x1a0\n  system_call_exception+0x268/0x530\n  system_call_vectored_common+0x15c/0x2ec\n\n  Allocated by task 1:\n   kasan_save_stack+0x48/0x80\n   kasan_set_track+0x34/0x50\n   kasan_save_alloc_info+0x34/0x50\n   __kasan_kmalloc+0xd0/0x120\n   __kmalloc+0x8c/0x320\n   kmalloc_array.constprop.0+0x48/0x5c\n   drmem_init+0x2a0/0x41c\n   do_one_initcall+0xe0/0x5c0\n   kernel_init_freeable+0x4ec/0x5a0\n   kernel_init+0x30/0x1e0\n   ret_from_kernel_user_thread+0x14/0x1c\n\n  The buggy address belongs to the object at c000000364e80000\n   which belongs to the cache kmalloc-128k of size 131072\n  The buggy address is located 0 bytes to the right of\n   allocated 98256-byte region [c000000364e80000, c000000364e97fd0)\n\n  ==================================================================\n  pseries-hotplug-mem: Failed to hot-remove memory at 0\n\nLog failed lookups with a separate message and dereference the\ncursor only when it points to a valid entry.",
       "id": "GSD-2023-52451",
       "modified": "2024-02-21T06:01:53.428478Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52451",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "51925fb3c5c9",
+                          "version_value": "bb79613a9a70"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.1"
+                              },
+                              {
+                                "lessThan": "4.1",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.306",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npowerpc/pseries/memhp: Fix access beyond end of drmem array\n\ndlpar_memory_remove_by_index() may access beyond the bounds of the\ndrmem lmb array when the LMB lookup fails to match an entry with the\ngiven DRC index. When the search fails, the cursor is left pointing to\n&drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the\nlast valid entry in the array. The debug message at the end of the\nfunction then dereferences this pointer:\n\n        pr_debug(\"Failed to hot-remove memory at %llx\\n\",\n                 lmb->base_addr);\n\nThis was found by inspection and confirmed with KASAN:\n\n  pseries-hotplug-mem: Attempting to hot-remove LMB, drc index 1234\n  ==================================================================\n  BUG: KASAN: slab-out-of-bounds in dlpar_memory+0x298/0x1658\n  Read of size 8 at addr c000000364e97fd0 by task bash/949\n\n  dump_stack_lvl+0xa4/0xfc (unreliable)\n  print_report+0x214/0x63c\n  kasan_report+0x140/0x2e0\n  __asan_load8+0xa8/0xe0\n  dlpar_memory+0x298/0x1658\n  handle_dlpar_errorlog+0x130/0x1d0\n  dlpar_store+0x18c/0x3e0\n  kobj_attr_store+0x68/0xa0\n  sysfs_kf_write+0xc4/0x110\n  kernfs_fop_write_iter+0x26c/0x390\n  vfs_write+0x2d4/0x4e0\n  ksys_write+0xac/0x1a0\n  system_call_exception+0x268/0x530\n  system_call_vectored_common+0x15c/0x2ec\n\n  Allocated by task 1:\n   kasan_save_stack+0x48/0x80\n   kasan_set_track+0x34/0x50\n   kasan_save_alloc_info+0x34/0x50\n   __kasan_kmalloc+0xd0/0x120\n   __kmalloc+0x8c/0x320\n   kmalloc_array.constprop.0+0x48/0x5c\n   drmem_init+0x2a0/0x41c\n   do_one_initcall+0xe0/0x5c0\n   kernel_init_freeable+0x4ec/0x5a0\n   kernel_init+0x30/0x1e0\n   ret_from_kernel_user_thread+0x14/0x1c\n\n  The buggy address belongs to the object at c000000364e80000\n   which belongs to the cache kmalloc-128k of size 131072\n  The buggy address is located 0 bytes to the right of\n   allocated 98256-byte region [c000000364e80000, c000000364e97fd0)\n\n  ==================================================================\n  pseries-hotplug-mem: Failed to hot-remove memory at 0\n\nLog failed lookups with a separate message and dereference the\ncursor only when it points to a valid entry."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-1d0b2ea67d2d"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/bb79613a9a704469ddb8d6c6029d532a5cea384c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bb79613a9a704469ddb8d6c6029d532a5cea384c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9b5f03500bc5b083c0df696d7dd169d7ef3dd0c7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9b5f03500bc5b083c0df696d7dd169d7ef3dd0c7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b582aa1f66411d4adcc1aa55b8c575683fb4687e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b582aa1f66411d4adcc1aa55b8c575683fb4687e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/999a27b3ce9a69d54ccd5db000ec3a447bc43e6d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/999a27b3ce9a69d54ccd5db000ec3a447bc43e6d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/026fd977dc50ff4a5e09bfb0603557f104d3f3a0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/026fd977dc50ff4a5e09bfb0603557f104d3f3a0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/df16afba2378d985359812c865a15c05c70a967e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/df16afba2378d985359812c865a15c05c70a967e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/708a4b59baad96c4718dc0bd3a3427d3ab22fedc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/708a4b59baad96c4718dc0bd3a3427d3ab22fedc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bd68ffce69f6cf8ddd3a3c32549d1d2275e49fc5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bd68ffce69f6cf8ddd3a3c32549d1d2275e49fc5"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npowerpc/pseries/memhp: Fix access beyond end of drmem array\n\ndlpar_memory_remove_by_index() may access beyond the bounds of the\ndrmem lmb array when the LMB lookup fails to match an entry with the\ngiven DRC index. When the search fails, the cursor is left pointing to\n&drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the\nlast valid entry in the array. The debug message at the end of the\nfunction then dereferences this pointer:\n\n        pr_debug(\"Failed to hot-remove memory at %llx\\n\",\n                 lmb->base_addr);\n\nThis was found by inspection and confirmed with KASAN:\n\n  pseries-hotplug-mem: Attempting to hot-remove LMB, drc index 1234\n  ==================================================================\n  BUG: KASAN: slab-out-of-bounds in dlpar_memory+0x298/0x1658\n  Read of size 8 at addr c000000364e97fd0 by task bash/949\n\n  dump_stack_lvl+0xa4/0xfc (unreliable)\n  print_report+0x214/0x63c\n  kasan_report+0x140/0x2e0\n  __asan_load8+0xa8/0xe0\n  dlpar_memory+0x298/0x1658\n  handle_dlpar_errorlog+0x130/0x1d0\n  dlpar_store+0x18c/0x3e0\n  kobj_attr_store+0x68/0xa0\n  sysfs_kf_write+0xc4/0x110\n  kernfs_fop_write_iter+0x26c/0x390\n  vfs_write+0x2d4/0x4e0\n  ksys_write+0xac/0x1a0\n  system_call_exception+0x268/0x530\n  system_call_vectored_common+0x15c/0x2ec\n\n  Allocated by task 1:\n   kasan_save_stack+0x48/0x80\n   kasan_set_track+0x34/0x50\n   kasan_save_alloc_info+0x34/0x50\n   __kasan_kmalloc+0xd0/0x120\n   __kmalloc+0x8c/0x320\n   kmalloc_array.constprop.0+0x48/0x5c\n   drmem_init+0x2a0/0x41c\n   do_one_initcall+0xe0/0x5c0\n   kernel_init_freeable+0x4ec/0x5a0\n   kernel_init+0x30/0x1e0\n   ret_from_kernel_user_thread+0x14/0x1c\n\n  The buggy address belongs to the object at c000000364e80000\n   which belongs to the cache kmalloc-128k of size 131072\n  The buggy address is located 0 bytes to the right of\n   allocated 98256-byte region [c000000364e80000, c000000364e97fd0)\n\n  ==================================================================\n  pseries-hotplug-mem: Failed to hot-remove memory at 0\n\nLog failed lookups with a separate message and dereference the\ncursor only when it points to a valid entry."
+          }
+        ],
+        "id": "CVE-2023-52451",
+        "lastModified": "2024-02-22T19:07:27.197",
+        "metrics": {},
+        "published": "2024-02-22T17:15:08.777",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/026fd977dc50ff4a5e09bfb0603557f104d3f3a0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/708a4b59baad96c4718dc0bd3a3427d3ab22fedc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/999a27b3ce9a69d54ccd5db000ec3a447bc43e6d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9b5f03500bc5b083c0df696d7dd169d7ef3dd0c7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b582aa1f66411d4adcc1aa55b8c575683fb4687e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bb79613a9a704469ddb8d6c6029d532a5cea384c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bd68ffce69f6cf8ddd3a3c32549d1d2275e49fc5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/df16afba2378d985359812c865a15c05c70a967e"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

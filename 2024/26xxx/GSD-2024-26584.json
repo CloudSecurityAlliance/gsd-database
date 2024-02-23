@@ -114,10 +114,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: tls: handle backlogging of crypto requests\n\nSince we're setting the CRYPTO_TFM_REQ_MAY_BACKLOG flag on our\nrequests to the crypto API, crypto_aead_{encrypt,decrypt} can return\n -EBUSY instead of -EINPROGRESS in valid situations. For example, when\nthe cryptd queue for AESNI is full (easy to trigger with an\nartificially low cryptd.cryptd_max_cpu_qlen), requests will be enqueued\nto the backlog but still processed. In that case, the async callback\nwill also be called twice: first with err == -EINPROGRESS, which it\nseems we can just ignore, then with err == 0.\n\nCompared to Sabrina's original patch this version uses the new\ntls_*crypt_async_wait() helpers and converts the EBUSY to\nEINPROGRESS to avoid having to modify all the error handling\npaths. The handling is identical."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net: tls: manejar el retraso de solicitudes criptogr\u00e1ficas Dado que estamos configurando el indicador CRYPTO_TFM_REQ_MAY_BACKLOG en nuestras solicitudes a la API criptogr\u00e1fica, crypto_aead_{encrypt,decrypt} puede devolver -EBUSY en lugar de - EINPROGRESS en situaciones v\u00e1lidas. Por ejemplo, cuando la cola cryptd para AESNI est\u00e1 llena (f\u00e1cil de activar con un cryptd.cryptd_max_cpu_qlen artificialmente bajo), las solicitudes se pondr\u00e1n en cola en el trabajo pendiente, pero a\u00fan as\u00ed se procesar\u00e1n. En ese caso, la devoluci\u00f3n de llamada as\u00edncrona tambi\u00e9n se llamar\u00e1 dos veces: primero con err == -EINPROGRESS, que parece que podemos ignorar, luego con err == 0. En comparaci\u00f3n con el parche original de Sabrina, esta versi\u00f3n usa el nuevo tls_*crypt_async_wait( ) ayuda y convierte EBUSY a EINPROGRESS para evitar tener que modificar todas las rutas de manejo de errores. El manejo es id\u00e9ntico."
           }
         ],
         "id": "CVE-2024-26584",
-        "lastModified": "2024-02-21T15:15:09.420",
+        "lastModified": "2024-02-22T19:07:27.197",
         "metrics": {},
         "published": "2024-02-21T15:15:09.420",
         "references": [
@@ -127,7 +131,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52445"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix use after free on context disconnection\n\nUpon module load, a kthread is created targeting the\npvr2_context_thread_func function, which may call pvr2_context_destroy\nand thus call kfree() on the context object. However, that might happen\nbefore the usb hub_event handler is able to notify the driver. This\npatch adds a sanity check before the invalid read reported by syzbot,\nwithin the context disconnection call stack.",
       "id": "GSD-2023-52445",
       "modified": "2024-02-21T06:01:53.466449Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52445",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "e5be15c63804",
+                          "version_value": "ec36c134dd02"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.26"
+                              },
+                              {
+                                "lessThan": "2.6.26",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.306",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix use after free on context disconnection\n\nUpon module load, a kthread is created targeting the\npvr2_context_thread_func function, which may call pvr2_context_destroy\nand thus call kfree() on the context object. However, that might happen\nbefore the usb hub_event handler is able to notify the driver. This\npatch adds a sanity check before the invalid read reported by syzbot,\nwithin the context disconnection call stack."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-1d0b2ea67d2d"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ec36c134dd020d28e312c2f1766f85525e747aab",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ec36c134dd020d28e312c2f1766f85525e747aab"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/47aa8fcd5e8b5563af4042a00f25ba89bef8f33d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/47aa8fcd5e8b5563af4042a00f25ba89bef8f33d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3233d8bf7893550045682192cb227af7fa3defeb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3233d8bf7893550045682192cb227af7fa3defeb"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ec3634ebe23fc3c44ebc67c6d25917300bc68c08",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ec3634ebe23fc3c44ebc67c6d25917300bc68c08"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/30773ea47d41773f9611ffb4ebc9bda9d19a9e7e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/30773ea47d41773f9611ffb4ebc9bda9d19a9e7e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2cf0005d315549b8d2b940ff96a66c2a889aa795",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2cf0005d315549b8d2b940ff96a66c2a889aa795"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/437b5f57732bb4cc32cc9f8895d2010ee9ff521c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/437b5f57732bb4cc32cc9f8895d2010ee9ff521c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ded85b0c0edd8f45fec88783d7555a5b982449c1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ded85b0c0edd8f45fec88783d7555a5b982449c1"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix use after free on context disconnection\n\nUpon module load, a kthread is created targeting the\npvr2_context_thread_func function, which may call pvr2_context_destroy\nand thus call kfree() on the context object. However, that might happen\nbefore the usb hub_event handler is able to notify the driver. This\npatch adds a sanity check before the invalid read reported by syzbot,\nwithin the context disconnection call stack."
+          }
+        ],
+        "id": "CVE-2023-52445",
+        "lastModified": "2024-02-22T19:07:27.197",
+        "metrics": {},
+        "published": "2024-02-22T17:15:08.477",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2cf0005d315549b8d2b940ff96a66c2a889aa795"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/30773ea47d41773f9611ffb4ebc9bda9d19a9e7e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3233d8bf7893550045682192cb227af7fa3defeb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/437b5f57732bb4cc32cc9f8895d2010ee9ff521c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/47aa8fcd5e8b5563af4042a00f25ba89bef8f33d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ded85b0c0edd8f45fec88783d7555a5b982449c1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec3634ebe23fc3c44ebc67c6d25917300bc68c08"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec36c134dd020d28e312c2f1766f85525e747aab"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -21,93 +21,7 @@
       "CVE_data_meta": {
         "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52437",
-        "STATE": "PUBLIC"
-      },
-      "affects": {
-        "vendor": {
-          "vendor_data": [
-            {
-              "product": {
-                "product_data": [
-                  {
-                    "product_name": "Linux",
-                    "version": {
-                      "version_data": [
-                        {
-                          "version_affected": "<",
-                          "version_name": "9e86dffd0b02",
-                          "version_value": "84c39986fe6d"
-                        },
-                        {
-                          "version_affected": "<",
-                          "version_name": "5e2cf333b7bd",
-                          "version_value": "bed0acf330b2"
-                        },
-                        {
-                          "version_value": "not down converted",
-                          "x_cve_json_5_version_data": {
-                            "defaultStatus": "affected",
-                            "versions": [
-                              {
-                                "lessThanOrEqual": "5.15.*",
-                                "status": "unaffected",
-                                "version": "5.15.148",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.1.*",
-                                "status": "unaffected",
-                                "version": "6.1.74",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.1.*",
-                                "status": "unaffected",
-                                "version": "6.1.75",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.6.*",
-                                "status": "unaffected",
-                                "version": "6.6.13",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.6.*",
-                                "status": "unaffected",
-                                "version": "6.6.14",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.7.*",
-                                "status": "unaffected",
-                                "version": "6.7.1",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "6.7.*",
-                                "status": "unaffected",
-                                "version": "6.7.2",
-                                "versionType": "custom"
-                              },
-                              {
-                                "lessThanOrEqual": "*",
-                                "status": "unaffected",
-                                "version": "6.8-rc1",
-                                "versionType": "original_commit_for_fix"
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "vendor_name": "Linux"
-            }
-          ]
-        }
+        "STATE": "REJECT"
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -116,66 +30,7 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d\"\n\nThis reverts commit 5e2cf333b7bd5d3e62595a44d598a254c697cd74.\n\nThat commit introduced the following race and can cause system hung.\n\n md_write_start:             raid5d:\n // mddev->in_sync == 1\n set \"MD_SB_CHANGE_PENDING\"\n                            // running before md_write_start wakeup it\n                             waiting \"MD_SB_CHANGE_PENDING\" cleared\n                             >>>>>>>>> hung\n wakeup mddev->thread\n ...\n waiting \"MD_SB_CHANGE_PENDING\" cleared\n >>>> hung, raid5d should clear this flag\n but get hung by same flag.\n\nThe issue reverted commit fixing is fixed by last patch in a new way."
-          }
-        ]
-      },
-      "generator": {
-        "engine": "bippy-03f60121d1f8"
-      },
-      "problemtype": {
-        "problemtype_data": [
-          {
-            "description": [
-              {
-                "lang": "eng",
-                "value": "n/a"
-              }
-            ]
-          }
-        ]
-      },
-      "references": {
-        "reference_data": [
-          {
-            "name": "https://git.kernel.org/stable/c/84c39986fe6dd77aa15f08712339f5d4eb7dbe27",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/84c39986fe6dd77aa15f08712339f5d4eb7dbe27"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/bed0acf330b2c50c688f6d9cfbcac2aa57a8e613",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/bed0acf330b2c50c688f6d9cfbcac2aa57a8e613"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/cfa46838285814c3a27faacf7357f0a65bb5d152",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/cfa46838285814c3a27faacf7357f0a65bb5d152"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/e16a0bbdb7e590a6607b0d82915add738c03c069",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/e16a0bbdb7e590a6607b0d82915add738c03c069"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/aab69ef769707ad987ff905d79e0bd6591812580",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/aab69ef769707ad987ff905d79e0bd6591812580"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/0de40f76d567133b871cd6ad46bb87afbce46983",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/0de40f76d567133b871cd6ad46bb87afbce46983"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/87165c64fe1a98bbab7280c58df3c83be2c98478",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/87165c64fe1a98bbab7280c58df3c83be2c98478"
-          },
-          {
-            "name": "https://git.kernel.org/stable/c/bed9e27baf52a09b7ba2a3714f1e24e17ced386d",
-            "refsource": "MISC",
-            "url": "https://git.kernel.org/stable/c/bed9e27baf52a09b7ba2a3714f1e24e17ced386d"
+            "value": "** REJECT ** This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
           }
         ]
       }
@@ -185,49 +40,16 @@
         "descriptions": [
           {
             "lang": "en",
-            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d\"\n\nThis reverts commit 5e2cf333b7bd5d3e62595a44d598a254c697cd74.\n\nThat commit introduced the following race and can cause system hung.\n\n md_write_start:             raid5d:\n // mddev->in_sync == 1\n set \"MD_SB_CHANGE_PENDING\"\n                            // running before md_write_start wakeup it\n                             waiting \"MD_SB_CHANGE_PENDING\" cleared\n                             >>>>>>>>> hung\n wakeup mddev->thread\n ...\n waiting \"MD_SB_CHANGE_PENDING\" cleared\n >>>> hung, raid5d should clear this flag\n but get hung by same flag.\n\nThe issue reverted commit fixing is fixed by last patch in a new way."
+            "value": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
           }
         ],
         "id": "CVE-2023-52437",
-        "lastModified": "2024-02-20T21:52:55.187",
+        "lastModified": "2024-02-22T13:15:08.020",
         "metrics": {},
         "published": "2024-02-20T21:15:08.107",
-        "references": [
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/0de40f76d567133b871cd6ad46bb87afbce46983"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/84c39986fe6dd77aa15f08712339f5d4eb7dbe27"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/87165c64fe1a98bbab7280c58df3c83be2c98478"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/aab69ef769707ad987ff905d79e0bd6591812580"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/bed0acf330b2c50c688f6d9cfbcac2aa57a8e613"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/bed9e27baf52a09b7ba2a3714f1e24e17ced386d"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/cfa46838285814c3a27faacf7357f0a65bb5d152"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/e16a0bbdb7e590a6607b0d82915add738c03c069"
-          }
-        ],
+        "references": [],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Rejected"
       }
     }
   }
