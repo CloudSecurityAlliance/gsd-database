@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52462"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: fix check for attempt to corrupt spilled pointer\n\nWhen register is spilled onto a stack as a 1/2/4-byte register, we set\nslot_type[BPF_REG_SIZE - 1] (plus potentially few more below it,\ndepending on actual spill size). So to check if some stack slot has\nspilled register we need to consult slot_type[7], not slot_type[0].\n\nTo avoid the need to remember and double-check this in the future, just\nuse is_spilled_reg() helper.",
       "id": "GSD-2023-52462",
       "modified": "2024-02-21T06:01:53.424394Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52462",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "cdd73a5ed084",
+                          "version_value": "2757f17972d8"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "07c286c10a9c",
+                          "version_value": "67e6707f0735"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "27113c59b6d0",
+                          "version_value": "fc3e3c50a0a4"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,100 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: fix check for attempt to corrupt spilled pointer\n\nWhen register is spilled onto a stack as a 1/2/4-byte register, we set\nslot_type[BPF_REG_SIZE - 1] (plus potentially few more below it,\ndepending on actual spill size). So to check if some stack slot has\nspilled register we need to consult slot_type[7], not slot_type[0].\n\nTo avoid the need to remember and double-check this in the future, just\nuse is_spilled_reg() helper."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2757f17972d87773b3677777f5682510f13c66ef",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2757f17972d87773b3677777f5682510f13c66ef"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/67e6707f07354ed1acb4e65552e97c60cf9d69cf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/67e6707f07354ed1acb4e65552e97c60cf9d69cf"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fc3e3c50a0a4cac1463967c110686189e4a59104",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fc3e3c50a0a4cac1463967c110686189e4a59104"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8dc15b0670594543c356567a1a45b0182ec63174",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8dc15b0670594543c356567a1a45b0182ec63174"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/40617d45ea05535105e202a8a819e388a2b1f036",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/40617d45ea05535105e202a8a819e388a2b1f036"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ab125ed3ec1c10ccc36bc98c7a4256ad114a3dae",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ab125ed3ec1c10ccc36bc98c7a4256ad114a3dae"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: fix check for attempt to corrupt spilled pointer\n\nWhen register is spilled onto a stack as a 1/2/4-byte register, we set\nslot_type[BPF_REG_SIZE - 1] (plus potentially few more below it,\ndepending on actual spill size). So to check if some stack slot has\nspilled register we need to consult slot_type[7], not slot_type[0].\n\nTo avoid the need to remember and double-check this in the future, just\nuse is_spilled_reg() helper."
+          }
+        ],
+        "id": "CVE-2023-52462",
+        "lastModified": "2024-02-23T16:14:43.447",
+        "metrics": {},
+        "published": "2024-02-23T15:15:08.540",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2757f17972d87773b3677777f5682510f13c66ef"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/40617d45ea05535105e202a8a819e388a2b1f036"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/67e6707f07354ed1acb4e65552e97c60cf9d69cf"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8dc15b0670594543c356567a1a45b0182ec63174"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ab125ed3ec1c10ccc36bc98c7a4256ad114a3dae"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fc3e3c50a0a4cac1463967c110686189e4a59104"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -25,10 +25,8 @@
     "cve.org": {
       "CVE_data_meta": {
         "ASSIGNER": "cna@mongodb.com",
-        "DATE_PUBLIC": "2022-04-12T20:00:00.000Z",
         "ID": "CVE-2021-32040",
-        "STATE": "PUBLIC",
-        "TITLE": "Large aggregation pipelines with a specific stage can crash mongod under default configuration"
+        "STATE": "PUBLIC"
       },
       "affects": {
         "vendor": {
@@ -46,9 +44,9 @@
                           "version_value": "5.0.4"
                         },
                         {
-                          "version_affected": "<",
+                          "version_affected": "<=",
                           "version_name": "4.4",
-                          "version_value": "4.4.11"
+                          "version_value": "4.4.28"
                         },
                         {
                           "version_affected": "<",
@@ -72,7 +70,7 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "It may be possible to have an extremely long aggregation pipeline in conjunction with a specific stage/operator and cause a stack overflow due to the size of the stack frames used by that stage. If an attacker could cause such an aggregation to occur, they could maliciously crash MongoDB in a DoS attack. This vulnerability affects MongoDB versions prior to 5.0.4, 4.4.11, 4.2.16."
+            "value": "It may be possible to have an extremely long aggregation pipeline in conjunction with a specific stage/operator and cause a stack overflow due to the size of the stack frames used by that stage. If an attacker could cause such an aggregation to occur, they could maliciously crash MongoDB in a DoS attack. This vulnerability affects MongoDB Server v4.4 versions prior to and including 4.4.28, MongoDB Server v5.0 versions prior to 5.0.4 and MongoDB Server v4.2 versions prior to 4.2.16.\n\nWorkaround:\u00a0>= v4.2.16 users and all v4.4 users can add the --setParameter internalPipelineLengthLimit=50 instead of the default 1000 to mongod at startup to prevent a crash.\n\n"
           }
         ]
       },
@@ -80,26 +78,29 @@
         "engine": "Vulnogram 0.0.9"
       },
       "impact": {
-        "cvss": {
-          "attackComplexity": "LOW",
-          "attackVector": "NETWORK",
-          "availabilityImpact": "HIGH",
-          "baseScore": 6.5,
-          "baseSeverity": "MEDIUM",
-          "confidentialityImpact": "NONE",
-          "integrityImpact": "NONE",
-          "privilegesRequired": "LOW",
-          "scope": "UNCHANGED",
-          "userInteraction": "NONE",
-          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
-          "version": "3.1"
-        }
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
       },
       "problemtype": {
         "problemtype_data": [
           {
             "description": [
               {
+                "cweId": "CWE-121",
                 "lang": "eng",
                 "value": "CWE-121 Stack-based Buffer Overflow"
               }
@@ -126,7 +127,7 @@
           },
           {
             "name": "https://security.netapp.com/advisory/ntap-20220609-0005/",
-            "refsource": "CONFIRM",
+            "refsource": "MISC",
             "url": "https://security.netapp.com/advisory/ntap-20220609-0005/"
           }
         ]
@@ -136,158 +137,196 @@
       },
       "work_around": [
         {
-          "lang": "eng",
-          "value": ">=4.2.16 users can add the --setParameter internalPipelineLengthLimit=50 instead of the default 1000 to mongod at startup to prevent a crash."
+          "lang": "en",
+          "supportingMedia": [
+            {
+              "base64": false,
+              "type": "text/html",
+              "value": "&gt;= v4.2.16 users and all v4.4 users can add the --setParameter internalPipelineLengthLimit=50 instead of the default 1000 to mongod at startup to prevent a crash."
+            }
+          ],
+          "value": ">= v4.2.16 users and all v4.4 users can add the --setParameter internalPipelineLengthLimit=50 instead of the default 1000 to mongod at startup to prevent a crash."
         }
       ]
     },
     "nvd.nist.gov": {
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
+      "cve": {
+        "configurations": [
           {
-            "children": [],
-            "cpe_match": [
+            "nodes": [
               {
-                "cpe23Uri": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "5.0.4",
-                "versionStartIncluding": "5.0.0",
-                "vulnerable": true
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E9E9B009-9C50-4181-BF09-5A62CC2A69F2",
+                    "versionEndExcluding": "4.2.16",
+                    "versionStartIncluding": "4.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "63C08E83-4BD2-413A-BEC3-8CC895A66A1C",
+                    "versionEndExcluding": "4.4.11",
+                    "versionStartIncluding": "4.4.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "F8601A2F-3061-47D5-8E27-5FEC58D25637",
+                    "versionEndExcluding": "5.0.4",
+                    "versionStartIncluding": "5.0.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "It may be possible to have an extremely long aggregation pipeline in conjunction with a specific stage/operator and cause a stack overflow due to the size of the stack frames used by that stage. If an attacker could cause such an aggregation to occur, they could maliciously crash MongoDB in a DoS attack. This vulnerability affects MongoDB Server v4.4 versions prior to and including 4.4.28, MongoDB Server v5.0 versions prior to 5.0.4 and MongoDB Server v4.2 versions prior to 4.2.16.\n\nWorkaround:\u00a0>= v4.2.16 users and all v4.4 users can add the --setParameter internalPipelineLengthLimit=50 instead of the default 1000 to mongod at startup to prevent a crash.\n\n"
+          },
+          {
+            "lang": "es",
+            "value": "Puede ser posible tener una tuber\u00eda de agregaci\u00f3n extremadamente larga en conjunto con una etapa/operador espec\u00edfico y causar un desbordamiento de pila debido al tama\u00f1o de los marcos de pila usados por esa etapa. Si un atacante pudiera causar tal agregaci\u00f3n, podr\u00eda colapsar MongoDB de forma maliciosa en un ataque DoS. Esta vulnerabilidad afecta a MongoDB versiones anteriores a 5.0.4, 4.4.11 y 4.2.16"
+          }
+        ],
+        "id": "CVE-2021-32040",
+        "lastModified": "2024-02-23T16:15:46.120",
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "acInsufInfo": false,
+              "baseSeverity": "MEDIUM",
+              "cvssData": {
+                "accessComplexity": "LOW",
+                "accessVector": "NETWORK",
+                "authentication": "NONE",
+                "availabilityImpact": "PARTIAL",
+                "baseScore": 5.0,
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+                "version": "2.0"
               },
-              {
-                "cpe23Uri": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "4.4.11",
-                "versionStartIncluding": "4.4.0",
-                "vulnerable": true
+              "exploitabilityScore": 10.0,
+              "impactScore": 2.9,
+              "obtainAllPrivilege": false,
+              "obtainOtherPrivilege": false,
+              "obtainUserPrivilege": false,
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "userInteractionRequired": false
+            }
+          ],
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.5,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
               },
+              "exploitabilityScore": 3.9,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            },
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 6.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 3.6,
+              "source": "cna@mongodb.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2022-04-12T15:15:07.707",
+        "references": [
+          {
+            "source": "cna@mongodb.com",
+            "tags": [
+              "Issue Tracking",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://jira.mongodb.org/browse/SERVER-58203"
+          },
+          {
+            "source": "cna@mongodb.com",
+            "tags": [
+              "Issue Tracking",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://jira.mongodb.org/browse/SERVER-59299"
+          },
+          {
+            "source": "cna@mongodb.com",
+            "tags": [
+              "Issue Tracking",
+              "Patch",
+              "Vendor Advisory"
+            ],
+            "url": "https://jira.mongodb.org/browse/SERVER-60218"
+          },
+          {
+            "source": "cna@mongodb.com",
+            "tags": [
+              "Third Party Advisory"
+            ],
+            "url": "https://security.netapp.com/advisory/ntap-20220609-0005/"
+          }
+        ],
+        "sourceIdentifier": "cna@mongodb.com",
+        "vulnStatus": "Modified",
+        "weaknesses": [
+          {
+            "description": [
               {
-                "cpe23Uri": "cpe:2.3:a:mongodb:mongodb:*:*:*:*:*:*:*:*",
-                "cpe_name": [],
-                "versionEndExcluding": "4.2.16",
-                "versionStartIncluding": "4.2.0",
-                "vulnerable": true
+                "lang": "en",
+                "value": "CWE-787"
               }
             ],
-            "operator": "OR"
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          },
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-121"
+              }
+            ],
+            "source": "cna@mongodb.com",
+            "type": "Secondary"
           }
         ]
-      },
-      "cve": {
-        "CVE_data_meta": {
-          "ASSIGNER": "cna@mongodb.com",
-          "ID": "CVE-2021-32040"
-        },
-        "data_format": "MITRE",
-        "data_type": "CVE",
-        "data_version": "4.0",
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "It may be possible to have an extremely long aggregation pipeline in conjunction with a specific stage/operator and cause a stack overflow due to the size of the stack frames used by that stage. If an attacker could cause such an aggregation to occur, they could maliciously crash MongoDB in a DoS attack. This vulnerability affects MongoDB versions prior to 5.0.4, 4.4.11, 4.2.16."
-            }
-          ]
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-787"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "name": "https://jira.mongodb.org/browse/SERVER-58203",
-              "refsource": "MISC",
-              "tags": [
-                "Issue Tracking",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://jira.mongodb.org/browse/SERVER-58203"
-            },
-            {
-              "name": "https://jira.mongodb.org/browse/SERVER-60218",
-              "refsource": "MISC",
-              "tags": [
-                "Issue Tracking",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://jira.mongodb.org/browse/SERVER-60218"
-            },
-            {
-              "name": "https://jira.mongodb.org/browse/SERVER-59299",
-              "refsource": "MISC",
-              "tags": [
-                "Issue Tracking",
-                "Patch",
-                "Vendor Advisory"
-              ],
-              "url": "https://jira.mongodb.org/browse/SERVER-59299"
-            },
-            {
-              "name": "https://security.netapp.com/advisory/ntap-20220609-0005/",
-              "refsource": "CONFIRM",
-              "tags": [
-                "Third Party Advisory"
-              ],
-              "url": "https://security.netapp.com/advisory/ntap-20220609-0005/"
-            }
-          ]
-        }
-      },
-      "impact": {
-        "baseMetricV2": {
-          "acInsufInfo": false,
-          "cvssV2": {
-            "accessComplexity": "LOW",
-            "accessVector": "NETWORK",
-            "authentication": "NONE",
-            "availabilityImpact": "PARTIAL",
-            "baseScore": 5.0,
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-            "version": "2.0"
-          },
-          "exploitabilityScore": 10.0,
-          "impactScore": 2.9,
-          "obtainAllPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "obtainUserPrivilege": false,
-          "severity": "MEDIUM",
-          "userInteractionRequired": false
-        },
-        "baseMetricV3": {
-          "cvssV3": {
-            "attackComplexity": "LOW",
-            "attackVector": "NETWORK",
-            "availabilityImpact": "HIGH",
-            "baseScore": 7.5,
-            "baseSeverity": "HIGH",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "privilegesRequired": "NONE",
-            "scope": "UNCHANGED",
-            "userInteraction": "NONE",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
-            "version": "3.1"
-          },
-          "exploitabilityScore": 3.9,
-          "impactScore": 3.6
-        }
-      },
-      "lastModifiedDate": "2023-02-03T19:13Z",
-      "publishedDate": "2022-04-12T15:15Z"
+      }
     }
   }
 }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26598"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: vgic-its: Avoid potential UAF in LPI translation cache\n\nThere is a potential UAF scenario in the case of an LPI translation\ncache hit racing with an operation that invalidates the cache, such\nas a DISCARD ITS command. The root of the problem is that\nvgic_its_check_cache() does not elevate the refcount on the vgic_irq\nbefore dropping the lock that serializes refcount changes.\n\nHave vgic_its_check_cache() raise the refcount on the returned vgic_irq\nand add the corresponding decrement after queueing the interrupt.",
       "id": "GSD-2024-26598",
       "modified": "2024-02-20T06:02:29.177591Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,84 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26598",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "d04acadb6490"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +105,109 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: vgic-its: Avoid potential UAF in LPI translation cache\n\nThere is a potential UAF scenario in the case of an LPI translation\ncache hit racing with an operation that invalidates the cache, such\nas a DISCARD ITS command. The root of the problem is that\nvgic_its_check_cache() does not elevate the refcount on the vgic_irq\nbefore dropping the lock that serializes refcount changes.\n\nHave vgic_its_check_cache() raise the refcount on the returned vgic_irq\nand add the corresponding decrement after queueing the interrupt."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/d04acadb6490aa3314f9c9e087691e55de153b88",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d04acadb6490aa3314f9c9e087691e55de153b88"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ba7be666740847d967822bed15500656b26bc703",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ba7be666740847d967822bed15500656b26bc703"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/12c2759ab1343c124ed46ba48f27bd1ef5d2dff4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/12c2759ab1343c124ed46ba48f27bd1ef5d2dff4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/dba788e25f05209adf2b0175eb1691dc89fb1ba6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/dba788e25f05209adf2b0175eb1691dc89fb1ba6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/65b201bf3e9af1b0254243a5881390eda56f72d1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/65b201bf3e9af1b0254243a5881390eda56f72d1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/dd3956a1b3dd11f46488c928cb890d6937d1ca80",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/dd3956a1b3dd11f46488c928cb890d6937d1ca80"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ad362fe07fecf0aba839ff2cc59a3617bd42c33f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ad362fe07fecf0aba839ff2cc59a3617bd42c33f"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: vgic-its: Avoid potential UAF in LPI translation cache\n\nThere is a potential UAF scenario in the case of an LPI translation\ncache hit racing with an operation that invalidates the cache, such\nas a DISCARD ITS command. The root of the problem is that\nvgic_its_check_cache() does not elevate the refcount on the vgic_irq\nbefore dropping the lock that serializes refcount changes.\n\nHave vgic_its_check_cache() raise the refcount on the returned vgic_irq\nand add the corresponding decrement after queueing the interrupt."
+          }
+        ],
+        "id": "CVE-2024-26598",
+        "lastModified": "2024-02-23T16:14:43.447",
+        "metrics": {},
+        "published": "2024-02-23T15:15:09.610",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/12c2759ab1343c124ed46ba48f27bd1ef5d2dff4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/65b201bf3e9af1b0254243a5881390eda56f72d1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ad362fe07fecf0aba839ff2cc59a3617bd42c33f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ba7be666740847d967822bed15500656b26bc703"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d04acadb6490aa3314f9c9e087691e55de153b88"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dba788e25f05209adf2b0175eb1691dc89fb1ba6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dd3956a1b3dd11f46488c928cb890d6937d1ca80"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
