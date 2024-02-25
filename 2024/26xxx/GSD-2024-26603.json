@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26603"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/fpu: Stop relying on userspace for info to fault in xsave buffer\n\nBefore this change, the expected size of the user space buffer was\ntaken from fx_sw->xstate_size. fx_sw->xstate_size can be changed\nfrom user-space, so it is possible construct a sigreturn frame where:\n\n * fx_sw->xstate_size is smaller than the size required by valid bits in\n   fx_sw->xfeatures.\n * user-space unmaps parts of the sigrame fpu buffer so that not all of\n   the buffer required by xrstor is accessible.\n\nIn this case, xrstor tries to restore and accesses the unmapped area\nwhich results in a fault. But fault_in_readable succeeds because buf +\nfx_sw->xstate_size is within the still mapped area, so it goes back and\ntries xrstor again. It will spin in this loop forever.\n\nInstead, fault in the maximum size which can be touched by XRSTOR (taken\nfrom fpstate->user_size).\n\n[ dhansen: tweak subject / changelog ]",
       "id": "GSD-2024-26603",
       "modified": "2024-02-20T06:02:29.086032Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26603",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "fcb3635f5018",
+                          "version_value": "627339cccdc9"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.14"
+                              },
+                              {
+                                "lessThan": "5.14",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc4",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +97,46 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/fpu: Stop relying on userspace for info to fault in xsave buffer\n\nBefore this change, the expected size of the user space buffer was\ntaken from fx_sw->xstate_size. fx_sw->xstate_size can be changed\nfrom user-space, so it is possible construct a sigreturn frame where:\n\n * fx_sw->xstate_size is smaller than the size required by valid bits in\n   fx_sw->xfeatures.\n * user-space unmaps parts of the sigrame fpu buffer so that not all of\n   the buffer required by xrstor is accessible.\n\nIn this case, xrstor tries to restore and accesses the unmapped area\nwhich results in a fault. But fault_in_readable succeeds because buf +\nfx_sw->xstate_size is within the still mapped area, so it goes back and\ntries xrstor again. It will spin in this loop forever.\n\nInstead, fault in the maximum size which can be touched by XRSTOR (taken\nfrom fpstate->user_size).\n\n[ dhansen: tweak subject / changelog ]"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/627339cccdc9166792ecf96bc3c9f711a60ce996",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/627339cccdc9166792ecf96bc3c9f711a60ce996"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b2479ab426cef7ab79a13005650eff956223ced2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b2479ab426cef7ab79a13005650eff956223ced2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/627e28cbb65564e55008315d9e02fbb90478beda",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/627e28cbb65564e55008315d9e02fbb90478beda"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835"
           }
         ]
       }
