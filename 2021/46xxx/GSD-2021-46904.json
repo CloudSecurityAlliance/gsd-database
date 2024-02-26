@@ -1,0 +1,189 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-46904"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hso: fix null-ptr-deref during tty device unregistration\n\nMultiple ttys try to claim the same the minor number causing a double\nunregistration of the same device. The first unregistration succeeds\nbut the next one results in a null-ptr-deref.\n\nThe get_free_serial_index() function returns an available minor number\nbut doesn't assign it immediately. The assignment is done by the caller\nlater. But before this assignment, calls to get_free_serial_index()\nwould return the same minor number.\n\nFix this by modifying get_free_serial_index to assign the minor number\nimmediately after one is found to be and rename it to obtain_minor()\nto better reflect what it does. Similary, rename set_serial_by_index()\nto release_minor() and modify it to free up the minor number of the\ngiven hso_serial. Every obtain_minor() should have corresponding\nrelease_minor() call.",
+      "id": "GSD-2021-46904",
+      "modified": "2024-02-26T06:03:52.242706Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2021-46904",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "72dc1c096c705",
+                          "version_value": "a462067d7c8e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.27"
+                              },
+                              {
+                                "lessThan": "2.6.27",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.4.*",
+                                "status": "unaffected",
+                                "version": "4.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.9.*",
+                                "status": "unaffected",
+                                "version": "4.9.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.232",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.187",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.112",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.30",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.12",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hso: fix null-ptr-deref during tty device unregistration\n\nMultiple ttys try to claim the same the minor number causing a double\nunregistration of the same device. The first unregistration succeeds\nbut the next one results in a null-ptr-deref.\n\nThe get_free_serial_index() function returns an available minor number\nbut doesn't assign it immediately. The assignment is done by the caller\nlater. But before this assignment, calls to get_free_serial_index()\nwould return the same minor number.\n\nFix this by modifying get_free_serial_index to assign the minor number\nimmediately after one is found to be and rename it to obtain_minor()\nto better reflect what it does. Similary, rename set_serial_by_index()\nto release_minor() and modify it to free up the minor number of the\ngiven hso_serial. Every obtain_minor() should have corresponding\nrelease_minor() call."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/a462067d7c8e6953a733bf5ade8db947b1bb5449",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a462067d7c8e6953a733bf5ade8db947b1bb5449"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/145c89c441d27696961752bf51b323f347601bee",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/145c89c441d27696961752bf51b323f347601bee"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/caf5ac93b3b5d5fac032fc11fbea680e115421b4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/caf5ac93b3b5d5fac032fc11fbea680e115421b4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/92028d7a31e55d53e41cff679156b9432cffcb36",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/92028d7a31e55d53e41cff679156b9432cffcb36"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4a2933c88399c0ebc738db39bbce3ae89786d723",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4a2933c88399c0ebc738db39bbce3ae89786d723"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/dc195928d7e4ec7b5cfc6cd10dc4c8d87a7c72ac",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/dc195928d7e4ec7b5cfc6cd10dc4c8d87a7c72ac"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/388d05f70f1ee0cac4a2068fd295072f1a44152a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/388d05f70f1ee0cac4a2068fd295072f1a44152a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8a12f8836145ffe37e9c8733dce18c22fb668b66",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8a12f8836145ffe37e9c8733dce18c22fb668b66"
+          }
+        ]
+      }
+    }
+  }
+}

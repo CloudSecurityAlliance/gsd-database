@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52469"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/amd/pm: fix a use-after-free in kv_parse_power_table\n\nWhen ps allocated by kzalloc equals to NULL, kv_parse_power_table\nfrees adev->pm.dpm.ps that allocated before. However, after the control\nflow goes through the following call chains:\n\nkv_parse_power_table\n  |-> kv_dpm_init\n        |-> kv_dpm_sw_init\n\t      |-> kv_dpm_fini\n\nThe adev->pm.dpm.ps is used in the for loop of kv_dpm_fini after its\nfirst free in kv_parse_power_table and causes a use-after-free bug.",
       "id": "GSD-2023-52469",
       "modified": "2024-02-21T06:01:53.393932Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52469",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "a2e73f56fa62",
+                          "version_value": "8a27d9d9fc9b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.2"
+                              },
+                              {
+                                "lessThan": "4.2",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.306",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.268",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.209",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.148",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.75",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +121,66 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/amd/pm: fix a use-after-free in kv_parse_power_table\n\nWhen ps allocated by kzalloc equals to NULL, kv_parse_power_table\nfrees adev->pm.dpm.ps that allocated before. However, after the control\nflow goes through the following call chains:\n\nkv_parse_power_table\n  |-> kv_dpm_init\n        |-> kv_dpm_sw_init\n\t      |-> kv_dpm_fini\n\nThe adev->pm.dpm.ps is used in the for loop of kv_dpm_fini after its\nfirst free in kv_parse_power_table and causes a use-after-free bug."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/8a27d9d9fc9b5564b8904c3a77a7dea482bfa34e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8a27d9d9fc9b5564b8904c3a77a7dea482bfa34e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8b55b06e737feb2a645b0293ea27e38418876d63",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8b55b06e737feb2a645b0293ea27e38418876d63"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/520e213a0b97b64735a13950e9371e0a5d7a5dc3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/520e213a0b97b64735a13950e9371e0a5d7a5dc3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b6dcba02ee178282e0d28684d241e0b8462dea6a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b6dcba02ee178282e0d28684d241e0b8462dea6a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/35fa2394d26e919f63600ce631e6aefc95ec2706",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/35fa2394d26e919f63600ce631e6aefc95ec2706"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/95084632a65d5c0d682a83b55935560bdcd2a1e3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/95084632a65d5c0d682a83b55935560bdcd2a1e3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3426f059eacc33ecc676b0d66539297e1cfafd02",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3426f059eacc33ecc676b0d66539297e1cfafd02"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28dd788382c43b330480f57cd34cde0840896743",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28dd788382c43b330480f57cd34cde0840896743"
           }
         ]
       }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52473"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal: core: Fix NULL pointer dereference in zone registration error path\n\nIf device_register() in thermal_zone_device_register_with_trips()\nreturns an error, the tz variable is set to NULL and subsequently\ndereferenced in kfree(tz->tzp).\n\nCommit adc8749b150c (\"thermal/drivers/core: Use put_device() if\ndevice_register() fails\") added the tz = NULL assignment in question to\navoid a possible double-free after dropping the reference to the zone\ndevice.  However, after commit 4649620d9404 (\"thermal: core: Make\nthermal_zone_device_unregister() return after freeing the zone\"), that\nassignment has become redundant, because dropping the reference to the\nzone device does not cause the zone object to be freed any more.\n\nDrop it to address the NULL pointer dereference.",
       "id": "GSD-2023-52473",
       "modified": "2024-02-21T06:01:53.318248Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52473",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3d439b1a2ad3",
+                          "version_value": "335176dd8eba"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.4"
+                              },
+                              {
+                                "lessThan": "6.4",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.14",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +91,41 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal: core: Fix NULL pointer dereference in zone registration error path\n\nIf device_register() in thermal_zone_device_register_with_trips()\nreturns an error, the tz variable is set to NULL and subsequently\ndereferenced in kfree(tz->tzp).\n\nCommit adc8749b150c (\"thermal/drivers/core: Use put_device() if\ndevice_register() fails\") added the tz = NULL assignment in question to\navoid a possible double-free after dropping the reference to the zone\ndevice.  However, after commit 4649620d9404 (\"thermal: core: Make\nthermal_zone_device_unregister() return after freeing the zone\"), that\nassignment has become redundant, because dropping the reference to the\nzone device does not cause the zone object to be freed any more.\n\nDrop it to address the NULL pointer dereference."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-5e66918c8507"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/335176dd8ebaca6493807dceea33c478305667fa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/335176dd8ebaca6493807dceea33c478305667fa"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/02871710b93058eb1249d5847c0b2d1c2c3c98ae",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/02871710b93058eb1249d5847c0b2d1c2c3c98ae"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/04e6ccfc93c5a1aa1d75a537cf27e418895e20ea",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/04e6ccfc93c5a1aa1d75a537cf27e418895e20ea"
           }
         ]
       }
