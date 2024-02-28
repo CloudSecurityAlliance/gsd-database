@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46924"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nNFC: st21nfca: Fix memory leak in device probe and remove\n\n'phy->pending_skb' is alloced when device probe, but forgot to free\nin the error handling path and remove path, this cause memory leak\nas follows:\n\nunreferenced object 0xffff88800bc06800 (size 512):\n  comm \"8\", pid 11775, jiffies 4295159829 (age 9.032s)\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace:\n    [<00000000d66c09ce>] __kmalloc_node_track_caller+0x1ed/0x450\n    [<00000000c93382b3>] kmalloc_reserve+0x37/0xd0\n    [<000000005fea522c>] __alloc_skb+0x124/0x380\n    [<0000000019f29f9a>] st21nfca_hci_i2c_probe+0x170/0x8f2\n\nFix it by freeing 'pending_skb' in error and remove.",
       "id": "GSD-2021-46924",
       "modified": "2024-02-26T06:03:52.846268Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46924",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "68957303f44a",
+                          "version_value": "38c3e320e7ff"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.16"
+                              },
+                              {
+                                "lessThan": "3.16",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.261",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.224",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.170",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.90",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.13",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,104 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nNFC: st21nfca: Fix memory leak in device probe and remove\n\n'phy->pending_skb' is alloced when device probe, but forgot to free\nin the error handling path and remove path, this cause memory leak\nas follows:\n\nunreferenced object 0xffff88800bc06800 (size 512):\n  comm \"8\", pid 11775, jiffies 4295159829 (age 9.032s)\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace:\n    [<00000000d66c09ce>] __kmalloc_node_track_caller+0x1ed/0x450\n    [<00000000c93382b3>] kmalloc_reserve+0x37/0xd0\n    [<000000005fea522c>] __alloc_skb+0x124/0x380\n    [<0000000019f29f9a>] st21nfca_hci_i2c_probe+0x170/0x8f2\n\nFix it by freeing 'pending_skb' in error and remove."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/38c3e320e7ff46f2dc67bc5045333e63d9f8918d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/38c3e320e7ff46f2dc67bc5045333e63d9f8918d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a1e0080a35a16ce3808f7040fe0c3a8fdb052349",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a1e0080a35a16ce3808f7040fe0c3a8fdb052349"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1cd4063dbc91cf7965d73a6a3855e2028cd4613b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1cd4063dbc91cf7965d73a6a3855e2028cd4613b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e553265ea56482da5700f56319fda9ff53e7dcb4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e553265ea56482da5700f56319fda9ff53e7dcb4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/238920381b8925d070d32d73cd9ce52ab29896fe",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/238920381b8925d070d32d73cd9ce52ab29896fe"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1b9dadba502234eea7244879b8d5d126bfaf9f0c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1b9dadba502234eea7244879b8d5d126bfaf9f0c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nNFC: st21nfca: Fix memory leak in device probe and remove\n\n'phy->pending_skb' is alloced when device probe, but forgot to free\nin the error handling path and remove path, this cause memory leak\nas follows:\n\nunreferenced object 0xffff88800bc06800 (size 512):\n  comm \"8\", pid 11775, jiffies 4295159829 (age 9.032s)\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace:\n    [<00000000d66c09ce>] __kmalloc_node_track_caller+0x1ed/0x450\n    [<00000000c93382b3>] kmalloc_reserve+0x37/0xd0\n    [<000000005fea522c>] __alloc_skb+0x124/0x380\n    [<0000000019f29f9a>] st21nfca_hci_i2c_probe+0x170/0x8f2\n\nFix it by freeing 'pending_skb' in error and remove."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: NFC: st21nfca: corrige la p\u00e9rdida de memoria en la sonda del dispositivo y elimina 'phy-&gt;pending_skb' cuando se asigna la sonda del dispositivo, pero olvid\u00f3 liberarla en la ruta de manejo de errores y eliminar la ruta, esto causa p\u00e9rdida de memoria de la siguiente manera: objeto sin referencia 0xffff88800bc06800 (tama\u00f1o 512): comunicaci\u00f3n \"8\", pid 11775, santiago 4295159829 (edad 9.032 s) volcado hexadecimal (primeros 32 bytes): 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................. backtrace: [&lt;00000000d66c09ce&gt;] __kmalloc_node_track_caller+0x1ed/0x450 [&lt;00000000c93382b3&gt;] kmalloc_reserve+0x37/0xd0 [&lt;000000005fea522c&gt;] __alloc_skb+0x124/0x380 [ &lt;0000000019f29f9a&gt;] st21nfca_hci_i2c_probe+0x170/0x8f2 Solucionarlo liberando 'pending_skb' por error y elim\u00ednelo."
+          }
+        ],
+        "id": "CVE-2021-46924",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T10:15:07.150",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1b9dadba502234eea7244879b8d5d126bfaf9f0c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1cd4063dbc91cf7965d73a6a3855e2028cd4613b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/238920381b8925d070d32d73cd9ce52ab29896fe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/38c3e320e7ff46f2dc67bc5045333e63d9f8918d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a1e0080a35a16ce3808f7040fe0c3a8fdb052349"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e553265ea56482da5700f56319fda9ff53e7dcb4"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

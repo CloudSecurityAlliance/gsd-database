@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46921"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nlocking/qrwlock: Fix ordering in queued_write_lock_slowpath()\n\nWhile this code is executed with the wait_lock held, a reader can\nacquire the lock without holding wait_lock.  The writer side loops\nchecking the value with the atomic_cond_read_acquire(), but only truly\nacquires the lock when the compare-and-exchange is completed\nsuccessfully which isn\u2019t ordered. This exposes the window between the\nacquire and the cmpxchg to an A-B-A problem which allows reads\nfollowing the lock acquisition to observe values speculatively before\nthe write lock is truly acquired.\n\nWe've seen a problem in epoll where the reader does a xchg while\nholding the read lock, but the writer can see a value change out from\nunder it.\n\n  Writer                                | Reader\n  --------------------------------------------------------------------------------\n  ep_scan_ready_list()                  |\n  |- write_lock_irq()                   |\n      |- queued_write_lock_slowpath()   |\n\t|- atomic_cond_read_acquire()   |\n\t\t\t\t        | read_lock_irqsave(&ep->lock, flags);\n     --> (observes value before unlock) |  chain_epi_lockless()\n     |                                  |    epi->next = xchg(&ep->ovflist, epi);\n     |                                  | read_unlock_irqrestore(&ep->lock, flags);\n     |                                  |\n     |     atomic_cmpxchg_relaxed()     |\n     |-- READ_ONCE(ep->ovflist);        |\n\nA core can order the read of the ovflist ahead of the\natomic_cmpxchg_relaxed(). Switching the cmpxchg to use acquire\nsemantics addresses this issue at which point the atomic_cond_read can\nbe switched to use relaxed semantics.\n\n[peterz: use try_cmpxchg()]",
       "id": "GSD-2021-46921",
       "modified": "2024-02-26T06:03:52.730535Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46921",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "b519b56e378ee",
+                          "version_value": "5902f9453a31"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.15"
+                              },
+                              {
+                                "lessThan": "4.15",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.189",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.115",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.33",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.17",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.12",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,95 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nlocking/qrwlock: Fix ordering in queued_write_lock_slowpath()\n\nWhile this code is executed with the wait_lock held, a reader can\nacquire the lock without holding wait_lock.  The writer side loops\nchecking the value with the atomic_cond_read_acquire(), but only truly\nacquires the lock when the compare-and-exchange is completed\nsuccessfully which isn\u2019t ordered. This exposes the window between the\nacquire and the cmpxchg to an A-B-A problem which allows reads\nfollowing the lock acquisition to observe values speculatively before\nthe write lock is truly acquired.\n\nWe've seen a problem in epoll where the reader does a xchg while\nholding the read lock, but the writer can see a value change out from\nunder it.\n\n  Writer                                | Reader\n  --------------------------------------------------------------------------------\n  ep_scan_ready_list()                  |\n  |- write_lock_irq()                   |\n      |- queued_write_lock_slowpath()   |\n\t|- atomic_cond_read_acquire()   |\n\t\t\t\t        | read_lock_irqsave(&ep->lock, flags);\n     --> (observes value before unlock) |  chain_epi_lockless()\n     |                                  |    epi->next = xchg(&ep->ovflist, epi);\n     |                                  | read_unlock_irqrestore(&ep->lock, flags);\n     |                                  |\n     |     atomic_cmpxchg_relaxed()     |\n     |-- READ_ONCE(ep->ovflist);        |\n\nA core can order the read of the ovflist ahead of the\natomic_cmpxchg_relaxed(). Switching the cmpxchg to use acquire\nsemantics addresses this issue at which point the atomic_cond_read can\nbe switched to use relaxed semantics.\n\n[peterz: use try_cmpxchg()]"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/5902f9453a313be8fe78cbd7e7ca9dba9319fc6e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5902f9453a313be8fe78cbd7e7ca9dba9319fc6e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/82808cc026811fbc3ecf0c0b267a12a339eead56",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/82808cc026811fbc3ecf0c0b267a12a339eead56"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/82fa9ced35d88581cffa4a1c856fc41fca96d80a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/82fa9ced35d88581cffa4a1c856fc41fca96d80a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d558fcdb17139728347bccc60a16af3e639649d2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d558fcdb17139728347bccc60a16af3e639649d2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/84a24bf8c52e66b7ac89ada5e3cfbe72d65c1896",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/84a24bf8c52e66b7ac89ada5e3cfbe72d65c1896"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nlocking/qrwlock: Fix ordering in queued_write_lock_slowpath()\n\nWhile this code is executed with the wait_lock held, a reader can\nacquire the lock without holding wait_lock.  The writer side loops\nchecking the value with the atomic_cond_read_acquire(), but only truly\nacquires the lock when the compare-and-exchange is completed\nsuccessfully which isn\u2019t ordered. This exposes the window between the\nacquire and the cmpxchg to an A-B-A problem which allows reads\nfollowing the lock acquisition to observe values speculatively before\nthe write lock is truly acquired.\n\nWe've seen a problem in epoll where the reader does a xchg while\nholding the read lock, but the writer can see a value change out from\nunder it.\n\n  Writer                                | Reader\n  --------------------------------------------------------------------------------\n  ep_scan_ready_list()                  |\n  |- write_lock_irq()                   |\n      |- queued_write_lock_slowpath()   |\n\t|- atomic_cond_read_acquire()   |\n\t\t\t\t        | read_lock_irqsave(&ep->lock, flags);\n     --> (observes value before unlock) |  chain_epi_lockless()\n     |                                  |    epi->next = xchg(&ep->ovflist, epi);\n     |                                  | read_unlock_irqrestore(&ep->lock, flags);\n     |                                  |\n     |     atomic_cmpxchg_relaxed()     |\n     |-- READ_ONCE(ep->ovflist);        |\n\nA core can order the read of the ovflist ahead of the\natomic_cmpxchg_relaxed(). Switching the cmpxchg to use acquire\nsemantics addresses this issue at which point the atomic_cond_read can\nbe switched to use relaxed semantics.\n\n[peterz: use try_cmpxchg()]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: lock/qrwlock: corrige el orden en queued_write_lock_slowpath() Mientras este c\u00f3digo se ejecuta con wait_lock retenido, un lector puede adquirir el bloqueo sin mantener wait_lock. El lado del escritor realiza un bucle para verificar el valor con atomic_cond_read_acquire(), pero solo adquiere realmente el bloqueo cuando la comparaci\u00f3n e intercambio se completa con \u00e9xito, lo cual no est\u00e1 ordenado. Esto expone la ventana entre la adquisici\u00f3n y el cmpxchg a un problema ABA que permite que las lecturas posteriores a la adquisici\u00f3n del bloqueo observen los valores de forma especulativa antes de que se adquiera realmente el bloqueo de escritura. Hemos visto un problema en epoll donde el lector realiza un xchg mientras mantiene el bloqueo de lectura, pero el escritor puede ver un cambio de valor debajo de \u00e9l. Escritor | Lector ------------------------------------------------- ------------------------------- ep_scan_ready_list() | |- write_lock_irq() | |- queued_write_lock_slowpath() | |- atomic_cond_read_acquire() | | read_lock_irqsave(&amp;ep-&gt;bloquear, banderas); --&gt; (observa el valor antes de desbloquear) | cadena_epi_lockless() | | epi-&gt;siguiente = xchg(&amp;ep-&gt;ovflist, epi); | | read_unlock_irqrestore(&amp;ep-&gt;bloquear, banderas); | | | atomic_cmpxchg_relaxed() | |-- READ_ONCE(ep-&gt;ovflist); | Un n\u00facleo puede ordenar la lectura de ovflist antes de atomic_cmpxchg_relaxed(). Cambiar cmpxchg para usar la sem\u00e1ntica de adquisici\u00f3n soluciona este problema, momento en el que atomic_cond_read se puede cambiar para usar una sem\u00e1ntica relajada. [peterz: utilice try_cmpxchg()]"
+          }
+        ],
+        "id": "CVE-2021-46921",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T10:15:06.990",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5902f9453a313be8fe78cbd7e7ca9dba9319fc6e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/82808cc026811fbc3ecf0c0b267a12a339eead56"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/82fa9ced35d88581cffa4a1c856fc41fca96d80a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/84a24bf8c52e66b7ac89ada5e3cfbe72d65c1896"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d558fcdb17139728347bccc60a16af3e639649d2"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -137,6 +137,16 @@
             "name": "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835",
             "refsource": "MISC",
             "url": "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EZOU3745CWCDZ7EMKMXB2OEEIB5Q3IWM/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EZOU3745CWCDZ7EMKMXB2OEEIB5Q3IWM/"
+          },
+          {
+            "name": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OX4EWCYDZRTOEMC2C6OF7ZACAP23SUB5/",
+            "refsource": "MISC",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OX4EWCYDZRTOEMC2C6OF7ZACAP23SUB5/"
           }
         ]
       }
@@ -147,10 +157,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/fpu: Stop relying on userspace for info to fault in xsave buffer\n\nBefore this change, the expected size of the user space buffer was\ntaken from fx_sw->xstate_size. fx_sw->xstate_size can be changed\nfrom user-space, so it is possible construct a sigreturn frame where:\n\n * fx_sw->xstate_size is smaller than the size required by valid bits in\n   fx_sw->xfeatures.\n * user-space unmaps parts of the sigrame fpu buffer so that not all of\n   the buffer required by xrstor is accessible.\n\nIn this case, xrstor tries to restore and accesses the unmapped area\nwhich results in a fault. But fault_in_readable succeeds because buf +\nfx_sw->xstate_size is within the still mapped area, so it goes back and\ntries xrstor again. It will spin in this loop forever.\n\nInstead, fault in the maximum size which can be touched by XRSTOR (taken\nfrom fpstate->user_size).\n\n[ dhansen: tweak subject / changelog ]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: x86/fpu: dejar de depender del espacio de usuario para que la informaci\u00f3n falle en el b\u00fafer xsave Antes de este cambio, el tama\u00f1o esperado del b\u00fafer de espacio de usuario se tomaba de fx_sw-&gt;xstate_size. fx_sw-&gt;xstate_size se puede cambiar desde el espacio de usuario, por lo que es posible construir un marco sigreturn donde: * fx_sw-&gt;xstate_size es m\u00e1s peque\u00f1o que el tama\u00f1o requerido por los bits v\u00e1lidos en fx_sw-&gt;xfeatures. * el espacio de usuario desasigna partes del b\u00fafer fpu de sigrame para que no se pueda acceder a todo el b\u00fafer requerido por xrstor. En este caso, xrstor intenta restaurar y accede al \u00e1rea no asignada, lo que genera una falla. Pero falla_in_readable tiene \u00e9xito porque buf + fx_sw-&gt;xstate_size est\u00e1 dentro del \u00e1rea a\u00fan mapeada, por lo que regresa e intenta xrstor nuevamente. Girar\u00e1 en este bucle para siempre. En cambio, falla en el tama\u00f1o m\u00e1ximo que XRSTOR puede tocar (tomado de fpstate-&gt;user_size). [dhansen: modificar asunto/registro de cambios]"
           }
         ],
         "id": "CVE-2024-26603",
-        "lastModified": "2024-02-26T16:32:25.577",
+        "lastModified": "2024-02-28T03:15:08.647",
         "metrics": {},
         "published": "2024-02-26T16:28:00.097",
         "references": [
@@ -169,6 +183,14 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EZOU3745CWCDZ7EMKMXB2OEEIB5Q3IWM/"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OX4EWCYDZRTOEMC2C6OF7ZACAP23SUB5/"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

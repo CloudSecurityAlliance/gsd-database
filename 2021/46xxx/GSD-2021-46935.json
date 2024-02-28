@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46935"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix async_free_space accounting for empty parcels\n\nIn 4.13, commit 74310e06be4d (\"android: binder: Move buffer out of area shared with user space\")\nfixed a kernel structure visibility issue. As part of that patch,\nsizeof(void *) was used as the buffer size for 0-length data payloads so\nthe driver could detect abusive clients sending 0-length asynchronous\ntransactions to a server by enforcing limits on async_free_size.\n\nUnfortunately, on the \"free\" side, the accounting of async_free_space\ndid not add the sizeof(void *) back. The result was that up to 8-bytes of\nasync_free_space were leaked on every async transaction of 8-bytes or\nless.  These small transactions are uncommon, so this accounting issue\nhas gone undetected for several years.\n\nThe fix is to use \"buffer_size\" (the allocated buffer size) instead of\n\"size\" (the logical buffer size) when updating the async_free_space\nduring the free operation. These are the same except for this\ncorner case of asynchronous transactions with payloads < 8 bytes.",
       "id": "GSD-2021-46935",
       "modified": "2024-02-26T06:03:52.280296Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46935",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "74310e06be4d",
+                          "version_value": "2d2df539d052"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.14"
+                              },
+                              {
+                                "lessThan": "4.14",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.261",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.224",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.170",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.90",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.13",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,104 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix async_free_space accounting for empty parcels\n\nIn 4.13, commit 74310e06be4d (\"android: binder: Move buffer out of area shared with user space\")\nfixed a kernel structure visibility issue. As part of that patch,\nsizeof(void *) was used as the buffer size for 0-length data payloads so\nthe driver could detect abusive clients sending 0-length asynchronous\ntransactions to a server by enforcing limits on async_free_size.\n\nUnfortunately, on the \"free\" side, the accounting of async_free_space\ndid not add the sizeof(void *) back. The result was that up to 8-bytes of\nasync_free_space were leaked on every async transaction of 8-bytes or\nless.  These small transactions are uncommon, so this accounting issue\nhas gone undetected for several years.\n\nThe fix is to use \"buffer_size\" (the allocated buffer size) instead of\n\"size\" (the logical buffer size) when updating the async_free_space\nduring the free operation. These are the same except for this\ncorner case of asynchronous transactions with payloads < 8 bytes."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2d2df539d05205fd83c404d5f2dff48d36f9b495",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2d2df539d05205fd83c404d5f2dff48d36f9b495"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7c7064402609aeb6fb11be1b4ec10673ff17b593",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7c7064402609aeb6fb11be1b4ec10673ff17b593"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/103b16a8c51f96d5fe063022869ea906c256e5da",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/103b16a8c51f96d5fe063022869ea906c256e5da"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1cb8444f3114f0bb2f6e3bcadcf09aa4a28425d4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1cb8444f3114f0bb2f6e3bcadcf09aa4a28425d4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/17691bada6b2f1d5f1c0f6d28cd9d0727023b0ff",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/17691bada6b2f1d5f1c0f6d28cd9d0727023b0ff"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cfd0d84ba28c18b531648c9d4a35ecca89ad9901",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cfd0d84ba28c18b531648c9d4a35ecca89ad9901"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix async_free_space accounting for empty parcels\n\nIn 4.13, commit 74310e06be4d (\"android: binder: Move buffer out of area shared with user space\")\nfixed a kernel structure visibility issue. As part of that patch,\nsizeof(void *) was used as the buffer size for 0-length data payloads so\nthe driver could detect abusive clients sending 0-length asynchronous\ntransactions to a server by enforcing limits on async_free_size.\n\nUnfortunately, on the \"free\" side, the accounting of async_free_space\ndid not add the sizeof(void *) back. The result was that up to 8-bytes of\nasync_free_space were leaked on every async transaction of 8-bytes or\nless.  These small transactions are uncommon, so this accounting issue\nhas gone undetected for several years.\n\nThe fix is to use \"buffer_size\" (the allocated buffer size) instead of\n\"size\" (the logical buffer size) when updating the async_free_space\nduring the free operation. These are the same except for this\ncorner case of asynchronous transactions with payloads < 8 bytes."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: binder: corrige la contabilidad async_free_space para paquetes vac\u00edos En 4.13, el commit 74310e06be4d (\"android: binder: mover el b\u00fafer fuera del \u00e1rea compartida con el espacio del usuario\") solucion\u00f3 un problema de visibilidad de la estructura del kernel. Como parte de ese parche, se us\u00f3 sizeof(void *) como tama\u00f1o de b\u00fafer para cargas de datos de longitud 0, de modo que el controlador pudiera detectar clientes abusivos que enviaran transacciones asincr\u00f3nicas de longitud 0 a un servidor imponiendo l\u00edmites en async_free_size. Desafortunadamente, en el lado \"libre\", la contabilidad de async_free_space no volvi\u00f3 a agregar el tama\u00f1o de (void *). El resultado fue que se filtraron hasta 8 bytes de async_free_space en cada transacci\u00f3n as\u00edncrona de 8 bytes o menos. Estas peque\u00f1as transacciones son poco comunes, por lo que este problema contable ha pasado desapercibido durante varios a\u00f1os. La soluci\u00f3n es utilizar \"buffer_size\" (el tama\u00f1o del b\u00fafer asignado) en lugar de \"size\" (el tama\u00f1o del b\u00fafer l\u00f3gico) al actualizar async_free_space durante la operaci\u00f3n libre. Son iguales excepto por este caso de esquina de transacciones asincr\u00f3nicas con payloads &lt;8 bytes."
+          }
+        ],
+        "id": "CVE-2021-46935",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T10:15:07.957",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/103b16a8c51f96d5fe063022869ea906c256e5da"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/17691bada6b2f1d5f1c0f6d28cd9d0727023b0ff"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1cb8444f3114f0bb2f6e3bcadcf09aa4a28425d4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2d2df539d05205fd83c404d5f2dff48d36f9b495"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7c7064402609aeb6fb11be1b4ec10673ff17b593"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cfd0d84ba28c18b531648c9d4a35ecca89ad9901"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

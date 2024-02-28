@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46912"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: Make tcp_allowed_congestion_control readonly in non-init netns\n\nCurrently, tcp_allowed_congestion_control is global and writable;\nwriting to it in any net namespace will leak into all other net\nnamespaces.\n\ntcp_available_congestion_control and tcp_allowed_congestion_control are\nthe only sysctls in ipv4_net_table (the per-netns sysctl table) with a\nNULL data pointer; their handlers (proc_tcp_available_congestion_control\nand proc_allowed_congestion_control) have no other way of referencing a\nstruct net. Thus, they operate globally.\n\nBecause ipv4_net_table does not use designated initializers, there is no\neasy way to fix up this one \"bad\" table entry. However, the data pointer\nupdating logic shouldn't be applied to NULL pointers anyway, so we\ninstead force these entries to be read-only.\n\nThese sysctls used to exist in ipv4_table (init-net only), but they were\nmoved to the per-net ipv4_net_table, presumably without realizing that\ntcp_allowed_congestion_control was writable and thus introduced a leak.\n\nBecause the intent of that commit was only to know (i.e. read) \"which\ncongestion algorithms are available or allowed\", this read-only solution\nshould be sufficient.\n\nThe logic added in recent commit\n31c4d2f160eb: (\"net: Ensure net namespace isolation of sysctls\")\ndoes not and cannot check for NULL data pointers, because\nother table entries (e.g. /proc/sys/net/netfilter/nf_log/) have\n.data=NULL but use other methods (.extra2) to access the struct net.",
       "id": "GSD-2021-46912",
       "modified": "2024-02-26T06:03:52.674121Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46912",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "9cb8e048e5d9",
+                          "version_value": "35d7491e2f77"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.7"
+                              },
+                              {
+                                "lessThan": "5.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.32",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.12",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: Make tcp_allowed_congestion_control readonly in non-init netns\n\nCurrently, tcp_allowed_congestion_control is global and writable;\nwriting to it in any net namespace will leak into all other net\nnamespaces.\n\ntcp_available_congestion_control and tcp_allowed_congestion_control are\nthe only sysctls in ipv4_net_table (the per-netns sysctl table) with a\nNULL data pointer; their handlers (proc_tcp_available_congestion_control\nand proc_allowed_congestion_control) have no other way of referencing a\nstruct net. Thus, they operate globally.\n\nBecause ipv4_net_table does not use designated initializers, there is no\neasy way to fix up this one \"bad\" table entry. However, the data pointer\nupdating logic shouldn't be applied to NULL pointers anyway, so we\ninstead force these entries to be read-only.\n\nThese sysctls used to exist in ipv4_table (init-net only), but they were\nmoved to the per-net ipv4_net_table, presumably without realizing that\ntcp_allowed_congestion_control was writable and thus introduced a leak.\n\nBecause the intent of that commit was only to know (i.e. read) \"which\ncongestion algorithms are available or allowed\", this read-only solution\nshould be sufficient.\n\nThe logic added in recent commit\n31c4d2f160eb: (\"net: Ensure net namespace isolation of sysctls\")\ndoes not and cannot check for NULL data pointers, because\nother table entries (e.g. /proc/sys/net/netfilter/nf_log/) have\n.data=NULL but use other methods (.extra2) to access the struct net."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/35d7491e2f77ce480097cabcaf93ed409e916e12",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/35d7491e2f77ce480097cabcaf93ed409e916e12"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1ccdf1bed140820240e383ba0accc474ffc7f006",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1ccdf1bed140820240e383ba0accc474ffc7f006"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/97684f0970f6e112926de631fdd98d9693c7e5c1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/97684f0970f6e112926de631fdd98d9693c7e5c1"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: Make tcp_allowed_congestion_control readonly in non-init netns\n\nCurrently, tcp_allowed_congestion_control is global and writable;\nwriting to it in any net namespace will leak into all other net\nnamespaces.\n\ntcp_available_congestion_control and tcp_allowed_congestion_control are\nthe only sysctls in ipv4_net_table (the per-netns sysctl table) with a\nNULL data pointer; their handlers (proc_tcp_available_congestion_control\nand proc_allowed_congestion_control) have no other way of referencing a\nstruct net. Thus, they operate globally.\n\nBecause ipv4_net_table does not use designated initializers, there is no\neasy way to fix up this one \"bad\" table entry. However, the data pointer\nupdating logic shouldn't be applied to NULL pointers anyway, so we\ninstead force these entries to be read-only.\n\nThese sysctls used to exist in ipv4_table (init-net only), but they were\nmoved to the per-net ipv4_net_table, presumably without realizing that\ntcp_allowed_congestion_control was writable and thus introduced a leak.\n\nBecause the intent of that commit was only to know (i.e. read) \"which\ncongestion algorithms are available or allowed\", this read-only solution\nshould be sufficient.\n\nThe logic added in recent commit\n31c4d2f160eb: (\"net: Ensure net namespace isolation of sysctls\")\ndoes not and cannot check for NULL data pointers, because\nother table entries (e.g. /proc/sys/net/netfilter/nf_log/) have\n.data=NULL but use other methods (.extra2) to access the struct net."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net: hacer que tcp_allowed_congestion_control sea de solo lectura en redes no init. Actualmente, tcp_allowed_congestion_control es global y se puede escribir; escribir en \u00e9l en cualquier espacio de nombres de red se filtrar\u00e1 a todos los dem\u00e1s espacios de nombres de red. tcp_available_congestion_control y tcp_allowed_congestion_control son los \u00fanicos sysctls en ipv4_net_table (la tabla sysctl por red) con un puntero de datos NULL; sus controladores (proc_tcp_available_congestion_control y proc_allowed_congestion_control) no tienen otra forma de hacer referencia a una estructura neta. Por lo tanto, operan globalmente. Debido a que ipv4_net_table no utiliza inicializadores designados, no existe una manera f\u00e1cil de corregir esta entrada \"mala\" de la tabla. Sin embargo, la l\u00f3gica de actualizaci\u00f3n del puntero de datos no deber\u00eda aplicarse a los punteros NULL de todos modos, por lo que forzamos que estas entradas sean de solo lectura. Estos sysctls sol\u00edan existir en ipv4_table (solo init-net), pero se movieron a ipv4_net_table por red, presumiblemente sin darse cuenta de que tcp_allowed_congestion_control se pod\u00eda escribir y, por lo tanto, introdujeron una fuga. Debido a que la intenci\u00f3n de esa confirmaci\u00f3n era s\u00f3lo saber (es decir, leer) \"qu\u00e9 algoritmos de congesti\u00f3n est\u00e1n disponibles o permitidos\", esta soluci\u00f3n de solo lectura deber\u00eda ser suficiente. La l\u00f3gica agregada en la reciente confirmaci\u00f3n 31c4d2f160eb: (\"net: Garantizar el aislamiento del espacio de nombres de red de sysctls\") no verifica ni puede verificar los punteros de datos NULL, porque otras entradas de la tabla (por ejemplo, /proc/sys/net/netfilter/nf_log/) tienen .data=NULL pero usa otros m\u00e9todos (.extra2) para acceder a la estructura neta."
+          }
+        ],
+        "id": "CVE-2021-46912",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T07:15:07.613",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1ccdf1bed140820240e383ba0accc474ffc7f006"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/35d7491e2f77ce480097cabcaf93ed409e916e12"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/97684f0970f6e112926de631fdd98d9693c7e5c1"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46941"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: core: Do core softreset when switch mode\n\n\nAccording to the programming guide, to switch mode for DRD controller,\nthe driver needs to do the following.\n\nTo switch from device to host:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(host mode)\n3. Reset the host with USBCMD.HCRESET\n4. Then follow up with the initializing host registers sequence\n\nTo switch from host to device:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(device mode)\n3. Reset the device with DCTL.CSftRst\n4. Then follow up with the initializing registers sequence\n\nCurrently we're missing step 1) to do GCTL.CoreSoftReset and step 3) of\nswitching from host to device. John Stult reported a lockup issue seen\nwith HiKey960 platform without these steps[1]. Similar issue is observed\nwith Ferry's testing platform[2].\n\nSo, apply the required steps along with some fixes to Yu Chen's and John\nStultz's version. The main fixes to their versions are the missing wait\nfor clocks synchronization before clearing GCTL.CoreSoftReset and only\napply DCTL.CSftRst when switching from host to device.\n\n[1] https://lore.kernel.org/linux-usb/20210108015115.27920-1-john.stultz@linaro.org/\n[2] https://lore.kernel.org/linux-usb/0ba7a6ba-e6a7-9cd4-0695-64fc927e01f1@gmail.com/",
       "id": "GSD-2021-46941",
       "modified": "2024-02-26T06:03:52.480923Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46941",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "41ce1456e1db",
+                          "version_value": "fce7bbcd07d5"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.12"
+                              },
+                              {
+                                "lessThan": "4.12",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.36",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.20",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: core: Do core softreset when switch mode\n\n\nAccording to the programming guide, to switch mode for DRD controller,\nthe driver needs to do the following.\n\nTo switch from device to host:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(host mode)\n3. Reset the host with USBCMD.HCRESET\n4. Then follow up with the initializing host registers sequence\n\nTo switch from host to device:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(device mode)\n3. Reset the device with DCTL.CSftRst\n4. Then follow up with the initializing registers sequence\n\nCurrently we're missing step 1) to do GCTL.CoreSoftReset and step 3) of\nswitching from host to device. John Stult reported a lockup issue seen\nwith HiKey960 platform without these steps[1]. Similar issue is observed\nwith Ferry's testing platform[2].\n\nSo, apply the required steps along with some fixes to Yu Chen's and John\nStultz's version. The main fixes to their versions are the missing wait\nfor clocks synchronization before clearing GCTL.CoreSoftReset and only\napply DCTL.CSftRst when switching from host to device.\n\n[1] https://lore.kernel.org/linux-usb/20210108015115.27920-1-john.stultz@linaro.org/\n[2] https://lore.kernel.org/linux-usb/0ba7a6ba-e6a7-9cd4-0695-64fc927e01f1@gmail.com/"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/fce7bbcd07d59ac30dba8ce225316b3b4c1c7b50",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fce7bbcd07d59ac30dba8ce225316b3b4c1c7b50"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/800f58217626c8b147aa40660e572ed8a0d56e3b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/800f58217626c8b147aa40660e572ed8a0d56e3b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1c10fd60c8595ea7ff7e29d3cf1fa88069941da3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1c10fd60c8595ea7ff7e29d3cf1fa88069941da3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f88359e1588b85cf0e8209ab7d6620085f3441d9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f88359e1588b85cf0e8209ab7d6620085f3441d9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: core: Do core softreset when switch mode\n\n\nAccording to the programming guide, to switch mode for DRD controller,\nthe driver needs to do the following.\n\nTo switch from device to host:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(host mode)\n3. Reset the host with USBCMD.HCRESET\n4. Then follow up with the initializing host registers sequence\n\nTo switch from host to device:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(device mode)\n3. Reset the device with DCTL.CSftRst\n4. Then follow up with the initializing registers sequence\n\nCurrently we're missing step 1) to do GCTL.CoreSoftReset and step 3) of\nswitching from host to device. John Stult reported a lockup issue seen\nwith HiKey960 platform without these steps[1]. Similar issue is observed\nwith Ferry's testing platform[2].\n\nSo, apply the required steps along with some fixes to Yu Chen's and John\nStultz's version. The main fixes to their versions are the missing wait\nfor clocks synchronization before clearing GCTL.CoreSoftReset and only\napply DCTL.CSftRst when switching from host to device.\n\n[1] https://lore.kernel.org/linux-usb/20210108015115.27920-1-john.stultz@linaro.org/\n[2] https://lore.kernel.org/linux-usb/0ba7a6ba-e6a7-9cd4-0695-64fc927e01f1@gmail.com/"
+          }
+        ],
+        "id": "CVE-2021-46941",
+        "lastModified": "2024-02-27T19:04:05.970",
+        "metrics": {},
+        "published": "2024-02-27T19:04:05.970",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1c10fd60c8595ea7ff7e29d3cf1fa88069941da3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/800f58217626c8b147aa40660e572ed8a0d56e3b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f88359e1588b85cf0e8209ab7d6620085f3441d9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fce7bbcd07d59ac30dba8ce225316b3b4c1c7b50"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

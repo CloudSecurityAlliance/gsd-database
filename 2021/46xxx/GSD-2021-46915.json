@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46915"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_limit: avoid possible divide error in nft_limit_init\n\ndiv_u64() divides u64 by u32.\n\nnft_limit_init() wants to divide u64 by u64, use the appropriate\nmath function (div64_u64)\n\ndivide error: 0000 [#1] PREEMPT SMP KASAN\nCPU: 1 PID: 8390 Comm: syz-executor188 Not tainted 5.12.0-rc4-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011\nRIP: 0010:div_u64_rem include/linux/math64.h:28 [inline]\nRIP: 0010:div_u64 include/linux/math64.h:127 [inline]\nRIP: 0010:nft_limit_init+0x2a2/0x5e0 net/netfilter/nft_limit.c:85\nCode: ef 4c 01 eb 41 0f 92 c7 48 89 de e8 38 a5 22 fa 4d 85 ff 0f 85 97 02 00 00 e8 ea 9e 22 fa 4c 0f af f3 45 89 ed 31 d2 4c 89 f0 <49> f7 f5 49 89 c6 e8 d3 9e 22 fa 48 8d 7d 48 48 b8 00 00 00 00 00\nRSP: 0018:ffffc90009447198 EFLAGS: 00010246\nRAX: 0000000000000000 RBX: 0000200000000000 RCX: 0000000000000000\nRDX: 0000000000000000 RSI: ffffffff875152e6 RDI: 0000000000000003\nRBP: ffff888020f80908 R08: 0000200000000000 R09: 0000000000000000\nR10: ffffffff875152d8 R11: 0000000000000000 R12: ffffc90009447270\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\nFS:  000000000097a300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00000000200001c4 CR3: 0000000026a52000 CR4: 00000000001506e0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n nf_tables_newexpr net/netfilter/nf_tables_api.c:2675 [inline]\n nft_expr_init+0x145/0x2d0 net/netfilter/nf_tables_api.c:2713\n nft_set_elem_expr_alloc+0x27/0x280 net/netfilter/nf_tables_api.c:5160\n nf_tables_newset+0x1997/0x3150 net/netfilter/nf_tables_api.c:4321\n nfnetlink_rcv_batch+0x85a/0x21b0 net/netfilter/nfnetlink.c:456\n nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:580 [inline]\n nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:598\n netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]\n netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1338\n netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1927\n sock_sendmsg_nosec net/socket.c:654 [inline]\n sock_sendmsg+0xcf/0x120 net/socket.c:674\n ____sys_sendmsg+0x6e8/0x810 net/socket.c:2350\n ___sys_sendmsg+0xf3/0x170 net/socket.c:2404\n __sys_sendmsg+0xe5/0x1b0 net/socket.c:2433\n do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46\n entry_SYSCALL_64_after_hwframe+0x44/0xae",
       "id": "GSD-2021-46915",
       "modified": "2024-02-26T06:03:52.452325Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46915",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3e0f64b7dd31",
+                          "version_value": "9065ccb9ec92"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.13"
+                              },
+                              {
+                                "lessThan": "4.13",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.232",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.189",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.114",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.32",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.12",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,104 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_limit: avoid possible divide error in nft_limit_init\n\ndiv_u64() divides u64 by u32.\n\nnft_limit_init() wants to divide u64 by u64, use the appropriate\nmath function (div64_u64)\n\ndivide error: 0000 [#1] PREEMPT SMP KASAN\nCPU: 1 PID: 8390 Comm: syz-executor188 Not tainted 5.12.0-rc4-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011\nRIP: 0010:div_u64_rem include/linux/math64.h:28 [inline]\nRIP: 0010:div_u64 include/linux/math64.h:127 [inline]\nRIP: 0010:nft_limit_init+0x2a2/0x5e0 net/netfilter/nft_limit.c:85\nCode: ef 4c 01 eb 41 0f 92 c7 48 89 de e8 38 a5 22 fa 4d 85 ff 0f 85 97 02 00 00 e8 ea 9e 22 fa 4c 0f af f3 45 89 ed 31 d2 4c 89 f0 <49> f7 f5 49 89 c6 e8 d3 9e 22 fa 48 8d 7d 48 48 b8 00 00 00 00 00\nRSP: 0018:ffffc90009447198 EFLAGS: 00010246\nRAX: 0000000000000000 RBX: 0000200000000000 RCX: 0000000000000000\nRDX: 0000000000000000 RSI: ffffffff875152e6 RDI: 0000000000000003\nRBP: ffff888020f80908 R08: 0000200000000000 R09: 0000000000000000\nR10: ffffffff875152d8 R11: 0000000000000000 R12: ffffc90009447270\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\nFS:  000000000097a300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00000000200001c4 CR3: 0000000026a52000 CR4: 00000000001506e0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n nf_tables_newexpr net/netfilter/nf_tables_api.c:2675 [inline]\n nft_expr_init+0x145/0x2d0 net/netfilter/nf_tables_api.c:2713\n nft_set_elem_expr_alloc+0x27/0x280 net/netfilter/nf_tables_api.c:5160\n nf_tables_newset+0x1997/0x3150 net/netfilter/nf_tables_api.c:4321\n nfnetlink_rcv_batch+0x85a/0x21b0 net/netfilter/nfnetlink.c:456\n nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:580 [inline]\n nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:598\n netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]\n netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1338\n netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1927\n sock_sendmsg_nosec net/socket.c:654 [inline]\n sock_sendmsg+0xcf/0x120 net/socket.c:674\n ____sys_sendmsg+0x6e8/0x810 net/socket.c:2350\n ___sys_sendmsg+0xf3/0x170 net/socket.c:2404\n __sys_sendmsg+0xe5/0x1b0 net/socket.c:2433\n do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46\n entry_SYSCALL_64_after_hwframe+0x44/0xae"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/9065ccb9ec92c5120e7e97958397ebdb454f23d6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9065ccb9ec92c5120e7e97958397ebdb454f23d6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fadd3c4afdf3d4c21f4d138502f8b76334987e26",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fadd3c4afdf3d4c21f4d138502f8b76334987e26"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/01fb1626b620cb37a65ad08e0f626489e8f042ef",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/01fb1626b620cb37a65ad08e0f626489e8f042ef"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/dc1732baa9da5b68621586bf8636ebbc27dc62d2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/dc1732baa9da5b68621586bf8636ebbc27dc62d2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1bb3ee4259936cc3b2d80a4a480bbb4868575071",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1bb3ee4259936cc3b2d80a4a480bbb4868575071"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b895bdf5d643b6feb7c60856326dd4feb6981560",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b895bdf5d643b6feb7c60856326dd4feb6981560"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_limit: avoid possible divide error in nft_limit_init\n\ndiv_u64() divides u64 by u32.\n\nnft_limit_init() wants to divide u64 by u64, use the appropriate\nmath function (div64_u64)\n\ndivide error: 0000 [#1] PREEMPT SMP KASAN\nCPU: 1 PID: 8390 Comm: syz-executor188 Not tainted 5.12.0-rc4-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011\nRIP: 0010:div_u64_rem include/linux/math64.h:28 [inline]\nRIP: 0010:div_u64 include/linux/math64.h:127 [inline]\nRIP: 0010:nft_limit_init+0x2a2/0x5e0 net/netfilter/nft_limit.c:85\nCode: ef 4c 01 eb 41 0f 92 c7 48 89 de e8 38 a5 22 fa 4d 85 ff 0f 85 97 02 00 00 e8 ea 9e 22 fa 4c 0f af f3 45 89 ed 31 d2 4c 89 f0 <49> f7 f5 49 89 c6 e8 d3 9e 22 fa 48 8d 7d 48 48 b8 00 00 00 00 00\nRSP: 0018:ffffc90009447198 EFLAGS: 00010246\nRAX: 0000000000000000 RBX: 0000200000000000 RCX: 0000000000000000\nRDX: 0000000000000000 RSI: ffffffff875152e6 RDI: 0000000000000003\nRBP: ffff888020f80908 R08: 0000200000000000 R09: 0000000000000000\nR10: ffffffff875152d8 R11: 0000000000000000 R12: ffffc90009447270\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\nFS:  000000000097a300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00000000200001c4 CR3: 0000000026a52000 CR4: 00000000001506e0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n nf_tables_newexpr net/netfilter/nf_tables_api.c:2675 [inline]\n nft_expr_init+0x145/0x2d0 net/netfilter/nf_tables_api.c:2713\n nft_set_elem_expr_alloc+0x27/0x280 net/netfilter/nf_tables_api.c:5160\n nf_tables_newset+0x1997/0x3150 net/netfilter/nf_tables_api.c:4321\n nfnetlink_rcv_batch+0x85a/0x21b0 net/netfilter/nfnetlink.c:456\n nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:580 [inline]\n nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:598\n netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]\n netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1338\n netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1927\n sock_sendmsg_nosec net/socket.c:654 [inline]\n sock_sendmsg+0xcf/0x120 net/socket.c:674\n ____sys_sendmsg+0x6e8/0x810 net/socket.c:2350\n ___sys_sendmsg+0xf3/0x170 net/socket.c:2404\n __sys_sendmsg+0xe5/0x1b0 net/socket.c:2433\n do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46\n entry_SYSCALL_64_after_hwframe+0x44/0xae"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux se ha resuelto la siguiente vulnerabilidad: netfilter: nft_limit: evita posible error de divisi\u00f3n en nft_limit_init div_u64() divide u64 entre u32. nft_limit_init() quiere dividir u64 entre u64, use la funci\u00f3n matem\u00e1tica apropiada (div64_u64) error de divisi\u00f3n: 0000 [#1] CPU PREEMPT SMP KASAN: 1 PID: 8390 Comm: syz-executor188 Not tainted 5.12.0-rc4-syzkaller # 0 Nombre del hardware: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011 RIP: 0010:div_u64_rem include/linux/math64.h:28 [en l\u00ednea] RIP: 0010:div_u64 include/linux/math64.h: 127 [en l\u00ednea] RIP: 0010:nft_limit_init+0x2a2/0x5e0 net/netfilter/nft_limit.c:85 C\u00f3digo: ef 4c 01 eb 41 0f 92 c7 48 89 de e8 38 a5 22 fa 4d 85 ff 0f 85 97 02 00 00 e8 ea 9e 22 fa 4c 0f af f3 45 89 ed 31 d2 4c 89 f0 &lt;49&gt; f7 f5 49 89 c6 e8 d3 9e 22 fa 48 8d 7d 48 48 b8 00 00 00 00 00 RSP: 0018:ffffc90009447198 EF LAGS: 00010246 RAX: 0000000000000000 RBX: 0000200000000000 RCX: 0000000000000000 RDX: 0000000000000000 RSI: ffffffff875152e6 RDI: 0000000000000003 RBP: ffff888 020f80908 R08: 0000200000000000 R09: 0000000000000000 R10: ffffffff875152d8 R11: 0000000000000000 R12: ffffc90009447270 R13: 000000000000 0000 R14: 0000000000000000 R15: 0000000000000000 FS: 000000000097a300(0000) GS :ffff8880b9d00000(0000) knlGS:0000000000000000 CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033 CR2: 00000000200001c4 CR3: 0000000026a52000 CR 4: 00000000001506e0 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000 DR3: 00000000000000000 DR6: 00000000ffe0ff0 DR7: 00000 00000000400 Rastreo de llamadas: nf_tables_newexpr net/netfilter/nf_tables_api.c:2675 [en l\u00ednea] nft_expr_init+0x145/0x2d0 net/netfilter/nf_tables_api.c:2713 nft_set_elem_expr_alloc+0x27/0x280 net/netfilter/nf_tables_api.c:5160 nf_tables_newset+0x1997/0x3150 net/netfilter/ nf_tables_api.c:4321 nfnetlink_rcv_batch+0x85a/0x21b0 net/netfilter/nfnetlink.c:456 nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:580 [en l\u00ednea] nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:59 8 netlink_unicast_kernel red/netlink /af_netlink.c:1312 [en l\u00ednea] netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1338 netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1927 sock_sendmsg_nosec net/socket.c:654 [en l\u00ednea] sock_sendmsg+ 0xcf/0x120 net/socket.c:674 ____sys_sendmsg+0x6e8/0x810 net/socket.c:2350 ___sys_sendmsg+0xf3/0x170 net/socket.c:2404 __sys_sendmsg+0xe5/0x1b0 net/socket.c:2433 do_sys llamada_64+0x2d/ 0x70 arch/x86/entry/common.c:46 entrada_SYSCALL_64_after_hwframe+0x44/0xae"
+          }
+        ],
+        "id": "CVE-2021-46915",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T07:15:08.083",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/01fb1626b620cb37a65ad08e0f626489e8f042ef"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1bb3ee4259936cc3b2d80a4a480bbb4868575071"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9065ccb9ec92c5120e7e97958397ebdb454f23d6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b895bdf5d643b6feb7c60856326dd4feb6981560"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dc1732baa9da5b68621586bf8636ebbc27dc62d2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fadd3c4afdf3d4c21f4d138502f8b76334987e26"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46925"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/smc: fix kernel panic caused by race of smc_sock\n\nA crash occurs when smc_cdc_tx_handler() tries to access smc_sock\nbut smc_release() has already freed it.\n\n[ 4570.695099] BUG: unable to handle page fault for address: 000000002eae9e88\n[ 4570.696048] #PF: supervisor write access in kernel mode\n[ 4570.696728] #PF: error_code(0x0002) - not-present page\n[ 4570.697401] PGD 0 P4D 0\n[ 4570.697716] Oops: 0002 [#1] PREEMPT SMP NOPTI\n[ 4570.698228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.16.0-rc4+ #111\n[ 4570.699013] Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS 8c24b4c 04/0\n[ 4570.699933] RIP: 0010:_raw_spin_lock+0x1a/0x30\n<...>\n[ 4570.711446] Call Trace:\n[ 4570.711746]  <IRQ>\n[ 4570.711992]  smc_cdc_tx_handler+0x41/0xc0\n[ 4570.712470]  smc_wr_tx_tasklet_fn+0x213/0x560\n[ 4570.712981]  ? smc_cdc_tx_dismisser+0x10/0x10\n[ 4570.713489]  tasklet_action_common.isra.17+0x66/0x140\n[ 4570.714083]  __do_softirq+0x123/0x2f4\n[ 4570.714521]  irq_exit_rcu+0xc4/0xf0\n[ 4570.714934]  common_interrupt+0xba/0xe0\n\nThough smc_cdc_tx_handler() checked the existence of smc connection,\nsmc_release() may have already dismissed and released the smc socket\nbefore smc_cdc_tx_handler() further visits it.\n\nsmc_cdc_tx_handler()           |smc_release()\nif (!conn)                     |\n                               |\n                               |smc_cdc_tx_dismiss_slots()\n                               |      smc_cdc_tx_dismisser()\n                               |\n                               |sock_put(&smc->sk) <- last sock_put,\n                               |                      smc_sock freed\nbh_lock_sock(&smc->sk) (panic) |\n\nTo make sure we won't receive any CDC messages after we free the\nsmc_sock, add a refcount on the smc_connection for inflight CDC\nmessage(posted to the QP but haven't received related CQE), and\ndon't release the smc_connection until all the inflight CDC messages\nhaven been done, for both success or failed ones.\n\nUsing refcount on CDC messages brings another problem: when the link\nis going to be destroyed, smcr_link_clear() will reset the QP, which\nthen remove all the pending CQEs related to the QP in the CQ. To make\nsure all the CQEs will always come back so the refcount on the\nsmc_connection can always reach 0, smc_ib_modify_qp_reset() was replaced\nby smc_ib_modify_qp_error().\nAnd remove the timeout in smc_wr_tx_wait_no_pending_sends() since we\nneed to wait for all pending WQEs done, or we may encounter use-after-\nfree when handling CQEs.\n\nFor IB device removal routine, we need to wait for all the QPs on that\ndevice been destroyed before we can destroy CQs on the device, or\nthe refcount on smc_connection won't reach 0 and smc_sock cannot be\nreleased.",
       "id": "GSD-2021-46925",
       "modified": "2024-02-26T06:03:52.400434Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46925",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5f08318f617b",
+                          "version_value": "e8a5988a85c7"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.11"
+                              },
+                              {
+                                "lessThan": "4.11",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.90",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.13",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/smc: fix kernel panic caused by race of smc_sock\n\nA crash occurs when smc_cdc_tx_handler() tries to access smc_sock\nbut smc_release() has already freed it.\n\n[ 4570.695099] BUG: unable to handle page fault for address: 000000002eae9e88\n[ 4570.696048] #PF: supervisor write access in kernel mode\n[ 4570.696728] #PF: error_code(0x0002) - not-present page\n[ 4570.697401] PGD 0 P4D 0\n[ 4570.697716] Oops: 0002 [#1] PREEMPT SMP NOPTI\n[ 4570.698228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.16.0-rc4+ #111\n[ 4570.699013] Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS 8c24b4c 04/0\n[ 4570.699933] RIP: 0010:_raw_spin_lock+0x1a/0x30\n<...>\n[ 4570.711446] Call Trace:\n[ 4570.711746]  <IRQ>\n[ 4570.711992]  smc_cdc_tx_handler+0x41/0xc0\n[ 4570.712470]  smc_wr_tx_tasklet_fn+0x213/0x560\n[ 4570.712981]  ? smc_cdc_tx_dismisser+0x10/0x10\n[ 4570.713489]  tasklet_action_common.isra.17+0x66/0x140\n[ 4570.714083]  __do_softirq+0x123/0x2f4\n[ 4570.714521]  irq_exit_rcu+0xc4/0xf0\n[ 4570.714934]  common_interrupt+0xba/0xe0\n\nThough smc_cdc_tx_handler() checked the existence of smc connection,\nsmc_release() may have already dismissed and released the smc socket\nbefore smc_cdc_tx_handler() further visits it.\n\nsmc_cdc_tx_handler()           |smc_release()\nif (!conn)                     |\n                               |\n                               |smc_cdc_tx_dismiss_slots()\n                               |      smc_cdc_tx_dismisser()\n                               |\n                               |sock_put(&smc->sk) <- last sock_put,\n                               |                      smc_sock freed\nbh_lock_sock(&smc->sk) (panic) |\n\nTo make sure we won't receive any CDC messages after we free the\nsmc_sock, add a refcount on the smc_connection for inflight CDC\nmessage(posted to the QP but haven't received related CQE), and\ndon't release the smc_connection until all the inflight CDC messages\nhaven been done, for both success or failed ones.\n\nUsing refcount on CDC messages brings another problem: when the link\nis going to be destroyed, smcr_link_clear() will reset the QP, which\nthen remove all the pending CQEs related to the QP in the CQ. To make\nsure all the CQEs will always come back so the refcount on the\nsmc_connection can always reach 0, smc_ib_modify_qp_reset() was replaced\nby smc_ib_modify_qp_error().\nAnd remove the timeout in smc_wr_tx_wait_no_pending_sends() since we\nneed to wait for all pending WQEs done, or we may encounter use-after-\nfree when handling CQEs.\n\nFor IB device removal routine, we need to wait for all the QPs on that\ndevice been destroyed before we can destroy CQs on the device, or\nthe refcount on smc_connection won't reach 0 and smc_sock cannot be\nreleased."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/e8a5988a85c719ce7205cb00dcf0716dcf611332",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e8a5988a85c719ce7205cb00dcf0716dcf611332"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b85f751d71ae8e2a15e9bda98852ea9af35282eb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b85f751d71ae8e2a15e9bda98852ea9af35282eb"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/349d43127dac00c15231e8ffbcaabd70f7b0e544",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/349d43127dac00c15231e8ffbcaabd70f7b0e544"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/smc: fix kernel panic caused by race of smc_sock\n\nA crash occurs when smc_cdc_tx_handler() tries to access smc_sock\nbut smc_release() has already freed it.\n\n[ 4570.695099] BUG: unable to handle page fault for address: 000000002eae9e88\n[ 4570.696048] #PF: supervisor write access in kernel mode\n[ 4570.696728] #PF: error_code(0x0002) - not-present page\n[ 4570.697401] PGD 0 P4D 0\n[ 4570.697716] Oops: 0002 [#1] PREEMPT SMP NOPTI\n[ 4570.698228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.16.0-rc4+ #111\n[ 4570.699013] Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS 8c24b4c 04/0\n[ 4570.699933] RIP: 0010:_raw_spin_lock+0x1a/0x30\n<...>\n[ 4570.711446] Call Trace:\n[ 4570.711746]  <IRQ>\n[ 4570.711992]  smc_cdc_tx_handler+0x41/0xc0\n[ 4570.712470]  smc_wr_tx_tasklet_fn+0x213/0x560\n[ 4570.712981]  ? smc_cdc_tx_dismisser+0x10/0x10\n[ 4570.713489]  tasklet_action_common.isra.17+0x66/0x140\n[ 4570.714083]  __do_softirq+0x123/0x2f4\n[ 4570.714521]  irq_exit_rcu+0xc4/0xf0\n[ 4570.714934]  common_interrupt+0xba/0xe0\n\nThough smc_cdc_tx_handler() checked the existence of smc connection,\nsmc_release() may have already dismissed and released the smc socket\nbefore smc_cdc_tx_handler() further visits it.\n\nsmc_cdc_tx_handler()           |smc_release()\nif (!conn)                     |\n                               |\n                               |smc_cdc_tx_dismiss_slots()\n                               |      smc_cdc_tx_dismisser()\n                               |\n                               |sock_put(&smc->sk) <- last sock_put,\n                               |                      smc_sock freed\nbh_lock_sock(&smc->sk) (panic) |\n\nTo make sure we won't receive any CDC messages after we free the\nsmc_sock, add a refcount on the smc_connection for inflight CDC\nmessage(posted to the QP but haven't received related CQE), and\ndon't release the smc_connection until all the inflight CDC messages\nhaven been done, for both success or failed ones.\n\nUsing refcount on CDC messages brings another problem: when the link\nis going to be destroyed, smcr_link_clear() will reset the QP, which\nthen remove all the pending CQEs related to the QP in the CQ. To make\nsure all the CQEs will always come back so the refcount on the\nsmc_connection can always reach 0, smc_ib_modify_qp_reset() was replaced\nby smc_ib_modify_qp_error().\nAnd remove the timeout in smc_wr_tx_wait_no_pending_sends() since we\nneed to wait for all pending WQEs done, or we may encounter use-after-\nfree when handling CQEs.\n\nFor IB device removal routine, we need to wait for all the QPs on that\ndevice been destroyed before we can destroy CQs on the device, or\nthe refcount on smc_connection won't reach 0 and smc_sock cannot be\nreleased."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net/smc: soluciona el p\u00e1nico del kernel causado por la carrera de smc_sock. Se produce un bloqueo cuando smc_cdc_tx_handler() intenta acceder a smc_sock pero smc_release() ya lo ha liberado. [ 4570.695099] ERROR: no se puede manejar el error de p\u00e1gina para la direcci\u00f3n: 000000002eae9e88 [ 4570.696048] #PF: acceso de escritura del supervisor en modo kernel [ 4570.696728] #PF: error_code(0x0002) - p\u00e1gina no presente [ 4570.697401] PGD 0 P4D 0 [ 4 570.697716 ] Ups: 0002 [#1] PREEMPT SMP NOPTI [ 4570.698228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.16.0-rc4+ #111 [ 4570.699013] Nombre de hardware: Alibaba Cloud Alibaba Cloud ECS, BIOS 8c24b4c 04/ 0 [ 4570.699933] RIP: 0010:_raw_spin_lock+0x1a/0x30 &lt;...&gt; [ 4570.711446] Seguimiento de llamadas: [ 4570.711746]  [ 4570.711992] smc_cdc_tx_handler+0x41/0xc0 [ 4570.7 12470] smc_wr_tx_tasklet_fn+0x213/0x560 [ 4570.712981] ? smc_cdc_tx_dismisser+0x10/0x10 [ 4570.713489] tasklet_action_common.isra.17+0x66/0x140 [ 4570.714083] __do_softirq+0x123/0x2f4 [ 4570.714521] irq_exit_rcu+0xc4/0x f0 [4570.714934] common_interrupt+0xba/0xe0 Aunque smc_cdc_tx_handler() comprob\u00f3 la existencia de smc conexi\u00f3n, es posible que smc_release() ya haya descartado y liberado el socket smc antes de que smc_cdc_tx_handler() lo visite m\u00e1s. smc_cdc_tx_handler() |smc_release() si (!conn) | | |smc_cdc_tx_dismiss_slots() | smc_cdc_tx_dismisser() | |sock_put(&amp;smc-&gt;sk) &lt;- \u00faltimo sock_put, | smc_sock liber\u00f3 bh_lock_sock(&amp;smc-&gt;sk) (p\u00e1nico) | Para asegurarnos de que no recibiremos ning\u00fan mensaje CDC despu\u00e9s de liberar el smc_sock, agregue un recuento en smc_connection para el mensaje CDC en vuelo (publicado en el QP pero no haya recibido el CQE relacionado) y no libere el smc_connection hasta que todo Los mensajes CDC a bordo se han realizado, tanto para los exitosos como para los fallidos. El uso de refcount en mensajes CDC trae otro problema: cuando el enlace se va a destruir, smcr_link_clear() restablecer\u00e1 el QP, lo que luego eliminar\u00e1 todos los CQE pendientes relacionados con el QP en el CQ. Para asegurarse de que todos los CQE siempre regresen para que el recuento en smc_connection siempre pueda llegar a 0, smc_ib_modify_qp_reset() fue reemplazado por smc_ib_modify_qp_error(). Y elimine el tiempo de espera en smc_wr_tx_wait_no_pending_sends() ya que debemos esperar a que se completen todos los WQE pendientes, o podemos encontrarnos con use-after- free al manejar CQE. Para la rutina de eliminaci\u00f3n del dispositivo IB, debemos esperar a que se destruyan todos los QP de ese dispositivo antes de poder destruir los CQ del dispositivo, o el recuento de referencia en smc_connection no llegar\u00e1 a 0 y smc_sock no podr\u00e1 liberarse."
+          }
+        ],
+        "id": "CVE-2021-46925",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T10:15:07.237",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/349d43127dac00c15231e8ffbcaabd70f7b0e544"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b85f751d71ae8e2a15e9bda98852ea9af35282eb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e8a5988a85c719ce7205cb00dcf0716dcf611332"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

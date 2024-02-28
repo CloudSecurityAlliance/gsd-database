@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46931"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/mlx5e: Wrap the tx reporter dump callback to extract the sq\n\nFunction mlx5e_tx_reporter_dump_sq() casts its void * argument to struct\nmlx5e_txqsq *, but in TX-timeout-recovery flow the argument is actually\nof type struct mlx5e_tx_timeout_ctx *.\n\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout detected\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout on queue: 1, SQ: 0x11ec, CQ: 0x146d, SQ Cons: 0x0 SQ Prod: 0x1, usecs since last trans: 21565000\n BUG: stack guard page was hit at 0000000093f1a2de (stack is 00000000b66ea0dc..000000004d932dae)\n kernel stack overflow (page fault): 0000 [#1] SMP NOPTI\n CPU: 5 PID: 95 Comm: kworker/u20:1 Tainted: G W OE 5.13.0_mlnx #1\n Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014\n Workqueue: mlx5e mlx5e_tx_timeout_work [mlx5_core]\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n [mlx5_core]\n Call Trace:\n mlx5e_tx_reporter_dump+0x43/0x1c0 [mlx5_core]\n devlink_health_do_dump.part.91+0x71/0xd0\n devlink_health_report+0x157/0x1b0\n mlx5e_reporter_tx_timeout+0xb9/0xf0 [mlx5_core]\n ? mlx5e_tx_reporter_err_cqe_recover+0x1d0/0x1d0\n [mlx5_core]\n ? mlx5e_health_queue_dump+0xd0/0xd0 [mlx5_core]\n ? update_load_avg+0x19b/0x550\n ? set_next_entity+0x72/0x80\n ? pick_next_task_fair+0x227/0x340\n ? finish_task_switch+0xa2/0x280\n   mlx5e_tx_timeout_work+0x83/0xb0 [mlx5_core]\n   process_one_work+0x1de/0x3a0\n   worker_thread+0x2d/0x3c0\n ? process_one_work+0x3a0/0x3a0\n   kthread+0x115/0x130\n ? kthread_park+0x90/0x90\n   ret_from_fork+0x1f/0x30\n --[ end trace 51ccabea504edaff ]---\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n PKRU: 55555554\n Kernel panic - not syncing: Fatal exception\n Kernel Offset: disabled\n end Kernel panic - not syncing: Fatal exception\n\nTo fix this bug add a wrapper for mlx5e_tx_reporter_dump_sq() which\nextracts the sq from struct mlx5e_tx_timeout_ctx and set it as the\nTX-timeout-recovery flow dump callback.",
       "id": "GSD-2021-46931",
       "modified": "2024-02-26T06:03:52.671871Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46931",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5f29458b77d5",
+                          "version_value": "73665165b64a"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.7"
+                              },
+                              {
+                                "lessThan": "5.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.90",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.13",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/mlx5e: Wrap the tx reporter dump callback to extract the sq\n\nFunction mlx5e_tx_reporter_dump_sq() casts its void * argument to struct\nmlx5e_txqsq *, but in TX-timeout-recovery flow the argument is actually\nof type struct mlx5e_tx_timeout_ctx *.\n\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout detected\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout on queue: 1, SQ: 0x11ec, CQ: 0x146d, SQ Cons: 0x0 SQ Prod: 0x1, usecs since last trans: 21565000\n BUG: stack guard page was hit at 0000000093f1a2de (stack is 00000000b66ea0dc..000000004d932dae)\n kernel stack overflow (page fault): 0000 [#1] SMP NOPTI\n CPU: 5 PID: 95 Comm: kworker/u20:1 Tainted: G W OE 5.13.0_mlnx #1\n Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014\n Workqueue: mlx5e mlx5e_tx_timeout_work [mlx5_core]\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n [mlx5_core]\n Call Trace:\n mlx5e_tx_reporter_dump+0x43/0x1c0 [mlx5_core]\n devlink_health_do_dump.part.91+0x71/0xd0\n devlink_health_report+0x157/0x1b0\n mlx5e_reporter_tx_timeout+0xb9/0xf0 [mlx5_core]\n ? mlx5e_tx_reporter_err_cqe_recover+0x1d0/0x1d0\n [mlx5_core]\n ? mlx5e_health_queue_dump+0xd0/0xd0 [mlx5_core]\n ? update_load_avg+0x19b/0x550\n ? set_next_entity+0x72/0x80\n ? pick_next_task_fair+0x227/0x340\n ? finish_task_switch+0xa2/0x280\n   mlx5e_tx_timeout_work+0x83/0xb0 [mlx5_core]\n   process_one_work+0x1de/0x3a0\n   worker_thread+0x2d/0x3c0\n ? process_one_work+0x3a0/0x3a0\n   kthread+0x115/0x130\n ? kthread_park+0x90/0x90\n   ret_from_fork+0x1f/0x30\n --[ end trace 51ccabea504edaff ]---\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n PKRU: 55555554\n Kernel panic - not syncing: Fatal exception\n Kernel Offset: disabled\n end Kernel panic - not syncing: Fatal exception\n\nTo fix this bug add a wrapper for mlx5e_tx_reporter_dump_sq() which\nextracts the sq from struct mlx5e_tx_timeout_ctx and set it as the\nTX-timeout-recovery flow dump callback."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/73665165b64a8f3c5b3534009a69be55bb744f05",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/73665165b64a8f3c5b3534009a69be55bb744f05"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/07f13d58a8ecc3baf9a488588fb38c5cb0db484f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/07f13d58a8ecc3baf9a488588fb38c5cb0db484f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/918fc3855a6507a200e9cf22c20be852c0982687",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/918fc3855a6507a200e9cf22c20be852c0982687"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/mlx5e: Wrap the tx reporter dump callback to extract the sq\n\nFunction mlx5e_tx_reporter_dump_sq() casts its void * argument to struct\nmlx5e_txqsq *, but in TX-timeout-recovery flow the argument is actually\nof type struct mlx5e_tx_timeout_ctx *.\n\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout detected\n mlx5_core 0000:08:00.1 enp8s0f1: TX timeout on queue: 1, SQ: 0x11ec, CQ: 0x146d, SQ Cons: 0x0 SQ Prod: 0x1, usecs since last trans: 21565000\n BUG: stack guard page was hit at 0000000093f1a2de (stack is 00000000b66ea0dc..000000004d932dae)\n kernel stack overflow (page fault): 0000 [#1] SMP NOPTI\n CPU: 5 PID: 95 Comm: kworker/u20:1 Tainted: G W OE 5.13.0_mlnx #1\n Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014\n Workqueue: mlx5e mlx5e_tx_timeout_work [mlx5_core]\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n [mlx5_core]\n Call Trace:\n mlx5e_tx_reporter_dump+0x43/0x1c0 [mlx5_core]\n devlink_health_do_dump.part.91+0x71/0xd0\n devlink_health_report+0x157/0x1b0\n mlx5e_reporter_tx_timeout+0xb9/0xf0 [mlx5_core]\n ? mlx5e_tx_reporter_err_cqe_recover+0x1d0/0x1d0\n [mlx5_core]\n ? mlx5e_health_queue_dump+0xd0/0xd0 [mlx5_core]\n ? update_load_avg+0x19b/0x550\n ? set_next_entity+0x72/0x80\n ? pick_next_task_fair+0x227/0x340\n ? finish_task_switch+0xa2/0x280\n   mlx5e_tx_timeout_work+0x83/0xb0 [mlx5_core]\n   process_one_work+0x1de/0x3a0\n   worker_thread+0x2d/0x3c0\n ? process_one_work+0x3a0/0x3a0\n   kthread+0x115/0x130\n ? kthread_park+0x90/0x90\n   ret_from_fork+0x1f/0x30\n --[ end trace 51ccabea504edaff ]---\n RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180\n PKRU: 55555554\n Kernel panic - not syncing: Fatal exception\n Kernel Offset: disabled\n end Kernel panic - not syncing: Fatal exception\n\nTo fix this bug add a wrapper for mlx5e_tx_reporter_dump_sq() which\nextracts the sq from struct mlx5e_tx_timeout_ctx and set it as the\nTX-timeout-recovery flow dump callback."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net/mlx5e: envuelve la devoluci\u00f3n de llamada del volcado de tx reporter para extraer el sq. La funci\u00f3n mlx5e_tx_reporter_dump_sq() lanza su argumento void * a la estructura mlx5e_txqsq *, pero en el flujo TX-timeout-recovery el argumento en realidad es de tipo struct mlx5e_tx_timeout_ctx *. mlx5_core 0000: 08: 00.1 enp8s0f1: tx timeout detectado mlx5_core 0000: 08: 00.1 enp8s0f1: tx timeout en cola: 1, sq: 0x11ec, cq: 0x146d, sq consecuencia: 0x0 sq prod: 0x1, usecs desde el \u00faltimo trans: 21565000 : la p\u00e1gina de protecci\u00f3n de pila fue visitada en 0000000093f1a2de (la pila es 00000000b66ea0dc..000000004d932dae) Desbordamiento de pila del kernel (fallo de p\u00e1gina): 0000 [#1] SMP NOPTI CPU: 5 PID: 95 Comm: kworker/u20:1 Contaminado: GW OE 5.13. 0_mlnx #1 Nombre del hardware: PC est\u00e1ndar QEMU (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 01/04/2014 Cola de trabajo: mlx5e mlx5e_tx_timeout_work [mlx5_core] RIP: 0010:mlx5e_tx_reporter_ volcado_sq +0xd3/0x180 [mlx5_core] Seguimiento de llamadas: mlx5e_tx_reporter_dump+0x43/0x1c0 [mlx5_core] devlink_health_do_dump.part.91+0x71/0xd0 devlink_health_report+0x157/0x1b0 mlx5e_reporter_tx_timeout+0xb9/0xf0 [ml x5_core] ? mlx5e_tx_reporter_err_cqe_recover+0x1d0/0x1d0 [mlx5_core] ? mlx5e_health_queue_dump+0xd0/0xd0 [mlx5_core] ? update_load_avg+0x19b/0x550? set_next_entity+0x72/0x80? pick_next_task_fair+0x227/0x340? Finish_task_switch+0xa2/0x280 mlx5e_tx_timeout_work+0x83/0xb0 [mlx5_core] Process_one_work+0x1de/0x3a0 trabajador_thread+0x2d/0x3c0? proceso_one_work+0x3a0/0x3a0 kthread+0x115/0x130 ? kthread_park+0x90/0x90 ret_from_fork+0x1f/0x30 --[ end trace 51ccabea504edaff ]--- RIP: 0010:mlx5e_tx_reporter_dump_sq+0xd3/0x180 PKRU: 55555554 P\u00e1nico del kernel - no sincronizado: excepci\u00f3n fatal Compensaci\u00f3n del kernel: final deshabilitado P\u00e1nico del kernel - no sincronizar : Excepci\u00f3n fatal Para corregir este error, agregue un contenedor para mlx5e_tx_reporter_dump_sq() que extrae el sq de la estructura mlx5e_tx_timeout_ctx y lo configura como devoluci\u00f3n de llamada de volcado de flujo de recuperaci\u00f3n de tiempo de espera de TX."
+          }
+        ],
+        "id": "CVE-2021-46931",
+        "lastModified": "2024-02-27T14:20:06.637",
+        "metrics": {},
+        "published": "2024-02-27T10:15:07.690",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/07f13d58a8ecc3baf9a488588fb38c5cb0db484f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/73665165b64a8f3c5b3534009a69be55bb744f05"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/918fc3855a6507a200e9cf22c20be852c0982687"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

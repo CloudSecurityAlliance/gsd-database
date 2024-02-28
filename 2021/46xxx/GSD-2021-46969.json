@@ -1,0 +1,149 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-46969"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbus: mhi: core: Fix invalid error returning in mhi_queue\n\nmhi_queue returns an error when the doorbell is not accessible in\nthe current state. This can happen when the device is in non M0\nstate, like M3, and needs to be waken-up prior ringing the DB. This\ncase is managed earlier by triggering an asynchronous M3 exit via\ncontroller resume/suspend callbacks, that in turn will cause M0\ntransition and DB update.\n\nSo, since it's not an error but just delaying of doorbell update, there\nis no reason to return an error.\n\nThis also fixes a use after free error for skb case, indeed a caller\nqueuing skb will try to free the skb if the queueing fails, but in\nthat case queueing has been done.",
+      "id": "GSD-2021-46969",
+      "modified": "2024-02-28T06:03:57.771644Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2021-46969",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "a8f75cb348fd",
+                          "version_value": "a99b661c3187"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.12"
+                              },
+                              {
+                                "lessThan": "5.12",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbus: mhi: core: Fix invalid error returning in mhi_queue\n\nmhi_queue returns an error when the doorbell is not accessible in\nthe current state. This can happen when the device is in non M0\nstate, like M3, and needs to be waken-up prior ringing the DB. This\ncase is managed earlier by triggering an asynchronous M3 exit via\ncontroller resume/suspend callbacks, that in turn will cause M0\ntransition and DB update.\n\nSo, since it's not an error but just delaying of doorbell update, there\nis no reason to return an error.\n\nThis also fixes a use after free error for skb case, indeed a caller\nqueuing skb will try to free the skb if the queueing fails, but in\nthat case queueing has been done."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-b01c2a820106"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/a99b661c3187365f81026d89b1133a76cd2652b3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a99b661c3187365f81026d89b1133a76cd2652b3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0ecc1c70dcd32c0f081b173a1a5d89952686f271",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0ecc1c70dcd32c0f081b173a1a5d89952686f271"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbus: mhi: core: Fix invalid error returning in mhi_queue\n\nmhi_queue returns an error when the doorbell is not accessible in\nthe current state. This can happen when the device is in non M0\nstate, like M3, and needs to be waken-up prior ringing the DB. This\ncase is managed earlier by triggering an asynchronous M3 exit via\ncontroller resume/suspend callbacks, that in turn will cause M0\ntransition and DB update.\n\nSo, since it's not an error but just delaying of doorbell update, there\nis no reason to return an error.\n\nThis also fixes a use after free error for skb case, indeed a caller\nqueuing skb will try to free the skb if the queueing fails, but in\nthat case queueing has been done."
+          }
+        ],
+        "id": "CVE-2021-46969",
+        "lastModified": "2024-02-27T19:04:07.260",
+        "metrics": {},
+        "published": "2024-02-27T19:04:07.260",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0ecc1c70dcd32c0f081b173a1a5d89952686f271"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a99b661c3187365f81026d89b1133a76cd2652b3"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
+    }
+  }
+}
