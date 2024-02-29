@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47005"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: endpoint: Fix NULL pointer dereference for ->get_features()\n\nget_features ops of pci_epc_ops may return NULL, causing NULL pointer\ndereference in pci_epf_test_alloc_space function. Let us add a check for\npci_epc_feature pointer in pci_epf_test_bind before we access it to avoid\nany such NULL pointer dereference and return -ENOTSUPP in case\npci_epc_feature is not found.\n\nWhen the patch is not applied and EPC features is not implemented in the\nplatform driver, we see the following dump due to kernel NULL pointer\ndereference.\n\nCall trace:\n pci_epf_test_bind+0xf4/0x388\n pci_epf_bind+0x3c/0x80\n pci_epc_epf_link+0xa8/0xcc\n configfs_symlink+0x1a4/0x48c\n vfs_symlink+0x104/0x184\n do_symlinkat+0x80/0xd4\n __arm64_sys_symlinkat+0x1c/0x24\n el0_svc_common.constprop.3+0xb8/0x170\n el0_svc_handler+0x70/0x88\n el0_svc+0x8/0x640\nCode: d2800581 b9403ab9 f9404ebb 8b394f60 (f9400400)\n---[ end trace a438e3c5a24f9df0 ]---",
       "id": "GSD-2021-47005",
       "modified": "2024-02-28T06:03:55.882646Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47005",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "2c04c5b8eef79",
+                          "version_value": "bbed83d7060e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.1"
+                              },
+                              {
+                                "lessThan": "5.1",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.38",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.22",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: endpoint: Fix NULL pointer dereference for ->get_features()\n\nget_features ops of pci_epc_ops may return NULL, causing NULL pointer\ndereference in pci_epf_test_alloc_space function. Let us add a check for\npci_epc_feature pointer in pci_epf_test_bind before we access it to avoid\nany such NULL pointer dereference and return -ENOTSUPP in case\npci_epc_feature is not found.\n\nWhen the patch is not applied and EPC features is not implemented in the\nplatform driver, we see the following dump due to kernel NULL pointer\ndereference.\n\nCall trace:\n pci_epf_test_bind+0xf4/0x388\n pci_epf_bind+0x3c/0x80\n pci_epc_epf_link+0xa8/0xcc\n configfs_symlink+0x1a4/0x48c\n vfs_symlink+0x104/0x184\n do_symlinkat+0x80/0xd4\n __arm64_sys_symlinkat+0x1c/0x24\n el0_svc_common.constprop.3+0xb8/0x170\n el0_svc_handler+0x70/0x88\n el0_svc+0x8/0x640\nCode: d2800581 b9403ab9 f9404ebb 8b394f60 (f9400400)\n---[ end trace a438e3c5a24f9df0 ]---"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/bbed83d7060e07a5d309104d25a00f0a24441428",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bbed83d7060e07a5d309104d25a00f0a24441428"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/679ebad058b8168f10e63876d63b0877fd2fe784",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/679ebad058b8168f10e63876d63b0877fd2fe784"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0169d4f0bee44fdfef908c13ed21fcb326c38695",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0169d4f0bee44fdfef908c13ed21fcb326c38695"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6613bc2301ba291a1c5a90e1dc24cf3edf223c03",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6613bc2301ba291a1c5a90e1dc24cf3edf223c03"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: endpoint: Fix NULL pointer dereference for ->get_features()\n\nget_features ops of pci_epc_ops may return NULL, causing NULL pointer\ndereference in pci_epf_test_alloc_space function. Let us add a check for\npci_epc_feature pointer in pci_epf_test_bind before we access it to avoid\nany such NULL pointer dereference and return -ENOTSUPP in case\npci_epc_feature is not found.\n\nWhen the patch is not applied and EPC features is not implemented in the\nplatform driver, we see the following dump due to kernel NULL pointer\ndereference.\n\nCall trace:\n pci_epf_test_bind+0xf4/0x388\n pci_epf_bind+0x3c/0x80\n pci_epc_epf_link+0xa8/0xcc\n configfs_symlink+0x1a4/0x48c\n vfs_symlink+0x104/0x184\n do_symlinkat+0x80/0xd4\n __arm64_sys_symlinkat+0x1c/0x24\n el0_svc_common.constprop.3+0xb8/0x170\n el0_svc_handler+0x70/0x88\n el0_svc+0x8/0x640\nCode: d2800581 b9403ab9 f9404ebb 8b394f60 (f9400400)\n---[ end trace a438e3c5a24f9df0 ]---"
+          }
+        ],
+        "id": "CVE-2021-47005",
+        "lastModified": "2024-02-28T14:06:45.783",
+        "metrics": {},
+        "published": "2024-02-28T09:15:38.403",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0169d4f0bee44fdfef908c13ed21fcb326c38695"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6613bc2301ba291a1c5a90e1dc24cf3edf223c03"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/679ebad058b8168f10e63876d63b0877fd2fe784"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bbed83d7060e07a5d309104d25a00f0a24441428"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

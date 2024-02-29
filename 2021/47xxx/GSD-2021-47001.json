@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47001"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nxprtrdma: Fix cwnd update ordering\n\nAfter a reconnect, the reply handler is opening the cwnd (and thus\nenabling more RPC Calls to be sent) /before/ rpcrdma_post_recvs()\ncan post enough Receive WRs to receive their replies. This causes an\nRNR and the new connection is lost immediately.\n\nThe race is most clearly exposed when KASAN and disconnect injection\nare enabled. This slows down rpcrdma_rep_create() enough to allow\nthe send side to post a bunch of RPC Calls before the Receive\ncompletion handler can invoke ib_post_recv().",
       "id": "GSD-2021-47001",
       "modified": "2024-02-28T06:03:55.892981Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47001",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "2ae50ad68cd7",
+                          "version_value": "eddae8be7944"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.5"
+                              },
+                              {
+                                "lessThan": "5.5",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.38",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.22",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nxprtrdma: Fix cwnd update ordering\n\nAfter a reconnect, the reply handler is opening the cwnd (and thus\nenabling more RPC Calls to be sent) /before/ rpcrdma_post_recvs()\ncan post enough Receive WRs to receive their replies. This causes an\nRNR and the new connection is lost immediately.\n\nThe race is most clearly exposed when KASAN and disconnect injection\nare enabled. This slows down rpcrdma_rep_create() enough to allow\nthe send side to post a bunch of RPC Calls before the Receive\ncompletion handler can invoke ib_post_recv()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/eddae8be7944096419c2ae29477a45f767d0fcd4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/eddae8be7944096419c2ae29477a45f767d0fcd4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8834ecb5df22b7ff3c9b0deba7726579bb613f95",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8834ecb5df22b7ff3c9b0deba7726579bb613f95"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/19b5fa9489b5706bc878c3a522a7f771079e2fa0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/19b5fa9489b5706bc878c3a522a7f771079e2fa0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/35d8b10a25884050bb3b0149b62c3818ec59f77c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/35d8b10a25884050bb3b0149b62c3818ec59f77c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nxprtrdma: Fix cwnd update ordering\n\nAfter a reconnect, the reply handler is opening the cwnd (and thus\nenabling more RPC Calls to be sent) /before/ rpcrdma_post_recvs()\ncan post enough Receive WRs to receive their replies. This causes an\nRNR and the new connection is lost immediately.\n\nThe race is most clearly exposed when KASAN and disconnect injection\nare enabled. This slows down rpcrdma_rep_create() enough to allow\nthe send side to post a bunch of RPC Calls before the Receive\ncompletion handler can invoke ib_post_recv()."
+          }
+        ],
+        "id": "CVE-2021-47001",
+        "lastModified": "2024-02-28T14:06:45.783",
+        "metrics": {},
+        "published": "2024-02-28T09:15:38.213",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/19b5fa9489b5706bc878c3a522a7f771079e2fa0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/35d8b10a25884050bb3b0149b62c3818ec59f77c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8834ecb5df22b7ff3c9b0deba7726579bb613f95"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/eddae8be7944096419c2ae29477a45f767d0fcd4"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

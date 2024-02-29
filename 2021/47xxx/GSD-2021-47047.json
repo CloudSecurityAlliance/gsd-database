@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47047"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: spi-zynqmp-gqspi: return -ENOMEM if dma_map_single fails\n\nThe spi controller supports 44-bit address space on AXI in DMA mode,\nso set dma_addr_t width to 44-bit to avoid using a swiotlb mapping.\nIn addition, if dma_map_single fails, it should return immediately\ninstead of continuing doing the DMA operation which bases on invalid\naddress.\n\nThis fixes the following crash which occurs in reading a big block\nfrom flash:\n\n[  123.633577] zynqmp-qspi ff0f0000.spi: swiotlb buffer is full (sz: 4194304 bytes), total 32768 (slots), used 0 (slots)\n[  123.644230] zynqmp-qspi ff0f0000.spi: ERR:rxdma:memory not mapped\n[  123.784625] Unable to handle kernel paging request at virtual address 00000000003fffc0\n[  123.792536] Mem abort info:\n[  123.795313]   ESR = 0x96000145\n[  123.798351]   EC = 0x25: DABT (current EL), IL = 32 bits\n[  123.803655]   SET = 0, FnV = 0\n[  123.806693]   EA = 0, S1PTW = 0\n[  123.809818] Data abort info:\n[  123.812683]   ISV = 0, ISS = 0x00000145\n[  123.816503]   CM = 1, WnR = 1\n[  123.819455] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000805047000\n[  123.825887] [00000000003fffc0] pgd=0000000803b45003, p4d=0000000803b45003, pud=0000000000000000\n[  123.834586] Internal error: Oops: 96000145 [#1] PREEMPT SMP",
       "id": "GSD-2021-47047",
       "modified": "2024-02-28T06:03:55.888466Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47047",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1c26372e5aa9",
+                          "version_value": "5980a3b9c933"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.10"
+                              },
+                              {
+                                "lessThan": "5.10",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.37",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.21",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: spi-zynqmp-gqspi: return -ENOMEM if dma_map_single fails\n\nThe spi controller supports 44-bit address space on AXI in DMA mode,\nso set dma_addr_t width to 44-bit to avoid using a swiotlb mapping.\nIn addition, if dma_map_single fails, it should return immediately\ninstead of continuing doing the DMA operation which bases on invalid\naddress.\n\nThis fixes the following crash which occurs in reading a big block\nfrom flash:\n\n[  123.633577] zynqmp-qspi ff0f0000.spi: swiotlb buffer is full (sz: 4194304 bytes), total 32768 (slots), used 0 (slots)\n[  123.644230] zynqmp-qspi ff0f0000.spi: ERR:rxdma:memory not mapped\n[  123.784625] Unable to handle kernel paging request at virtual address 00000000003fffc0\n[  123.792536] Mem abort info:\n[  123.795313]   ESR = 0x96000145\n[  123.798351]   EC = 0x25: DABT (current EL), IL = 32 bits\n[  123.803655]   SET = 0, FnV = 0\n[  123.806693]   EA = 0, S1PTW = 0\n[  123.809818] Data abort info:\n[  123.812683]   ISV = 0, ISS = 0x00000145\n[  123.816503]   CM = 1, WnR = 1\n[  123.819455] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000805047000\n[  123.825887] [00000000003fffc0] pgd=0000000803b45003, p4d=0000000803b45003, pud=0000000000000000\n[  123.834586] Internal error: Oops: 96000145 [#1] PREEMPT SMP"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/5980a3b9c933408bc22b0e349b78c3ebd7cbf880",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5980a3b9c933408bc22b0e349b78c3ebd7cbf880"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c26c026eb496261dbc0adbf606cc81989cd2038c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c26c026eb496261dbc0adbf606cc81989cd2038c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bad5a23cf2b477fa78b85fd392736dae09a1e818",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bad5a23cf2b477fa78b85fd392736dae09a1e818"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/126bdb606fd2802454e6048caef1be3e25dd121e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/126bdb606fd2802454e6048caef1be3e25dd121e"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: spi-zynqmp-gqspi: return -ENOMEM if dma_map_single fails\n\nThe spi controller supports 44-bit address space on AXI in DMA mode,\nso set dma_addr_t width to 44-bit to avoid using a swiotlb mapping.\nIn addition, if dma_map_single fails, it should return immediately\ninstead of continuing doing the DMA operation which bases on invalid\naddress.\n\nThis fixes the following crash which occurs in reading a big block\nfrom flash:\n\n[  123.633577] zynqmp-qspi ff0f0000.spi: swiotlb buffer is full (sz: 4194304 bytes), total 32768 (slots), used 0 (slots)\n[  123.644230] zynqmp-qspi ff0f0000.spi: ERR:rxdma:memory not mapped\n[  123.784625] Unable to handle kernel paging request at virtual address 00000000003fffc0\n[  123.792536] Mem abort info:\n[  123.795313]   ESR = 0x96000145\n[  123.798351]   EC = 0x25: DABT (current EL), IL = 32 bits\n[  123.803655]   SET = 0, FnV = 0\n[  123.806693]   EA = 0, S1PTW = 0\n[  123.809818] Data abort info:\n[  123.812683]   ISV = 0, ISS = 0x00000145\n[  123.816503]   CM = 1, WnR = 1\n[  123.819455] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000805047000\n[  123.825887] [00000000003fffc0] pgd=0000000803b45003, p4d=0000000803b45003, pud=0000000000000000\n[  123.834586] Internal error: Oops: 96000145 [#1] PREEMPT SMP"
+          }
+        ],
+        "id": "CVE-2021-47047",
+        "lastModified": "2024-02-28T14:06:45.783",
+        "metrics": {},
+        "published": "2024-02-28T09:15:40.323",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/126bdb606fd2802454e6048caef1be3e25dd121e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5980a3b9c933408bc22b0e349b78c3ebd7cbf880"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bad5a23cf2b477fa78b85fd392736dae09a1e818"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c26c026eb496261dbc0adbf606cc81989cd2038c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

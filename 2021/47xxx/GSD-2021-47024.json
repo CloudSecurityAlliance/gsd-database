@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47024"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nvsock/virtio: free queued packets when closing socket\n\nAs reported by syzbot [1], there is a memory leak while closing the\nsocket. We partially solved this issue with commit ac03046ece2b\n(\"vsock/virtio: free packets during the socket release\"), but we\nforgot to drain the RX queue when the socket is definitely closed by\nthe scheduled work.\n\nTo avoid future issues, let's use the new virtio_transport_remove_sock()\nto drain the RX queue before removing the socket from the af_vsock lists\ncalling vsock_remove_sock().\n\n[1] https://syzkaller.appspot.com/bug?extid=24452624fc4c571eedd9",
       "id": "GSD-2021-47024",
       "modified": "2024-02-28T06:03:55.883194Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47024",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "ac03046ece2b",
+                          "version_value": "b605673b523f"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.2"
+                              },
+                              {
+                                "lessThan": "5.2",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.37",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.21",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvsock/virtio: free queued packets when closing socket\n\nAs reported by syzbot [1], there is a memory leak while closing the\nsocket. We partially solved this issue with commit ac03046ece2b\n(\"vsock/virtio: free packets during the socket release\"), but we\nforgot to drain the RX queue when the socket is definitely closed by\nthe scheduled work.\n\nTo avoid future issues, let's use the new virtio_transport_remove_sock()\nto drain the RX queue before removing the socket from the af_vsock lists\ncalling vsock_remove_sock().\n\n[1] https://syzkaller.appspot.com/bug?extid=24452624fc4c571eedd9"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b605673b523fe33abeafb2136759bcbc9c1e6ebf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b605673b523fe33abeafb2136759bcbc9c1e6ebf"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/27691665145e74a45034a9dccf1150cf1894763a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/27691665145e74a45034a9dccf1150cf1894763a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/37c38674ef2f8d7e8629e5d433c37d6c1273d16b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/37c38674ef2f8d7e8629e5d433c37d6c1273d16b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8432b8114957235f42e070a16118a7f750de9d39",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8432b8114957235f42e070a16118a7f750de9d39"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvsock/virtio: free queued packets when closing socket\n\nAs reported by syzbot [1], there is a memory leak while closing the\nsocket. We partially solved this issue with commit ac03046ece2b\n(\"vsock/virtio: free packets during the socket release\"), but we\nforgot to drain the RX queue when the socket is definitely closed by\nthe scheduled work.\n\nTo avoid future issues, let's use the new virtio_transport_remove_sock()\nto drain the RX queue before removing the socket from the af_vsock lists\ncalling vsock_remove_sock().\n\n[1] https://syzkaller.appspot.com/bug?extid=24452624fc4c571eedd9"
+          }
+        ],
+        "id": "CVE-2021-47024",
+        "lastModified": "2024-02-28T14:06:45.783",
+        "metrics": {},
+        "published": "2024-02-28T09:15:39.243",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/27691665145e74a45034a9dccf1150cf1894763a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/37c38674ef2f8d7e8629e5d433c37d6c1273d16b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8432b8114957235f42e070a16118a7f750de9d39"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b605673b523fe33abeafb2136759bcbc9c1e6ebf"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -147,10 +147,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: core: Do core softreset when switch mode\n\n\nAccording to the programming guide, to switch mode for DRD controller,\nthe driver needs to do the following.\n\nTo switch from device to host:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(host mode)\n3. Reset the host with USBCMD.HCRESET\n4. Then follow up with the initializing host registers sequence\n\nTo switch from host to device:\n1. Reset controller with GCTL.CoreSoftReset\n2. Set GCTL.PrtCapDir(device mode)\n3. Reset the device with DCTL.CSftRst\n4. Then follow up with the initializing registers sequence\n\nCurrently we're missing step 1) to do GCTL.CoreSoftReset and step 3) of\nswitching from host to device. John Stult reported a lockup issue seen\nwith HiKey960 platform without these steps[1]. Similar issue is observed\nwith Ferry's testing platform[2].\n\nSo, apply the required steps along with some fixes to Yu Chen's and John\nStultz's version. The main fixes to their versions are the missing wait\nfor clocks synchronization before clearing GCTL.CoreSoftReset and only\napply DCTL.CSftRst when switching from host to device.\n\n[1] https://lore.kernel.org/linux-usb/20210108015115.27920-1-john.stultz@linaro.org/\n[2] https://lore.kernel.org/linux-usb/0ba7a6ba-e6a7-9cd4-0695-64fc927e01f1@gmail.com/"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: usb: dwc3: core: Realiza un reinicio suave del n\u00facleo al cambiar de modo Seg\u00fan la gu\u00eda de programaci\u00f3n, para cambiar el modo del controlador DRD, el controlador debe hacer lo siguiente. Para cambiar de dispositivo a host: 1. Reinicie el controlador con GCTL.CoreSoftReset 2. Configure GCTL.PrtCapDir (modo de host) 3. Reinicie el host con USBCMD.HCRESET 4. Luego siga con la secuencia de inicializaci\u00f3n de registros del host Para cambiar de host a dispositivo: 1. Reinicie el controlador con GCTL.CoreSoftReset 2. Configure GCTL.PrtCapDir (modo de dispositivo) 3. Reinicie el dispositivo con DCTL.CSftRst 4. Luego siga con la secuencia de inicializaci\u00f3n de registros Actualmente nos falta el paso 1) para hacer GCTL .CoreSoftReset y paso 3) de cambio de host a dispositivo. John Stult inform\u00f3 un problema de bloqueo observado con la plataforma HiKey960 sin estos pasos[1]. Se observa un problema similar con la plataforma de pruebas de Ferry[2]. Entonces, aplique los pasos requeridos junto con algunas correcciones a la versi\u00f3n de Yu Chen y John Stultz. Las principales correcciones a sus versiones son la falta de espera para la sincronizaci\u00f3n de los relojes antes de borrar GCTL.CoreSoftReset y solo aplicar DCTL.CSftRst al cambiar de host a dispositivo. [1] https://lore.kernel.org/linux-usb/20210108015115.27920-1-john.stultz@linaro.org/ [2] https://lore.kernel.org/linux-usb/0ba7a6ba-e6a7- 9cd4-0695-64fc927e01f1@gmail.com/"
           }
         ],
         "id": "CVE-2021-46941",
-        "lastModified": "2024-02-27T19:04:05.970",
+        "lastModified": "2024-02-28T14:06:45.783",
         "metrics": {},
         "published": "2024-02-27T19:04:05.970",
         "references": [
@@ -172,7 +176,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -147,10 +147,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\novl: fix leaked dentry\n\nSince commit 6815f479ca90 (\"ovl: use only uppermetacopy state in\novl_lookup()\"), overlayfs doesn't put temporary dentry when there is a\nmetacopy error, which leads to dentry leaks when shutting down the related\nsuperblock:\n\n  overlayfs: refusing to follow metacopy origin for (/file0)\n  ...\n  BUG: Dentry (____ptrval____){i=3f33,n=file3}  still in use (1) [unmount of overlay overlay]\n  ...\n  WARNING: CPU: 1 PID: 432 at umount_check.cold+0x107/0x14d\n  CPU: 1 PID: 432 Comm: unmount-overlay Not tainted 5.12.0-rc5 #1\n  ...\n  RIP: 0010:umount_check.cold+0x107/0x14d\n  ...\n  Call Trace:\n   d_walk+0x28c/0x950\n   ? dentry_lru_isolate+0x2b0/0x2b0\n   ? __kasan_slab_free+0x12/0x20\n   do_one_tree+0x33/0x60\n   shrink_dcache_for_umount+0x78/0x1d0\n   generic_shutdown_super+0x70/0x440\n   kill_anon_super+0x3e/0x70\n   deactivate_locked_super+0xc4/0x160\n   deactivate_super+0xfa/0x140\n   cleanup_mnt+0x22e/0x370\n   __cleanup_mnt+0x1a/0x30\n   task_work_run+0x139/0x210\n   do_exit+0xb0c/0x2820\n   ? __kasan_check_read+0x1d/0x30\n   ? find_held_lock+0x35/0x160\n   ? lock_release+0x1b6/0x660\n   ? mm_update_next_owner+0xa20/0xa20\n   ? reacquire_held_locks+0x3f0/0x3f0\n   ? __sanitizer_cov_trace_const_cmp4+0x22/0x30\n   do_group_exit+0x135/0x380\n   __do_sys_exit_group.isra.0+0x20/0x20\n   __x64_sys_exit_group+0x3c/0x50\n   do_syscall_64+0x45/0x70\n   entry_SYSCALL_64_after_hwframe+0x44/0xae\n  ...\n  VFS: Busy inodes after unmount of overlay. Self-destruct in 5 seconds.  Have a nice day...\n\nThis fix has been tested with a syzkaller reproducer."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: ovl: corrige la dentry filtrada Desde el commit 6815f479ca90 (\"ovl: usa solo el estado de metacopia superior en ovl_lookup()\"), overlayfs no coloca la dentry temporal cuando hay un error de metacopia, lo que conduce a fugas de dentry al cerrar el superbloque relacionado: overlayfs: se niega a seguir el origen de la metacopia para (/file0)... ERROR: Dentry (____ptrval____){i=3f33,n=file3} todav\u00eda est\u00e1 en uso (1) [desmontaje de superposici\u00f3n superpuesta]... ADVERTENCIA: CPU: 1 PID: 432 en umount_check.cold+0x107/0x14d CPU: 1 PID: 432 Comm: unmount-overlay No contaminado 5.12.0-rc5 #1... RIP: 0010:umount_check .cold+0x107/0x14d... Seguimiento de llamadas: d_walk+0x28c/0x950 ? dentry_lru_isolate+0x2b0/0x2b0? __kasan_slab_free+0x12/0x20 do_one_tree+0x33/0x60 encogimiento_dcache_for_umount+0x78/0x1d0 generic_shutdown_super+0x70/0x440 kill_anon_super+0x3e/0x70 deactivate_locked_super+0xc4/0x160 deactivate_super+0xfa/0x140 clean up_mnt+0x22e/0x370 __cleanup_mnt+0x1a/0x30 task_work_run+0x139/0x210 do_exit+0xb0c/0x2820? __kasan_check_read+0x1d/0x30 ? find_held_lock+0x35/0x160? lock_release+0x1b6/0x660? mm_update_next_owner+0xa20/0xa20? \u00bfreaquirir_held_locks+0x3f0/0x3f0? __sanitizer_cov_trace_const_cmp4+0x22/0x30 do_group_exit+0x135/0x380 __do_sys_exit_group.isra.0+0x20/0x20 __x64_sys_exit_group+0x3c/0x50 do_syscall_64+0x45/0x70 entrada_SYSCALL_64 _after_hwframe+0x44/0xae... VFS: Inodos ocupados despu\u00e9s de desmontar la superposici\u00f3n. Autodestrucci\u00f3n en 5 segundos. Que tengas un buen d\u00eda... Esta soluci\u00f3n ha sido probada con un reproductor syzkaller."
           }
         ],
         "id": "CVE-2021-46972",
-        "lastModified": "2024-02-27T19:04:07.403",
+        "lastModified": "2024-02-28T14:06:45.783",
         "metrics": {},
         "published": "2024-02-27T19:04:07.403",
         "references": [
@@ -172,7 +176,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

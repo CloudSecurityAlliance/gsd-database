@@ -125,10 +125,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nio_uring: fix shared sqpoll cancellation hangs\n\n[  736.982891] INFO: task iou-sqp-4294:4295 blocked for more than 122 seconds.\n[  736.982897] Call Trace:\n[  736.982901]  schedule+0x68/0xe0\n[  736.982903]  io_uring_cancel_sqpoll+0xdb/0x110\n[  736.982908]  io_sqpoll_cancel_cb+0x24/0x30\n[  736.982911]  io_run_task_work_head+0x28/0x50\n[  736.982913]  io_sq_thread+0x4e3/0x720\n\nWe call io_uring_cancel_sqpoll() one by one for each ctx either in\nsq_thread() itself or via task works, and it's intended to cancel all\nrequests of a specified context. However the function uses per-task\ncounters to track the number of inflight requests, so it counts more\nrequests than available via currect io_uring ctx and goes to sleep for\nthem to appear (e.g. from IRQ), that will never happen.\n\nCancel a bit more than before, i.e. all ctxs that share sqpoll\nand continue to use shared counters. Don't forget that we should not\nremove ctx from the list before running that task_work sqpoll-cancel,\notherwise the function wouldn't be able to find the context and will\nhang."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: io_uring: corrige bloqueos de cancelaci\u00f3n de sqpoll compartido [736.982891] INFORMACI\u00d3N: tarea iou-sqp-4294:4295 bloqueada durante m\u00e1s de 122 segundos. [ 736.982897] Seguimiento de llamadas: [ 736.982901] agenda+0x68/0xe0 [ 736.982903] io_uring_cancel_sqpoll+0xdb/0x110 [ 736.982908] io_sqpoll_cancel_cb+0x24/0x30 [ 736.982911] io_run_task_work_head+0x28/0x50 [ 736.982913] io_sq_thread+0x4e3/0x720 Llamamos a io_uring_cancel_sqpoll( ) uno por uno para cada ctx, ya sea en sq_thread() o mediante tareas, y est\u00e1 destinado a cancelar todas las solicitudes de un contexto espec\u00edfico. Sin embargo, la funci\u00f3n utiliza contadores por tarea para rastrear la cantidad de solicitudes en curso, por lo que cuenta m\u00e1s solicitudes de las disponibles a trav\u00e9s de currect io_uring ctx y se pone en suspensi\u00f3n para que aparezcan (por ejemplo, desde IRQ), eso nunca suceder\u00e1. Cancele un poco m\u00e1s que antes, es decir, todos los ctx que comparten sqpoll y contin\u00faan usando contadores compartidos. No olvide que no debemos eliminar ctx de la lista antes de ejecutar task_work sqpoll-cancel; de lo contrario, la funci\u00f3n no podr\u00e1 encontrar el contexto y se bloquear\u00e1."
           }
         ],
         "id": "CVE-2021-46942",
-        "lastModified": "2024-02-27T19:04:06.017",
+        "lastModified": "2024-02-28T14:06:45.783",
         "metrics": {},
         "published": "2024-02-27T19:04:06.017",
         "references": [
@@ -142,7 +146,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

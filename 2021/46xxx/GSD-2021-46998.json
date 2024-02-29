@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46998"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nethernet:enic: Fix a use after free bug in enic_hard_start_xmit\n\nIn enic_hard_start_xmit, it calls enic_queue_wq_skb(). Inside\nenic_queue_wq_skb, if some error happens, the skb will be freed\nby dev_kfree_skb(skb). But the freed skb is still used in\nskb_tx_timestamp(skb).\n\nMy patch makes enic_queue_wq_skb() return error and goto spin_unlock()\nincase of error. The solution is provided by Govind.\nSee https://lkml.org/lkml/2021/4/30/961.",
       "id": "GSD-2021-46998",
       "modified": "2024-02-28T06:03:57.313524Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46998",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "fb7516d42478e",
+                          "version_value": "25a87b1f566b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.16"
+                              },
+                              {
+                                "lessThan": "4.16",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.191",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.120",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.38",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.22",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,100 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nethernet:enic: Fix a use after free bug in enic_hard_start_xmit\n\nIn enic_hard_start_xmit, it calls enic_queue_wq_skb(). Inside\nenic_queue_wq_skb, if some error happens, the skb will be freed\nby dev_kfree_skb(skb). But the freed skb is still used in\nskb_tx_timestamp(skb).\n\nMy patch makes enic_queue_wq_skb() return error and goto spin_unlock()\nincase of error. The solution is provided by Govind.\nSee https://lkml.org/lkml/2021/4/30/961."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/25a87b1f566b5eb2af2857a928f0e2310d900976",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/25a87b1f566b5eb2af2857a928f0e2310d900976"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f7f6f07774091a6ddd98500b85386c3c6afb30d3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f7f6f07774091a6ddd98500b85386c3c6afb30d3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7afdd6aba95c8a526038e7abe283eeac3e4320f1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7afdd6aba95c8a526038e7abe283eeac3e4320f1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6892396ebf04ea2c021d80e10f4075e014cd7cc3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6892396ebf04ea2c021d80e10f4075e014cd7cc3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d90529392aaf498dafa95d212295d64b2cea4e24",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d90529392aaf498dafa95d212295d64b2cea4e24"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/643001b47adc844ae33510c4bb93c236667008a3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/643001b47adc844ae33510c4bb93c236667008a3"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nethernet:enic: Fix a use after free bug in enic_hard_start_xmit\n\nIn enic_hard_start_xmit, it calls enic_queue_wq_skb(). Inside\nenic_queue_wq_skb, if some error happens, the skb will be freed\nby dev_kfree_skb(skb). But the freed skb is still used in\nskb_tx_timestamp(skb).\n\nMy patch makes enic_queue_wq_skb() return error and goto spin_unlock()\nincase of error. The solution is provided by Govind.\nSee https://lkml.org/lkml/2021/4/30/961."
+          }
+        ],
+        "id": "CVE-2021-46998",
+        "lastModified": "2024-02-28T14:06:45.783",
+        "metrics": {},
+        "published": "2024-02-28T09:15:38.090",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/25a87b1f566b5eb2af2857a928f0e2310d900976"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/643001b47adc844ae33510c4bb93c236667008a3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6892396ebf04ea2c021d80e10f4075e014cd7cc3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7afdd6aba95c8a526038e7abe283eeac3e4320f1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d90529392aaf498dafa95d212295d64b2cea4e24"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f7f6f07774091a6ddd98500b85386c3c6afb30d3"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
