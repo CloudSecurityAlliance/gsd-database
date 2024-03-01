@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-46959"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: Fix use-after-free with devm_spi_alloc_*\n\nWe can't rely on the contents of the devres list during\nspi_unregister_controller(), as the list is already torn down at the\ntime we perform devres_find() for devm_spi_release_controller. This\ncauses devices registered with devm_spi_alloc_{master,slave}() to be\nmistakenly identified as legacy, non-devm managed devices and have their\nreference counters decremented below 0.\n\n------------[ cut here ]------------\nWARNING: CPU: 1 PID: 660 at lib/refcount.c:28 refcount_warn_saturate+0x108/0x174\n[<b0396f04>] (refcount_warn_saturate) from [<b03c56a4>] (kobject_put+0x90/0x98)\n[<b03c5614>] (kobject_put) from [<b0447b4c>] (put_device+0x20/0x24)\n r4:b6700140\n[<b0447b2c>] (put_device) from [<b07515e8>] (devm_spi_release_controller+0x3c/0x40)\n[<b07515ac>] (devm_spi_release_controller) from [<b045343c>] (release_nodes+0x84/0xc4)\n r5:b6700180 r4:b6700100\n[<b04533b8>] (release_nodes) from [<b0454160>] (devres_release_all+0x5c/0x60)\n r8:b1638c54 r7:b117ad94 r6:b1638c10 r5:b117ad94 r4:b163dc10\n[<b0454104>] (devres_release_all) from [<b044e41c>] (__device_release_driver+0x144/0x1ec)\n r5:b117ad94 r4:b163dc10\n[<b044e2d8>] (__device_release_driver) from [<b044f70c>] (device_driver_detach+0x84/0xa0)\n r9:00000000 r8:00000000 r7:b117ad94 r6:b163dc54 r5:b1638c10 r4:b163dc10\n[<b044f688>] (device_driver_detach) from [<b044d274>] (unbind_store+0xe4/0xf8)\n\nInstead, determine the devm allocation state as a flag on the\ncontroller which is guaranteed to be stable during cleanup.",
       "id": "GSD-2021-46959",
       "modified": "2024-02-28T06:03:57.825134Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,121 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-46959",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0713aa02f20d",
+                          "version_value": "62bb2c7f2411"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "2be1837b1737",
+                          "version_value": "8bf96425c90f"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "e620a73d7ca7",
+                          "version_value": "8e029707f50a"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "c886774bf583",
+                          "version_value": "28a5529068c5"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "2737549129ec",
+                          "version_value": "001c8e83646a"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "5e844cc37a5c",
+                          "version_value": "c7fabe372a90"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.4.*",
+                                "status": "unaffected",
+                                "version": "4.4.271",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.9.*",
+                                "status": "unaffected",
+                                "version": "4.9.271",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.233",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.191",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.119",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.37",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.11.*",
+                                "status": "unaffected",
+                                "version": "5.11.21",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +142,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: Fix use-after-free with devm_spi_alloc_*\n\nWe can't rely on the contents of the devres list during\nspi_unregister_controller(), as the list is already torn down at the\ntime we perform devres_find() for devm_spi_release_controller. This\ncauses devices registered with devm_spi_alloc_{master,slave}() to be\nmistakenly identified as legacy, non-devm managed devices and have their\nreference counters decremented below 0.\n\n------------[ cut here ]------------\nWARNING: CPU: 1 PID: 660 at lib/refcount.c:28 refcount_warn_saturate+0x108/0x174\n[<b0396f04>] (refcount_warn_saturate) from [<b03c56a4>] (kobject_put+0x90/0x98)\n[<b03c5614>] (kobject_put) from [<b0447b4c>] (put_device+0x20/0x24)\n r4:b6700140\n[<b0447b2c>] (put_device) from [<b07515e8>] (devm_spi_release_controller+0x3c/0x40)\n[<b07515ac>] (devm_spi_release_controller) from [<b045343c>] (release_nodes+0x84/0xc4)\n r5:b6700180 r4:b6700100\n[<b04533b8>] (release_nodes) from [<b0454160>] (devres_release_all+0x5c/0x60)\n r8:b1638c54 r7:b117ad94 r6:b1638c10 r5:b117ad94 r4:b163dc10\n[<b0454104>] (devres_release_all) from [<b044e41c>] (__device_release_driver+0x144/0x1ec)\n r5:b117ad94 r4:b163dc10\n[<b044e2d8>] (__device_release_driver) from [<b044f70c>] (device_driver_detach+0x84/0xa0)\n r9:00000000 r8:00000000 r7:b117ad94 r6:b163dc54 r5:b1638c10 r4:b163dc10\n[<b044f688>] (device_driver_detach) from [<b044d274>] (unbind_store+0xe4/0xf8)\n\nInstead, determine the devm allocation state as a flag on the\ncontroller which is guaranteed to be stable during cleanup."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/62bb2c7f2411a0045c24831f11ecacfc35610815",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/62bb2c7f2411a0045c24831f11ecacfc35610815"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8bf96425c90f5c1dcf3b7b9df568019a1d4b8a0e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8bf96425c90f5c1dcf3b7b9df568019a1d4b8a0e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8e029707f50a82c53172359c686b2536ab54e58c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8e029707f50a82c53172359c686b2536ab54e58c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28a5529068c51cdf0295ab1e11a99a3a909a03e4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28a5529068c51cdf0295ab1e11a99a3a909a03e4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/001c8e83646ad3b847b18f6ac55a54367d917d74",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/001c8e83646ad3b847b18f6ac55a54367d917d74"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c7fabe372a9031acd00498bc718ce27c253abfd1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c7fabe372a9031acd00498bc718ce27c253abfd1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cee78aa24578edac8cf00513dca618c0acc17cd7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cee78aa24578edac8cf00513dca618c0acc17cd7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8735248ebb918d25427965f0db07939ed0473ec6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8735248ebb918d25427965f0db07939ed0473ec6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/794aaf01444d4e765e2b067cba01cc69c1c68ed9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/794aaf01444d4e765e2b067cba01cc69c1c68ed9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: Fix use-after-free with devm_spi_alloc_*\n\nWe can't rely on the contents of the devres list during\nspi_unregister_controller(), as the list is already torn down at the\ntime we perform devres_find() for devm_spi_release_controller. This\ncauses devices registered with devm_spi_alloc_{master,slave}() to be\nmistakenly identified as legacy, non-devm managed devices and have their\nreference counters decremented below 0.\n\n------------[ cut here ]------------\nWARNING: CPU: 1 PID: 660 at lib/refcount.c:28 refcount_warn_saturate+0x108/0x174\n[<b0396f04>] (refcount_warn_saturate) from [<b03c56a4>] (kobject_put+0x90/0x98)\n[<b03c5614>] (kobject_put) from [<b0447b4c>] (put_device+0x20/0x24)\n r4:b6700140\n[<b0447b2c>] (put_device) from [<b07515e8>] (devm_spi_release_controller+0x3c/0x40)\n[<b07515ac>] (devm_spi_release_controller) from [<b045343c>] (release_nodes+0x84/0xc4)\n r5:b6700180 r4:b6700100\n[<b04533b8>] (release_nodes) from [<b0454160>] (devres_release_all+0x5c/0x60)\n r8:b1638c54 r7:b117ad94 r6:b1638c10 r5:b117ad94 r4:b163dc10\n[<b0454104>] (devres_release_all) from [<b044e41c>] (__device_release_driver+0x144/0x1ec)\n r5:b117ad94 r4:b163dc10\n[<b044e2d8>] (__device_release_driver) from [<b044f70c>] (device_driver_detach+0x84/0xa0)\n r9:00000000 r8:00000000 r7:b117ad94 r6:b163dc54 r5:b1638c10 r4:b163dc10\n[<b044f688>] (device_driver_detach) from [<b044d274>] (unbind_store+0xe4/0xf8)\n\nInstead, determine the devm allocation state as a flag on the\ncontroller which is guaranteed to be stable during cleanup."
+          }
+        ],
+        "id": "CVE-2021-46959",
+        "lastModified": "2024-02-29T23:15:07.230",
+        "metrics": {},
+        "published": "2024-02-29T23:15:07.230",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/001c8e83646ad3b847b18f6ac55a54367d917d74"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28a5529068c51cdf0295ab1e11a99a3a909a03e4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/62bb2c7f2411a0045c24831f11ecacfc35610815"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/794aaf01444d4e765e2b067cba01cc69c1c68ed9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8735248ebb918d25427965f0db07939ed0473ec6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8bf96425c90f5c1dcf3b7b9df568019a1d4b8a0e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8e029707f50a82c53172359c686b2536ab54e58c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c7fabe372a9031acd00498bc718ce27c253abfd1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cee78aa24578edac8cf00513dca618c0acc17cd7"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

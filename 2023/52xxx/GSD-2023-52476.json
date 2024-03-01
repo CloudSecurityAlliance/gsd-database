@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52476"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nperf/x86/lbr: Filter vsyscall addresses\n\nWe found that a panic can occur when a vsyscall is made while LBR sampling\nis active. If the vsyscall is interrupted (NMI) for perf sampling, this\ncall sequence can occur (most recent at top):\n\n    __insn_get_emulate_prefix()\n    insn_get_emulate_prefix()\n    insn_get_prefixes()\n    insn_get_opcode()\n    decode_branch_type()\n    get_branch_type()\n    intel_pmu_lbr_filter()\n    intel_pmu_handle_irq()\n    perf_event_nmi_handler()\n\nWithin __insn_get_emulate_prefix() at frame 0, a macro is called:\n\n    peek_nbyte_next(insn_byte_t, insn, i)\n\nWithin this macro, this dereference occurs:\n\n    (insn)->next_byte\n\nInspecting registers at this point, the value of the next_byte field is the\naddress of the vsyscall made, for example the location of the vsyscall\nversion of gettimeofday() at 0xffffffffff600000. The access to an address\nin the vsyscall region will trigger an oops due to an unhandled page fault.\n\nTo fix the bug, filtering for vsyscalls can be done when\ndetermining the branch type. This patch will return\na \"none\" branch if a kernel address if found to lie in the\nvsyscall region.",
       "id": "GSD-2023-52476",
       "modified": "2024-02-21T06:01:53.487130Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,66 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52476",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "403d201d1fd1"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.137",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +87,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nperf/x86/lbr: Filter vsyscall addresses\n\nWe found that a panic can occur when a vsyscall is made while LBR sampling\nis active. If the vsyscall is interrupted (NMI) for perf sampling, this\ncall sequence can occur (most recent at top):\n\n    __insn_get_emulate_prefix()\n    insn_get_emulate_prefix()\n    insn_get_prefixes()\n    insn_get_opcode()\n    decode_branch_type()\n    get_branch_type()\n    intel_pmu_lbr_filter()\n    intel_pmu_handle_irq()\n    perf_event_nmi_handler()\n\nWithin __insn_get_emulate_prefix() at frame 0, a macro is called:\n\n    peek_nbyte_next(insn_byte_t, insn, i)\n\nWithin this macro, this dereference occurs:\n\n    (insn)->next_byte\n\nInspecting registers at this point, the value of the next_byte field is the\naddress of the vsyscall made, for example the location of the vsyscall\nversion of gettimeofday() at 0xffffffffff600000. The access to an address\nin the vsyscall region will trigger an oops due to an unhandled page fault.\n\nTo fix the bug, filtering for vsyscalls can be done when\ndetermining the branch type. This patch will return\na \"none\" branch if a kernel address if found to lie in the\nvsyscall region."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/403d201d1fd144cb249836dafb222f6375871c6c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/403d201d1fd144cb249836dafb222f6375871c6c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3863989497652488a50f00e96de4331e5efabc6c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3863989497652488a50f00e96de4331e5efabc6c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f71edacbd4f99c0e12fe4a4007ab4d687d0688db",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f71edacbd4f99c0e12fe4a4007ab4d687d0688db"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e53899771a02f798d436655efbd9d4b46c0f9265",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e53899771a02f798d436655efbd9d4b46c0f9265"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nperf/x86/lbr: Filter vsyscall addresses\n\nWe found that a panic can occur when a vsyscall is made while LBR sampling\nis active. If the vsyscall is interrupted (NMI) for perf sampling, this\ncall sequence can occur (most recent at top):\n\n    __insn_get_emulate_prefix()\n    insn_get_emulate_prefix()\n    insn_get_prefixes()\n    insn_get_opcode()\n    decode_branch_type()\n    get_branch_type()\n    intel_pmu_lbr_filter()\n    intel_pmu_handle_irq()\n    perf_event_nmi_handler()\n\nWithin __insn_get_emulate_prefix() at frame 0, a macro is called:\n\n    peek_nbyte_next(insn_byte_t, insn, i)\n\nWithin this macro, this dereference occurs:\n\n    (insn)->next_byte\n\nInspecting registers at this point, the value of the next_byte field is the\naddress of the vsyscall made, for example the location of the vsyscall\nversion of gettimeofday() at 0xffffffffff600000. The access to an address\nin the vsyscall region will trigger an oops due to an unhandled page fault.\n\nTo fix the bug, filtering for vsyscalls can be done when\ndetermining the branch type. This patch will return\na \"none\" branch if a kernel address if found to lie in the\nvsyscall region."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: perf/x86/lbr: Filtrar direcciones vsyscall Descubrimos que puede ocurrir un p\u00e1nico cuando se realiza una vsyscall mientras el muestreo LBR est\u00e1 activo. Si el VSYSCALL se interrumpe (NMI) para el muestreo de Perf, esta secuencia de llamadas puede ocurrir (m\u00e1s reciente en la parte superior): __insn_get_emulate_prefix () insn_get_emulate_prefix () insn_get_prefixes () insn_get_opcode () decode_branch_type () get_branch_type () _pmu_handle_irq () perf_event_nmi_handler ( ) Dentro de __insn_get_emulate_prefix() en el cuadro 0, se llama una macro: peek_nbyte_next(insn_byte_t, insn, i) Dentro de esta macro, se produce esta desreferencia: (insn)-&gt;next_byte Inspeccionando registros en este punto, el valor del campo next_byte es el direcci\u00f3n de vsyscall realizada, por ejemplo, la ubicaci\u00f3n de la versi\u00f3n vsyscall de gettimeofday() en 0xffffffffff600000. El acceso a una direcci\u00f3n en la regi\u00f3n vsyscall provocar\u00e1 un error debido a un error de p\u00e1gina no controlado. Para corregir el error, se puede filtrar por vsyscalls al determinar el tipo de rama. Este parche devolver\u00e1 una rama \"ninguna\" si se encuentra que una direcci\u00f3n del kernel se encuentra en la regi\u00f3n vsyscall."
+          }
+        ],
+        "id": "CVE-2023-52476",
+        "lastModified": "2024-02-29T13:49:29.390",
+        "metrics": {},
+        "published": "2024-02-29T06:15:45.820",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3863989497652488a50f00e96de4331e5efabc6c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/403d201d1fd144cb249836dafb222f6375871c6c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e53899771a02f798d436655efbd9d4b46c0f9265"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f71edacbd4f99c0e12fe4a4007ab4d687d0688db"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

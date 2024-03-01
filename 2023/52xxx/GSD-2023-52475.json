@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52475"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nInput: powermate - fix use-after-free in powermate_config_complete\n\nsyzbot has found a use-after-free bug [1] in the powermate driver. This\nhappens when the device is disconnected, which leads to a memory free from\nthe powermate_device struct.  When an asynchronous control message\ncompletes after the kfree and its callback is invoked, the lock does not\nexist anymore and hence the bug.\n\nUse usb_kill_urb() on pm->config to cancel any in-progress requests upon\ndevice disconnection.\n\n[1] https://syzkaller.appspot.com/bug?extid=0434ac83f907a1dbdd1e",
       "id": "GSD-2023-52475",
       "modified": "2024-02-21T06:01:53.419103Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52475",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "8677575c4f39"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.328",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.297",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.259",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.199",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.136",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nInput: powermate - fix use-after-free in powermate_config_complete\n\nsyzbot has found a use-after-free bug [1] in the powermate driver. This\nhappens when the device is disconnected, which leads to a memory free from\nthe powermate_device struct.  When an asynchronous control message\ncompletes after the kfree and its callback is invoked, the lock does not\nexist anymore and hence the bug.\n\nUse usb_kill_urb() on pm->config to cancel any in-progress requests upon\ndevice disconnection.\n\n[1] https://syzkaller.appspot.com/bug?extid=0434ac83f907a1dbdd1e"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/8677575c4f39d65bf0d719b5d20e8042e550ccb9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8677575c4f39d65bf0d719b5d20e8042e550ccb9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/67cace72606baf1758fd60feb358f4c6be92e1cc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/67cace72606baf1758fd60feb358f4c6be92e1cc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5aa514100aaf59868d745196258269a16737c7bd",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5aa514100aaf59868d745196258269a16737c7bd"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cd2fbfd8b922b7fdd50732e47d797754ab59cb06",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cd2fbfd8b922b7fdd50732e47d797754ab59cb06"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6a4a396386404e62fb59bc3bde48871a64a82b4f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6a4a396386404e62fb59bc3bde48871a64a82b4f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2efe67c581a2a6122b328d4bb6f21b3f36f40d46",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2efe67c581a2a6122b328d4bb6f21b3f36f40d46"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e528b1b9d60743e0b26224e3fe7aa74c24b8b2f8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e528b1b9d60743e0b26224e3fe7aa74c24b8b2f8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5c15c60e7be615f05a45cd905093a54b11f461bc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5c15c60e7be615f05a45cd905093a54b11f461bc"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nInput: powermate - fix use-after-free in powermate_config_complete\n\nsyzbot has found a use-after-free bug [1] in the powermate driver. This\nhappens when the device is disconnected, which leads to a memory free from\nthe powermate_device struct.  When an asynchronous control message\ncompletes after the kfree and its callback is invoked, the lock does not\nexist anymore and hence the bug.\n\nUse usb_kill_urb() on pm->config to cancel any in-progress requests upon\ndevice disconnection.\n\n[1] https://syzkaller.appspot.com/bug?extid=0434ac83f907a1dbdd1e"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: Entrada: powermate - corrige el use-after-free en powermate_config_complete syzbot ha encontrado un error de use-after-free [1] en el controlador powermate. Esto sucede cuando el dispositivo est\u00e1 desconectado, lo que genera una memoria libre de la estructura powermate_device. Cuando se completa un mensaje de control asincr\u00f3nico despu\u00e9s de que se invoca kfree y su devoluci\u00f3n de llamada, el bloqueo ya no existe y de ah\u00ed el error. Utilice usb_kill_urb() en pm-&gt;config para cancelar cualquier solicitud en curso al desconectar el dispositivo. [1] https://syzkaller.appspot.com/bug?extid=0434ac83f907a1dbdd1e"
+          }
+        ],
+        "id": "CVE-2023-52475",
+        "lastModified": "2024-02-29T13:49:29.390",
+        "metrics": {},
+        "published": "2024-02-29T06:15:45.763",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2efe67c581a2a6122b328d4bb6f21b3f36f40d46"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5aa514100aaf59868d745196258269a16737c7bd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5c15c60e7be615f05a45cd905093a54b11f461bc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/67cace72606baf1758fd60feb358f4c6be92e1cc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6a4a396386404e62fb59bc3bde48871a64a82b4f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8677575c4f39d65bf0d719b5d20e8042e550ccb9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cd2fbfd8b922b7fdd50732e47d797754ab59cb06"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e528b1b9d60743e0b26224e3fe7aa74c24b8b2f8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

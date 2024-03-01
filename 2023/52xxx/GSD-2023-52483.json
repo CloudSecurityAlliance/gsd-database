@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52483"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmctp: perform route lookups under a RCU read-side lock\n\nOur current route lookups (mctp_route_lookup and mctp_route_lookup_null)\ntraverse the net's route list without the RCU read lock held. This means\nthe route lookup is subject to preemption, resulting in an potential\ngrace period expiry, and so an eventual kfree() while we still have the\nroute pointer.\n\nAdd the proper read-side critical section locks around the route\nlookups, preventing premption and a possible parallel kfree.\n\nThe remaining net->mctp.routes accesses are already under a\nrcu_read_lock, or protected by the RTNL for updates.\n\nBased on an analysis from Sili Luo <rootlab@huawei.com>, where\nintroducing a delay in the route lookup could cause a UAF on\nsimultaneous sendmsg() and route deletion.",
       "id": "GSD-2023-52483",
       "modified": "2024-02-21T06:01:53.445111Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52483",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "889b7da23abf",
+                          "version_value": "6c52b1215904"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.15"
+                              },
+                              {
+                                "lessThan": "5.15",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.137",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmctp: perform route lookups under a RCU read-side lock\n\nOur current route lookups (mctp_route_lookup and mctp_route_lookup_null)\ntraverse the net's route list without the RCU read lock held. This means\nthe route lookup is subject to preemption, resulting in an potential\ngrace period expiry, and so an eventual kfree() while we still have the\nroute pointer.\n\nAdd the proper read-side critical section locks around the route\nlookups, preventing premption and a possible parallel kfree.\n\nThe remaining net->mctp.routes accesses are already under a\nrcu_read_lock, or protected by the RTNL for updates.\n\nBased on an analysis from Sili Luo <rootlab@huawei.com>, where\nintroducing a delay in the route lookup could cause a UAF on\nsimultaneous sendmsg() and route deletion."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-c298863b1525"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/6c52b12159049046483fdb0c411a0a1869c41a67",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6c52b12159049046483fdb0c411a0a1869c41a67"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1db0724a01b558feb1ecae551782add1951a114a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1db0724a01b558feb1ecae551782add1951a114a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2405f64a95a7a094eb24cba9bcfaffd1ea264de4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2405f64a95a7a094eb24cba9bcfaffd1ea264de4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5093bbfc10ab6636b32728e35813cbd79feb063c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5093bbfc10ab6636b32728e35813cbd79feb063c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmctp: perform route lookups under a RCU read-side lock\n\nOur current route lookups (mctp_route_lookup and mctp_route_lookup_null)\ntraverse the net's route list without the RCU read lock held. This means\nthe route lookup is subject to preemption, resulting in an potential\ngrace period expiry, and so an eventual kfree() while we still have the\nroute pointer.\n\nAdd the proper read-side critical section locks around the route\nlookups, preventing premption and a possible parallel kfree.\n\nThe remaining net->mctp.routes accesses are already under a\nrcu_read_lock, or protected by the RTNL for updates.\n\nBased on an analysis from Sili Luo <rootlab@huawei.com>, where\nintroducing a delay in the route lookup could cause a UAF on\nsimultaneous sendmsg() and route deletion."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: mctp: realiza b\u00fasquedas de rutas bajo un bloqueo del lado de lectura de RCU. Nuestras b\u00fasquedas de rutas actuales (mctp_route_lookup y mctp_route_lookup_null) atraviesan la lista de rutas de la red sin que se mantenga el bloqueo de lectura de RCU. Esto significa que la b\u00fasqueda de ruta est\u00e1 sujeta a preferencia, lo que resulta en una posible expiraci\u00f3n del per\u00edodo de gracia y, por lo tanto, en un eventual kfree() mientras todav\u00eda tenemos el puntero de ruta. Agregue los bloqueos de secci\u00f3n cr\u00edtica del lado de lectura adecuados alrededor de las b\u00fasquedas de rutas, evitando la preferencia y un posible kfree paralelo. Los accesos restantes a net-&gt;mctp.routes ya est\u00e1n bajo rcu_read_lock o protegidos por RTNL para actualizaciones. Basado en un an\u00e1lisis de Sili Luo , donde la introducci\u00f3n de un retraso en la b\u00fasqueda de rutas podr\u00eda causar una UAF en sendmsg() y eliminaci\u00f3n de rutas simult\u00e1neas."
+          }
+        ],
+        "id": "CVE-2023-52483",
+        "lastModified": "2024-02-29T13:49:29.390",
+        "metrics": {},
+        "published": "2024-02-29T06:15:46.147",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1db0724a01b558feb1ecae551782add1951a114a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2405f64a95a7a094eb24cba9bcfaffd1ea264de4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5093bbfc10ab6636b32728e35813cbd79feb063c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6c52b12159049046483fdb0c411a0a1869c41a67"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
