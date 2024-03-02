@@ -147,10 +147,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nasync_xor: increase src_offs when dropping destination page\n\nNow we support sharing one page if PAGE_SIZE is not equal stripe size. To\nsupport this, it needs to support calculating xor value with different\noffsets for each r5dev. One offset array is used to record those offsets.\n\nIn RMW mode, parity page is used as a source page. It sets\nASYNC_TX_XOR_DROP_DST before calculating xor value in ops_run_prexor5.\nSo it needs to add src_list and src_offs at the same time. Now it only\nneeds src_list. So the xor value which is calculated is wrong. It can\ncause data corruption problem.\n\nI can reproduce this problem 100% on a POWER8 machine. The steps are:\n\n  mdadm -CR /dev/md0 -l5 -n3 /dev/sdb1 /dev/sdc1 /dev/sdd1 --size=3G\n  mkfs.xfs /dev/md0\n  mount /dev/md0 /mnt/test\n  mount: /mnt/test: mount(2) system call failed: Structure needs cleaning."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: async_xor: aumenta src_offs al eliminar la p\u00e1gina de destino. Ahora admitimos compartir una p\u00e1gina si PAGE_SIZE no tiene el mismo tama\u00f1o de banda. Para respaldar esto, debe admitir el c\u00e1lculo del valor xor con diferentes compensaciones para cada r5dev. Se utiliza una matriz de desplazamiento para registrar esos desplazamientos. En el modo RMW, la p\u00e1gina de paridad se utiliza como p\u00e1gina de origen. Establece ASYNC_TX_XOR_DROP_DST antes de calcular el valor xor en ops_run_prexor5. Por lo tanto, es necesario agregar src_list y src_offs al mismo tiempo. Ahora s\u00f3lo necesita src_list. Entonces el valor xor que se calcula es incorrecto. Puede causar problemas de corrupci\u00f3n de datos. Puedo reproducir este problema al 100% en una m\u00e1quina POWER8. Los pasos son: mdadm -CR /dev/md0 -l5 -n3 /dev/sdb1 /dev/sdc1 /dev/sdd1 --size=3G mkfs.xfs /dev/md0 mount /dev/md0 /mnt/test mount: /mnt/test: la llamada al sistema mount(2) fall\u00f3: la estructura necesita limpieza."
           }
         ],
         "id": "CVE-2021-47066",
-        "lastModified": "2024-02-29T23:15:08.057",
+        "lastModified": "2024-03-01T14:04:26.010",
         "metrics": {},
         "published": "2024-02-29T23:15:08.057",
         "references": [
@@ -172,7 +176,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

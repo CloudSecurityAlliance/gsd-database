@@ -227,10 +227,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/nfc: fix use-after-free llcp_sock_bind/connect\n\nCommits 8a4cd82d (\"nfc: fix refcount leak in llcp_sock_connect()\")\nand c33b1cc62 (\"nfc: fix refcount leak in llcp_sock_bind()\")\nfixed a refcount leak bug in bind/connect but introduced a\nuse-after-free if the same local is assigned to 2 different sockets.\n\nThis can be triggered by the following simple program:\n    int sock1 = socket( AF_NFC, SOCK_STREAM, NFC_SOCKPROTO_LLCP );\n    int sock2 = socket( AF_NFC, SOCK_STREAM, NFC_SOCKPROTO_LLCP );\n    memset( &addr, 0, sizeof(struct sockaddr_nfc_llcp) );\n    addr.sa_family = AF_NFC;\n    addr.nfc_protocol = NFC_PROTO_NFC_DEP;\n    bind( sock1, (struct sockaddr*) &addr, sizeof(struct sockaddr_nfc_llcp) )\n    bind( sock2, (struct sockaddr*) &addr, sizeof(struct sockaddr_nfc_llcp) )\n    close(sock1);\n    close(sock2);\n\nFix this by assigning NULL to llcp_sock->local after calling\nnfc_llcp_local_put.\n\nThis addresses CVE-2021-23134."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net/nfc: corrige use-after-free llcp_sock_bind/connect Commits 8a4cd82d (\"nfc: corrige la fuga de refcount en llcp_sock_connect()\") y c33b1cc62 (\"nfc: corrige la fuga de refcount en llcp_sock_bind()\") corrigi\u00f3 un error de fuga de recuento en bind/connect pero introdujo un Use-After-Free si el mismo local est\u00e1 asignado a 2 sockets diferentes. Esto puede activarse mediante el siguiente programa simple: int sock1 = socket( AF_NFC, SOCK_STREAM, NFC_SOCKPROTO_LLCP ); int sock2 = conector (AF_NFC, SOCK_STREAM, NFC_SOCKPROTO_LLCP); memset( &amp;addr, 0, sizeof(struct sockaddr_nfc_llcp) ); addr.sa_family = AF_NFC; addr.nfc_protocol = NFC_PROTO_NFC_DEP; bind( sock1, (struct sockaddr*) &amp; addr, sizeof(struct sockaddr_nfc_llcp) ) bind( sock2, (struct sockaddr*) &amp; addr, sizeof(struct sockaddr_nfc_llcp) ) close(sock1); cerrar(calcet\u00edn2); Solucione este problema asignando NULL a llcp_sock-&gt;local despu\u00e9s de llamar a nfc_llcp_local_put. Esto aborda CVE-2021-23134."
           }
         ],
         "id": "CVE-2021-47068",
-        "lastModified": "2024-02-29T23:15:08.170",
+        "lastModified": "2024-03-01T14:04:26.010",
         "metrics": {},
         "published": "2024-02-29T23:15:08.170",
         "references": [
@@ -272,7 +276,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

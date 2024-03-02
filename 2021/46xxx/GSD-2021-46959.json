@@ -217,10 +217,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: Fix use-after-free with devm_spi_alloc_*\n\nWe can't rely on the contents of the devres list during\nspi_unregister_controller(), as the list is already torn down at the\ntime we perform devres_find() for devm_spi_release_controller. This\ncauses devices registered with devm_spi_alloc_{master,slave}() to be\nmistakenly identified as legacy, non-devm managed devices and have their\nreference counters decremented below 0.\n\n------------[ cut here ]------------\nWARNING: CPU: 1 PID: 660 at lib/refcount.c:28 refcount_warn_saturate+0x108/0x174\n[<b0396f04>] (refcount_warn_saturate) from [<b03c56a4>] (kobject_put+0x90/0x98)\n[<b03c5614>] (kobject_put) from [<b0447b4c>] (put_device+0x20/0x24)\n r4:b6700140\n[<b0447b2c>] (put_device) from [<b07515e8>] (devm_spi_release_controller+0x3c/0x40)\n[<b07515ac>] (devm_spi_release_controller) from [<b045343c>] (release_nodes+0x84/0xc4)\n r5:b6700180 r4:b6700100\n[<b04533b8>] (release_nodes) from [<b0454160>] (devres_release_all+0x5c/0x60)\n r8:b1638c54 r7:b117ad94 r6:b1638c10 r5:b117ad94 r4:b163dc10\n[<b0454104>] (devres_release_all) from [<b044e41c>] (__device_release_driver+0x144/0x1ec)\n r5:b117ad94 r4:b163dc10\n[<b044e2d8>] (__device_release_driver) from [<b044f70c>] (device_driver_detach+0x84/0xa0)\n r9:00000000 r8:00000000 r7:b117ad94 r6:b163dc54 r5:b1638c10 r4:b163dc10\n[<b044f688>] (device_driver_detach) from [<b044d274>] (unbind_store+0xe4/0xf8)\n\nInstead, determine the devm allocation state as a flag on the\ncontroller which is guaranteed to be stable during cleanup."
+          },
+          {
+            "lang": "es",
+            "value": " En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: spi: corrige el Use-After-Free con devm_spi_alloc_* No podemos confiar en el contenido de la lista devres durante spi_unregister_controller(), ya que la lista ya est\u00e1 eliminada en ese momento. Realizamos devres_find() para devm_spi_release_controller. Esto hace que los dispositivos registrados con devm_spi_alloc_{master,slave}() se identifiquen err\u00f3neamente como dispositivos heredados, no administrados por devm y sus contadores de referencia disminuyan por debajo de 0. ------------[ cortar aqu\u00ed ] ------------ ADVERTENCIA: CPU: 1 PID: 660 en lib/refcount.c:28 refcount_warn_saturate+0x108/0x174 [] (refcount_warn_saturate) de [] (kobject_put+ 0x90/0x98) [] (kobject_put) de [] (put_device+0x20/0x24) r4:b6700140 [] (put_device) de [] (devm_spi_release_controller+0x3c/0x40 ) [ ] (devm_spi_release_controller) de [] (release_nodes+0x84/0xc4) r5:b6700180 r4:b6700100 [] (release_nodes) de [] (devres_release_all+0x5c/0x6 0) r8:b1638c54 r7:b117ad94 r6:b1638c10 r5:b117ad94 r4:b163dc10 [] (devres_release_all) de [] (__device_release_driver+0x144/0x1ec) r5:b117ad94 r4:b163dc10 [] (__device_release_driver) de [&lt; b044f70c&gt;] (device_driver_detach+0x84/0xa0) r9:00000000 r8:00000000 r7:b117ad94 r6:b163dc54 r5:b1638c10 r4:b163dc10 [] (device_driver_detach) de [ ] (unbind_store+0xe4/0xf8) en su lugar , determine el estado de asignaci\u00f3n devm como un indicador en el controlador que se garantiza que ser\u00e1 estable durante la limpieza."
           }
         ],
         "id": "CVE-2021-46959",
-        "lastModified": "2024-02-29T23:15:07.230",
+        "lastModified": "2024-03-01T14:04:26.010",
         "metrics": {},
         "published": "2024-02-29T23:15:07.230",
         "references": [
@@ -262,7 +266,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

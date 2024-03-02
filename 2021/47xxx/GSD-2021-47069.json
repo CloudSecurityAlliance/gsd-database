@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47069"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nipc/mqueue, msg, sem: avoid relying on a stack reference past its expiry\n\ndo_mq_timedreceive calls wq_sleep with a stack local address.  The\nsender (do_mq_timedsend) uses this address to later call pipelined_send.\n\nThis leads to a very hard to trigger race where a do_mq_timedreceive\ncall might return and leave do_mq_timedsend to rely on an invalid\naddress, causing the following crash:\n\n  RIP: 0010:wake_q_add_safe+0x13/0x60\n  Call Trace:\n   __x64_sys_mq_timedsend+0x2a9/0x490\n   do_syscall_64+0x80/0x680\n   entry_SYSCALL_64_after_hwframe+0x44/0xa9\n  RIP: 0033:0x7f5928e40343\n\nThe race occurs as:\n\n1. do_mq_timedreceive calls wq_sleep with the address of `struct\n   ext_wait_queue` on function stack (aliased as `ewq_addr` here) - it\n   holds a valid `struct ext_wait_queue *` as long as the stack has not\n   been overwritten.\n\n2. `ewq_addr` gets added to info->e_wait_q[RECV].list in wq_add, and\n   do_mq_timedsend receives it via wq_get_first_waiter(info, RECV) to call\n   __pipelined_op.\n\n3. Sender calls __pipelined_op::smp_store_release(&this->state,\n   STATE_READY).  Here is where the race window begins.  (`this` is\n   `ewq_addr`.)\n\n4. If the receiver wakes up now in do_mq_timedreceive::wq_sleep, it\n   will see `state == STATE_READY` and break.\n\n5. do_mq_timedreceive returns, and `ewq_addr` is no longer guaranteed\n   to be a `struct ext_wait_queue *` since it was on do_mq_timedreceive's\n   stack.  (Although the address may not get overwritten until another\n   function happens to touch it, which means it can persist around for an\n   indefinite time.)\n\n6. do_mq_timedsend::__pipelined_op() still believes `ewq_addr` is a\n   `struct ext_wait_queue *`, and uses it to find a task_struct to pass to\n   the wake_q_add_safe call.  In the lucky case where nothing has\n   overwritten `ewq_addr` yet, `ewq_addr->task` is the right task_struct.\n   In the unlucky case, __pipelined_op::wake_q_add_safe gets handed a\n   bogus address as the receiver's task_struct causing the crash.\n\ndo_mq_timedsend::__pipelined_op() should not dereference `this` after\nsetting STATE_READY, as the receiver counterpart is now free to return.\nChange __pipelined_op to call wake_q_add_safe on the receiver's\ntask_struct returned by get_task_struct, instead of dereferencing `this`\nwhich sits on the receiver's stack.\n\nAs Manfred pointed out, the race potentially also exists in\nipc/msg.c::expunge_all and ipc/sem.c::wake_up_sem_queue_prepare.  Fix\nthose in the same way.",
       "id": "GSD-2021-47069",
       "modified": "2024-03-01T06:04:48.313787Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47069",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0d97a82ba830d8",
+                          "version_value": "4528c0c32308"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.6"
+                              },
+                              {
+                                "lessThan": "5.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.40",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nipc/mqueue, msg, sem: avoid relying on a stack reference past its expiry\n\ndo_mq_timedreceive calls wq_sleep with a stack local address.  The\nsender (do_mq_timedsend) uses this address to later call pipelined_send.\n\nThis leads to a very hard to trigger race where a do_mq_timedreceive\ncall might return and leave do_mq_timedsend to rely on an invalid\naddress, causing the following crash:\n\n  RIP: 0010:wake_q_add_safe+0x13/0x60\n  Call Trace:\n   __x64_sys_mq_timedsend+0x2a9/0x490\n   do_syscall_64+0x80/0x680\n   entry_SYSCALL_64_after_hwframe+0x44/0xa9\n  RIP: 0033:0x7f5928e40343\n\nThe race occurs as:\n\n1. do_mq_timedreceive calls wq_sleep with the address of `struct\n   ext_wait_queue` on function stack (aliased as `ewq_addr` here) - it\n   holds a valid `struct ext_wait_queue *` as long as the stack has not\n   been overwritten.\n\n2. `ewq_addr` gets added to info->e_wait_q[RECV].list in wq_add, and\n   do_mq_timedsend receives it via wq_get_first_waiter(info, RECV) to call\n   __pipelined_op.\n\n3. Sender calls __pipelined_op::smp_store_release(&this->state,\n   STATE_READY).  Here is where the race window begins.  (`this` is\n   `ewq_addr`.)\n\n4. If the receiver wakes up now in do_mq_timedreceive::wq_sleep, it\n   will see `state == STATE_READY` and break.\n\n5. do_mq_timedreceive returns, and `ewq_addr` is no longer guaranteed\n   to be a `struct ext_wait_queue *` since it was on do_mq_timedreceive's\n   stack.  (Although the address may not get overwritten until another\n   function happens to touch it, which means it can persist around for an\n   indefinite time.)\n\n6. do_mq_timedsend::__pipelined_op() still believes `ewq_addr` is a\n   `struct ext_wait_queue *`, and uses it to find a task_struct to pass to\n   the wake_q_add_safe call.  In the lucky case where nothing has\n   overwritten `ewq_addr` yet, `ewq_addr->task` is the right task_struct.\n   In the unlucky case, __pipelined_op::wake_q_add_safe gets handed a\n   bogus address as the receiver's task_struct causing the crash.\n\ndo_mq_timedsend::__pipelined_op() should not dereference `this` after\nsetting STATE_READY, as the receiver counterpart is now free to return.\nChange __pipelined_op to call wake_q_add_safe on the receiver's\ntask_struct returned by get_task_struct, instead of dereferencing `this`\nwhich sits on the receiver's stack.\n\nAs Manfred pointed out, the race potentially also exists in\nipc/msg.c::expunge_all and ipc/sem.c::wake_up_sem_queue_prepare.  Fix\nthose in the same way."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4528c0c323085e645b8765913b4a7fd42cf49b65",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4528c0c323085e645b8765913b4a7fd42cf49b65"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/807fa14536b26803b858da878b643be72952a097",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/807fa14536b26803b858da878b643be72952a097"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a11ddb37bf367e6b5239b95ca759e5389bb46048",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a11ddb37bf367e6b5239b95ca759e5389bb46048"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nipc/mqueue, msg, sem: avoid relying on a stack reference past its expiry\n\ndo_mq_timedreceive calls wq_sleep with a stack local address.  The\nsender (do_mq_timedsend) uses this address to later call pipelined_send.\n\nThis leads to a very hard to trigger race where a do_mq_timedreceive\ncall might return and leave do_mq_timedsend to rely on an invalid\naddress, causing the following crash:\n\n  RIP: 0010:wake_q_add_safe+0x13/0x60\n  Call Trace:\n   __x64_sys_mq_timedsend+0x2a9/0x490\n   do_syscall_64+0x80/0x680\n   entry_SYSCALL_64_after_hwframe+0x44/0xa9\n  RIP: 0033:0x7f5928e40343\n\nThe race occurs as:\n\n1. do_mq_timedreceive calls wq_sleep with the address of `struct\n   ext_wait_queue` on function stack (aliased as `ewq_addr` here) - it\n   holds a valid `struct ext_wait_queue *` as long as the stack has not\n   been overwritten.\n\n2. `ewq_addr` gets added to info->e_wait_q[RECV].list in wq_add, and\n   do_mq_timedsend receives it via wq_get_first_waiter(info, RECV) to call\n   __pipelined_op.\n\n3. Sender calls __pipelined_op::smp_store_release(&this->state,\n   STATE_READY).  Here is where the race window begins.  (`this` is\n   `ewq_addr`.)\n\n4. If the receiver wakes up now in do_mq_timedreceive::wq_sleep, it\n   will see `state == STATE_READY` and break.\n\n5. do_mq_timedreceive returns, and `ewq_addr` is no longer guaranteed\n   to be a `struct ext_wait_queue *` since it was on do_mq_timedreceive's\n   stack.  (Although the address may not get overwritten until another\n   function happens to touch it, which means it can persist around for an\n   indefinite time.)\n\n6. do_mq_timedsend::__pipelined_op() still believes `ewq_addr` is a\n   `struct ext_wait_queue *`, and uses it to find a task_struct to pass to\n   the wake_q_add_safe call.  In the lucky case where nothing has\n   overwritten `ewq_addr` yet, `ewq_addr->task` is the right task_struct.\n   In the unlucky case, __pipelined_op::wake_q_add_safe gets handed a\n   bogus address as the receiver's task_struct causing the crash.\n\ndo_mq_timedsend::__pipelined_op() should not dereference `this` after\nsetting STATE_READY, as the receiver counterpart is now free to return.\nChange __pipelined_op to call wake_q_add_safe on the receiver's\ntask_struct returned by get_task_struct, instead of dereferencing `this`\nwhich sits on the receiver's stack.\n\nAs Manfred pointed out, the race potentially also exists in\nipc/msg.c::expunge_all and ipc/sem.c::wake_up_sem_queue_prepare.  Fix\nthose in the same way."
+          }
+        ],
+        "id": "CVE-2021-47069",
+        "lastModified": "2024-03-01T22:22:25.913",
+        "metrics": {},
+        "published": "2024-03-01T22:15:46.857",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4528c0c323085e645b8765913b4a7fd42cf49b65"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/807fa14536b26803b858da878b643be72952a097"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a11ddb37bf367e6b5239b95ca759e5389bb46048"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

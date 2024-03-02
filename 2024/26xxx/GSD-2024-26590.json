@@ -36,7 +36,7 @@
                         {
                           "version_affected": "<",
                           "version_name": "622ceaddb764",
-                          "version_value": "823ba1d21060"
+                          "version_value": "47467e04816c"
                         },
                         {
                           "version_value": "not down converted",
@@ -51,6 +51,12 @@
                                 "lessThan": "5.16",
                                 "status": "unaffected",
                                 "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.80",
                                 "versionType": "custom"
                               },
                               {
@@ -96,7 +102,7 @@
         ]
       },
       "generator": {
-        "engine": "bippy-1d0b2ea67d2d"
+        "engine": "bippy-4986f5686161"
       },
       "problemtype": {
         "problemtype_data": [
@@ -112,6 +118,11 @@
       },
       "references": {
         "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/47467e04816cb297905c0f09bc2d11ef865942d9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/47467e04816cb297905c0f09bc2d11ef865942d9"
+          },
           {
             "name": "https://git.kernel.org/stable/c/823ba1d2106019ddf195287ba53057aee33cf724",
             "refsource": "MISC",
@@ -136,16 +147,24 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nerofs: fix inconsistent per-file compression format\n\nEROFS can select compression algorithms on a per-file basis, and each\nper-file compression algorithm needs to be marked in the on-disk\nsuperblock for initialization.\n\nHowever, syzkaller can generate inconsistent crafted images that use\nan unsupported algorithmtype for specific inodes, e.g. use MicroLZMA\nalgorithmtype even it's not set in `sbi->available_compr_algs`.  This\ncan lead to an unexpected \"BUG: kernel NULL pointer dereference\" if\nthe corresponding decompressor isn't built-in.\n\nFix this by checking against `sbi->available_compr_algs` for each\nm_algorithmformat request.  Incorrect !erofs_sb_has_compr_cfgs preset\nbitmap is now fixed together since it was harmless previously."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: erofs: corrige el formato de compresi\u00f3n por archivo inconsistente EROFS puede seleccionar algoritmos de compresi\u00f3n por archivo, y cada algoritmo de compresi\u00f3n por archivo debe marcarse en el superbloque del disco para la inicializaci\u00f3n. Sin embargo, syzkaller puede generar im\u00e1genes manipuladas inconsistentes que usan un tipo de algoritmo no compatible para inodos espec\u00edficos, por ejemplo, usa el tipo de algoritmo MicroLZMA incluso si no est\u00e1 configurado en `sbi-&gt;available_compr_algs`. Esto puede provocar un \"ERROR: desreferencia del puntero NULL del kernel\" inesperado si el descompresor correspondiente no est\u00e1 integrado. Solucione este problema comprobando con `sbi-&gt;available_compr_algs` para cada solicitud de m_algorithmformat. El mapa de bits preestablecido !erofs_sb_has_compr_cfgs incorrecto ahora se corrige porque antes era inofensivo."
           }
         ],
         "id": "CVE-2024-26590",
-        "lastModified": "2024-02-22T19:07:27.197",
+        "lastModified": "2024-03-01T14:15:54.007",
         "metrics": {},
         "published": "2024-02-22T17:15:09.103",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/118a8cf504d7dfa519562d000f423ee3ca75d2c4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/47467e04816cb297905c0f09bc2d11ef865942d9"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

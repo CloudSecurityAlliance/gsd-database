@@ -191,10 +191,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: qat - ADF_STATUS_PF_RUNNING should be set after adf_dev_init\n\nADF_STATUS_PF_RUNNING is (only) used and checked by adf_vf2pf_shutdown()\nbefore calling adf_iov_putmsg()->mutex_lock(vf2pf_lock), however the\nvf2pf_lock is initialized in adf_dev_init(), which can fail and when it\nfail, the vf2pf_lock is either not initialized or destroyed, a subsequent\nuse of vf2pf_lock will cause issue.\nTo fix this issue, only set this flag if adf_dev_init() returns 0.\n\n[    7.178404] BUG: KASAN: user-memory-access in __mutex_lock.isra.0+0x1ac/0x7c0\n[    7.180345] Call Trace:\n[    7.182576]  mutex_lock+0xc9/0xd0\n[    7.183257]  adf_iov_putmsg+0x118/0x1a0 [intel_qat]\n[    7.183541]  adf_vf2pf_shutdown+0x4d/0x7b [intel_qat]\n[    7.183834]  adf_dev_shutdown+0x172/0x2b0 [intel_qat]\n[    7.184127]  adf_probe+0x5e9/0x600 [qat_dh895xccvf]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: crypto: qat - ADF_STATUS_PF_RUNNING debe configurarse despu\u00e9s de adf_dev_init ADF_STATUS_PF_RUNNING es (solo) usado y verificado por adf_vf2pf_shutdown() antes de llamar a adf_iov_putmsg()-&gt;mutex_lock(vf2pf_lock), sin embargo, vf2pf_lock es inicializado en adf_dev_init(), que puede fallar y cuando falla, vf2pf_lock no se inicializa o se destruye, un uso posterior de vf2pf_lock causar\u00e1 problemas. Para solucionar este problema, establezca este indicador solo si adf_dev_init() devuelve 0. [7.178404] ERROR: KASAN: acceso a memoria de usuario en __mutex_lock.isra.0+0x1ac/0x7c0 [7.180345] Seguimiento de llamadas: [7.182576] mutex_lock+0xc9 /0xd0 [ 7.183257] adf_iov_putmsg+0x118/0x1a0 [intel_qat] [ 7.183541] adf_vf2pf_shutdown+0x4d/0x7b [intel_qat] [ 7.183834] adf_dev_shutdown+0x172/0x2b0 [intel_qat] [7.184127] adf_probe+0x5e9/0x600 [qat_dh895xccvf]"
           }
         ],
         "id": "CVE-2021-47056",
-        "lastModified": "2024-02-29T23:15:07.530",
+        "lastModified": "2024-03-01T14:04:26.010",
         "metrics": {},
         "published": "2024-02-29T23:15:07.530",
         "references": [
@@ -232,7 +236,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
