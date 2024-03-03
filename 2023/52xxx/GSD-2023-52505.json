@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52505"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nphy: lynx-28g: serialize concurrent phy_set_mode_ext() calls to shared registers\n\nThe protocol converter configuration registers PCC8, PCCC, PCCD\n(implemented by the driver), as well as others, control protocol\nconverters from multiple lanes (each represented as a different\nstruct phy). So, if there are simultaneous calls to phy_set_mode_ext()\nto lanes sharing the same PCC register (either for the \"old\" or for the\n\"new\" protocol), corruption of the values programmed to hardware is\npossible, because lynx_28g_rmw() has no locking.\n\nAdd a spinlock in the struct lynx_28g_priv shared by all lanes, and take\nthe global spinlock from the phy_ops :: set_mode() implementation. There\nare no other callers which modify PCC registers.",
       "id": "GSD-2023-52505",
       "modified": "2024-02-21T06:01:53.345520Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52505",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "8f73b37cf3fb",
+                          "version_value": "6f901f8448c6"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.18"
+                              },
+                              {
+                                "lessThan": "5.18",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nphy: lynx-28g: serialize concurrent phy_set_mode_ext() calls to shared registers\n\nThe protocol converter configuration registers PCC8, PCCC, PCCD\n(implemented by the driver), as well as others, control protocol\nconverters from multiple lanes (each represented as a different\nstruct phy). So, if there are simultaneous calls to phy_set_mode_ext()\nto lanes sharing the same PCC register (either for the \"old\" or for the\n\"new\" protocol), corruption of the values programmed to hardware is\npossible, because lynx_28g_rmw() has no locking.\n\nAdd a spinlock in the struct lynx_28g_priv shared by all lanes, and take\nthe global spinlock from the phy_ops :: set_mode() implementation. There\nare no other callers which modify PCC registers."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/6f901f8448c6b25ed843796b114471d2a3fc5dfb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6f901f8448c6b25ed843796b114471d2a3fc5dfb"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c2d7c79898b427d263c64a4841987eec131f2d4e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c2d7c79898b427d263c64a4841987eec131f2d4e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/139ad1143151a07be93bf741d4ea7c89e59f89ce",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/139ad1143151a07be93bf741d4ea7c89e59f89ce"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nphy: lynx-28g: serialize concurrent phy_set_mode_ext() calls to shared registers\n\nThe protocol converter configuration registers PCC8, PCCC, PCCD\n(implemented by the driver), as well as others, control protocol\nconverters from multiple lanes (each represented as a different\nstruct phy). So, if there are simultaneous calls to phy_set_mode_ext()\nto lanes sharing the same PCC register (either for the \"old\" or for the\n\"new\" protocol), corruption of the values programmed to hardware is\npossible, because lynx_28g_rmw() has no locking.\n\nAdd a spinlock in the struct lynx_28g_priv shared by all lanes, and take\nthe global spinlock from the phy_ops :: set_mode() implementation. There\nare no other callers which modify PCC registers."
+          }
+        ],
+        "id": "CVE-2023-52505",
+        "lastModified": "2024-03-02T22:15:47.350",
+        "metrics": {},
+        "published": "2024-03-02T22:15:47.350",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/139ad1143151a07be93bf741d4ea7c89e59f89ce"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6f901f8448c6b25ed843796b114471d2a3fc5dfb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c2d7c79898b427d263c64a4841987eec131f2d4e"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

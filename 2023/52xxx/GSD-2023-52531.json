@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52531"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: iwlwifi: mvm: Fix a memory corruption issue\n\nA few lines above, space is kzalloc()'ed for:\n\tsizeof(struct iwl_nvm_data) +\n\tsizeof(struct ieee80211_channel) +\n\tsizeof(struct ieee80211_rate)\n\n'mvm->nvm_data' is a 'struct iwl_nvm_data', so it is fine.\n\nAt the end of this structure, there is the 'channels' flex array.\nEach element is of type 'struct ieee80211_channel'.\nSo only 1 element is allocated in this array.\n\nWhen doing:\n  mvm->nvm_data->bands[0].channels = mvm->nvm_data->channels;\nWe point at the first element of the 'channels' flex array.\nSo this is fine.\n\nHowever, when doing:\n  mvm->nvm_data->bands[0].bitrates =\n\t\t\t(void *)((u8 *)mvm->nvm_data->channels + 1);\nbecause of the \"(u8 *)\" cast, we add only 1 to the address of the beginning\nof the flex array.\n\nIt is likely that we want point at the 'struct ieee80211_rate' allocated\njust after.\n\nRemove the spurious casting so that the pointer arithmetic works as\nexpected.",
       "id": "GSD-2023-52531",
       "modified": "2024-02-21T06:01:53.373672Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52531",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "8ca151b568b6",
+                          "version_value": "7c8faa310803"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.9"
+                              },
+                              {
+                                "lessThan": "3.9",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.135",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.57",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: iwlwifi: mvm: Fix a memory corruption issue\n\nA few lines above, space is kzalloc()'ed for:\n\tsizeof(struct iwl_nvm_data) +\n\tsizeof(struct ieee80211_channel) +\n\tsizeof(struct ieee80211_rate)\n\n'mvm->nvm_data' is a 'struct iwl_nvm_data', so it is fine.\n\nAt the end of this structure, there is the 'channels' flex array.\nEach element is of type 'struct ieee80211_channel'.\nSo only 1 element is allocated in this array.\n\nWhen doing:\n  mvm->nvm_data->bands[0].channels = mvm->nvm_data->channels;\nWe point at the first element of the 'channels' flex array.\nSo this is fine.\n\nHowever, when doing:\n  mvm->nvm_data->bands[0].bitrates =\n\t\t\t(void *)((u8 *)mvm->nvm_data->channels + 1);\nbecause of the \"(u8 *)\" cast, we add only 1 to the address of the beginning\nof the flex array.\n\nIt is likely that we want point at the 'struct ieee80211_rate' allocated\njust after.\n\nRemove the spurious casting so that the pointer arithmetic works as\nexpected."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/7c8faa31080342aec4903c9acb20caf82fcca1ef",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7c8faa31080342aec4903c9acb20caf82fcca1ef"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6b3223449c959a8be94a1f042288059e40fcccb0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6b3223449c959a8be94a1f042288059e40fcccb0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f06cdd8d4ba5252986f51f80cc30263636397128",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f06cdd8d4ba5252986f51f80cc30263636397128"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8ba438ef3cacc4808a63ed0ce24d4f0942cfe55d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8ba438ef3cacc4808a63ed0ce24d4f0942cfe55d"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: iwlwifi: mvm: Fix a memory corruption issue\n\nA few lines above, space is kzalloc()'ed for:\n\tsizeof(struct iwl_nvm_data) +\n\tsizeof(struct ieee80211_channel) +\n\tsizeof(struct ieee80211_rate)\n\n'mvm->nvm_data' is a 'struct iwl_nvm_data', so it is fine.\n\nAt the end of this structure, there is the 'channels' flex array.\nEach element is of type 'struct ieee80211_channel'.\nSo only 1 element is allocated in this array.\n\nWhen doing:\n  mvm->nvm_data->bands[0].channels = mvm->nvm_data->channels;\nWe point at the first element of the 'channels' flex array.\nSo this is fine.\n\nHowever, when doing:\n  mvm->nvm_data->bands[0].bitrates =\n\t\t\t(void *)((u8 *)mvm->nvm_data->channels + 1);\nbecause of the \"(u8 *)\" cast, we add only 1 to the address of the beginning\nof the flex array.\n\nIt is likely that we want point at the 'struct ieee80211_rate' allocated\njust after.\n\nRemove the spurious casting so that the pointer arithmetic works as\nexpected."
+          }
+        ],
+        "id": "CVE-2023-52531",
+        "lastModified": "2024-03-02T22:15:48.613",
+        "metrics": {},
+        "published": "2024-03-02T22:15:48.613",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6b3223449c959a8be94a1f042288059e40fcccb0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7c8faa31080342aec4903c9acb20caf82fcca1ef"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8ba438ef3cacc4808a63ed0ce24d4f0942cfe55d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f06cdd8d4ba5252986f51f80cc30263636397128"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

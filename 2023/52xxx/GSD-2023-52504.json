@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52504"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/alternatives: Disable KASAN in apply_alternatives()\n\nFei has reported that KASAN triggers during apply_alternatives() on\na 5-level paging machine:\n\n\tBUG: KASAN: out-of-bounds in rcu_is_watching()\n\tRead of size 4 at addr ff110003ee6419a0 by task swapper/0/0\n\t...\n\t__asan_load4()\n\trcu_is_watching()\n\ttrace_hardirqs_on()\n\ttext_poke_early()\n\tapply_alternatives()\n\t...\n\nOn machines with 5-level paging, cpu_feature_enabled(X86_FEATURE_LA57)\ngets patched. It includes KASAN code, where KASAN_SHADOW_START depends on\n__VIRTUAL_MASK_SHIFT, which is defined with cpu_feature_enabled().\n\nKASAN gets confused when apply_alternatives() patches the\nKASAN_SHADOW_START users. A test patch that makes KASAN_SHADOW_START\nstatic, by replacing __VIRTUAL_MASK_SHIFT with 56, works around the issue.\n\nFix it for real by disabling KASAN while the kernel is patching alternatives.\n\n[ mingo: updated the changelog ]",
       "id": "GSD-2023-52504",
       "modified": "2024-02-21T06:01:53.417399Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,94 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52504",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "6657fca06e3f",
+                          "version_value": "3719d3c36aa8"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.17"
+                              },
+                              {
+                                "lessThan": "4.17",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.297",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.270",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.199",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.136",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +115,109 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/alternatives: Disable KASAN in apply_alternatives()\n\nFei has reported that KASAN triggers during apply_alternatives() on\na 5-level paging machine:\n\n\tBUG: KASAN: out-of-bounds in rcu_is_watching()\n\tRead of size 4 at addr ff110003ee6419a0 by task swapper/0/0\n\t...\n\t__asan_load4()\n\trcu_is_watching()\n\ttrace_hardirqs_on()\n\ttext_poke_early()\n\tapply_alternatives()\n\t...\n\nOn machines with 5-level paging, cpu_feature_enabled(X86_FEATURE_LA57)\ngets patched. It includes KASAN code, where KASAN_SHADOW_START depends on\n__VIRTUAL_MASK_SHIFT, which is defined with cpu_feature_enabled().\n\nKASAN gets confused when apply_alternatives() patches the\nKASAN_SHADOW_START users. A test patch that makes KASAN_SHADOW_START\nstatic, by replacing __VIRTUAL_MASK_SHIFT with 56, works around the issue.\n\nFix it for real by disabling KASAN while the kernel is patching alternatives.\n\n[ mingo: updated the changelog ]"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/3719d3c36aa853d5a2401af9f8d6b116c91ad5ae",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3719d3c36aa853d5a2401af9f8d6b116c91ad5ae"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3770c38cd6a60494da29ac2da73ff8156440a2d1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3770c38cd6a60494da29ac2da73ff8156440a2d1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6788b10620ca6e98575d1e06e72a8974aad7657e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6788b10620ca6e98575d1e06e72a8974aad7657e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ecba5afe86f30605eb9dfb7f265a8de0218d4cfc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ecba5afe86f30605eb9dfb7f265a8de0218d4cfc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5b784489c8158518bf7a466bb3cc045b0fb66b4b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5b784489c8158518bf7a466bb3cc045b0fb66b4b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cd287cc208dfe6bd6da98e7f88e723209242c9b4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cd287cc208dfe6bd6da98e7f88e723209242c9b4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d35652a5fc9944784f6f50a5c979518ff8dacf61",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d35652a5fc9944784f6f50a5c979518ff8dacf61"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/alternatives: Disable KASAN in apply_alternatives()\n\nFei has reported that KASAN triggers during apply_alternatives() on\na 5-level paging machine:\n\n\tBUG: KASAN: out-of-bounds in rcu_is_watching()\n\tRead of size 4 at addr ff110003ee6419a0 by task swapper/0/0\n\t...\n\t__asan_load4()\n\trcu_is_watching()\n\ttrace_hardirqs_on()\n\ttext_poke_early()\n\tapply_alternatives()\n\t...\n\nOn machines with 5-level paging, cpu_feature_enabled(X86_FEATURE_LA57)\ngets patched. It includes KASAN code, where KASAN_SHADOW_START depends on\n__VIRTUAL_MASK_SHIFT, which is defined with cpu_feature_enabled().\n\nKASAN gets confused when apply_alternatives() patches the\nKASAN_SHADOW_START users. A test patch that makes KASAN_SHADOW_START\nstatic, by replacing __VIRTUAL_MASK_SHIFT with 56, works around the issue.\n\nFix it for real by disabling KASAN while the kernel is patching alternatives.\n\n[ mingo: updated the changelog ]"
+          }
+        ],
+        "id": "CVE-2023-52504",
+        "lastModified": "2024-03-02T22:15:47.300",
+        "metrics": {},
+        "published": "2024-03-02T22:15:47.300",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3719d3c36aa853d5a2401af9f8d6b116c91ad5ae"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3770c38cd6a60494da29ac2da73ff8156440a2d1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5b784489c8158518bf7a466bb3cc045b0fb66b4b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6788b10620ca6e98575d1e06e72a8974aad7657e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cd287cc208dfe6bd6da98e7f88e723209242c9b4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d35652a5fc9944784f6f50a5c979518ff8dacf61"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ecba5afe86f30605eb9dfb7f265a8de0218d4cfc"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

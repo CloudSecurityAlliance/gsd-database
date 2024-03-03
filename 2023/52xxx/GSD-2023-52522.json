@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52522"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix possible store tearing in neigh_periodic_work()\n\nWhile looking at a related syzbot report involving neigh_periodic_work(),\nI found that I forgot to add an annotation when deleting an\nRCU protected item from a list.\n\nReaders use rcu_deference(*np), we need to use either\nrcu_assign_pointer() or WRITE_ONCE() on writer side\nto prevent store tearing.\n\nI use rcu_assign_pointer() to have lockdep support,\nthis was the choice made in neigh_flush_dev().",
       "id": "GSD-2023-52522",
       "modified": "2024-02-21T06:01:53.389663Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52522",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "767e97e1e0db",
+                          "version_value": "95eabb075a59"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.37"
+                              },
+                              {
+                                "lessThan": "2.6.37",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.258",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.198",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.135",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.57",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,100 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix possible store tearing in neigh_periodic_work()\n\nWhile looking at a related syzbot report involving neigh_periodic_work(),\nI found that I forgot to add an annotation when deleting an\nRCU protected item from a list.\n\nReaders use rcu_deference(*np), we need to use either\nrcu_assign_pointer() or WRITE_ONCE() on writer side\nto prevent store tearing.\n\nI use rcu_assign_pointer() to have lockdep support,\nthis was the choice made in neigh_flush_dev()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/95eabb075a5902f4c0834ab1fb12dc35730c05af",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/95eabb075a5902f4c0834ab1fb12dc35730c05af"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2ea52a2fb8e87067e26bbab4efb8872639240eb0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2ea52a2fb8e87067e26bbab4efb8872639240eb0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/147d89ee41434b97043c2dcb17a97dc151859baa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/147d89ee41434b97043c2dcb17a97dc151859baa"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f82aac8162871e87027692b36af335a2375d4580",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f82aac8162871e87027692b36af335a2375d4580"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a75152d233370362eebedb2643592e7c883cc9fc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a75152d233370362eebedb2643592e7c883cc9fc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/25563b581ba3a1f263a00e8c9a97f5e7363be6fd",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/25563b581ba3a1f263a00e8c9a97f5e7363be6fd"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix possible store tearing in neigh_periodic_work()\n\nWhile looking at a related syzbot report involving neigh_periodic_work(),\nI found that I forgot to add an annotation when deleting an\nRCU protected item from a list.\n\nReaders use rcu_deference(*np), we need to use either\nrcu_assign_pointer() or WRITE_ONCE() on writer side\nto prevent store tearing.\n\nI use rcu_assign_pointer() to have lockdep support,\nthis was the choice made in neigh_flush_dev()."
+          }
+        ],
+        "id": "CVE-2023-52522",
+        "lastModified": "2024-03-02T22:15:48.170",
+        "metrics": {},
+        "published": "2024-03-02T22:15:48.170",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/147d89ee41434b97043c2dcb17a97dc151859baa"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/25563b581ba3a1f263a00e8c9a97f5e7363be6fd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2ea52a2fb8e87067e26bbab4efb8872639240eb0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/95eabb075a5902f4c0834ab1fb12dc35730c05af"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a75152d233370362eebedb2643592e7c883cc9fc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f82aac8162871e87027692b36af335a2375d4580"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

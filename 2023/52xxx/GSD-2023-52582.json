@@ -1,0 +1,164 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-52582"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfs: Only call folio_start_fscache() one time for each folio\n\nIf a network filesystem using netfs implements a clamp_length()\nfunction, it can set subrequest lengths smaller than a page size.\n\nWhen we loop through the folios in netfs_rreq_unlock_folios() to\nset any folios to be written back, we need to make sure we only\ncall folio_start_fscache() once for each folio.\n\nOtherwise, this simple testcase:\n\n  mount -o fsc,rsize=1024,wsize=1024 127.0.0.1:/export /mnt/nfs\n  dd if=/dev/zero of=/mnt/nfs/file.bin bs=4096 count=1\n  1+0 records in\n  1+0 records out\n  4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s\n  echo 3 > /proc/sys/vm/drop_caches\n  cat /mnt/nfs/file.bin > /dev/null\n\nwill trigger an oops similar to the following:\n\n  page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))\n  ------------[ cut here ]------------\n  kernel BUG at include/linux/netfs.h:44!\n  ...\n  CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc5\n  ...\n  RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]\n  ...\n  Call Trace:\n    netfs_rreq_assess+0x497/0x660 [netfs]\n    netfs_subreq_terminated+0x32b/0x610 [netfs]\n    nfs_netfs_read_completion+0x14e/0x1a0 [nfs]\n    nfs_read_completion+0x2f9/0x330 [nfs]\n    rpc_free_task+0x72/0xa0 [sunrpc]\n    rpc_async_release+0x46/0x70 [sunrpc]\n    process_one_work+0x3bd/0x710\n    worker_thread+0x89/0x610\n    kthread+0x181/0x1c0\n    ret_from_fork+0x29/0x50",
+      "id": "GSD-2023-52582",
+      "modified": "2024-03-03T06:01:51.732889Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2023-52582",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3d3c95046742",
+                          "version_value": "df9950d37df1"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.13"
+                              },
+                              {
+                                "lessThan": "5.13",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.56",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfs: Only call folio_start_fscache() one time for each folio\n\nIf a network filesystem using netfs implements a clamp_length()\nfunction, it can set subrequest lengths smaller than a page size.\n\nWhen we loop through the folios in netfs_rreq_unlock_folios() to\nset any folios to be written back, we need to make sure we only\ncall folio_start_fscache() once for each folio.\n\nOtherwise, this simple testcase:\n\n  mount -o fsc,rsize=1024,wsize=1024 127.0.0.1:/export /mnt/nfs\n  dd if=/dev/zero of=/mnt/nfs/file.bin bs=4096 count=1\n  1+0 records in\n  1+0 records out\n  4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s\n  echo 3 > /proc/sys/vm/drop_caches\n  cat /mnt/nfs/file.bin > /dev/null\n\nwill trigger an oops similar to the following:\n\n  page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))\n  ------------[ cut here ]------------\n  kernel BUG at include/linux/netfs.h:44!\n  ...\n  CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc5\n  ...\n  RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]\n  ...\n  Call Trace:\n    netfs_rreq_assess+0x497/0x660 [netfs]\n    netfs_subreq_terminated+0x32b/0x610 [netfs]\n    nfs_netfs_read_completion+0x14e/0x1a0 [nfs]\n    nfs_read_completion+0x2f9/0x330 [nfs]\n    rpc_free_task+0x72/0xa0 [sunrpc]\n    rpc_async_release+0x46/0x70 [sunrpc]\n    process_one_work+0x3bd/0x710\n    worker_thread+0x89/0x610\n    kthread+0x181/0x1c0\n    ret_from_fork+0x29/0x50"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/df9950d37df113db59495fa09d060754366a2b7c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/df9950d37df113db59495fa09d060754366a2b7c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d9f5537479d4ec97ea92ff24e81a517d5772581a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d9f5537479d4ec97ea92ff24e81a517d5772581a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/df1c357f25d808e30b216188330e708e09e1a412",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/df1c357f25d808e30b216188330e708e09e1a412"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfs: Only call folio_start_fscache() one time for each folio\n\nIf a network filesystem using netfs implements a clamp_length()\nfunction, it can set subrequest lengths smaller than a page size.\n\nWhen we loop through the folios in netfs_rreq_unlock_folios() to\nset any folios to be written back, we need to make sure we only\ncall folio_start_fscache() once for each folio.\n\nOtherwise, this simple testcase:\n\n  mount -o fsc,rsize=1024,wsize=1024 127.0.0.1:/export /mnt/nfs\n  dd if=/dev/zero of=/mnt/nfs/file.bin bs=4096 count=1\n  1+0 records in\n  1+0 records out\n  4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s\n  echo 3 > /proc/sys/vm/drop_caches\n  cat /mnt/nfs/file.bin > /dev/null\n\nwill trigger an oops similar to the following:\n\n  page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))\n  ------------[ cut here ]------------\n  kernel BUG at include/linux/netfs.h:44!\n  ...\n  CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc5\n  ...\n  RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]\n  ...\n  Call Trace:\n    netfs_rreq_assess+0x497/0x660 [netfs]\n    netfs_subreq_terminated+0x32b/0x610 [netfs]\n    nfs_netfs_read_completion+0x14e/0x1a0 [nfs]\n    nfs_read_completion+0x2f9/0x330 [nfs]\n    rpc_free_task+0x72/0xa0 [sunrpc]\n    rpc_async_release+0x46/0x70 [sunrpc]\n    process_one_work+0x3bd/0x710\n    worker_thread+0x89/0x610\n    kthread+0x181/0x1c0\n    ret_from_fork+0x29/0x50"
+          }
+        ],
+        "id": "CVE-2023-52582",
+        "lastModified": "2024-03-02T22:15:49.770",
+        "metrics": {},
+        "published": "2024-03-02T22:15:49.770",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d9f5537479d4ec97ea92ff24e81a517d5772581a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/df1c357f25d808e30b216188330e708e09e1a412"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/df9950d37df113db59495fa09d060754366a2b7c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
+    }
+  }
+}

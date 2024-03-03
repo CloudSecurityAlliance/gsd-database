@@ -1,0 +1,154 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2023-52569"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: remove BUG() after failure to insert delayed dir index item\n\nInstead of calling BUG() when we fail to insert a delayed dir index item\ninto the delayed node's tree, we can just release all the resources we\nhave allocated/acquired before and return the error to the caller. This is\nfine because all existing call chains undo anything they have done before\ncalling btrfs_insert_delayed_dir_index() or BUG_ON (when creating pending\nsnapshots in the transaction commit path).\n\nSo remove the BUG() call and do proper error handling.\n\nThis relates to a syzbot report linked below, but does not fix it because\nit only prevents hitting a BUG(), it does not fix the issue where somehow\nwe attempt to use twice the same index number for different index items.",
+      "id": "GSD-2023-52569",
+      "modified": "2024-03-03T06:01:51.799531Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2023-52569",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "39c4a9522db0"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.56",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: remove BUG() after failure to insert delayed dir index item\n\nInstead of calling BUG() when we fail to insert a delayed dir index item\ninto the delayed node's tree, we can just release all the resources we\nhave allocated/acquired before and return the error to the caller. This is\nfine because all existing call chains undo anything they have done before\ncalling btrfs_insert_delayed_dir_index() or BUG_ON (when creating pending\nsnapshots in the transaction commit path).\n\nSo remove the BUG() call and do proper error handling.\n\nThis relates to a syzbot report linked below, but does not fix it because\nit only prevents hitting a BUG(), it does not fix the issue where somehow\nwe attempt to use twice the same index number for different index items."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/39c4a9522db0072570d602e9b365119e17fb9f4f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/39c4a9522db0072570d602e9b365119e17fb9f4f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d10fd53393cc5de4b9cf1a4b8f9984f0a037aa51",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d10fd53393cc5de4b9cf1a4b8f9984f0a037aa51"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2c58c3931ede7cd08cbecf1f1a4acaf0a04a41a9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2c58c3931ede7cd08cbecf1f1a4acaf0a04a41a9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: remove BUG() after failure to insert delayed dir index item\n\nInstead of calling BUG() when we fail to insert a delayed dir index item\ninto the delayed node's tree, we can just release all the resources we\nhave allocated/acquired before and return the error to the caller. This is\nfine because all existing call chains undo anything they have done before\ncalling btrfs_insert_delayed_dir_index() or BUG_ON (when creating pending\nsnapshots in the transaction commit path).\n\nSo remove the BUG() call and do proper error handling.\n\nThis relates to a syzbot report linked below, but does not fix it because\nit only prevents hitting a BUG(), it does not fix the issue where somehow\nwe attempt to use twice the same index number for different index items."
+          }
+        ],
+        "id": "CVE-2023-52569",
+        "lastModified": "2024-03-02T22:15:49.163",
+        "metrics": {},
+        "published": "2024-03-02T22:15:49.163",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2c58c3931ede7cd08cbecf1f1a4acaf0a04a41a9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/39c4a9522db0072570d602e9b365119e17fb9f4f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d10fd53393cc5de4b9cf1a4b8f9984f0a037aa51"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
+    }
+  }
+}

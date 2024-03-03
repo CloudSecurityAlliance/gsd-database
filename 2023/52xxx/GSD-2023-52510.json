@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52510"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nieee802154: ca8210: Fix a potential UAF in ca8210_probe\n\nIf of_clk_add_provider() fails in ca8210_register_ext_clock(),\nit calls clk_unregister() to release priv->clk and returns an\nerror. However, the caller ca8210_probe() then calls ca8210_remove(),\nwhere priv->clk is freed again in ca8210_unregister_ext_clock(). In\nthis case, a use-after-free may happen in the second time we call\nclk_unregister().\n\nFix this by removing the first clk_unregister(). Also, priv->clk could\nbe an error code on failure of clk_register_fixed_rate(). Use\nIS_ERR_OR_NULL to catch this case in ca8210_unregister_ext_clock().",
       "id": "GSD-2023-52510",
       "modified": "2024-02-21T06:01:53.365899Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52510",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "ded845a781a5",
+                          "version_value": "28b68cba378e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.12"
+                              },
+                              {
+                                "lessThan": "4.12",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.14.*",
+                                "status": "unaffected",
+                                "version": "4.14.328",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.297",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.259",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.199",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.136",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.59",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.8",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nieee802154: ca8210: Fix a potential UAF in ca8210_probe\n\nIf of_clk_add_provider() fails in ca8210_register_ext_clock(),\nit calls clk_unregister() to release priv->clk and returns an\nerror. However, the caller ca8210_probe() then calls ca8210_remove(),\nwhere priv->clk is freed again in ca8210_unregister_ext_clock(). In\nthis case, a use-after-free may happen in the second time we call\nclk_unregister().\n\nFix this by removing the first clk_unregister(). Also, priv->clk could\nbe an error code on failure of clk_register_fixed_rate(). Use\nIS_ERR_OR_NULL to catch this case in ca8210_unregister_ext_clock()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/28b68cba378e3e50a4082b65f262bc4f2c7c2add",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28b68cba378e3e50a4082b65f262bc4f2c7c2add"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cdb46be93c1f7bbf2c4649e9fc5fb147cfb5245d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cdb46be93c1f7bbf2c4649e9fc5fb147cfb5245d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/85c2857ef90041f567ce98722c1c342c4d31f4bc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/85c2857ef90041f567ce98722c1c342c4d31f4bc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/55e06850c7894f00d41b767c5f5665459f83f58f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/55e06850c7894f00d41b767c5f5665459f83f58f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/84c6aa0ae5c4dc121f9996bb8fed46c80909d80e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/84c6aa0ae5c4dc121f9996bb8fed46c80909d80e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/217efe32a45249eb07dcd7197e8403de98345e66",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/217efe32a45249eb07dcd7197e8403de98345e66"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/becf5c147198f4345243c5df0c4f035415491640",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/becf5c147198f4345243c5df0c4f035415491640"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f990874b1c98fe8e57ee9385669f501822979258",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f990874b1c98fe8e57ee9385669f501822979258"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nieee802154: ca8210: Fix a potential UAF in ca8210_probe\n\nIf of_clk_add_provider() fails in ca8210_register_ext_clock(),\nit calls clk_unregister() to release priv->clk and returns an\nerror. However, the caller ca8210_probe() then calls ca8210_remove(),\nwhere priv->clk is freed again in ca8210_unregister_ext_clock(). In\nthis case, a use-after-free may happen in the second time we call\nclk_unregister().\n\nFix this by removing the first clk_unregister(). Also, priv->clk could\nbe an error code on failure of clk_register_fixed_rate(). Use\nIS_ERR_OR_NULL to catch this case in ca8210_unregister_ext_clock()."
+          }
+        ],
+        "id": "CVE-2023-52510",
+        "lastModified": "2024-03-02T22:15:47.587",
+        "metrics": {},
+        "published": "2024-03-02T22:15:47.587",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/217efe32a45249eb07dcd7197e8403de98345e66"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28b68cba378e3e50a4082b65f262bc4f2c7c2add"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/55e06850c7894f00d41b767c5f5665459f83f58f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/84c6aa0ae5c4dc121f9996bb8fed46c80909d80e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/85c2857ef90041f567ce98722c1c342c4d31f4bc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/becf5c147198f4345243c5df0c4f035415491640"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cdb46be93c1f7bbf2c4649e9fc5fb147cfb5245d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f990874b1c98fe8e57ee9385669f501822979258"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }

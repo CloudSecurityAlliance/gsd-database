@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52515"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nRDMA/srp: Do not call scsi_done() from srp_abort()\n\nAfter scmd_eh_abort_handler() has called the SCSI LLD eh_abort_handler\ncallback, it performs one of the following actions:\n* Call scsi_queue_insert().\n* Call scsi_finish_command().\n* Call scsi_eh_scmd_add().\nHence, SCSI abort handlers must not call scsi_done(). Otherwise all\nthe above actions would trigger a use-after-free. Hence remove the\nscsi_done() call from srp_abort(). Keep the srp_free_req() call\nbefore returning SUCCESS because we may not see the command again if\nSUCCESS is returned.",
       "id": "GSD-2023-52515",
       "modified": "2024-02-21T06:01:53.489907Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52515",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "d8536670916a",
+                          "version_value": "26788a5b48d9"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.7"
+                              },
+                              {
+                                "lessThan": "3.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.199",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.136",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.57",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,91 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nRDMA/srp: Do not call scsi_done() from srp_abort()\n\nAfter scmd_eh_abort_handler() has called the SCSI LLD eh_abort_handler\ncallback, it performs one of the following actions:\n* Call scsi_queue_insert().\n* Call scsi_finish_command().\n* Call scsi_eh_scmd_add().\nHence, SCSI abort handlers must not call scsi_done(). Otherwise all\nthe above actions would trigger a use-after-free. Hence remove the\nscsi_done() call from srp_abort(). Keep the srp_free_req() call\nbefore returning SUCCESS because we may not see the command again if\nSUCCESS is returned."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/26788a5b48d9d5cd3283d777d238631c8cd7495a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/26788a5b48d9d5cd3283d777d238631c8cd7495a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b9bdffb3f9aaeff8379c83f5449c6b42cb71c2b5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b9bdffb3f9aaeff8379c83f5449c6b42cb71c2b5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2b298f9181582270d5e95774e5a6c7a7fb5b1206",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2b298f9181582270d5e95774e5a6c7a7fb5b1206"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/05a10b316adaac1f322007ca9a0383b410d759cc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/05a10b316adaac1f322007ca9a0383b410d759cc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e193b7955dfad68035b983a0011f4ef3590c85eb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e193b7955dfad68035b983a0011f4ef3590c85eb"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nRDMA/srp: Do not call scsi_done() from srp_abort()\n\nAfter scmd_eh_abort_handler() has called the SCSI LLD eh_abort_handler\ncallback, it performs one of the following actions:\n* Call scsi_queue_insert().\n* Call scsi_finish_command().\n* Call scsi_eh_scmd_add().\nHence, SCSI abort handlers must not call scsi_done(). Otherwise all\nthe above actions would trigger a use-after-free. Hence remove the\nscsi_done() call from srp_abort(). Keep the srp_free_req() call\nbefore returning SUCCESS because we may not see the command again if\nSUCCESS is returned."
+          }
+        ],
+        "id": "CVE-2023-52515",
+        "lastModified": "2024-03-02T22:15:47.823",
+        "metrics": {},
+        "published": "2024-03-02T22:15:47.823",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/05a10b316adaac1f322007ca9a0383b410d759cc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/26788a5b48d9d5cd3283d777d238631c8cd7495a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2b298f9181582270d5e95774e5a6c7a7fb5b1206"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b9bdffb3f9aaeff8379c83f5449c6b42cb71c2b5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e193b7955dfad68035b983a0011f4ef3590c85eb"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }
