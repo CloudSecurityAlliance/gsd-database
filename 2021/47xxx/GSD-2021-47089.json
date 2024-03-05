@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47089"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nkfence: fix memory leak when cat kfence objects\n\nHulk robot reported a kmemleak problem:\n\n    unreferenced object 0xffff93d1d8cc02e8 (size 248):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        00 40 85 19 d4 93 ff ff 00 10 00 00 00 00 00 00  .@..............\n        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n      backtrace:\n         seq_open+0x2a/0x80\n         full_proxy_open+0x167/0x1e0\n         do_dentry_open+0x1e1/0x3a0\n         path_openat+0x961/0xa20\n         do_filp_open+0xae/0x120\n         do_sys_openat2+0x216/0x2f0\n         do_sys_open+0x57/0x80\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n    unreferenced object 0xffff93d419854000 (size 4096):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        6b 66 65 6e 63 65 2d 23 32 35 30 3a 20 30 78 30  kfence-#250: 0x0\n        30 30 30 30 30 30 30 37 35 34 62 64 61 31 32 2d  0000000754bda12-\n      backtrace:\n         seq_read_iter+0x313/0x440\n         seq_read+0x14b/0x1a0\n         full_proxy_read+0x56/0x80\n         vfs_read+0xa5/0x1b0\n         ksys_read+0xa0/0xf0\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n\nI find that we can easily reproduce this problem with the following\ncommands:\n\n\tcat /sys/kernel/debug/kfence/objects\n\techo scan > /sys/kernel/debug/kmemleak\n\tcat /sys/kernel/debug/kmemleak\n\nThe leaked memory is allocated in the stack below:\n\n    do_syscall_64\n      do_sys_open\n        do_dentry_open\n          full_proxy_open\n            seq_open            ---> alloc seq_file\n      vfs_read\n        full_proxy_read\n          seq_read\n            seq_read_iter\n              traverse          ---> alloc seq_buf\n\nAnd it should have been released in the following process:\n\n    do_syscall_64\n      syscall_exit_to_user_mode\n        exit_to_user_mode_prepare\n          task_work_run\n            ____fput\n              __fput\n                full_proxy_release  ---> free here\n\nHowever, the release function corresponding to file_operations is not\nimplemented in kfence.  As a result, a memory leak occurs.  Therefore,\nthe solution to this problem is to implement the corresponding release\nfunction.",
       "id": "GSD-2021-47089",
       "modified": "2024-03-01T06:04:48.327067Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,64 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47089",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0ce20dd84089",
+                          "version_value": "2f06c8293d27"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.12"
+                              },
+                              {
+                                "lessThan": "5.12",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +85,64 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nkfence: fix memory leak when cat kfence objects\n\nHulk robot reported a kmemleak problem:\n\n    unreferenced object 0xffff93d1d8cc02e8 (size 248):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        00 40 85 19 d4 93 ff ff 00 10 00 00 00 00 00 00  .@..............\n        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n      backtrace:\n         seq_open+0x2a/0x80\n         full_proxy_open+0x167/0x1e0\n         do_dentry_open+0x1e1/0x3a0\n         path_openat+0x961/0xa20\n         do_filp_open+0xae/0x120\n         do_sys_openat2+0x216/0x2f0\n         do_sys_open+0x57/0x80\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n    unreferenced object 0xffff93d419854000 (size 4096):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        6b 66 65 6e 63 65 2d 23 32 35 30 3a 20 30 78 30  kfence-#250: 0x0\n        30 30 30 30 30 30 30 37 35 34 62 64 61 31 32 2d  0000000754bda12-\n      backtrace:\n         seq_read_iter+0x313/0x440\n         seq_read+0x14b/0x1a0\n         full_proxy_read+0x56/0x80\n         vfs_read+0xa5/0x1b0\n         ksys_read+0xa0/0xf0\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n\nI find that we can easily reproduce this problem with the following\ncommands:\n\n\tcat /sys/kernel/debug/kfence/objects\n\techo scan > /sys/kernel/debug/kmemleak\n\tcat /sys/kernel/debug/kmemleak\n\nThe leaked memory is allocated in the stack below:\n\n    do_syscall_64\n      do_sys_open\n        do_dentry_open\n          full_proxy_open\n            seq_open            ---> alloc seq_file\n      vfs_read\n        full_proxy_read\n          seq_read\n            seq_read_iter\n              traverse          ---> alloc seq_buf\n\nAnd it should have been released in the following process:\n\n    do_syscall_64\n      syscall_exit_to_user_mode\n        exit_to_user_mode_prepare\n          task_work_run\n            ____fput\n              __fput\n                full_proxy_release  ---> free here\n\nHowever, the release function corresponding to file_operations is not\nimplemented in kfence.  As a result, a memory leak occurs.  Therefore,\nthe solution to this problem is to implement the corresponding release\nfunction."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2f06c8293d27f6337f907042c602c9c953988c48",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2f06c8293d27f6337f907042c602c9c953988c48"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0129ab1f268b6cf88825eae819b9b84aa0a85634",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0129ab1f268b6cf88825eae819b9b84aa0a85634"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nkfence: fix memory leak when cat kfence objects\n\nHulk robot reported a kmemleak problem:\n\n    unreferenced object 0xffff93d1d8cc02e8 (size 248):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        00 40 85 19 d4 93 ff ff 00 10 00 00 00 00 00 00  .@..............\n        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n      backtrace:\n         seq_open+0x2a/0x80\n         full_proxy_open+0x167/0x1e0\n         do_dentry_open+0x1e1/0x3a0\n         path_openat+0x961/0xa20\n         do_filp_open+0xae/0x120\n         do_sys_openat2+0x216/0x2f0\n         do_sys_open+0x57/0x80\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n    unreferenced object 0xffff93d419854000 (size 4096):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        6b 66 65 6e 63 65 2d 23 32 35 30 3a 20 30 78 30  kfence-#250: 0x0\n        30 30 30 30 30 30 30 37 35 34 62 64 61 31 32 2d  0000000754bda12-\n      backtrace:\n         seq_read_iter+0x313/0x440\n         seq_read+0x14b/0x1a0\n         full_proxy_read+0x56/0x80\n         vfs_read+0xa5/0x1b0\n         ksys_read+0xa0/0xf0\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n\nI find that we can easily reproduce this problem with the following\ncommands:\n\n\tcat /sys/kernel/debug/kfence/objects\n\techo scan > /sys/kernel/debug/kmemleak\n\tcat /sys/kernel/debug/kmemleak\n\nThe leaked memory is allocated in the stack below:\n\n    do_syscall_64\n      do_sys_open\n        do_dentry_open\n          full_proxy_open\n            seq_open            ---> alloc seq_file\n      vfs_read\n        full_proxy_read\n          seq_read\n            seq_read_iter\n              traverse          ---> alloc seq_buf\n\nAnd it should have been released in the following process:\n\n    do_syscall_64\n      syscall_exit_to_user_mode\n        exit_to_user_mode_prepare\n          task_work_run\n            ____fput\n              __fput\n                full_proxy_release  ---> free here\n\nHowever, the release function corresponding to file_operations is not\nimplemented in kfence.  As a result, a memory leak occurs.  Therefore,\nthe solution to this problem is to implement the corresponding release\nfunction."
+          }
+        ],
+        "id": "CVE-2021-47089",
+        "lastModified": "2024-03-04T18:15:07.560",
+        "metrics": {},
+        "published": "2024-03-04T18:15:07.560",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0129ab1f268b6cf88825eae819b9b84aa0a85634"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2f06c8293d27f6337f907042c602c9c953988c48"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }
