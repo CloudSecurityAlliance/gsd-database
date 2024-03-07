@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52599"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\njfs: fix array-index-out-of-bounds in diNewExt\n\n[Syz report]\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_imap.c:2360:2\nindex -878706688 is out of range for type 'struct iagctl[128]'\nCPU: 1 PID: 5065 Comm: syz-executor282 Not tainted 6.7.0-rc4-syzkaller-00009-gbee0e7762ad2 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n diNewExt+0x3cf3/0x4000 fs/jfs/jfs_imap.c:2360\n diAllocExt fs/jfs/jfs_imap.c:1949 [inline]\n diAllocAG+0xbe8/0x1e50 fs/jfs/jfs_imap.c:1666\n diAlloc+0x1d3/0x1760 fs/jfs/jfs_imap.c:1587\n ialloc+0x8f/0x900 fs/jfs/jfs_inode.c:56\n jfs_mkdir+0x1c5/0xb90 fs/jfs/namei.c:225\n vfs_mkdir+0x2f1/0x4b0 fs/namei.c:4106\n do_mkdirat+0x264/0x3a0 fs/namei.c:4129\n __do_sys_mkdir fs/namei.c:4149 [inline]\n __se_sys_mkdir fs/namei.c:4147 [inline]\n __x64_sys_mkdir+0x6e/0x80 fs/namei.c:4147\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x45/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\nRIP: 0033:0x7fcb7e6a0b57\nCode: ff ff 77 07 31 c0 c3 0f 1f 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007ffd83023038 EFLAGS: 00000286 ORIG_RAX: 0000000000000053\nRAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fcb7e6a0b57\nRDX: 00000000000a1020 RSI: 00000000000001ff RDI: 0000000020000140\nRBP: 0000000020000140 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000286 R12: 00007ffd830230d0\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\n\n[Analysis]\nWhen the agstart is too large, it can cause agno overflow.\n\n[Fix]\nAfter obtaining agno, if the value is invalid, exit the subsequent process.\n\n\nModified the test from agno > MAXAG to agno >= MAXAG based on linux-next\nreport by kernel test robot (Dan Carpenter).",
       "id": "GSD-2023-52599",
       "modified": "2024-03-03T06:01:51.496617Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52599",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "f423528488e4"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\njfs: fix array-index-out-of-bounds in diNewExt\n\n[Syz report]\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_imap.c:2360:2\nindex -878706688 is out of range for type 'struct iagctl[128]'\nCPU: 1 PID: 5065 Comm: syz-executor282 Not tainted 6.7.0-rc4-syzkaller-00009-gbee0e7762ad2 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n diNewExt+0x3cf3/0x4000 fs/jfs/jfs_imap.c:2360\n diAllocExt fs/jfs/jfs_imap.c:1949 [inline]\n diAllocAG+0xbe8/0x1e50 fs/jfs/jfs_imap.c:1666\n diAlloc+0x1d3/0x1760 fs/jfs/jfs_imap.c:1587\n ialloc+0x8f/0x900 fs/jfs/jfs_inode.c:56\n jfs_mkdir+0x1c5/0xb90 fs/jfs/namei.c:225\n vfs_mkdir+0x2f1/0x4b0 fs/namei.c:4106\n do_mkdirat+0x264/0x3a0 fs/namei.c:4129\n __do_sys_mkdir fs/namei.c:4149 [inline]\n __se_sys_mkdir fs/namei.c:4147 [inline]\n __x64_sys_mkdir+0x6e/0x80 fs/namei.c:4147\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x45/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\nRIP: 0033:0x7fcb7e6a0b57\nCode: ff ff 77 07 31 c0 c3 0f 1f 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007ffd83023038 EFLAGS: 00000286 ORIG_RAX: 0000000000000053\nRAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fcb7e6a0b57\nRDX: 00000000000a1020 RSI: 00000000000001ff RDI: 0000000020000140\nRBP: 0000000020000140 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000286 R12: 00007ffd830230d0\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\n\n[Analysis]\nWhen the agstart is too large, it can cause agno overflow.\n\n[Fix]\nAfter obtaining agno, if the value is invalid, exit the subsequent process.\n\n\nModified the test from agno > MAXAG to agno >= MAXAG based on linux-next\nreport by kernel test robot (Dan Carpenter)."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/f423528488e4f9606cef858eceea210bf1163f41",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f423528488e4f9606cef858eceea210bf1163f41"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/de6a91aed1e0b1a23e9c11e7d7557f088eeeb017",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/de6a91aed1e0b1a23e9c11e7d7557f088eeeb017"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e2b77d107b33bb31c8b1f5c4cb8f277b23728f1e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e2b77d107b33bb31c8b1f5c4cb8f277b23728f1e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6aa30020879042d46df9f747e4f0a486eea6fe98",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6aa30020879042d46df9f747e4f0a486eea6fe98"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3537f92cd22c672db97fae6997481e678ad14641",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3537f92cd22c672db97fae6997481e678ad14641"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6996d43b14486f4a6655b10edc541ada1b580b4b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6996d43b14486f4a6655b10edc541ada1b580b4b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5a6660139195f5e2fbbda459eeecb8788f3885fe",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5a6660139195f5e2fbbda459eeecb8788f3885fe"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/49f9637aafa6e63ba686c13cb8549bf5e6920402",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/49f9637aafa6e63ba686c13cb8549bf5e6920402"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\njfs: fix array-index-out-of-bounds in diNewExt\n\n[Syz report]\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_imap.c:2360:2\nindex -878706688 is out of range for type 'struct iagctl[128]'\nCPU: 1 PID: 5065 Comm: syz-executor282 Not tainted 6.7.0-rc4-syzkaller-00009-gbee0e7762ad2 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n diNewExt+0x3cf3/0x4000 fs/jfs/jfs_imap.c:2360\n diAllocExt fs/jfs/jfs_imap.c:1949 [inline]\n diAllocAG+0xbe8/0x1e50 fs/jfs/jfs_imap.c:1666\n diAlloc+0x1d3/0x1760 fs/jfs/jfs_imap.c:1587\n ialloc+0x8f/0x900 fs/jfs/jfs_inode.c:56\n jfs_mkdir+0x1c5/0xb90 fs/jfs/namei.c:225\n vfs_mkdir+0x2f1/0x4b0 fs/namei.c:4106\n do_mkdirat+0x264/0x3a0 fs/namei.c:4129\n __do_sys_mkdir fs/namei.c:4149 [inline]\n __se_sys_mkdir fs/namei.c:4147 [inline]\n __x64_sys_mkdir+0x6e/0x80 fs/namei.c:4147\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x45/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\nRIP: 0033:0x7fcb7e6a0b57\nCode: ff ff 77 07 31 c0 c3 0f 1f 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007ffd83023038 EFLAGS: 00000286 ORIG_RAX: 0000000000000053\nRAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fcb7e6a0b57\nRDX: 00000000000a1020 RSI: 00000000000001ff RDI: 0000000020000140\nRBP: 0000000020000140 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000286 R12: 00007ffd830230d0\nR13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\n\n[Analysis]\nWhen the agstart is too large, it can cause agno overflow.\n\n[Fix]\nAfter obtaining agno, if the value is invalid, exit the subsequent process.\n\n\nModified the test from agno > MAXAG to agno >= MAXAG based on linux-next\nreport by kernel test robot (Dan Carpenter)."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux se ha resuelto la siguiente vulnerabilidad: jfs: corrige array-index-out-of-bounds en diNewExt [Informe Syz] UBSAN: array-index-out-of-bounds en fs/jfs/jfs_imap.c: \u00cdndice 2360:2 -878706688 est\u00e1 fuera de rango para el tipo 'struct iagctl[128]' CPU: 1 PID: 5065 Comm: syz-executor282 No contaminado 6.7.0-rc4-syzkaller-00009-gbee0e7762ad2 #0 Nombre de hardware: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2023 Seguimiento de llamadas:  __dump_stack lib/dump_stack.c:88 [en l\u00ednea] dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106 ubsan_epilogue lib/ubsan.c: 217 [en l\u00ednea] __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348 diNewExt+0x3cf3/0x4000 fs/jfs/jfs_imap.c:2360 diAllocExt fs/jfs/jfs_imap.c:1949 [en l\u00ednea] diAllocAG+0xbe8/0x1 e50 fs/ jfs/jfs_imap.c:1666 diAlloc+0x1d3/0x1760 fs/jfs/jfs_imap.c:1587 ialloc+0x8f/0x900 fs/jfs/jfs_inode.c:56 jfs_mkdir+0x1c5/0xb90 fs/jfs/namei.c:225 vfs_m kdir +0x2f1/0x4b0 fs/namei.c:4106 do_mkdirat+0x264/0x3a0 fs/namei.c:4129 __do_sys_mkdir fs/namei.c:4149 [en l\u00ednea] __se_sys_mkdir fs/namei.c:4147 [en l\u00ednea] __x64_sys_mkdir+0x 6e/0x80 fs/namei.c:4147 do_syscall_x64 arch/x86/entry/common.c:51 [en l\u00ednea] do_syscall_64+0x45/0x110 arch/x86/entry/common.c:82 Entry_SYSCALL_64_after_hwframe+0x63/0x6b RIP: 0033:0x7fcb7e6a0b57 C\u00f3digo: ff ff 77 07 31 c0 c3 0f 1f 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 b8 53 00 00 00 0f 05 &lt;48&gt; 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48 RSP: 002b:00007ffd83023038 EFLAGS: 00000286 ORIG_RAX: 00000000000000053 RAX: ffffffffffffffda RBX: 0000000 0ffffffff RCX: 00007fcb7e6a0b57 RDX: 00000000000a1020 RSI: 00000000000001ff RDI: 0000000020000140 RBP: 0000000020000140 R08: 0000000000000000 R09: 0000000000000000 R10: 0000000000000000 R11: 0000000000000286 R12: 00007ffd830230d0 R13: 0000000000000000 R14 : 0000000000000000 R15: 0000000000000000 [An\u00e1lisis] Cuando el agstart es demasiado grande, puede causar un desbordamiento de agno. [Soluci\u00f3n] Despu\u00e9s de obtener agno, si el valor no es v\u00e1lido, salga del proceso posterior. Se modific\u00f3 la prueba de agno &gt; MAXAG a agno &gt;= MAXAG seg\u00fan el informe de Linux-next realizado por el robot de prueba del kernel (Dan Carpenter)."
+          }
+        ],
+        "id": "CVE-2023-52599",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:10.210",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3537f92cd22c672db97fae6997481e678ad14641"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/49f9637aafa6e63ba686c13cb8549bf5e6920402"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5a6660139195f5e2fbbda459eeecb8788f3885fe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6996d43b14486f4a6655b10edc541ada1b580b4b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6aa30020879042d46df9f747e4f0a486eea6fe98"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/de6a91aed1e0b1a23e9c11e7d7557f088eeeb017"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e2b77d107b33bb31c8b1f5c4cb8f277b23728f1e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f423528488e4f9606cef858eceea210bf1163f41"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

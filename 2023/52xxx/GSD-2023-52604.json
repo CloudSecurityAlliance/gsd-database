@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52604"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nFS:JFS:UBSAN:array-index-out-of-bounds in dbAdjTree\n\nSyzkaller reported the following issue:\n\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_dmap.c:2867:6\nindex 196694 is out of range for type 's8[1365]' (aka 'signed char[1365]')\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\n================================================================================\nKernel panic - not syncing: UBSAN: panic_on_warn set ...\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n panic+0x30f/0x770 kernel/panic.c:340\n check_panic_on_warn+0x82/0xa0 kernel/panic.c:236\n ubsan_epilogue lib/ubsan.c:223 [inline]\n __ubsan_handle_out_of_bounds+0x13c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\nKernel Offset: disabled\nRebooting in 86400 seconds..\n\nThe issue is caused when the value of lp becomes greater than\nCTLTREESIZE which is the max size of stree. Adding a simple check\nsolves this issue.\n\nDave:\nAs the function returns a void, good error handling\nwould require a more intrusive code reorganization, so I modified\nOsama's patch at use WARN_ON_ONCE for lack of a cleaner option.\n\nThe patch is tested via syzbot.",
       "id": "GSD-2023-52604",
       "modified": "2024-03-03T06:01:51.430264Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52604",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "e3e95c685066"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nFS:JFS:UBSAN:array-index-out-of-bounds in dbAdjTree\n\nSyzkaller reported the following issue:\n\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_dmap.c:2867:6\nindex 196694 is out of range for type 's8[1365]' (aka 'signed char[1365]')\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\n================================================================================\nKernel panic - not syncing: UBSAN: panic_on_warn set ...\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n panic+0x30f/0x770 kernel/panic.c:340\n check_panic_on_warn+0x82/0xa0 kernel/panic.c:236\n ubsan_epilogue lib/ubsan.c:223 [inline]\n __ubsan_handle_out_of_bounds+0x13c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\nKernel Offset: disabled\nRebooting in 86400 seconds..\n\nThe issue is caused when the value of lp becomes greater than\nCTLTREESIZE which is the max size of stree. Adding a simple check\nsolves this issue.\n\nDave:\nAs the function returns a void, good error handling\nwould require a more intrusive code reorganization, so I modified\nOsama's patch at use WARN_ON_ONCE for lack of a cleaner option.\n\nThe patch is tested via syzbot."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/e3e95c6850661c77e6dab079d9b5374a618ebb15",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e3e95c6850661c77e6dab079d9b5374a618ebb15"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/98f9537fe61b8382b3cc5dd97347531698517c56",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/98f9537fe61b8382b3cc5dd97347531698517c56"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/de34de6e57bbbc868e4fcf9e98c76b3587cabb0b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/de34de6e57bbbc868e4fcf9e98c76b3587cabb0b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6fe8b702125aeee6ce83f20092a2341446704e7b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6fe8b702125aeee6ce83f20092a2341446704e7b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/42f433785f108893de0dd5260bafb85d7d51db03",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/42f433785f108893de0dd5260bafb85d7d51db03"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6a44065dd604972ec1fbcccbdc4a70d266a89cdd",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6a44065dd604972ec1fbcccbdc4a70d266a89cdd"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/59342822276f753e49d27ef5eebffbba990572b9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/59342822276f753e49d27ef5eebffbba990572b9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9862ec7ac1cbc6eb5ee4a045b5d5b8edbb2f7e68",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9862ec7ac1cbc6eb5ee4a045b5d5b8edbb2f7e68"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nFS:JFS:UBSAN:array-index-out-of-bounds in dbAdjTree\n\nSyzkaller reported the following issue:\n\nUBSAN: array-index-out-of-bounds in fs/jfs/jfs_dmap.c:2867:6\nindex 196694 is out of range for type 's8[1365]' (aka 'signed char[1365]')\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n ubsan_epilogue lib/ubsan.c:217 [inline]\n __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\n================================================================================\nKernel panic - not syncing: UBSAN: panic_on_warn set ...\nCPU: 1 PID: 109 Comm: jfsCommit Not tainted 6.6.0-rc3-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/04/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n panic+0x30f/0x770 kernel/panic.c:340\n check_panic_on_warn+0x82/0xa0 kernel/panic.c:236\n ubsan_epilogue lib/ubsan.c:223 [inline]\n __ubsan_handle_out_of_bounds+0x13c/0x150 lib/ubsan.c:348\n dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867\n dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834\n dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331\n dbFreeDmap fs/jfs/jfs_dmap.c:2080 [inline]\n dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402\n txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534\n txUpdateMap+0x342/0x9e0\n txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]\n jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732\n kthread+0x2d3/0x370 kernel/kthread.c:388\n ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304\n </TASK>\nKernel Offset: disabled\nRebooting in 86400 seconds..\n\nThe issue is caused when the value of lp becomes greater than\nCTLTREESIZE which is the max size of stree. Adding a simple check\nsolves this issue.\n\nDave:\nAs the function returns a void, good error handling\nwould require a more intrusive code reorganization, so I modified\nOsama's patch at use WARN_ON_ONCE for lack of a cleaner option.\n\nThe patch is tested via syzbot."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: FS:JFS:UBSAN:array-index-out-of-bounds en dbAdjTree Syzkaller inform\u00f3 el siguiente problema: UBSAN: array-index-out-of-bounds en fs/jfs /jfs_dmap.c:2867:6 el \u00edndice 196694 est\u00e1 fuera del rango para el tipo 's8[1365]' (tambi\u00e9n conocido como 'car\u00e1cter firmado[1365]') CPU: 1 PID: 109 Comm: jfsCommit No contaminado 6.6.0-rc3-syzkaller #0 Nombre del hardware: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/08/2023 Seguimiento de llamadas:  __dump_stack lib/dump_stack.c:88 [en l\u00ednea] dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106 ubsan_epilogue lib/ubsan.c:217 [en l\u00ednea] __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348 dbAdjTree+0x474/0x4f0 fs/jfs/jfs_dmap.c:2867 dbJoin+0x210/0x2d0 fs/jfs/jfs _dmap.c: 2834 dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331 dbFreeDmap fs/jfs/jfs_dmap.c:2080 [en l\u00ednea] dbFree+0x343/0x650 fs/jfs/jfs_dmap.c:402 txFreeMap+0x798/0xd50 fs/j fs /jfs_txnmgr.c:2534 txUpdateMap+0x342/0x9e0 txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [en l\u00ednea] jfs_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732 kthread+0x2d3/0x3 70 kernel/kthread.c:388 ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147 ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304  ============== ==================================================== ================ P\u00e1nico del kernel: no se sincroniza: UBSAN: p\u00e1nico_on_warn configurado... CPU: 1 PID: 109 Comm: jfsCommit No contaminado 6.6.0-rc3-syzkaller #0 Hardware nombre: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/08/2023 Seguimiento de llamadas:  __dump_stack lib/dump_stack.c:88 [en l\u00ednea] dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106 p\u00e1nico+0x30f /0x770 Kernel/Panic.C: 340 check_panic_on_warn+0x82/0xa0 kernel/Panic.c: 236 UBSAN_EPILOGO LIB/UBSAN.C: 223 [Inline] __ubsan_handle_out_of_bounds+0x13c/0x150 LIB/UB/UBSAN.C: 4F0 FS /jfs/jfs_dmap.c:2867 dbJoin+0x210/0x2d0 fs/jfs/jfs_dmap.c:2834 dbFreeBits+0x4eb/0xda0 fs/jfs/jfs_dmap.c:2331 dbFreeDmap fs/jfs/jfs_dmap.c:2080 [en l\u00ednea] dbFree +0x343/0x650 fs/jfs/jfs_dmap.c:402 txFreeMap+0x798/0xd50 fs/jfs/jfs_txnmgr.c:2534 txUpdateMap+0x342/0x9e0 txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [en l\u00ednea] jf s_lazycommit+0x47a/0xb70 fs/jfs/jfs_txnmgr.c:2732 kthread+0x2d3/0x370 kernel/kthread.c:388 ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147 ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64. S:304  Desplazamiento del kernel: deshabilitado Reinicio en 86400 segundos. El problema se produce cuando el valor de lp se vuelve mayor que CTLTREESIZE, que es el tama\u00f1o m\u00e1ximo de stree. Agregar una verificaci\u00f3n simple resuelve este problema. Dave: Como la funci\u00f3n devuelve un valor nulo, un buen manejo de errores requerir\u00eda una reorganizaci\u00f3n del c\u00f3digo m\u00e1s intrusiva, as\u00ed que modifiqu\u00e9 el parche de Osama en use WARN_ON_ONCE por falta de una opci\u00f3n m\u00e1s limpia. El parche se prueba mediante syzbot."
+          }
+        ],
+        "id": "CVE-2023-52604",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:11.347",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/42f433785f108893de0dd5260bafb85d7d51db03"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/59342822276f753e49d27ef5eebffbba990572b9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6a44065dd604972ec1fbcccbdc4a70d266a89cdd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6fe8b702125aeee6ce83f20092a2341446704e7b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9862ec7ac1cbc6eb5ee4a045b5d5b8edbb2f7e68"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/98f9537fe61b8382b3cc5dd97347531698517c56"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/de34de6e57bbbc868e4fcf9e98c76b3587cabb0b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e3e95c6850661c77e6dab079d9b5374a618ebb15"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

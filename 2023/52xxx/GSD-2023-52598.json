@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52598"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ns390/ptrace: handle setting of fpc register correctly\n\nIf the content of the floating point control (fpc) register of a traced\nprocess is modified with the ptrace interface the new value is tested for\nvalidity by temporarily loading it into the fpc register.\n\nThis may lead to corruption of the fpc register of the tracing process:\nif an interrupt happens while the value is temporarily loaded into the\nfpc register, and within interrupt context floating point or vector\nregisters are used, the current fp/vx registers are saved with\nsave_fpu_regs() assuming they belong to user space and will be loaded into\nfp/vx registers when returning to user space.\n\ntest_fp_ctl() restores the original user space fpc register value, however\nit will be discarded, when returning to user space.\n\nIn result the tracer will incorrectly continue to run with the value that\nwas supposed to be used for the traced process.\n\nFix this by saving fpu register contents with save_fpu_regs() before using\ntest_fp_ctl().",
       "id": "GSD-2023-52598",
       "modified": "2024-03-03T06:01:51.501508Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52598",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "6ccf904aac02"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ns390/ptrace: handle setting of fpc register correctly\n\nIf the content of the floating point control (fpc) register of a traced\nprocess is modified with the ptrace interface the new value is tested for\nvalidity by temporarily loading it into the fpc register.\n\nThis may lead to corruption of the fpc register of the tracing process:\nif an interrupt happens while the value is temporarily loaded into the\nfpc register, and within interrupt context floating point or vector\nregisters are used, the current fp/vx registers are saved with\nsave_fpu_regs() assuming they belong to user space and will be loaded into\nfp/vx registers when returning to user space.\n\ntest_fp_ctl() restores the original user space fpc register value, however\nit will be discarded, when returning to user space.\n\nIn result the tracer will incorrectly continue to run with the value that\nwas supposed to be used for the traced process.\n\nFix this by saving fpu register contents with save_fpu_regs() before using\ntest_fp_ctl()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/6ccf904aac0292e1f6b1a1be6c407c414f7cf713",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6ccf904aac0292e1f6b1a1be6c407c414f7cf713"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6d0822f2cc9b153bf2df49a84599195a2e0d21a8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6d0822f2cc9b153bf2df49a84599195a2e0d21a8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/856caf2730ea18cb39e95833719c02a02447dc0a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/856caf2730ea18cb39e95833719c02a02447dc0a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28a1f492cb527f64593457a0a0f0d809b3f36c25",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28a1f492cb527f64593457a0a0f0d809b3f36c25"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7a4d6481fbdd661f9e40e95febb95e3dee82bad3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7a4d6481fbdd661f9e40e95febb95e3dee82bad3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/02c6bbfb08bad78dd014e24c7b893723c15ec7a1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/02c6bbfb08bad78dd014e24c7b893723c15ec7a1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bdce67df7f12fb0409fbc604ce7c4254703f56d4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bdce67df7f12fb0409fbc604ce7c4254703f56d4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8b13601d19c541158a6e18b278c00ba69ae37829",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8b13601d19c541158a6e18b278c00ba69ae37829"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ns390/ptrace: handle setting of fpc register correctly\n\nIf the content of the floating point control (fpc) register of a traced\nprocess is modified with the ptrace interface the new value is tested for\nvalidity by temporarily loading it into the fpc register.\n\nThis may lead to corruption of the fpc register of the tracing process:\nif an interrupt happens while the value is temporarily loaded into the\nfpc register, and within interrupt context floating point or vector\nregisters are used, the current fp/vx registers are saved with\nsave_fpu_regs() assuming they belong to user space and will be loaded into\nfp/vx registers when returning to user space.\n\ntest_fp_ctl() restores the original user space fpc register value, however\nit will be discarded, when returning to user space.\n\nIn result the tracer will incorrectly continue to run with the value that\nwas supposed to be used for the traced process.\n\nFix this by saving fpu register contents with save_fpu_regs() before using\ntest_fp_ctl()."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: s390/ptrace: maneja la configuraci\u00f3n del registro fpc correctamente Si el contenido del registro de control de punto flotante (fpc) de un proceso rastreado se modifica con la interfaz ptrace, se prueba el nuevo valor validez carg\u00e1ndolo temporalmente en el registro fpc. Esto puede conducir a la corrupci\u00f3n del registro fpc del proceso de seguimiento: si ocurre una interrupci\u00f3n mientras el valor se carga temporalmente en el registro fpc, y dentro del contexto de interrupci\u00f3n se utilizan registros de punto flotante o vectoriales, los registros fp/vx actuales se guardan con save_fpu_regs() suponiendo que pertenecen al espacio del usuario y se cargar\u00e1n en los registros fp/vx cuando regresen al espacio del usuario. test_fp_ctl() restaura el valor del registro fpc del espacio de usuario original; sin embargo, se descartar\u00e1 al regresar al espacio de usuario. Como resultado, el rastreador continuar\u00e1 ejecut\u00e1ndose incorrectamente con el valor que se supon\u00eda que deb\u00eda usarse para el proceso rastreado. Solucione este problema guardando el contenido del registro fpu con save_fpu_regs() antes de usar test_fp_ctl()."
+          }
+        ],
+        "id": "CVE-2023-52598",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:09.990",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/02c6bbfb08bad78dd014e24c7b893723c15ec7a1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28a1f492cb527f64593457a0a0f0d809b3f36c25"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6ccf904aac0292e1f6b1a1be6c407c414f7cf713"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6d0822f2cc9b153bf2df49a84599195a2e0d21a8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7a4d6481fbdd661f9e40e95febb95e3dee82bad3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/856caf2730ea18cb39e95833719c02a02447dc0a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8b13601d19c541158a6e18b278c00ba69ae37829"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bdce67df7f12fb0409fbc604ce7c4254703f56d4"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

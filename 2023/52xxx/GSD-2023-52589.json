@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52589"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: rkisp1: Fix IRQ disable race issue\n\nIn rkisp1_isp_stop() and rkisp1_csi_disable() the driver masks the\ninterrupts and then apparently assumes that the interrupt handler won't\nbe running, and proceeds in the stop procedure. This is not the case, as\nthe interrupt handler can already be running, which would lead to the\nISP being disabled while the interrupt handler handling a captured\nframe.\n\nThis brings up two issues: 1) the ISP could be powered off while the\ninterrupt handler is still running and accessing registers, leading to\nboard lockup, and 2) the interrupt handler code and the code that\ndisables the streaming might do things that conflict.\n\nIt is not clear to me if 2) causes a real issue, but 1) can be seen with\na suitable delay (or printk in my case) in the interrupt handler,\nleading to board lockup.",
       "id": "GSD-2023-52589",
       "modified": "2024-03-03T06:01:51.588073Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,66 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52589",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "bf808f58681c"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +87,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: rkisp1: Fix IRQ disable race issue\n\nIn rkisp1_isp_stop() and rkisp1_csi_disable() the driver masks the\ninterrupts and then apparently assumes that the interrupt handler won't\nbe running, and proceeds in the stop procedure. This is not the case, as\nthe interrupt handler can already be running, which would lead to the\nISP being disabled while the interrupt handler handling a captured\nframe.\n\nThis brings up two issues: 1) the ISP could be powered off while the\ninterrupt handler is still running and accessing registers, leading to\nboard lockup, and 2) the interrupt handler code and the code that\ndisables the streaming might do things that conflict.\n\nIt is not clear to me if 2) causes a real issue, but 1) can be seen with\na suitable delay (or printk in my case) in the interrupt handler,\nleading to board lockup."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/bf808f58681cab64c81cd814551814fd34e540fe",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bf808f58681cab64c81cd814551814fd34e540fe"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fab483438342984f2a315fe13c882a80f0f7e545",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fab483438342984f2a315fe13c882a80f0f7e545"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7bb1a2822aa2c2de4e09bf7c56dd93bd532f1fa7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7bb1a2822aa2c2de4e09bf7c56dd93bd532f1fa7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/870565f063a58576e8a4529f122cac4325c6b395",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/870565f063a58576e8a4529f122cac4325c6b395"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: rkisp1: Fix IRQ disable race issue\n\nIn rkisp1_isp_stop() and rkisp1_csi_disable() the driver masks the\ninterrupts and then apparently assumes that the interrupt handler won't\nbe running, and proceeds in the stop procedure. This is not the case, as\nthe interrupt handler can already be running, which would lead to the\nISP being disabled while the interrupt handler handling a captured\nframe.\n\nThis brings up two issues: 1) the ISP could be powered off while the\ninterrupt handler is still running and accessing registers, leading to\nboard lockup, and 2) the interrupt handler code and the code that\ndisables the streaming might do things that conflict.\n\nIt is not clear to me if 2) causes a real issue, but 1) can be seen with\na suitable delay (or printk in my case) in the interrupt handler,\nleading to board lockup."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: medios: rkisp1: Solucionar el problema de ejecuci\u00f3n de desactivaci\u00f3n de IRQ En rkisp1_isp_stop() y rkisp1_csi_disable() el controlador enmascara las interrupciones y aparentemente asume que el controlador de interrupciones no se ejecutar\u00e1 y contin\u00faa en el procedimiento de parada. Este no es el caso, ya que el controlador de interrupciones puede estar ejecut\u00e1ndose, lo que llevar\u00eda a que el ISP se deshabilite mientras el controlador de interrupciones maneja una trama capturada. Esto plantea dos problemas: 1) el ISP podr\u00eda apagarse mientras el controlador de interrupciones a\u00fan est\u00e1 ejecut\u00e1ndose y accediendo a los registros, lo que provoca el bloqueo de la placa, y 2) el c\u00f3digo del controlador de interrupciones y el c\u00f3digo que deshabilita la transmisi\u00f3n pueden hacer cosas que entren en conflicto. No me queda claro si 2) causa un problema real, pero 1) se puede ver con un retraso adecuado (o printk en mi caso) en el controlador de interrupciones, lo que provoca el bloqueo de la placa."
+          }
+        ],
+        "id": "CVE-2023-52589",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:08.053",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7bb1a2822aa2c2de4e09bf7c56dd93bd532f1fa7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/870565f063a58576e8a4529f122cac4325c6b395"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bf808f58681cab64c81cd814551814fd34e540fe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fab483438342984f2a315fe13c882a80f0f7e545"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

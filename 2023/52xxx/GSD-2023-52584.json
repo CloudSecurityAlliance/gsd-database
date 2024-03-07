@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52584"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nspmi: mediatek: Fix UAF on device remove\n\nThe pmif driver data that contains the clocks is allocated along with\nspmi_controller.\nOn device remove, spmi_controller will be freed first, and then devres\n, including the clocks, will be cleanup.\nThis leads to UAF because putting the clocks will access the clocks in\nthe pmif driver data, which is already freed along with spmi_controller.\n\nThis can be reproduced by enabling DEBUG_TEST_DRIVER_REMOVE and\nbuilding the kernel with KASAN.\n\nFix the UAF issue by using unmanaged clk_bulk_get() and putting the\nclocks before freeing spmi_controller.",
       "id": "GSD-2023-52584",
       "modified": "2024-03-03T06:01:51.408124Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,66 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52584",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "521f28eedd6b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +87,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspmi: mediatek: Fix UAF on device remove\n\nThe pmif driver data that contains the clocks is allocated along with\nspmi_controller.\nOn device remove, spmi_controller will be freed first, and then devres\n, including the clocks, will be cleanup.\nThis leads to UAF because putting the clocks will access the clocks in\nthe pmif driver data, which is already freed along with spmi_controller.\n\nThis can be reproduced by enabling DEBUG_TEST_DRIVER_REMOVE and\nbuilding the kernel with KASAN.\n\nFix the UAF issue by using unmanaged clk_bulk_get() and putting the\nclocks before freeing spmi_controller."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/521f28eedd6b14228c46e3b81e3bf9b90c2818d8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/521f28eedd6b14228c46e3b81e3bf9b90c2818d8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f8dcafcb54632536684336161da8bdd52120f95e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f8dcafcb54632536684336161da8bdd52120f95e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9a3881b1f07db1bb55cb0108e6f05cfd027eaf2e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9a3881b1f07db1bb55cb0108e6f05cfd027eaf2e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e821d50ab5b956ed0effa49faaf29912fd4106d9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e821d50ab5b956ed0effa49faaf29912fd4106d9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspmi: mediatek: Fix UAF on device remove\n\nThe pmif driver data that contains the clocks is allocated along with\nspmi_controller.\nOn device remove, spmi_controller will be freed first, and then devres\n, including the clocks, will be cleanup.\nThis leads to UAF because putting the clocks will access the clocks in\nthe pmif driver data, which is already freed along with spmi_controller.\n\nThis can be reproduced by enabling DEBUG_TEST_DRIVER_REMOVE and\nbuilding the kernel with KASAN.\n\nFix the UAF issue by using unmanaged clk_bulk_get() and putting the\nclocks before freeing spmi_controller."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: spmi: mediatek: reparar UAF en la eliminaci\u00f3n del dispositivo. Los datos del controlador pmif que contienen los relojes se asignan junto con spmi_controller. Al eliminar el dispositivo, primero se liberar\u00e1 spmi_controller y luego se limpiar\u00e1n los devres, incluidos los relojes. Esto lleva a UAF porque al poner los relojes se acceder\u00e1 a los relojes en los datos del controlador pmif, que ya est\u00e1n liberados junto con spmi_controller. Esto se puede reproducir habilitando DEBUG_TEST_DRIVER_REMOVE y compilando el kernel con KASAN. Solucione el problema de UAF utilizando clk_bulk_get() no administrado y poniendo los relojes antes de liberar spmi_controller."
+          }
+        ],
+        "id": "CVE-2023-52584",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:07.227",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/521f28eedd6b14228c46e3b81e3bf9b90c2818d8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9a3881b1f07db1bb55cb0108e6f05cfd027eaf2e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e821d50ab5b956ed0effa49faaf29912fd4106d9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f8dcafcb54632536684336161da8bdd52120f95e"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

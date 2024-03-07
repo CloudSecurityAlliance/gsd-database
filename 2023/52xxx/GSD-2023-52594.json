@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52594"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath9k: Fix potential array-index-out-of-bounds read in ath9k_htc_txstatus()\n\nFix an array-index-out-of-bounds read in ath9k_htc_txstatus(). The bug\noccurs when txs->cnt, data from a URB provided by a USB device, is\nbigger than the size of the array txs->txstatus, which is\nHTC_MAX_TX_STATUS. WARN_ON() already checks it, but there is no bug\nhandling code after the check. Make the function return if that is the\ncase.\n\nFound by a modified version of syzkaller.\n\nUBSAN: array-index-out-of-bounds in htc_drv_txrx.c\nindex 13 is out of range for type '__wmi_event_txstatus [12]'\nCall Trace:\n ath9k_htc_txstatus\n ath9k_wmi_event_tasklet\n tasklet_action_common\n __do_softirq\n irq_exit_rxu\n sysvec_apic_timer_interrupt",
       "id": "GSD-2023-52594",
       "modified": "2024-03-03T06:01:51.739974Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52594",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "f44f073c7811"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath9k: Fix potential array-index-out-of-bounds read in ath9k_htc_txstatus()\n\nFix an array-index-out-of-bounds read in ath9k_htc_txstatus(). The bug\noccurs when txs->cnt, data from a URB provided by a USB device, is\nbigger than the size of the array txs->txstatus, which is\nHTC_MAX_TX_STATUS. WARN_ON() already checks it, but there is no bug\nhandling code after the check. Make the function return if that is the\ncase.\n\nFound by a modified version of syzkaller.\n\nUBSAN: array-index-out-of-bounds in htc_drv_txrx.c\nindex 13 is out of range for type '__wmi_event_txstatus [12]'\nCall Trace:\n ath9k_htc_txstatus\n ath9k_wmi_event_tasklet\n tasklet_action_common\n __do_softirq\n irq_exit_rxu\n sysvec_apic_timer_interrupt"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/f44f073c78112ff921a220d01b86d09f2ace59bc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f44f073c78112ff921a220d01b86d09f2ace59bc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f11f0fd1ad6c11ae7856d4325fe9d05059767225",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f11f0fd1ad6c11ae7856d4325fe9d05059767225"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/84770a996ad8d7f121ff2fb5a8d149aad52d64c1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/84770a996ad8d7f121ff2fb5a8d149aad52d64c1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9003fa9a0198ce004b30738766c67eb7373479c9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9003fa9a0198ce004b30738766c67eb7373479c9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/25c6f49ef59b7a9b80a3f7ab9e95268a1b01a234",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/25c6f49ef59b7a9b80a3f7ab9e95268a1b01a234"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e4f4bac7d3b64eb75f70cd3345712de6f68a215d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e4f4bac7d3b64eb75f70cd3345712de6f68a215d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/be609c7002dd4504b15b069cb7582f4c778548d1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/be609c7002dd4504b15b069cb7582f4c778548d1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2adc886244dff60f948497b59affb6c6ebb3c348",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2adc886244dff60f948497b59affb6c6ebb3c348"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath9k: Fix potential array-index-out-of-bounds read in ath9k_htc_txstatus()\n\nFix an array-index-out-of-bounds read in ath9k_htc_txstatus(). The bug\noccurs when txs->cnt, data from a URB provided by a USB device, is\nbigger than the size of the array txs->txstatus, which is\nHTC_MAX_TX_STATUS. WARN_ON() already checks it, but there is no bug\nhandling code after the check. Make the function return if that is the\ncase.\n\nFound by a modified version of syzkaller.\n\nUBSAN: array-index-out-of-bounds in htc_drv_txrx.c\nindex 13 is out of range for type '__wmi_event_txstatus [12]'\nCall Trace:\n ath9k_htc_txstatus\n ath9k_wmi_event_tasklet\n tasklet_action_common\n __do_softirq\n irq_exit_rxu\n sysvec_apic_timer_interrupt"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: wifi: ath9k: corrige una posible lectura de \u00edndice de matriz fuera de los l\u00edmites en ath9k_htc_txstatus(). Corrige una lectura de \u00edndice de matriz fuera de los l\u00edmites en ath9k_htc_txstatus(). El error ocurre cuando txs-&gt;cnt, los datos de una URB proporcionados por un dispositivo USB, son mayores que el tama\u00f1o de la matriz txs-&gt;txstatus, que es HTC_MAX_TX_STATUS. WARN_ON() ya lo verifica, pero no hay ning\u00fan c\u00f3digo de manejo de errores despu\u00e9s de la verificaci\u00f3n. Haga que la funci\u00f3n regrese si ese es el caso. Encontrado por una versi\u00f3n modificada de syzkaller. UBSAN: Array-Index-Of-Bunds en htc_drv_txrx.c El \u00edndice 13 est\u00e1 fuera de rango para el tipo '__WMI_EVENT_TXSTATUS [12]' LLAME TRACE: ATH9K_HTC_TXSTATUS ATH9K_WMI_EVENT_TASKLET_ACTION_ACTION_COMNOMON __DO_SOFTIRQ IRQITITI"
+          }
+        ],
+        "id": "CVE-2023-52594",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:09.200",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/25c6f49ef59b7a9b80a3f7ab9e95268a1b01a234"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2adc886244dff60f948497b59affb6c6ebb3c348"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/84770a996ad8d7f121ff2fb5a8d149aad52d64c1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9003fa9a0198ce004b30738766c67eb7373479c9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/be609c7002dd4504b15b069cb7582f4c778548d1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e4f4bac7d3b64eb75f70cd3345712de6f68a215d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f11f0fd1ad6c11ae7856d4325fe9d05059767225"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f44f073c78112ff921a220d01b86d09f2ace59bc"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

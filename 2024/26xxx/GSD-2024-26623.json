@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26623"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\npds_core: Prevent race issues involving the adminq\n\nThere are multiple paths that can result in using the pdsc's\nadminq.\n\n[1] pdsc_adminq_isr and the resulting work from queue_work(),\n    i.e. pdsc_work_thread()->pdsc_process_adminq()\n\n[2] pdsc_adminq_post()\n\nWhen the device goes through reset via PCIe reset and/or\na fw_down/fw_up cycle due to bad PCIe state or bad device\nstate the adminq is destroyed and recreated.\n\nA NULL pointer dereference can happen if [1] or [2] happens\nafter the adminq is already destroyed.\n\nIn order to fix this, add some further state checks and\nimplement reference counting for adminq uses. Reference\ncounting was used because multiple threads can attempt to\naccess the adminq at the same time via [1] or [2]. Additionally,\nmultiple clients (i.e. pds-vfio-pci) can be using [2]\nat the same time.\n\nThe adminq_refcnt is initialized to 1 when the adminq has been\nallocated and is ready to use. Users/clients of the adminq\n(i.e. [1] and [2]) will increment the refcnt when they are using\nthe adminq. When the driver goes into a fw_down cycle it will\nset the PDSC_S_FW_DEAD bit and then wait for the adminq_refcnt\nto hit 1. Setting the PDSC_S_FW_DEAD before waiting will prevent\nany further adminq_refcnt increments. Waiting for the\nadminq_refcnt to hit 1 allows for any current users of the adminq\nto finish before the driver frees the adminq. Once the\nadminq_refcnt hits 1 the driver clears the refcnt to signify that\nthe adminq is deleted and cannot be used. On the fw_up cycle the\ndriver will once again initialize the adminq_refcnt to 1 allowing\nthe adminq to be used again.",
       "id": "GSD-2024-26623",
       "modified": "2024-02-20T06:02:29.303471Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26623",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "01ba61b55b20",
+                          "version_value": "22cd6046eb21"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.4"
+                              },
+                              {
+                                "lessThan": "6.4",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc3",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npds_core: Prevent race issues involving the adminq\n\nThere are multiple paths that can result in using the pdsc's\nadminq.\n\n[1] pdsc_adminq_isr and the resulting work from queue_work(),\n    i.e. pdsc_work_thread()->pdsc_process_adminq()\n\n[2] pdsc_adminq_post()\n\nWhen the device goes through reset via PCIe reset and/or\na fw_down/fw_up cycle due to bad PCIe state or bad device\nstate the adminq is destroyed and recreated.\n\nA NULL pointer dereference can happen if [1] or [2] happens\nafter the adminq is already destroyed.\n\nIn order to fix this, add some further state checks and\nimplement reference counting for adminq uses. Reference\ncounting was used because multiple threads can attempt to\naccess the adminq at the same time via [1] or [2]. Additionally,\nmultiple clients (i.e. pds-vfio-pci) can be using [2]\nat the same time.\n\nThe adminq_refcnt is initialized to 1 when the adminq has been\nallocated and is ready to use. Users/clients of the adminq\n(i.e. [1] and [2]) will increment the refcnt when they are using\nthe adminq. When the driver goes into a fw_down cycle it will\nset the PDSC_S_FW_DEAD bit and then wait for the adminq_refcnt\nto hit 1. Setting the PDSC_S_FW_DEAD before waiting will prevent\nany further adminq_refcnt increments. Waiting for the\nadminq_refcnt to hit 1 allows for any current users of the adminq\nto finish before the driver frees the adminq. Once the\nadminq_refcnt hits 1 the driver clears the refcnt to signify that\nthe adminq is deleted and cannot be used. On the fw_up cycle the\ndriver will once again initialize the adminq_refcnt to 1 allowing\nthe adminq to be used again."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/22cd6046eb2148b18990257505834dd45c672a1b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/22cd6046eb2148b18990257505834dd45c672a1b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5939feb63ea1f011027576c64b68b681cbad31ca",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5939feb63ea1f011027576c64b68b681cbad31ca"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7e82a8745b951b1e794cc780d46f3fbee5e93447",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7e82a8745b951b1e794cc780d46f3fbee5e93447"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npds_core: Prevent race issues involving the adminq\n\nThere are multiple paths that can result in using the pdsc's\nadminq.\n\n[1] pdsc_adminq_isr and the resulting work from queue_work(),\n    i.e. pdsc_work_thread()->pdsc_process_adminq()\n\n[2] pdsc_adminq_post()\n\nWhen the device goes through reset via PCIe reset and/or\na fw_down/fw_up cycle due to bad PCIe state or bad device\nstate the adminq is destroyed and recreated.\n\nA NULL pointer dereference can happen if [1] or [2] happens\nafter the adminq is already destroyed.\n\nIn order to fix this, add some further state checks and\nimplement reference counting for adminq uses. Reference\ncounting was used because multiple threads can attempt to\naccess the adminq at the same time via [1] or [2]. Additionally,\nmultiple clients (i.e. pds-vfio-pci) can be using [2]\nat the same time.\n\nThe adminq_refcnt is initialized to 1 when the adminq has been\nallocated and is ready to use. Users/clients of the adminq\n(i.e. [1] and [2]) will increment the refcnt when they are using\nthe adminq. When the driver goes into a fw_down cycle it will\nset the PDSC_S_FW_DEAD bit and then wait for the adminq_refcnt\nto hit 1. Setting the PDSC_S_FW_DEAD before waiting will prevent\nany further adminq_refcnt increments. Waiting for the\nadminq_refcnt to hit 1 allows for any current users of the adminq\nto finish before the driver frees the adminq. Once the\nadminq_refcnt hits 1 the driver clears the refcnt to signify that\nthe adminq is deleted and cannot be used. On the fw_up cycle the\ndriver will once again initialize the adminq_refcnt to 1 allowing\nthe adminq to be used again."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: pds_core: evita problemas de ejecuci\u00f3n relacionados con adminq. Hay varias rutas que pueden resultar en el uso de adminq de pdsc. [1] pdsc_adminq_isr y el trabajo resultante de queue_work(), es decir, pdsc_work_thread()-&gt;pdsc_process_adminq() [2] pdsc_adminq_post() Cuando el dispositivo se reinicia mediante reinicio de PCIe y/o un ciclo fw_down/fw_up debido a un estado incorrecto de PCIe o mal estado del dispositivo, adminq se destruye y se vuelve a crear. Puede ocurrir una desreferencia de puntero NULL si [1] o [2] ocurre despu\u00e9s de que adminq ya est\u00e9 destruido. Para solucionar este problema, agregue algunas comprobaciones de estado adicionales e implemente el recuento de referencias para usos de adminq. Se utiliz\u00f3 el recuento de referencias porque varios subprocesos pueden intentar acceder a adminq al mismo tiempo a trav\u00e9s de [1] o [2]. Adem\u00e1s, varios clientes (es decir, pds-vfio-pci) pueden utilizar [2] al mismo tiempo. adminq_refcnt se inicializa en 1 cuando adminq se ha asignado y est\u00e1 listo para usar. Los usuarios/clientes de adminq (es decir, [1] y [2]) incrementar\u00e1n el refcnt cuando utilicen adminq. Cuando el controlador entra en un ciclo fw_down, establecer\u00e1 el bit PDSC_S_FW_DEAD y luego esperar\u00e1 a que adminq_refcnt llegue a 1. Configurar PDSC_S_FW_DEAD antes de esperar evitar\u00e1 m\u00e1s incrementos de adminq_refcnt. Esperar a que adminq_refcnt llegue a 1 permite que cualquier usuario actual de adminq finalice antes de que el controlador libere adminq. Una vez que adminq_refcnt llega a 1, el controlador borra el refcnt para indicar que adminq se elimina y no se puede utilizar. En el ciclo fw_up, el controlador inicializar\u00e1 una vez m\u00e1s adminq_refcnt en 1, lo que permitir\u00e1 utilizar adminq nuevamente."
+          }
+        ],
+        "id": "CVE-2024-26623",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:12.173",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/22cd6046eb2148b18990257505834dd45c672a1b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5939feb63ea1f011027576c64b68b681cbad31ca"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7e82a8745b951b1e794cc780d46f3fbee5e93447"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

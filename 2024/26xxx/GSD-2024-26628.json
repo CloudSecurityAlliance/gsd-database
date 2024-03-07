@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26628"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdkfd: Fix lock dependency warning\n\n======================================================\nWARNING: possible circular locking dependency detected\n6.5.0-kfd-fkuehlin #276 Not tainted\n------------------------------------------------------\nkworker/8:2/2676 is trying to acquire lock:\nffff9435aae95c88 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}, at: __flush_work+0x52/0x550\n\nbut task is already holding lock:\nffff9435cd8e1720 (&svms->lock){+.+.}-{3:3}, at: svm_range_deferred_list_work+0xe8/0x340 [amdgpu]\n\nwhich lock already depends on the new lock.\n\nthe existing dependency chain (in reverse order) is:\n\n-> #2 (&svms->lock){+.+.}-{3:3}:\n       __mutex_lock+0x97/0xd30\n       kfd_ioctl_alloc_memory_of_gpu+0x6d/0x3c0 [amdgpu]\n       kfd_ioctl+0x1b2/0x5d0 [amdgpu]\n       __x64_sys_ioctl+0x86/0xc0\n       do_syscall_64+0x39/0x80\n       entry_SYSCALL_64_after_hwframe+0x63/0xcd\n\n-> #1 (&mm->mmap_lock){++++}-{3:3}:\n       down_read+0x42/0x160\n       svm_range_evict_svm_bo_worker+0x8b/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\n-> #0 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}:\n       __lock_acquire+0x1426/0x2200\n       lock_acquire+0xc1/0x2b0\n       __flush_work+0x80/0x550\n       __cancel_work_timer+0x109/0x190\n       svm_range_bo_release+0xdc/0x1c0 [amdgpu]\n       svm_range_free+0x175/0x180 [amdgpu]\n       svm_range_deferred_list_work+0x15d/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\nother info that might help us debug this:\n\nChain exists of:\n  (work_completion)(&svm_bo->eviction_work) --> &mm->mmap_lock --> &svms->lock\n\n Possible unsafe locking scenario:\n\n       CPU0                    CPU1\n       ----                    ----\n  lock(&svms->lock);\n                               lock(&mm->mmap_lock);\n                               lock(&svms->lock);\n  lock((work_completion)(&svm_bo->eviction_work));\n\nI believe this cannot really lead to a deadlock in practice, because\nsvm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO\nrefcount is non-0. That means it's impossible that svm_range_bo_release\nis running concurrently. However, there is no good way to annotate this.\n\nTo avoid the problem, take a BO reference in\nsvm_range_schedule_evict_svm_bo instead of in the worker. That way it's\nimpossible for a BO to get freed while eviction work is pending and the\ncancel_work_sync call in svm_range_bo_release can be eliminated.\n\nv2: Use svm_bo_ref_unless_zero and explained why that's safe. Also\nremoved redundant checks that are already done in\namdkfd_fence_enable_signaling.",
       "id": "GSD-2024-26628",
       "modified": "2024-02-20T06:02:29.177873Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,72 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26628",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "7a70663ba02b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +93,95 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdkfd: Fix lock dependency warning\n\n======================================================\nWARNING: possible circular locking dependency detected\n6.5.0-kfd-fkuehlin #276 Not tainted\n------------------------------------------------------\nkworker/8:2/2676 is trying to acquire lock:\nffff9435aae95c88 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}, at: __flush_work+0x52/0x550\n\nbut task is already holding lock:\nffff9435cd8e1720 (&svms->lock){+.+.}-{3:3}, at: svm_range_deferred_list_work+0xe8/0x340 [amdgpu]\n\nwhich lock already depends on the new lock.\n\nthe existing dependency chain (in reverse order) is:\n\n-> #2 (&svms->lock){+.+.}-{3:3}:\n       __mutex_lock+0x97/0xd30\n       kfd_ioctl_alloc_memory_of_gpu+0x6d/0x3c0 [amdgpu]\n       kfd_ioctl+0x1b2/0x5d0 [amdgpu]\n       __x64_sys_ioctl+0x86/0xc0\n       do_syscall_64+0x39/0x80\n       entry_SYSCALL_64_after_hwframe+0x63/0xcd\n\n-> #1 (&mm->mmap_lock){++++}-{3:3}:\n       down_read+0x42/0x160\n       svm_range_evict_svm_bo_worker+0x8b/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\n-> #0 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}:\n       __lock_acquire+0x1426/0x2200\n       lock_acquire+0xc1/0x2b0\n       __flush_work+0x80/0x550\n       __cancel_work_timer+0x109/0x190\n       svm_range_bo_release+0xdc/0x1c0 [amdgpu]\n       svm_range_free+0x175/0x180 [amdgpu]\n       svm_range_deferred_list_work+0x15d/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\nother info that might help us debug this:\n\nChain exists of:\n  (work_completion)(&svm_bo->eviction_work) --> &mm->mmap_lock --> &svms->lock\n\n Possible unsafe locking scenario:\n\n       CPU0                    CPU1\n       ----                    ----\n  lock(&svms->lock);\n                               lock(&mm->mmap_lock);\n                               lock(&svms->lock);\n  lock((work_completion)(&svm_bo->eviction_work));\n\nI believe this cannot really lead to a deadlock in practice, because\nsvm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO\nrefcount is non-0. That means it's impossible that svm_range_bo_release\nis running concurrently. However, there is no good way to annotate this.\n\nTo avoid the problem, take a BO reference in\nsvm_range_schedule_evict_svm_bo instead of in the worker. That way it's\nimpossible for a BO to get freed while eviction work is pending and the\ncancel_work_sync call in svm_range_bo_release can be eliminated.\n\nv2: Use svm_bo_ref_unless_zero and explained why that's safe. Also\nremoved redundant checks that are already done in\namdkfd_fence_enable_signaling."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/7a70663ba02bd4e19aea8d70c979eb3bd03d839d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7a70663ba02bd4e19aea8d70c979eb3bd03d839d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8b25d397162b0316ceda40afaa63ee0c4a97d28b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8b25d397162b0316ceda40afaa63ee0c4a97d28b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28d2d623d2fbddcca5c24600474e92f16ebb3a05",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28d2d623d2fbddcca5c24600474e92f16ebb3a05"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cb96e492d72d143d57db2d2bc143a1cee8741807",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cb96e492d72d143d57db2d2bc143a1cee8741807"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/47bf0f83fc86df1bf42b385a91aadb910137c5c9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/47bf0f83fc86df1bf42b385a91aadb910137c5c9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdkfd: Fix lock dependency warning\n\n======================================================\nWARNING: possible circular locking dependency detected\n6.5.0-kfd-fkuehlin #276 Not tainted\n------------------------------------------------------\nkworker/8:2/2676 is trying to acquire lock:\nffff9435aae95c88 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}, at: __flush_work+0x52/0x550\n\nbut task is already holding lock:\nffff9435cd8e1720 (&svms->lock){+.+.}-{3:3}, at: svm_range_deferred_list_work+0xe8/0x340 [amdgpu]\n\nwhich lock already depends on the new lock.\n\nthe existing dependency chain (in reverse order) is:\n\n-> #2 (&svms->lock){+.+.}-{3:3}:\n       __mutex_lock+0x97/0xd30\n       kfd_ioctl_alloc_memory_of_gpu+0x6d/0x3c0 [amdgpu]\n       kfd_ioctl+0x1b2/0x5d0 [amdgpu]\n       __x64_sys_ioctl+0x86/0xc0\n       do_syscall_64+0x39/0x80\n       entry_SYSCALL_64_after_hwframe+0x63/0xcd\n\n-> #1 (&mm->mmap_lock){++++}-{3:3}:\n       down_read+0x42/0x160\n       svm_range_evict_svm_bo_worker+0x8b/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\n-> #0 ((work_completion)(&svm_bo->eviction_work)){+.+.}-{0:0}:\n       __lock_acquire+0x1426/0x2200\n       lock_acquire+0xc1/0x2b0\n       __flush_work+0x80/0x550\n       __cancel_work_timer+0x109/0x190\n       svm_range_bo_release+0xdc/0x1c0 [amdgpu]\n       svm_range_free+0x175/0x180 [amdgpu]\n       svm_range_deferred_list_work+0x15d/0x340 [amdgpu]\n       process_one_work+0x27a/0x540\n       worker_thread+0x53/0x3e0\n       kthread+0xeb/0x120\n       ret_from_fork+0x31/0x50\n       ret_from_fork_asm+0x11/0x20\n\nother info that might help us debug this:\n\nChain exists of:\n  (work_completion)(&svm_bo->eviction_work) --> &mm->mmap_lock --> &svms->lock\n\n Possible unsafe locking scenario:\n\n       CPU0                    CPU1\n       ----                    ----\n  lock(&svms->lock);\n                               lock(&mm->mmap_lock);\n                               lock(&svms->lock);\n  lock((work_completion)(&svm_bo->eviction_work));\n\nI believe this cannot really lead to a deadlock in practice, because\nsvm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO\nrefcount is non-0. That means it's impossible that svm_range_bo_release\nis running concurrently. However, there is no good way to annotate this.\n\nTo avoid the problem, take a BO reference in\nsvm_range_schedule_evict_svm_bo instead of in the worker. That way it's\nimpossible for a BO to get freed while eviction work is pending and the\ncancel_work_sync call in svm_range_bo_release can be eliminated.\n\nv2: Use svm_bo_ref_unless_zero and explained why that's safe. Also\nremoved redundant checks that are already done in\namdkfd_fence_enable_signaling."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: drm/amdkfd: Reparar advertencia de dependencia de bloqueo =============================== ======================== ADVERTENCIA: posible dependencia de bloqueo circular detectada 6.5.0-kfd-fkuehlin #276 No contaminado -------- ---------------------------------------------- ktrabajador/8: 2/2676 est\u00e1 intentando adquirir el bloqueo: ffff9435aae95c88 ((work_completion)(&amp;svm_bo-&gt;eviction_work)){+.+.}-{0:0}, en: __flush_work+0x52/0x550 pero la tarea ya mantiene el bloqueo: ffff9435cd8e1720 ( &amp;svms-&gt;lock){+.+.}-{3:3}, en: svm_range_deferred_list_work+0xe8/0x340 [amdgpu] cuyo bloqueo ya depende del nuevo bloqueo. la cadena de dependencia existente (en orden inverso) es: -&gt; #2 (&amp;svms-&gt;lock){+.+.}-{3:3}: __mutex_lock+0x97/0xd30 kfd_ioctl_alloc_memory_of_gpu+0x6d/0x3c0 [amdgpu] kfd_ioctl+0x1b2 /0x5d0 [amdgpu] __x64_sys_ioctl+0x86/0xc0 do_syscall_64+0x39/0x80 Entry_SYSCALL_64_after_hwframe+0x63/0xcd -&gt; #1 (&amp;mm-&gt;mmap_lock){++++}-{3:3}: down_read+0x42/0x160 svm_range_evi ct_svm_bo_worker+ 0x8b/0x340 [amdgpu] proceso_one_work+0x27a/0x540 trabajador_thread+0x53/0x3e0 kthread+0xeb/0x120 ret_from_fork+0x31/0x50 ret_from_fork_asm+0x11/0x20 -&gt; #0 ((work_completion)(&amp;svm_bo-&gt;eviction_work) ){+.+ .}-{0:0}: __lock_acquire+0x1426/0x2200 lock_acquire+0xc1/0x2b0 __flush_work+0x80/0x550 __cancel_work_timer+0x109/0x190 svm_range_bo_release+0xdc/0x1c0 [amdgpu] svm_range_free+0x175 /0x180 [amdgpu] svm_range_deferred_list_work+0x15d/0x340 [amdgpu] Process_one_work+0x27a/0x540 trabajador_thread+0x53/0x3e0 kthread+0xeb/0x120 ret_from_fork+0x31/0x50 ret_from_fork_asm+0x11/0x20 otra informaci\u00f3n que podr\u00eda ayudarnos a depurar esto: Existe cadena de: (work_completion)(&amp;svm_bo-&gt;eviction_work) --&gt; &amp;mm-&gt;mmap_lock --&gt; &amp;svms-&gt;lock Posible escenario de bloqueo inseguro: CPU0 CPU1 ---- ---- lock(&amp;svms-&gt;lock); bloquear(&amp;mm-&gt;mmap_lock); bloquear(&amp;svms-&gt;bloquear); lock((work_completion)(&amp;svm_bo-&gt;eviction_work)); Creo que esto realmente no puede llevar a un punto muerto en la pr\u00e1ctica, porque svm_range_evict_svm_bo_worker solo toma mmap_read_lock si el recuento de BO no es 0. Eso significa que es imposible que svm_range_bo_release se est\u00e9 ejecutando al mismo tiempo. Sin embargo, no existe una buena forma de anotar esto. Para evitar el problema, tome una referencia de BO en svm_range_schedule_evict_svm_bo en lugar de en el trabajador. De esa manera, es imposible que un BO sea liberado mientras el trabajo de desalojo est\u00e1 pendiente y la llamada cancel_work_sync en svm_range_bo_release puede eliminarse. v2: Use svm_bo_ref_unless_zero y explic\u00f3 por qu\u00e9 es seguro. Tambi\u00e9n se eliminaron las comprobaciones redundantes que ya se realizan en amdkfd_fence_enable_signaling."
+          }
+        ],
+        "id": "CVE-2024-26628",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:13.173",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28d2d623d2fbddcca5c24600474e92f16ebb3a05"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/47bf0f83fc86df1bf42b385a91aadb910137c5c9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7a70663ba02bd4e19aea8d70c979eb3bd03d839d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8b25d397162b0316ceda40afaa63ee0c4a97d28b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cb96e492d72d143d57db2d2bc143a1cee8741807"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

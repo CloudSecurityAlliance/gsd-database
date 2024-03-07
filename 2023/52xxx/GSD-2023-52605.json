@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52605"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: extlog: fix NULL pointer dereference check\n\nThe gcc plugin -fanalyzer [1] tries to detect various\npatterns of incorrect behaviour.  The tool reports:\n\ndrivers/acpi/acpi_extlog.c: In function \u2018extlog_exit\u2019:\ndrivers/acpi/acpi_extlog.c:307:12: warning: check of \u2018extlog_l1_addr\u2019 for NULL after already dereferencing it [-Wanalyzer-deref-before-check]\n    |\n    |  306 |         ((struct extlog_l1_head *)extlog_l1_addr)->flags &= ~FLAG_OS_OPTIN;\n    |      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~\n    |      |                                                  |\n    |      |                                                  (1) pointer \u2018extlog_l1_addr\u2019 is dereferenced here\n    |  307 |         if (extlog_l1_addr)\n    |      |            ~\n    |      |            |\n    |      |            (2) pointer \u2018extlog_l1_addr\u2019 is checked for NULL here but it was already dereferenced at (1)\n    |\n\nFix the NULL pointer dereference check in extlog_exit().",
       "id": "GSD-2023-52605",
       "modified": "2024-03-03T06:01:51.530548Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52605",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "b7b33627be06"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: extlog: fix NULL pointer dereference check\n\nThe gcc plugin -fanalyzer [1] tries to detect various\npatterns of incorrect behaviour.  The tool reports:\n\ndrivers/acpi/acpi_extlog.c: In function \u2018extlog_exit\u2019:\ndrivers/acpi/acpi_extlog.c:307:12: warning: check of \u2018extlog_l1_addr\u2019 for NULL after already dereferencing it [-Wanalyzer-deref-before-check]\n    |\n    |  306 |         ((struct extlog_l1_head *)extlog_l1_addr)->flags &= ~FLAG_OS_OPTIN;\n    |      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~\n    |      |                                                  |\n    |      |                                                  (1) pointer \u2018extlog_l1_addr\u2019 is dereferenced here\n    |  307 |         if (extlog_l1_addr)\n    |      |            ~\n    |      |            |\n    |      |            (2) pointer \u2018extlog_l1_addr\u2019 is checked for NULL here but it was already dereferenced at (1)\n    |\n\nFix the NULL pointer dereference check in extlog_exit()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b7b33627be0626b16ca321b982d6a2261ef7f703",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b7b33627be0626b16ca321b982d6a2261ef7f703"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d2049af7ddbc361702c3e1f09bd6c5e9488454ca",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d2049af7ddbc361702c3e1f09bd6c5e9488454ca"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b17a71435e7e153e949df018244a98b4ede04069",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b17a71435e7e153e949df018244a98b4ede04069"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5457b0cbaa0238fc56b855c4ef2c0b9cc9c559ab",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5457b0cbaa0238fc56b855c4ef2c0b9cc9c559ab"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/33650372e3ead97c5ab3b84d9ad97737bc5e00c0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/33650372e3ead97c5ab3b84d9ad97737bc5e00c0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f066171de33d71ff0f7c46bd17636a5a26db3fb6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f066171de33d71ff0f7c46bd17636a5a26db3fb6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/77846571b3ba6a6125a20ad109bb8514ba884cf9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/77846571b3ba6a6125a20ad109bb8514ba884cf9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/72d9b9747e78979510e9aafdd32eb99c7aa30dd1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/72d9b9747e78979510e9aafdd32eb99c7aa30dd1"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: extlog: fix NULL pointer dereference check\n\nThe gcc plugin -fanalyzer [1] tries to detect various\npatterns of incorrect behaviour.  The tool reports:\n\ndrivers/acpi/acpi_extlog.c: In function \u2018extlog_exit\u2019:\ndrivers/acpi/acpi_extlog.c:307:12: warning: check of \u2018extlog_l1_addr\u2019 for NULL after already dereferencing it [-Wanalyzer-deref-before-check]\n    |\n    |  306 |         ((struct extlog_l1_head *)extlog_l1_addr)->flags &= ~FLAG_OS_OPTIN;\n    |      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~\n    |      |                                                  |\n    |      |                                                  (1) pointer \u2018extlog_l1_addr\u2019 is dereferenced here\n    |  307 |         if (extlog_l1_addr)\n    |      |            ~\n    |      |            |\n    |      |            (2) pointer \u2018extlog_l1_addr\u2019 is checked for NULL here but it was already dereferenced at (1)\n    |\n\nFix the NULL pointer dereference check in extlog_exit()."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: ACPI: extlog: corrige la verificaci\u00f3n de desreferencia del puntero NULL El complemento gcc -fanalyzer [1] intenta detectar varios patrones de comportamiento incorrecto. La herramienta informa: drivers/acpi/acpi_extlog.c: En funci\u00f3n 'extlog_exit': drivers/acpi/acpi_extlog.c:307:12: advertencia: verificaci\u00f3n de 'extlog_l1_addr' para NULL despu\u00e9s de desreferenciarlo [-Wanalyzer-deref-before -verificar] | | 306 | ((struct extlog_l1_head *)extlog_l1_addr)-&gt;flags &amp;= ~FLAG_OS_OPTIN; | | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~ | | | | | (1) Aqu\u00ed se elimina la referencia al puntero 'extlog_l1_addr' | 307 | si (extlog_l1_addr) | | ~ | | | | | (2) El puntero 'extlog_l1_addr' est\u00e1 marcado como NULL aqu\u00ed pero ya se elimin\u00f3 la referencia en (1) | Corrija la verificaci\u00f3n de desreferencia del puntero NULL en extlog_exit()."
+          }
+        ],
+        "id": "CVE-2023-52605",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:11.560",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/33650372e3ead97c5ab3b84d9ad97737bc5e00c0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5457b0cbaa0238fc56b855c4ef2c0b9cc9c559ab"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/72d9b9747e78979510e9aafdd32eb99c7aa30dd1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/77846571b3ba6a6125a20ad109bb8514ba884cf9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b17a71435e7e153e949df018244a98b4ede04069"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b7b33627be0626b16ca321b982d6a2261ef7f703"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d2049af7ddbc361702c3e1f09bd6c5e9488454ca"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f066171de33d71ff0f7c46bd17636a5a26db3fb6"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

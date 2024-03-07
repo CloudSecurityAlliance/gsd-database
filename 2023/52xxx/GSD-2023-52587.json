@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52587"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nIB/ipoib: Fix mcast list locking\n\nReleasing the `priv->lock` while iterating the `priv->multicast_list` in\n`ipoib_mcast_join_task()` opens a window for `ipoib_mcast_dev_flush()` to\nremove the items while in the middle of iteration. If the mcast is removed\nwhile the lock was dropped, the for loop spins forever resulting in a hard\nlockup (as was reported on RHEL 4.18.0-372.75.1.el8_6 kernel):\n\n    Task A (kworker/u72:2 below)       | Task B (kworker/u72:0 below)\n    -----------------------------------+-----------------------------------\n    ipoib_mcast_join_task(work)        | ipoib_ib_dev_flush_light(work)\n      spin_lock_irq(&priv->lock)       | __ipoib_ib_dev_flush(priv, ...)\n      list_for_each_entry(mcast,       | ipoib_mcast_dev_flush(dev = priv->dev)\n          &priv->multicast_list, list) |\n        ipoib_mcast_join(dev, mcast)   |\n          spin_unlock_irq(&priv->lock) |\n                                       |   spin_lock_irqsave(&priv->lock, flags)\n                                       |   list_for_each_entry_safe(mcast, tmcast,\n                                       |                  &priv->multicast_list, list)\n                                       |     list_del(&mcast->list);\n                                       |     list_add_tail(&mcast->list, &remove_list)\n                                       |   spin_unlock_irqrestore(&priv->lock, flags)\n          spin_lock_irq(&priv->lock)   |\n                                       |   ipoib_mcast_remove_list(&remove_list)\n   (Here, `mcast` is no longer on the  |     list_for_each_entry_safe(mcast, tmcast,\n    `priv->multicast_list` and we keep |                            remove_list, list)\n    spinning on the `remove_list` of   |  >>>  wait_for_completion(&mcast->done)\n    the other thread which is blocked  |\n    and the list is still valid on     |\n    it's stack.)\n\nFix this by keeping the lock held and changing to GFP_ATOMIC to prevent\neventual sleeps.\nUnfortunately we could not reproduce the lockup and confirm this fix but\nbased on the code review I think this fix should address such lockups.\n\ncrash> bc 31\nPID: 747      TASK: ff1c6a1a007e8000  CPU: 31   COMMAND: \"kworker/u72:2\"\n--\n    [exception RIP: ipoib_mcast_join_task+0x1b1]\n    RIP: ffffffffc0944ac1  RSP: ff646f199a8c7e00  RFLAGS: 00000002\n    RAX: 0000000000000000  RBX: ff1c6a1a04dc82f8  RCX: 0000000000000000\n                                  work (&priv->mcast_task{,.work})\n    RDX: ff1c6a192d60ac68  RSI: 0000000000000286  RDI: ff1c6a1a04dc8000\n           &mcast->list\n    RBP: ff646f199a8c7e90   R8: ff1c699980019420   R9: ff1c6a1920c9a000\n    R10: ff646f199a8c7e00  R11: ff1c6a191a7d9800  R12: ff1c6a192d60ac00\n                                                         mcast\n    R13: ff1c6a1d82200000  R14: ff1c6a1a04dc8000  R15: ff1c6a1a04dc82d8\n           dev                    priv (&priv->lock)     &priv->multicast_list (aka head)\n    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018\n--- <NMI exception stack> ---\n #5 [ff646f199a8c7e00] ipoib_mcast_join_task+0x1b1 at ffffffffc0944ac1 [ib_ipoib]\n #6 [ff646f199a8c7e98] process_one_work+0x1a7 at ffffffff9bf10967\n\ncrash> rx ff646f199a8c7e68\nff646f199a8c7e68:  ff1c6a1a04dc82f8 <<< work = &priv->mcast_task.work\n\ncrash> list -hO ipoib_dev_priv.multicast_list ff1c6a1a04dc8000\n(empty)\n\ncrash> ipoib_dev_priv.mcast_task.work.func,mcast_mutex.owner.counter ff1c6a1a04dc8000\n  mcast_task.work.func = 0xffffffffc0944910 <ipoib_mcast_join_task>,\n  mcast_mutex.owner.counter = 0xff1c69998efec000\n\ncrash> b 8\nPID: 8        TASK: ff1c69998efec000  CPU: 33   COMMAND: \"kworker/u72:0\"\n--\n #3 [ff646f1980153d50] wait_for_completion+0x96 at ffffffff9c7d7646\n #4 [ff646f1980153d90] ipoib_mcast_remove_list+0x56 at ffffffffc0944dc6 [ib_ipoib]\n #5 [ff646f1980153de8] ipoib_mcast_dev_flush+0x1a7 at ffffffffc09455a7 [ib_ipoib]\n #6 [ff646f1980153e58] __ipoib_ib_dev_flush+0x1a4 at ffffffffc09431a4 [ib_ipoib]\n #7 [ff\n---truncated---",
       "id": "GSD-2023-52587",
       "modified": "2024-03-03T06:01:51.495260Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,90 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52587",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "4c8922ae8eb8"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +111,122 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nIB/ipoib: Fix mcast list locking\n\nReleasing the `priv->lock` while iterating the `priv->multicast_list` in\n`ipoib_mcast_join_task()` opens a window for `ipoib_mcast_dev_flush()` to\nremove the items while in the middle of iteration. If the mcast is removed\nwhile the lock was dropped, the for loop spins forever resulting in a hard\nlockup (as was reported on RHEL 4.18.0-372.75.1.el8_6 kernel):\n\n    Task A (kworker/u72:2 below)       | Task B (kworker/u72:0 below)\n    -----------------------------------+-----------------------------------\n    ipoib_mcast_join_task(work)        | ipoib_ib_dev_flush_light(work)\n      spin_lock_irq(&priv->lock)       | __ipoib_ib_dev_flush(priv, ...)\n      list_for_each_entry(mcast,       | ipoib_mcast_dev_flush(dev = priv->dev)\n          &priv->multicast_list, list) |\n        ipoib_mcast_join(dev, mcast)   |\n          spin_unlock_irq(&priv->lock) |\n                                       |   spin_lock_irqsave(&priv->lock, flags)\n                                       |   list_for_each_entry_safe(mcast, tmcast,\n                                       |                  &priv->multicast_list, list)\n                                       |     list_del(&mcast->list);\n                                       |     list_add_tail(&mcast->list, &remove_list)\n                                       |   spin_unlock_irqrestore(&priv->lock, flags)\n          spin_lock_irq(&priv->lock)   |\n                                       |   ipoib_mcast_remove_list(&remove_list)\n   (Here, `mcast` is no longer on the  |     list_for_each_entry_safe(mcast, tmcast,\n    `priv->multicast_list` and we keep |                            remove_list, list)\n    spinning on the `remove_list` of   |  >>>  wait_for_completion(&mcast->done)\n    the other thread which is blocked  |\n    and the list is still valid on     |\n    it's stack.)\n\nFix this by keeping the lock held and changing to GFP_ATOMIC to prevent\neventual sleeps.\nUnfortunately we could not reproduce the lockup and confirm this fix but\nbased on the code review I think this fix should address such lockups.\n\ncrash> bc 31\nPID: 747      TASK: ff1c6a1a007e8000  CPU: 31   COMMAND: \"kworker/u72:2\"\n--\n    [exception RIP: ipoib_mcast_join_task+0x1b1]\n    RIP: ffffffffc0944ac1  RSP: ff646f199a8c7e00  RFLAGS: 00000002\n    RAX: 0000000000000000  RBX: ff1c6a1a04dc82f8  RCX: 0000000000000000\n                                  work (&priv->mcast_task{,.work})\n    RDX: ff1c6a192d60ac68  RSI: 0000000000000286  RDI: ff1c6a1a04dc8000\n           &mcast->list\n    RBP: ff646f199a8c7e90   R8: ff1c699980019420   R9: ff1c6a1920c9a000\n    R10: ff646f199a8c7e00  R11: ff1c6a191a7d9800  R12: ff1c6a192d60ac00\n                                                         mcast\n    R13: ff1c6a1d82200000  R14: ff1c6a1a04dc8000  R15: ff1c6a1a04dc82d8\n           dev                    priv (&priv->lock)     &priv->multicast_list (aka head)\n    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018\n--- <NMI exception stack> ---\n #5 [ff646f199a8c7e00] ipoib_mcast_join_task+0x1b1 at ffffffffc0944ac1 [ib_ipoib]\n #6 [ff646f199a8c7e98] process_one_work+0x1a7 at ffffffff9bf10967\n\ncrash> rx ff646f199a8c7e68\nff646f199a8c7e68:  ff1c6a1a04dc82f8 <<< work = &priv->mcast_task.work\n\ncrash> list -hO ipoib_dev_priv.multicast_list ff1c6a1a04dc8000\n(empty)\n\ncrash> ipoib_dev_priv.mcast_task.work.func,mcast_mutex.owner.counter ff1c6a1a04dc8000\n  mcast_task.work.func = 0xffffffffc0944910 <ipoib_mcast_join_task>,\n  mcast_mutex.owner.counter = 0xff1c69998efec000\n\ncrash> b 8\nPID: 8        TASK: ff1c69998efec000  CPU: 33   COMMAND: \"kworker/u72:0\"\n--\n #3 [ff646f1980153d50] wait_for_completion+0x96 at ffffffff9c7d7646\n #4 [ff646f1980153d90] ipoib_mcast_remove_list+0x56 at ffffffffc0944dc6 [ib_ipoib]\n #5 [ff646f1980153de8] ipoib_mcast_dev_flush+0x1a7 at ffffffffc09455a7 [ib_ipoib]\n #6 [ff646f1980153e58] __ipoib_ib_dev_flush+0x1a4 at ffffffffc09431a4 [ib_ipoib]\n #7 [ff\n---truncated---"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-4986f5686161"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4c8922ae8eb8dcc1e4b7d1059d97a8334288d825",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4c8922ae8eb8dcc1e4b7d1059d97a8334288d825"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/615e3adc2042b7be4ad122a043fc9135e6342c90",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/615e3adc2042b7be4ad122a043fc9135e6342c90"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ac2630fd3c90ffec34a0bfc4d413668538b0e8f2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ac2630fd3c90ffec34a0bfc4d413668538b0e8f2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ed790bd0903ed3352ebf7f650d910f49b7319b34",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ed790bd0903ed3352ebf7f650d910f49b7319b34"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5108a2dc2db5630fb6cd58b8be80a0c134bc310a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5108a2dc2db5630fb6cd58b8be80a0c134bc310a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/342258fb46d66c1b4c7e2c3717ac01e10c03cf18",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/342258fb46d66c1b4c7e2c3717ac01e10c03cf18"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7c7bd4d561e9dc6f5b7df9e184974915f6701a89",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7c7bd4d561e9dc6f5b7df9e184974915f6701a89"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4f973e211b3b1c6d36f7c6a19239d258856749f9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4f973e211b3b1c6d36f7c6a19239d258856749f9"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nIB/ipoib: Fix mcast list locking\n\nReleasing the `priv->lock` while iterating the `priv->multicast_list` in\n`ipoib_mcast_join_task()` opens a window for `ipoib_mcast_dev_flush()` to\nremove the items while in the middle of iteration. If the mcast is removed\nwhile the lock was dropped, the for loop spins forever resulting in a hard\nlockup (as was reported on RHEL 4.18.0-372.75.1.el8_6 kernel):\n\n    Task A (kworker/u72:2 below)       | Task B (kworker/u72:0 below)\n    -----------------------------------+-----------------------------------\n    ipoib_mcast_join_task(work)        | ipoib_ib_dev_flush_light(work)\n      spin_lock_irq(&priv->lock)       | __ipoib_ib_dev_flush(priv, ...)\n      list_for_each_entry(mcast,       | ipoib_mcast_dev_flush(dev = priv->dev)\n          &priv->multicast_list, list) |\n        ipoib_mcast_join(dev, mcast)   |\n          spin_unlock_irq(&priv->lock) |\n                                       |   spin_lock_irqsave(&priv->lock, flags)\n                                       |   list_for_each_entry_safe(mcast, tmcast,\n                                       |                  &priv->multicast_list, list)\n                                       |     list_del(&mcast->list);\n                                       |     list_add_tail(&mcast->list, &remove_list)\n                                       |   spin_unlock_irqrestore(&priv->lock, flags)\n          spin_lock_irq(&priv->lock)   |\n                                       |   ipoib_mcast_remove_list(&remove_list)\n   (Here, `mcast` is no longer on the  |     list_for_each_entry_safe(mcast, tmcast,\n    `priv->multicast_list` and we keep |                            remove_list, list)\n    spinning on the `remove_list` of   |  >>>  wait_for_completion(&mcast->done)\n    the other thread which is blocked  |\n    and the list is still valid on     |\n    it's stack.)\n\nFix this by keeping the lock held and changing to GFP_ATOMIC to prevent\neventual sleeps.\nUnfortunately we could not reproduce the lockup and confirm this fix but\nbased on the code review I think this fix should address such lockups.\n\ncrash> bc 31\nPID: 747      TASK: ff1c6a1a007e8000  CPU: 31   COMMAND: \"kworker/u72:2\"\n--\n    [exception RIP: ipoib_mcast_join_task+0x1b1]\n    RIP: ffffffffc0944ac1  RSP: ff646f199a8c7e00  RFLAGS: 00000002\n    RAX: 0000000000000000  RBX: ff1c6a1a04dc82f8  RCX: 0000000000000000\n                                  work (&priv->mcast_task{,.work})\n    RDX: ff1c6a192d60ac68  RSI: 0000000000000286  RDI: ff1c6a1a04dc8000\n           &mcast->list\n    RBP: ff646f199a8c7e90   R8: ff1c699980019420   R9: ff1c6a1920c9a000\n    R10: ff646f199a8c7e00  R11: ff1c6a191a7d9800  R12: ff1c6a192d60ac00\n                                                         mcast\n    R13: ff1c6a1d82200000  R14: ff1c6a1a04dc8000  R15: ff1c6a1a04dc82d8\n           dev                    priv (&priv->lock)     &priv->multicast_list (aka head)\n    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018\n--- <NMI exception stack> ---\n #5 [ff646f199a8c7e00] ipoib_mcast_join_task+0x1b1 at ffffffffc0944ac1 [ib_ipoib]\n #6 [ff646f199a8c7e98] process_one_work+0x1a7 at ffffffff9bf10967\n\ncrash> rx ff646f199a8c7e68\nff646f199a8c7e68:  ff1c6a1a04dc82f8 <<< work = &priv->mcast_task.work\n\ncrash> list -hO ipoib_dev_priv.multicast_list ff1c6a1a04dc8000\n(empty)\n\ncrash> ipoib_dev_priv.mcast_task.work.func,mcast_mutex.owner.counter ff1c6a1a04dc8000\n  mcast_task.work.func = 0xffffffffc0944910 <ipoib_mcast_join_task>,\n  mcast_mutex.owner.counter = 0xff1c69998efec000\n\ncrash> b 8\nPID: 8        TASK: ff1c69998efec000  CPU: 33   COMMAND: \"kworker/u72:0\"\n--\n #3 [ff646f1980153d50] wait_for_completion+0x96 at ffffffff9c7d7646\n #4 [ff646f1980153d90] ipoib_mcast_remove_list+0x56 at ffffffffc0944dc6 [ib_ipoib]\n #5 [ff646f1980153de8] ipoib_mcast_dev_flush+0x1a7 at ffffffffc09455a7 [ib_ipoib]\n #6 [ff646f1980153e58] __ipoib_ib_dev_flush+0x1a4 at ffffffffc09431a4 [ib_ipoib]\n #7 [ff\n---truncated---"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: IB/ipoib: corrige el bloqueo de la lista mcast Al liberar `priv-&gt;lock` mientras se itera `priv-&gt;multicast_list` en `ipoib_mcast_join_task()`, se abre una ventana para `ipoib_mcast_dev_flush( )` para eliminar los elementos mientras se encuentra en medio de la iteraci\u00f3n. Si se elimina mcast mientras se elimina el bloqueo, el bucle for gira para siempre, lo que resulta en un bloqueo total (como se inform\u00f3 en el kernel RHEL 4.18.0-372.75.1.el8_6): Tarea A (kworker/u72:2 a continuaci\u00f3n) | Tarea B (kworker/u72:0 a continuaci\u00f3n) -----------------------------------+---- ------------------------------- ipoib_mcast_join_task(trabajo) | ipoib_ib_dev_flush_light(trabajo) spin_lock_irq(&amp;priv-&gt;lock) | __ipoib_ib_dev_flush(priv, ...) list_for_each_entry(mcast, | ipoib_mcast_dev_flush(dev = priv-&gt;dev) &amp;priv-&gt;multicast_list, lista) | ipoib_mcast_join(dev, mcast) | spin_unlock_irq(&amp;priv-&gt;bloquear) | | spin_lock_irqsave(&amp;priv-&gt;bloqueo, banderas) | list_for_each_entry_safe(mcast, tmcast, | &amp;priv-&gt;multicast_list, lista) | list_del(&amp;mcast-&gt;lista); | list_add_tail(&amp;mcast-&gt;lista, &amp;remove_list) | spin_unlock_irqrestore(&amp;priv-&gt;bloquear, banderas) spin_lock_irq(&amp;priv-&gt;bloquear) | | ipoib_mcast_remove_list(&amp;remove_list) (Aqu\u00ed, `mcast` ya no est\u00e1 en | list_for_each_entry_safe(mcast, tmcast, `priv-&gt;multicast_list` y seguimos | remove_list, list) girando en `remove_list` de | &gt;&gt;&gt; wait_for_completion(&amp;mcast -&gt;hecho) el otro hilo que est\u00e1 bloqueado | y la lista sigue siendo v\u00e1lida | en su pila.) Solucione este problema manteniendo el bloqueo mantenido y cambiando a GFP_ATOMIC para evitar eventuales suspensiones. Desafortunadamente, no pudimos reproducir el bloqueo y confirmar esta soluci\u00f3n, pero seg\u00fan la revisi\u00f3n del c\u00f3digo, creo que esta soluci\u00f3n deber\u00eda abordar dichos bloqueos. crash&gt; bc 31 PID: 747 TAREA: ff1c6a1a007e8000 CPU: 31 COMANDO: \"kworker/u72:2\" -- [excepci\u00f3n RIP: ipoib_mcast_join_task+0x1b1] RIP: ffffffffc0944ac1 RSP: ff646f199a8c7e00 RFLAGS: 000000 02 RAX: 0000000000000000 RBX: ff1c6a1a04dc82f8 RCX: 00000000000000000 trabajo (&amp;priv-&gt;mcast_task{,.work}) RDX: ff1c6a192d60ac68 RSI: 0000000000000286 RDI: ff1c6a1a04dc8000 &amp;mcast-&gt;list RBP: ff646f199a8c7e90 R8: ff1c699980019420 R9: ff 1c6a1920c9a000 R10: ff646f199a8c7e00 R11: ff1c6a191a7d9800 R12: ff1c6a192d60ac00 mcast R13: ff1c6a1d82200000 R14: ff1c6a1a04dc8000 R15: ff1c6a1a04dc82d8 dev priv (&amp;priv-&gt;lock) &amp;priv-&gt;multicast_list (tambi\u00e9n conocido como head) ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018 ---  --- #5 [ff646f199a8c7e00] ipoib_mcast_join_task+0x1b1 en ffffff ffc0944ac1 [ ib_ipoib] #6 [ff646f199a8c7e98] Process_one_work+0x1a7 en ffffffff9bf10967 crash&gt; rx ff646f199a8c7e68 ff646f199a8c7e68: ff1c6a1a04dc82f8 &lt;&lt;&lt; work = &amp;priv-&gt;mcast_task.work crash&gt; lista -hO ipoib_dev_priv.multicast_list ff1c6a1a04dc8000 (vac\u00edo) falla&gt; ipoib_dev_priv.mcast_task.work. func,mcast_mutex.owner.counter ff1c6a1a04dc8000 mcast_task.work.func = 0xffffffffc0944910 , mcast_mutex.owner.counter = 0xff1c69998efec000 crash&gt; b 8 PID: 8 TAREA: ff1c69998efec000 CPU: 33 COMANDO: \"kworker/u72:0\" -- #3 [ff646f1980153d50] wait_for_completion+0x96 en ffffffff9c7d7646 #4 [ff646f1980153d90] ipoib_mcast_remove_list+0x56 en ffffffffc0944dc6 [ib_ipoib] #5 [ff646f1980153de8] ipoib_ mcast_dev_flush+0x1a7 en ffffffffc09455a7 [ib_ipoib] #6 [ff646f1980153e58] __ipoib_ib_dev_flush+0x1a4 en ffffffffc09431a4 [ib_ipoib] # 7 [ff ---truncado---"
+          }
+        ],
+        "id": "CVE-2023-52587",
+        "lastModified": "2024-03-06T15:18:08.093",
+        "metrics": {},
+        "published": "2024-03-06T07:15:07.633",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/342258fb46d66c1b4c7e2c3717ac01e10c03cf18"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4c8922ae8eb8dcc1e4b7d1059d97a8334288d825"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4f973e211b3b1c6d36f7c6a19239d258856749f9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5108a2dc2db5630fb6cd58b8be80a0c134bc310a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/615e3adc2042b7be4ad122a043fc9135e6342c90"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7c7bd4d561e9dc6f5b7df9e184974915f6701a89"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ac2630fd3c90ffec34a0bfc4d413668538b0e8f2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ed790bd0903ed3352ebf7f650d910f49b7319b34"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
