@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-2044"
       ],
+      "details": "pgAdmin 4 uses a file-based session management approach. The session files are saved on disk as pickle objects. When a user performs a request, the value of the session cookie 'pga4_session' is used to retrieve the file, then its content is deserialised, and finally its signature verified.\nThe cookie value is split in 2 parts at the first '!' character. The first part is the session ID (sid), while the second is the session digest.\n The vulnerability lies in versions of pgAdmin prior to 8.4 where a method loads session files by concatenating the sessions folder - located inside the pgAdmin 4 DATA_DIR - with the session ID. Precisely, the two values are concatenated using the ['os.path.join'] function. It does not set a trusted base-path which should not be escaped\n",
       "id": "GSD-2024-2044",
       "modified": "2024-03-01T06:03:00.837123Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,43 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cna@postgresql.org",
         "ID": "CVE-2024-2044",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "pgAdmin 4",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThan": "8.4",
+                                "status": "affected",
+                                "version": "0",
+                                "versionType": "custom"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "pgadmin.org"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +64,99 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "pgAdmin 4 uses a file-based session management approach. The session files are saved on disk as pickle objects. When a user performs a request, the value of the session cookie 'pga4_session' is used to retrieve the file, then its content is deserialised, and finally its signature verified.\nThe cookie value is split in 2 parts at the first '!' character. The first part is the session ID (sid), while the second is the session digest.\n The vulnerability lies in versions of pgAdmin prior to 8.4 where a method loads session files by concatenating the sessions folder - located inside the pgAdmin 4 DATA_DIR - with the session ID. Precisely, the two values are concatenated using the ['os.path.join'] function. It does not set a trusted base-path which should not be escaped\n"
           }
         ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 4.6,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "LOW",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/pgadmin-org/pgadmin4/issues/7258",
+            "refsource": "MISC",
+            "url": "https://github.com/pgadmin-org/pgadmin4/issues/7258"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "EXTERNAL"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "pgAdmin 4 uses a file-based session management approach. The session files are saved on disk as pickle objects. When a user performs a request, the value of the session cookie 'pga4_session' is used to retrieve the file, then its content is deserialised, and finally its signature verified.\nThe cookie value is split in 2 parts at the first '!' character. The first part is the session ID (sid), while the second is the session digest.\n The vulnerability lies in versions of pgAdmin prior to 8.4 where a method loads session files by concatenating the sessions folder - located inside the pgAdmin 4 DATA_DIR - with the session ID. Precisely, the two values are concatenated using the ['os.path.join'] function. It does not set a trusted base-path which should not be escaped\n"
+          }
+        ],
+        "id": "CVE-2024-2044",
+        "lastModified": "2024-03-07T21:15:08.767",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "LOW",
+                "baseScore": 4.6,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "LOW",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.2,
+              "impactScore": 3.4,
+              "source": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-03-07T21:15:08.767",
+        "references": [
+          {
+            "source": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+            "url": "https://github.com/pgadmin-org/pgadmin4/issues/7258"
+          }
+        ],
+        "sourceIdentifier": "f86ef6dc-4d3a-42ad-8f28-e6d5547a5007",
+        "vulnStatus": "Received"
       }
     }
   }
