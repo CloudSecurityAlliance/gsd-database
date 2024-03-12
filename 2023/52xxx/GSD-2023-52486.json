@@ -174,6 +174,56 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm: Don't unref the same fb many times by mistake due to deadlock handling\n\nIf we get a deadlock after the fb lookup in drm_mode_page_flip_ioctl()\nwe proceed to unref the fb and then retry the whole thing from the top.\nBut we forget to reset the fb pointer back to NULL, and so if we then\nget another error during the retry, before the fb lookup, we proceed\nthe unref the same fb again without having gotten another reference.\nThe end result is that the fb will (eventually) end up being freed\nwhile it's still in use.\n\nReset fb to NULL once we've unreffed it to avoid doing it again\nuntil we've done another fb lookup.\n\nThis turned out to be pretty easy to hit on a DG2 when doing async\nflips (and CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y). The first symptom I\nsaw that drm_closefb() simply got stuck in a busy loop while walking\nthe framebuffer list. Fortunately I was able to convince it to oops\ninstead, and from there it was easier to track down the culprit."
+          }
+        ],
+        "id": "CVE-2023-52486",
+        "lastModified": "2024-03-11T18:15:16.427",
+        "metrics": {},
+        "published": "2024-03-11T18:15:16.427",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/376e21a9e4c2c63ee5d8d3aa74be5082c3882229"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/62f2e79cf9f4f47cc9dea9cebdf58d9f7b5695e0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9dd334a8245011ace45e53298175c7b659edb3e7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b4af63da9d94986c529d74499fdfe44289acd551"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bfd0feb1b109cb63b87fdcd00122603787c75a1a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cb4daf271302d71a6b9a7c01bd0b6d76febd8f0c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d7afdf360f4ac142832b098b4de974e867cc063c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f55261469be87c55df13db76dc945f6bcd825105"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
     }
   }
 }
