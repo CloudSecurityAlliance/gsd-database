@@ -33,6 +33,79 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "stimulus_reflex is a system to extend the capabilities of both Rails and Stimulus by intercepting user interactions and passing them to Rails over real-time websockets. In affected versions more methods than expected can be called on reflex instances. Being able to call some of them has security implications. To invoke a reflex a websocket message of the following shape is sent: `\\\"target\\\":\\\"[class_name]#[method_name]\\\",\\\"args\\\":[]`. The server will proceed to instantiate `reflex` using the provided `class_name` as long as it extends `StimulusReflex::Reflex`. It then attempts to call `method_name` on the instance with the provided arguments. This is problematic as `reflex.method method_name` can be more methods that those explicitly specified by the developer in their reflex class. A good example is the instance_variable_set method. This vulnerability has been patched in versions 3.4.2 and 3.5.0.rc4. Users unable to upgrade should: see the backing GHSA advisory for mitigation advice."
+          }
+        ],
+        "id": "CVE-2024-28121",
+        "lastModified": "2024-03-12T20:15:08.313",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-03-12T20:15:08.313",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/stimulusreflex/stimulus_reflex/blob/0211cad7d60fe96838587f159d657e44cee51b9b/app/channels/stimulus_reflex/channel.rb#L83"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/stimulusreflex/stimulus_reflex/commit/538582d240439aab76066c72335ea92096cd0c7f"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/stimulusreflex/stimulus_reflex/releases/tag/v3.4.2"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/stimulusreflex/stimulus_reflex/releases/tag/v3.5.0.rc4"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/stimulusreflex/stimulus_reflex/security/advisories/GHSA-f78j-4w3g-4q65"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-470"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
+          }
+        ]
+      }
     }
   }
 }

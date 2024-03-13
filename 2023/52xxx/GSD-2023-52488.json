@@ -147,10 +147,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nserial: sc16is7xx: convert from _raw_ to _noinc_ regmap functions for FIFO\n\nThe SC16IS7XX IC supports a burst mode to access the FIFOs where the\ninitial register address is sent ($00), followed by all the FIFO data\nwithout having to resend the register address each time. In this mode, the\nIC doesn't increment the register address for each R/W byte.\n\nThe regmap_raw_read() and regmap_raw_write() are functions which can\nperform IO over multiple registers. They are currently used to read/write\nfrom/to the FIFO, and although they operate correctly in this burst mode on\nthe SPI bus, they would corrupt the regmap cache if it was not disabled\nmanually. The reason is that when the R/W size is more than 1 byte, these\nfunctions assume that the register address is incremented and handle the\ncache accordingly.\n\nConvert FIFO R/W functions to use the regmap _noinc_ versions in order to\nremove the manual cache control which was a workaround when using the\n_raw_ versions. FIFO registers are properly declared as volatile so\ncache will not be used/updated for FIFO accesses."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: serial: sc16is7xx: convierte de _raw_ a _noinc_ funciones regmap para FIFO El IC SC16IS7XX admite un modo de r\u00e1faga para acceder a los FIFO donde se env\u00eda la direcci\u00f3n de registro inicial ($00), seguida de todas los datos FIFO sin tener que reenviar la direcci\u00f3n de registro cada vez. En este modo, el IC no incrementa la direcci\u00f3n de registro para cada byte de lectura/escritura. regmap_raw_read() y regmap_raw_write() son funciones que pueden realizar IO en m\u00faltiples registros. Actualmente se utilizan para leer/escribir desde/hacia FIFO y, aunque funcionan correctamente en este modo de r\u00e1faga en el bus SPI, da\u00f1ar\u00edan el cach\u00e9 de regmap si no se desactivara manualmente. La raz\u00f3n es que cuando el tama\u00f1o de lectura y escritura es superior a 1 byte, estas funciones asumen que la direcci\u00f3n del registro se incrementa y manejan la cach\u00e9 en consecuencia. Convierta las funciones FIFO R/W para usar las versiones regmap _noinc_ para eliminar el control de cach\u00e9 manual, que era una soluci\u00f3n alternativa al usar las versiones _raw_. Los registros FIFO se declaran correctamente como vol\u00e1tiles, por lo que la cach\u00e9 no se utilizar\u00e1 ni se actualizar\u00e1 para los accesos FIFO."
           }
         ],
         "id": "CVE-2023-52488",
-        "lastModified": "2024-03-11T18:15:16.603",
+        "lastModified": "2024-03-12T12:40:13.500",
         "metrics": {},
         "published": "2024-03-11T18:15:16.603",
         "references": [
@@ -172,7 +176,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

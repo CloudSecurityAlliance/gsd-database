@@ -169,10 +169,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndmaengine: fix NULL pointer in channel unregistration function\n\n__dma_async_device_channel_register() can fail. In case of failure,\nchan->local is freed (with free_percpu()), and chan->local is nullified.\nWhen dma_async_device_unregister() is called (because of managed API or\nintentionally by DMA controller driver), channels are unconditionally\nunregistered, leading to this NULL pointer:\n[    1.318693] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000d0\n[...]\n[    1.484499] Call trace:\n[    1.486930]  device_del+0x40/0x394\n[    1.490314]  device_unregister+0x20/0x7c\n[    1.494220]  __dma_async_device_channel_unregister+0x68/0xc0\n\nLook at dma_async_device_register() function error path, channel device\nunregistration is done only if chan->local is not NULL.\n\nThen add the same condition at the beginning of\n__dma_async_device_channel_unregister() function, to avoid NULL pointer\nissue whatever the API used to reach this function."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: dmaengine: corrige el puntero NULL en la funci\u00f3n de cancelaci\u00f3n del registro del canal __dma_async_device_channel_register() puede fallar. En caso de falla, chan-&gt;local se libera (con free_percpu()) y chan-&gt;local se anula. Cuando se llama a dma_async_device_unregister() (debido a una API administrada o intencionalmente por el controlador del controlador DMA), los canales se anulan incondicionalmente, lo que lleva a este puntero NULL: [1.318693] No se puede manejar la desreferencia del puntero NULL del kernel en la direcci\u00f3n virtual 00000000000000d0 [...] [ 1.484499] Seguimiento de llamadas: [ 1.486930] device_del+0x40/0x394 [ 1.490314] device_unregister+0x20/0x7c [ 1.494220] __dma_async_device_channel_unregister+0x68/0xc0 Mire la ruta de error de la funci\u00f3n dma_async_device_register(), cancelaci\u00f3n del registro del dispositivo La raci\u00f3n se realiza s\u00f3lo si chan-&gt;local es no nulo. Luego agregue la misma condici\u00f3n al comienzo de la funci\u00f3n __dma_async_device_channel_unregister(), para evitar problemas de puntero NULL cualquiera que sea la API utilizada para alcanzar esta funci\u00f3n."
           }
         ],
         "id": "CVE-2023-52492",
-        "lastModified": "2024-03-11T18:15:16.877",
+        "lastModified": "2024-03-12T12:40:13.500",
         "metrics": {},
         "published": "2024-03-11T18:15:16.877",
         "references": [
@@ -202,7 +206,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -181,10 +181,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm: Don't unref the same fb many times by mistake due to deadlock handling\n\nIf we get a deadlock after the fb lookup in drm_mode_page_flip_ioctl()\nwe proceed to unref the fb and then retry the whole thing from the top.\nBut we forget to reset the fb pointer back to NULL, and so if we then\nget another error during the retry, before the fb lookup, we proceed\nthe unref the same fb again without having gotten another reference.\nThe end result is that the fb will (eventually) end up being freed\nwhile it's still in use.\n\nReset fb to NULL once we've unreffed it to avoid doing it again\nuntil we've done another fb lookup.\n\nThis turned out to be pretty easy to hit on a DG2 when doing async\nflips (and CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y). The first symptom I\nsaw that drm_closefb() simply got stuck in a busy loop while walking\nthe framebuffer list. Fortunately I was able to convince it to oops\ninstead, and from there it was easier to track down the culprit."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux se ha resuelto la siguiente vulnerabilidad: drm: No desreferenciar el mismo fb muchas veces por error debido al manejo de interbloqueos Si obtenemos un punto muerto despu\u00e9s de la b\u00fasqueda de fb en drm_mode_page_flip_ioctl() procedemos a desreferenciar el fb y luego Vuelva a intentarlo todo desde arriba. Pero nos olvidamos de restablecer el puntero fb a NULL, por lo que si obtenemos otro error durante el reintento, antes de la b\u00fasqueda de fb, procedemos a desref el mismo fb nuevamente sin haber obtenido otra referencia. El resultado final es que el Facebook (eventualmente) terminar\u00e1 siendo liberado mientras todav\u00eda est\u00e1 en uso. Restablezca fb a NULL una vez que lo hayamos eliminado para evitar hacerlo nuevamente hasta que hayamos realizado otra b\u00fasqueda de fb. Esto result\u00f3 ser bastante f\u00e1cil de lograr en un DG2 cuando se realizan volteos as\u00edncronos (y CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y). El primer s\u00edntoma que vi fue que drm_closefb() simplemente se qued\u00f3 atascado en un bucle ocupado mientras recorr\u00eda la lista de framebuffer. Afortunadamente, pude convencerlo de que lo hiciera, y a partir de ah\u00ed fue m\u00e1s f\u00e1cil localizar al culpable."
           }
         ],
         "id": "CVE-2023-52486",
-        "lastModified": "2024-03-11T18:15:16.427",
+        "lastModified": "2024-03-12T12:40:13.500",
         "metrics": {},
         "published": "2024-03-11T18:15:16.427",
         "references": [
@@ -222,7 +226,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -159,10 +159,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nPM: sleep: Fix possible deadlocks in core system-wide PM code\n\nIt is reported that in low-memory situations the system-wide resume core\ncode deadlocks, because async_schedule_dev() executes its argument\nfunction synchronously if it cannot allocate memory (and not only in\nthat case) and that function attempts to acquire a mutex that is already\nheld.  Executing the argument function synchronously from within\ndpm_async_fn() may also be problematic for ordering reasons (it may\ncause a consumer device's resume callback to be invoked before a\nrequisite supplier device's one, for example).\n\nAddress this by changing the code in question to use\nasync_schedule_dev_nocall() for scheduling the asynchronous\nexecution of device suspend and resume functions and to directly\nrun them synchronously if async_schedule_dev_nocall() returns false."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: PM: suspensi\u00f3n: soluciona posibles bloqueos en el c\u00f3digo PM de todo el sistema central. Se informa que en situaciones de poca memoria, el c\u00f3digo central de reanudaci\u00f3n de todo el sistema se bloquea porque async_schedule_dev() ejecuta su el argumento funciona sincr\u00f3nicamente si no puede asignar memoria (y no solo en ese caso) y esa funci\u00f3n intenta adquirir un mutex que ya est\u00e1 retenido. La ejecuci\u00f3n de la funci\u00f3n de argumento sincr\u00f3nicamente desde dpm_async_fn() tambi\u00e9n puede ser problem\u00e1tica por razones de pedido (puede causar que la devoluci\u00f3n de llamada de curr\u00edculum de un dispositivo consumidor se invoque antes que la de un dispositivo proveedor requerido, por ejemplo). Solucione este problema cambiando el c\u00f3digo en cuesti\u00f3n para usar async_schedule_dev_nocall() para programar la ejecuci\u00f3n asincr\u00f3nica de las funciones de suspensi\u00f3n y reanudaci\u00f3n del dispositivo y para ejecutarlas directamente de forma sincr\u00f3nica si async_schedule_dev_nocall() devuelve falso."
           }
         ],
         "id": "CVE-2023-52498",
-        "lastModified": "2024-03-11T18:15:17.130",
+        "lastModified": "2024-03-12T12:40:13.500",
         "metrics": {},
         "published": "2024-03-11T18:15:17.130",
         "references": [
@@ -192,7 +196,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -147,10 +147,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ns390/vfio-ap: always filter entire AP matrix\n\nThe vfio_ap_mdev_filter_matrix function is called whenever a new adapter or\ndomain is assigned to the mdev. The purpose of the function is to update\nthe guest's AP configuration by filtering the matrix of adapters and\ndomains assigned to the mdev. When an adapter or domain is assigned, only\nthe APQNs associated with the APID of the new adapter or APQI of the new\ndomain are inspected. If an APQN does not reference a queue device bound to\nthe vfio_ap device driver, then it's APID will be filtered from the mdev's\nmatrix when updating the guest's AP configuration.\n\nInspecting only the APID of the new adapter or APQI of the new domain will\nresult in passing AP queues through to a guest that are not bound to the\nvfio_ap device driver under certain circumstances. Consider the following:\n\nguest's AP configuration (all also assigned to the mdev's matrix):\n14.0004\n14.0005\n14.0006\n16.0004\n16.0005\n16.0006\n\nunassign domain 4\nunbind queue 16.0005\nassign domain 4\n\nWhen domain 4 is re-assigned, since only domain 4 will be inspected, the\nAPQNs that will be examined will be:\n14.0004\n16.0004\n\nSince both of those APQNs reference queue devices that are bound to the\nvfio_ap device driver, nothing will get filtered from the mdev's matrix\nwhen updating the guest's AP configuration. Consequently, queue 16.0005\nwill get passed through despite not being bound to the driver. This\nviolates the linux device model requirement that a guest shall only be\ngiven access to devices bound to the device driver facilitating their\npass-through.\n\nTo resolve this problem, every adapter and domain assigned to the mdev will\nbe inspected when filtering the mdev's matrix."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: s390/vfio-ap: filtra siempre toda la matriz AP La funci\u00f3n vfio_ap_mdev_filter_matrix se llama cada vez que se asigna un nuevo adaptador o dominio al mdev. El prop\u00f3sito de la funci\u00f3n es actualizar la configuraci\u00f3n del AP del invitado filtrando la matriz de adaptadores y dominios asignados al mdev. Cuando se asigna un adaptador o dominio, solo se inspeccionan los APQN asociados con el APID del nuevo adaptador o APQI del nuevo dominio. Si un APQN no hace referencia a un dispositivo de cola vinculado al controlador de dispositivo vfio_ap, entonces su APID se filtrar\u00e1 de la matriz de mdev al actualizar la configuraci\u00f3n de AP del invitado. Inspeccionar solo el APID del nuevo adaptador o APQI del nuevo dominio dar\u00e1 como resultado que se pasen colas de AP a un invitado que no est\u00e1 vinculado al controlador de dispositivo vfio_ap en determinadas circunstancias. Considere lo siguiente: configuraci\u00f3n de AP del invitado (todas tambi\u00e9n asignadas a la matriz de mdev): 14.0004 14.0005 14.0006 16.0004 16.0005 16.0006 desasignar dominio 4 desvincular cola 16.0005 asignar dominio 4 Cuando se reasigna el dominio 4, dado que solo se inspeccionar\u00e1 el dominio 4, los APQN que se examinar\u00e1 ser\u00e1: 14.0004 16.0004 Dado que ambos APQN hacen referencia a dispositivos de cola que est\u00e1n vinculados al controlador de dispositivo vfio_ap, no se filtrar\u00e1 nada de la matriz de mdev al actualizar la configuraci\u00f3n de AP del invitado. En consecuencia, la cola 16.0005 pasar\u00e1 a pesar de no estar vinculada al conductor. Esto viola el requisito del modelo de dispositivo Linux de que a un invitado solo se le dar\u00e1 acceso a los dispositivos vinculados al controlador del dispositivo que facilita su paso. Para resolver este problema, cada adaptador y dominio asignado al mdev se inspeccionar\u00e1 al filtrar la matriz del mdev."
           }
         ],
         "id": "CVE-2024-26620",
-        "lastModified": "2024-03-11T18:15:19.613",
+        "lastModified": "2024-03-12T12:40:13.500",
         "metrics": {},
         "published": "2024-03-11T18:15:19.613",
         "references": [
@@ -172,7 +176,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
