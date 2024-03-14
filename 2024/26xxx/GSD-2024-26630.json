@@ -33,6 +33,36 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: cachestat: fix folio read-after-free in cache walk\n\nIn cachestat, we access the folio from the page cache's xarray to compute\nits page offset, and check for its dirty and writeback flags.  However, we\ndo not hold a reference to the folio before performing these actions,\nwhich means the folio can concurrently be released and reused as another\nfolio/page/slab.\n\nGet around this altogether by just using xarray's existing machinery for\nthe folio page offsets and dirty/writeback states.\n\nThis changes behavior for tmpfs files to now always report zeroes in their\ndirty and writeback counters.  This is okay as tmpfs doesn't follow\nconventional writeback cache behavior: its pages get \"cleaned\" during\nswapout, after which they're no longer resident etc."
+          }
+        ],
+        "id": "CVE-2024-26630",
+        "lastModified": "2024-03-13T18:15:58.530",
+        "metrics": {},
+        "published": "2024-03-13T16:15:30.047",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3a75cb05d53f4a6823a32deb078de1366954a804"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ba60fdf75e89ea762bb617be578dc47f27655117"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fe7e008e0ce728252e4ec652cceebcc62211657c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
