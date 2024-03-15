@@ -143,36 +143,120 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "F138E9B6-24E6-403F-97D9-025AE266325F",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.9.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Defer the free of inner map when necessary\n\nWhen updating or deleting an inner map in map array or map htab, the map\nmay still be accessed by non-sleepable program or sleepable program.\nHowever bpf_map_fd_put_ptr() decreases the ref-counter of the inner map\ndirectly through bpf_map_put(), if the ref-counter is the last one\n(which is true for most cases), the inner map will be freed by\nops->map_free() in a kworker. But for now, most .map_free() callbacks\ndon't use synchronize_rcu() or its variants to wait for the elapse of a\nRCU grace period, so after the invocation of ops->map_free completes,\nthe bpf program which is accessing the inner map may incur\nuse-after-free problem.\n\nFix the free of inner map by invoking bpf_map_free_deferred() after both\none RCU grace period and one tasks trace RCU grace period if the inner\nmap has been removed from the outer map before. The deferment is\naccomplished by using call_rcu() or call_rcu_tasks_trace() when\nreleasing the last ref-counter of bpf map. The newly-added rcu_head\nfield in bpf_map shares the same storage space with work field to\nreduce the size of bpf_map."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: bpf: posponer la liberaci\u00f3n del mapa interno cuando sea necesario Al actualizar o eliminar un mapa interno en la matriz de mapas o en el htab de mapas, a\u00fan se puede acceder al mapa mediante un programa que no se puede dormir o un programa que se puede dormir. . Sin embargo, bpf_map_fd_put_ptr() disminuye el contador de referencias del mapa interno directamente a trav\u00e9s de bpf_map_put(), si el contador de referencias es el \u00faltimo (lo cual es cierto en la mayor\u00eda de los casos), el mapa interno ser\u00e1 liberado por ops-&gt;map_free() en un kworker. Pero por ahora, la mayor\u00eda de las devoluciones de llamada .map_free() no usan sincronizar_rcu() o sus variantes para esperar a que transcurra el per\u00edodo de gracia de RCU, por lo que despu\u00e9s de que se completa la invocaci\u00f3n de ops-&gt;map_free, el programa bpf que accede al interior El mapa puede sufrir un problema de uso despu\u00e9s de su liberaci\u00f3n. Corrija la liberaci\u00f3n del mapa interno invocando bpf_map_free_deferred() despu\u00e9s de un per\u00edodo de gracia de RCU y un per\u00edodo de gracia de seguimiento de tareas de RCU si el mapa interno se elimin\u00f3 del mapa externo antes. El aplazamiento se logra utilizando call_rcu() o call_rcu_tasks_trace() al liberar el \u00faltimo contador de referencia del mapa bpf. El campo rcu_head reci\u00e9n agregado en bpf_map comparte el mismo espacio de almacenamiento con el campo de trabajo para reducir el tama\u00f1o de bpf_map."
           }
         ],
         "id": "CVE-2023-52447",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-14T19:46:43.030",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:08.580",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/62fca83303d608ad4fec3f7428c8685680bb01b0"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/876673364161da50eed6b472d746ef88242b2368"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/bfd9b20c4862f41d4590fde11d70a5eeae53dcc5"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/f91cd728b10c51f6d4a39957ccd56d1e802fc8ee"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-416"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

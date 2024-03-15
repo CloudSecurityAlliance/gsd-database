@@ -187,52 +187,175 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0A7AEFD0-0681-4E8D-9074-27416D3EE94C",
+                    "versionEndExcluding": "4.19.306",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "991BF737-6083-429B-ACD5-FB27D4143E2F",
+                    "versionEndExcluding": "5.4.268",
+                    "versionStartIncluding": "4.20",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5D2E4F24-2FBB-4434-8598-2B1499E566B5",
+                    "versionEndExcluding": "5.10.209",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E25E1389-4B0F-407A-9C94-5908FF3EE88B",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2C4951FA-80C0-4B4C-9836-6E5035DEB0F9",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\napparmor: avoid crash when parsed profile name is empty\n\nWhen processing a packed profile in unpack_profile() described like\n\n \"profile :ns::samba-dcerpcd /usr/lib*/samba/{,samba/}samba-dcerpcd {...}\"\n\na string \":samba-dcerpcd\" is unpacked as a fully-qualified name and then\npassed to aa_splitn_fqname().\n\naa_splitn_fqname() treats \":samba-dcerpcd\" as only containing a namespace.\nThus it returns NULL for tmpname, meanwhile tmpns is non-NULL. Later\naa_alloc_profile() crashes as the new profile name is NULL now.\n\ngeneral protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI\nKASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]\nCPU: 6 PID: 1657 Comm: apparmor_parser Not tainted 6.7.0-rc2-dirty #16\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.2-3-gd478f380-rebuilt.opensuse.org 04/01/2014\nRIP: 0010:strlen+0x1e/0xa0\nCall Trace:\n <TASK>\n ? strlen+0x1e/0xa0\n aa_policy_init+0x1bb/0x230\n aa_alloc_profile+0xb1/0x480\n unpack_profile+0x3bc/0x4960\n aa_unpack+0x309/0x15e0\n aa_replace_profiles+0x213/0x33c0\n policy_update+0x261/0x370\n profile_replace+0x20e/0x2a0\n vfs_write+0x2af/0xe00\n ksys_write+0x126/0x250\n do_syscall_64+0x46/0xf0\n entry_SYSCALL_64_after_hwframe+0x6e/0x76\n </TASK>\n---[ end trace 0000000000000000 ]---\nRIP: 0010:strlen+0x1e/0xa0\n\nIt seems such behaviour of aa_splitn_fqname() is expected and checked in\nother places where it is called (e.g. aa_remove_profiles). Well, there\nis an explicit comment \"a ns name without a following profile is allowed\"\ninside.\n\nAFAICS, nothing can prevent unpacked \"name\" to be in form like\n\":samba-dcerpcd\" - it is passed from userspace.\n\nDeny the whole profile set replacement in such case and inform user with\nEPROTO and an explaining message.\n\nFound by Linux Verification Center (linuxtesting.org)."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: apparmor: evita fallas cuando el nombre del perfil analizado est\u00e1 vac\u00edo Al procesar un perfil empaquetado en unpack_profile() descrito como \"perfil :ns::samba-dcerpcd /usr/lib*/samba/ {,samba/}samba-dcerpcd {...}\" una cadena \":samba-dcerpcd\" se descomprime como un nombre completo y luego se pasa a aa_splitn_fqname(). aa_splitn_fqname() trata \":samba-dcerpcd\" como si solo contuviera un espacio de nombres. Por lo tanto, devuelve NULL para tmpname, mientras que tmpns no es NULL. M\u00e1s tarde, aa_alloc_profile() falla porque el nuevo nombre del perfil ahora es NULL. falla de protecci\u00f3n general, probablemente para direcci\u00f3n no can\u00f3nica 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI KASAN: null-ptr-deref en rango [0x00000000000000000-0x0000000000000007] CPU: 6 PID: 1657 Comm: apparmor_parser No contaminado 6.7.0- rc2-dirty #16 Nombre del hardware: PC est\u00e1ndar QEMU (i440FX + PIIX, 1996), BIOS rel-1.16.2-3-gd478f380-rebuilt.opensuse.org 01/04/2014 RIP: 0010:strlen+0x1e/0xa0 Llamada Seguimiento:  ? strlen+0x1e/0xa0 aa_policy_init+0x1bb/0x230 aa_alloc_profile+0xb1/0x480 unpack_profile+0x3bc/0x4960 aa_unpack+0x309/0x15e0 aa_replace_profiles+0x213/0x33c0 Policy_update+0x261/0x370 perfil_replace+ 0x20e/0x2a0 vfs_write+0x2af/0xe00 ksys_write+0x126/0x250 do_syscall_64+0x46/0xf0 Entry_SYSCALL_64_after_hwframe+0x6e/0x76  ---[ end trace 0000000000000000 ]--- RIP: 0010:strlen+0x1e/0xa0 Parece que tal comportamiento de aa_splitn_fqname() se espera y se verifica en otros lugares donde se llama (por ejemplo, aa_remove_profiles). Bueno, hay un comentario expl\u00edcito \"se permite un nombre ns sin un perfil de seguimiento\" dentro. AFAICS, nada puede evitar que el \"nombre\" descomprimido tenga un formato como \":samba-dcerpcd\": se pasa desde el espacio de usuario. En tal caso, rechace el reemplazo completo del conjunto de perfiles e informe al usuario con EPROTO y un mensaje explicativo. Encontrado por el Centro de verificaci\u00f3n de Linux (linuxtesting.org)."
           }
         ],
         "id": "CVE-2023-52443",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-14T20:16:02.947",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 5.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:08.377",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/0a12db736edbb4933e4274932aeea594b5876fa4"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/1d8e62b5569cc1466ceb8a7e4872cf10160a9dcf"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/55a8210c9e7d21ff2644809699765796d4bfb200"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5c0392fdafb0a2321311900be83ffa572bef8203"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5ff00408e5029d3550ee77f62dc15f1e15c47f87"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/77ab09b92f16c8439a948d1af489196953dc4a0e"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/9286ee97aa4803d99185768735011d0d65827c9e"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/9d4fa5fe2b1d56662afd14915a73b4d0783ffa45"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-476"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }
