@@ -33,6 +33,71 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "OpenMetadata is a unified platform for discovery, observability, and governance powered by a central metadata repository, in-depth lineage, and seamless team collaboration. The `JwtFilter` handles the API authentication by requiring and verifying JWT tokens. When a new request comes in, the request's path is checked against this list. When the request's path contains any of the excluded endpoints the filter returns without validating the JWT. Unfortunately, an attacker may use Path Parameters to make any path contain any arbitrary strings. For example, a request to `GET /api/v1;v1%2fusers%2flogin/events/subscriptions/validation/condition/111` will match the excluded endpoint condition and therefore will be processed with no JWT validation allowing an attacker to bypass the authentication mechanism and reach any arbitrary endpoint, including the ones listed above that lead to arbitrary SpEL expression injection. This bypass will not work when the endpoint uses the `SecurityContext.getUserPrincipal()` since it will return `null` and will throw an NPE. This issue may lead to authentication bypass and has been addressed in version 1.2.4. Users are advised to upgrade. There are no known workarounds for this vulnerability. This issue is also tracked as `GHSL-2023-237`."
+          }
+        ],
+        "id": "CVE-2024-28255",
+        "lastModified": "2024-03-15T20:15:10.270",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.8,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-03-15T20:15:10.270",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/e2043a3f31312ebb42391d6c93a67584d798de52/openmetadata-service/src/main/java/org/openmetadata/service/security/JwtFilter.java#L111"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/e2043a3f31312ebb42391d6c93a67584d798de52/openmetadata-service/src/main/java/org/openmetadata/service/security/JwtFilter.java#L113"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/security/advisories/GHSA-6wx7-qw5p-wh84"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-287"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
+          }
+        ]
+      }
     }
   }
 }

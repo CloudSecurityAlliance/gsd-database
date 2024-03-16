@@ -33,6 +33,56 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: fix bug on in ext4_es_cache_extent as ext4_split_extent_at failed\n\nWe got follow bug_on when run fsstress with injecting IO fault:\n[130747.323114] kernel BUG at fs/ext4/extents_status.c:762!\n[130747.323117] Internal error: Oops - BUG: 0 [#1] SMP\n......\n[130747.334329] Call trace:\n[130747.334553]  ext4_es_cache_extent+0x150/0x168 [ext4]\n[130747.334975]  ext4_cache_extents+0x64/0xe8 [ext4]\n[130747.335368]  ext4_find_extent+0x300/0x330 [ext4]\n[130747.335759]  ext4_ext_map_blocks+0x74/0x1178 [ext4]\n[130747.336179]  ext4_map_blocks+0x2f4/0x5f0 [ext4]\n[130747.336567]  ext4_mpage_readpages+0x4a8/0x7a8 [ext4]\n[130747.336995]  ext4_readpage+0x54/0x100 [ext4]\n[130747.337359]  generic_file_buffered_read+0x410/0xae8\n[130747.337767]  generic_file_read_iter+0x114/0x190\n[130747.338152]  ext4_file_read_iter+0x5c/0x140 [ext4]\n[130747.338556]  __vfs_read+0x11c/0x188\n[130747.338851]  vfs_read+0x94/0x150\n[130747.339110]  ksys_read+0x74/0xf0\n\nThis patch's modification is according to Jan Kara's suggestion in:\nhttps://patchwork.ozlabs.org/project/linux-ext4/patch/20210428085158.3728201-1-yebin10@huawei.com/\n\"I see. Now I understand your patch. Honestly, seeing how fragile is trying\nto fix extent tree after split has failed in the middle, I would probably\ngo even further and make sure we fix the tree properly in case of ENOSPC\nand EDQUOT (those are easily user triggerable).  Anything else indicates a\nHW problem or fs corruption so I'd rather leave the extent tree as is and\ndon't try to fix it (which also means we will not create overlapping\nextents).\""
+          }
+        ],
+        "id": "CVE-2021-47117",
+        "lastModified": "2024-03-15T21:15:06.887",
+        "metrics": {},
+        "published": "2024-03-15T21:15:06.887",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/082cd4ec240b8734a82a89ffb890216ac98fec68"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/48105dc98c9ca35af418746277b087cb2bc6df7c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/569496aa3776eea1ff0d49d0174ac1b7e861e107"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5b3a9a2be59478b013a430ac57b0f3d65471b071"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/920697b004e49cb026e2e15fe91be065bf0741b7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d3b668b96ad3192c0581a248ae2f596cd054792a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d8116743ef5432336289256b2f7c117299213eb9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e33bafad30d34cfa5e9787cb099cab05e2677fcb"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
     }
   }
 }

@@ -187,52 +187,201 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5A94A44F-4F9A-4447-AF13-47B88B4CD211",
+                    "versionEndExcluding": "4.19.306",
+                    "versionStartExcluding": "4.18.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "35ADF607-EDCA-45AB-8FB6-9F2D40D47C0C",
+                    "versionEndExcluding": "5.4.268",
+                    "versionStartIncluding": "4.20.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5D2E4F24-2FBB-4434-8598-2B1499E566B5",
+                    "versionEndExcluding": "5.10.209",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E25E1389-4B0F-407A-9C94-5908FF3EE88B",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "F7DD9841-CE11-470D-A285-A2E8E0F6640D",
+                    "versionEndExcluding": "6.1.74",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "74A1FFC7-19FA-450E-BC2D-2BBD2EBF0A5F",
+                    "versionEndExcluding": "6.6.13",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "664EB721-F519-48BB-B1C8-897D5990CD78",
+                    "versionEndExcluding": "6.7.1",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:4.18:-:*:*:*:*:*:*",
+                    "matchCriteriaId": "6AE7DC47-EAFA-42D5-BCF5-C7039EE3D771",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:4.18:rc5:*:*:*:*:*:*",
+                    "matchCriteriaId": "DB2B91AF-ACE1-4F6F-B2D0-9D4B7D8D20CE",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:4.18:rc6:*:*:*:*:*:*",
+                    "matchCriteriaId": "30FBD992-DD41-441E-A6C7-D39DAC45DA34",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:4.18:rc7:*:*:*:*:*:*",
+                    "matchCriteriaId": "10979D17-76B4-465F-A475-78680FBECEBD",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:4.18:rc8:*:*:*:*:*:*",
+                    "matchCriteriaId": "56BF1EDD-3351-4E3E-AD42-54AF093ADB89",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nuio: Fix use-after-free in uio_open\n\ncore-1\t\t\t\tcore-2\n-------------------------------------------------------\nuio_unregister_device\t\tuio_open\n\t\t\t\tidev = idr_find()\ndevice_unregister(&idev->dev)\nput_device(&idev->dev)\nuio_device_release\n\t\t\t\tget_device(&idev->dev)\nkfree(idev)\nuio_free_minor(minor)\n\t\t\t\tuio_release\n\t\t\t\tput_device(&idev->dev)\n\t\t\t\tkfree(idev)\n-------------------------------------------------------\n\nIn the core-1 uio_unregister_device(), the device_unregister will kfree\nidev when the idev->dev kobject ref is 1. But after core-1\ndevice_unregister, put_device and before doing kfree, the core-2 may\nget_device. Then:\n1. After core-1 kfree idev, the core-2 will do use-after-free for idev.\n2. When core-2 do uio_release and put_device, the idev will be double\n   freed.\n\nTo address this issue, we can get idev atomic & inc idev reference with\nminor_lock."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: uio: corrige use-after-free en uio_open core-1 core-2 ------------------------------------------------------- uio_unregister_device uio_open idev = idr_find() device_unregister(&amp;idev-&gt;dev) put_device(&amp;idev-&gt;dev) uio_device_release get_device(&amp;idev-&gt;dev) kfree(idev) uio_free_minor(minor) uio_release put_device(&amp;idev-&gt;dev) kfree(idev) ------------------------------------------------------- In the core-1 uio_unregister_device(), the device_unregister se liberar\u00e1 idev cuando la referencia del objeto idev-&gt;dev kobject es 1. But after core-1 device_unregister, put_device and before doing kfree, the core-2 may get_device. Then: 1. After core-1 kfree idev, the core-2 will do use-after-free for idev. 2. When core-2 do uio_release and put_device, el idev se liberar\u00e1 dos veces. Para solucionar este problema, podemos obtener la referencia de idev atomic &amp; inc idev con minor_lock."
           }
         ],
         "id": "CVE-2023-52439",
-        "lastModified": "2024-02-20T21:52:55.187",
-        "metrics": {},
+        "lastModified": "2024-03-15T14:21:10.847",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-20T21:15:08.213",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/0c9ae0b8605078eafc3bea053cc78791e97ba2e2"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/17a8519cb359c3b483fb5c7367efa9a8a508bdea"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/3174e0f7de1ba392dc191625da83df02d695b60c"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/35f102607054faafe78d2a6994b18d5d9d6e92ad"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5cf604ee538ed0c467abe3b4cda5308a6398f0f7"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5e0be1229ae199ebb90b33102f74a0f22d152570"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/913205930da6213305616ac539447702eaa85e41"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/e93da893d52d82d57fc0db2ca566024e0f26ff50"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-415"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

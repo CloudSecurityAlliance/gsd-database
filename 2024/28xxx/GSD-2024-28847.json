@@ -1,0 +1,81 @@
+{
+  "namespaces": {
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "OpenMetadata is a unified platform for discovery, observability, and governance powered by a central metadata repository, in-depth lineage, and seamless team collaboration. Similarly to the GHSL-2023-250 issue, `AlertUtil::validateExpression` is also called from `EventSubscriptionRepository.prepare()`, which can lead to Remote Code Execution. `prepare()` is called from `EntityRepository.prepareInternal()` which, in turn, gets called from `EntityResource.createOrUpdate()`. Note that, even though there is an authorization check (`authorizer.authorize()`), it gets called after `prepareInternal()` gets called and, therefore, after the SpEL expression has been evaluated. In order to reach this method, an attacker can send a PUT request to `/api/v1/events/subscriptions` which gets handled by `EventSubscriptionResource.createOrUpdateEventSubscription()`. This vulnerability was discovered with the help of CodeQL's Expression language injection (Spring) query. This issue may lead to Remote Code Execution and has been addressed in version 1.2.4. Users are advised to upgrade. There are no known workarounds for this vulnerability. This issue is also tracked as `GHSL-2023-251`."
+          }
+        ],
+        "id": "CVE-2024-28847",
+        "lastModified": "2024-03-15T20:15:10.480",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-03-15T20:15:10.480",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://codeql.github.com/codeql-query-help/java/java-spel-expression-injection"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/b6b337e09a05101506a5faba4b45d370cc3c9fc8/openmetadata-service/src/main/java/org/openmetadata/service/jdbi3/EntityRepository.java#L693"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/b6b337e09a05101506a5faba4b45d370cc3c9fc8/openmetadata-service/src/main/java/org/openmetadata/service/jdbi3/EventSubscriptionRepository.java#L69-L83"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/b6b337e09a05101506a5faba4b45d370cc3c9fc8/openmetadata-service/src/main/java/org/openmetadata/service/resources/EntityResource.java#L219"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/blob/b6b337e09a05101506a5faba4b45d370cc3c9fc8/openmetadata-service/src/main/java/org/openmetadata/service/resources/events/subscription/EventSubscriptionResource.java#L289"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/open-metadata/OpenMetadata/security/advisories/GHSA-8p5r-6mvv-2435"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-94"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
+          }
+        ]
+      }
+    }
+  }
+}

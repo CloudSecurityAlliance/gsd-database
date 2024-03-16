@@ -33,6 +33,32 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsch_htb: fix refcount leak in htb_parent_to_leaf_offload\n\nThe commit ae81feb7338c (\"sch_htb: fix null pointer dereference\non a null new_q\") fixes a NULL pointer dereference bug, but it\nis not correct.\n\nBecause htb_graft_helper properly handles the case when new_q\nis NULL, and after the previous patch by skipping this call\nwhich creates an inconsistency : dev_queue->qdisc will still\npoint to the old qdisc, but cl->parent->leaf.q will point to\nthe new one (which will be noop_qdisc, because new_q was NULL).\nThe code is based on an assumption that these two pointers are\nthe same, so it can lead to refcount leaks.\n\nThe correct fix is to add a NULL pointer check to protect\nqdisc_refcount_inc inside htb_parent_to_leaf_offload."
+          }
+        ],
+        "id": "CVE-2021-47125",
+        "lastModified": "2024-03-15T21:15:07.307",
+        "metrics": {},
+        "published": "2024-03-15T21:15:07.307",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2411c02d03892a5057499f8102d0cc1e0f852416"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/944d671d5faa0d78980a3da5c0f04960ef1ad893"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
+      }
     }
   }
 }
