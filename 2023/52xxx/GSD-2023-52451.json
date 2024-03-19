@@ -187,52 +187,176 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "B2135E32-75F4-4FAA-AD3B-034720E6A1CD",
+                    "versionEndExcluding": "4.19.306",
+                    "versionStartIncluding": "4.1.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "35ADF607-EDCA-45AB-8FB6-9F2D40D47C0C",
+                    "versionEndExcluding": "5.4.268",
+                    "versionStartIncluding": "4.20.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5D2E4F24-2FBB-4434-8598-2B1499E566B5",
+                    "versionEndExcluding": "5.10.209",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E25E1389-4B0F-407A-9C94-5908FF3EE88B",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2C4951FA-80C0-4B4C-9836-6E5035DEB0F9",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npowerpc/pseries/memhp: Fix access beyond end of drmem array\n\ndlpar_memory_remove_by_index() may access beyond the bounds of the\ndrmem lmb array when the LMB lookup fails to match an entry with the\ngiven DRC index. When the search fails, the cursor is left pointing to\n&drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the\nlast valid entry in the array. The debug message at the end of the\nfunction then dereferences this pointer:\n\n        pr_debug(\"Failed to hot-remove memory at %llx\\n\",\n                 lmb->base_addr);\n\nThis was found by inspection and confirmed with KASAN:\n\n  pseries-hotplug-mem: Attempting to hot-remove LMB, drc index 1234\n  ==================================================================\n  BUG: KASAN: slab-out-of-bounds in dlpar_memory+0x298/0x1658\n  Read of size 8 at addr c000000364e97fd0 by task bash/949\n\n  dump_stack_lvl+0xa4/0xfc (unreliable)\n  print_report+0x214/0x63c\n  kasan_report+0x140/0x2e0\n  __asan_load8+0xa8/0xe0\n  dlpar_memory+0x298/0x1658\n  handle_dlpar_errorlog+0x130/0x1d0\n  dlpar_store+0x18c/0x3e0\n  kobj_attr_store+0x68/0xa0\n  sysfs_kf_write+0xc4/0x110\n  kernfs_fop_write_iter+0x26c/0x390\n  vfs_write+0x2d4/0x4e0\n  ksys_write+0xac/0x1a0\n  system_call_exception+0x268/0x530\n  system_call_vectored_common+0x15c/0x2ec\n\n  Allocated by task 1:\n   kasan_save_stack+0x48/0x80\n   kasan_set_track+0x34/0x50\n   kasan_save_alloc_info+0x34/0x50\n   __kasan_kmalloc+0xd0/0x120\n   __kmalloc+0x8c/0x320\n   kmalloc_array.constprop.0+0x48/0x5c\n   drmem_init+0x2a0/0x41c\n   do_one_initcall+0xe0/0x5c0\n   kernel_init_freeable+0x4ec/0x5a0\n   kernel_init+0x30/0x1e0\n   ret_from_kernel_user_thread+0x14/0x1c\n\n  The buggy address belongs to the object at c000000364e80000\n   which belongs to the cache kmalloc-128k of size 131072\n  The buggy address is located 0 bytes to the right of\n   allocated 98256-byte region [c000000364e80000, c000000364e97fd0)\n\n  ==================================================================\n  pseries-hotplug-mem: Failed to hot-remove memory at 0\n\nLog failed lookups with a separate message and dereference the\ncursor only when it points to a valid entry."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: powerpc/pseries/memhp: corrige el acceso m\u00e1s all\u00e1 del final de la matriz drmem dlpar_memory_remove_by_index() puede acceder m\u00e1s all\u00e1 de los l\u00edmites de la matriz lmb drmem cuando la b\u00fasqueda de LMB no coincide con una entrada con el valor dado \u00cdndice de la Rep\u00fablica Democr\u00e1tica del Congo. Cuando la b\u00fasqueda falla, el cursor queda apuntando a &amp;drmem_info-&gt;lmbs[drmem_info-&gt;n_lmbs], que es un elemento despu\u00e9s de la \u00faltima entrada v\u00e1lida en la matriz. El mensaje de depuraci\u00f3n al final de la funci\u00f3n elimina la referencia a este puntero: pr_debug(\"Error al eliminar memoria en caliente en %llx\\n\", lmb-&gt;base_addr); Esto se encontr\u00f3 mediante inspecci\u00f3n y se confirm\u00f3 con KASAN: pseries-hotplug-mem: Intentando eliminar LMB en caliente, \u00edndice drc 1234 ========================== ========================================== ERROR: KASAN: losa- fuera de l\u00edmites en dlpar_memory+0x298/0x1658 Lectura de tama\u00f1o 8 en la direcci\u00f3n c000000364e97fd0 por tarea bash/949 dump_stack_lvl+0xa4/0xfc (no confiable) print_report+0x214/0x63c kasan_report+0x140/0x2e0 __asan_load8+0xa8/ 0xe0 dlpar_memory+0x298/0x1658 handle_dlpar_errorlog +0x130/0x1d0 dlpar_store+0x18c/0x3e0 kobj_attr_store+0x68/0xa0 sysfs_kf_write+0xc4/0x110 kernfs_fop_write_iter+0x26c/0x390 vfs_write+0x2d4/0x4e0 ksys_write+0xac/0x1a0 system_call_exception+0x268/0x530 system_call_vectored_common+0x15c/0x2ec Asignado por tarea 1: kasan_save_stack +0x48/0x80 kasan_set_track+0x34/0x50 kasan_save_alloc_info+0x34/0x50 __kasan_kmalloc+0xd0/0x120 __kmalloc+0x8c/0x320 kmalloc_array.constprop.0+0x48/0x5c drmem_init+0x2a0/0x41c do_one _initcall+0xe0/0x5c0 kernel_init_freeable+0x4ec/0x5a0 kernel_init+ 0x30/0x1e0 ret_from_kernel_user_thread+0x14/0x1c La direcci\u00f3n con errores pertenece al objeto en c000000364e80000 que pertenece al cach\u00e9 kmalloc-128k de tama\u00f1o 131072 La direcci\u00f3n con errores se encuentra 0 bytes a la derecha de la regi\u00f3n asignada de 98256 bytes [c000000364e80000, c0 00000364e97fd0) = ==================================================== =============== pseries-hotplug-mem: No se pudo eliminar la memoria en caliente en 0 Registre las b\u00fasquedas fallidas con un mensaje separado y elimine la referencia del cursor solo cuando apunte a una entrada v\u00e1lida."
           }
         ],
         "id": "CVE-2023-52451",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-18T18:33:31.077",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:08.777",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/026fd977dc50ff4a5e09bfb0603557f104d3f3a0"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/708a4b59baad96c4718dc0bd3a3427d3ab22fedc"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/999a27b3ce9a69d54ccd5db000ec3a447bc43e6d"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/9b5f03500bc5b083c0df696d7dd169d7ef3dd0c7"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/b582aa1f66411d4adcc1aa55b8c575683fb4687e"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/bb79613a9a704469ddb8d6c6029d532a5cea384c"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/bd68ffce69f6cf8ddd3a3c32549d1d2275e49fc5"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/df16afba2378d985359812c865a15c05c70a967e"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-129"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

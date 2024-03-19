@@ -33,6 +33,56 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: switchtec: Fix stdev_release() crash after surprise hot remove\n\nA PCI device hot removal may occur while stdev->cdev is held open. The call\nto stdev_release() then happens during close or exit, at a point way past\nswitchtec_pci_remove(). Otherwise the last ref would vanish with the\ntrailing put_device(), just before return.\n\nAt that later point in time, the devm cleanup has already removed the\nstdev->mmio_mrpc mapping. Also, the stdev->pdev reference was not a counted\none. Therefore, in DMA mode, the iowrite32() in stdev_release() will cause\na fatal page fault, and the subsequent dma_free_coherent(), if reached,\nwould pass a stale &stdev->pdev->dev pointer.\n\nFix by moving MRPC DMA shutdown into switchtec_pci_remove(), after\nstdev_kill(). Counting the stdev->pdev ref is now optional, but may prevent\nfuture accidents.\n\nReproducible via the script at\nhttps://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: PCI: switchtec: corrige el bloqueo de stdev_release() despu\u00e9s de una eliminaci\u00f3n sorpresa en caliente. Puede ocurrir una eliminaci\u00f3n en caliente del dispositivo PCI mientras stdev-&gt;cdev se mantiene abierto. La llamada a stdev_release() ocurre durante el cierre o la salida, en un punto mucho m\u00e1s all\u00e1 de switchtec_pci_remove(). De lo contrario, la \u00faltima referencia desaparecer\u00eda con el put_device() final, justo antes del retorno. En ese momento posterior, la limpieza devm ya elimin\u00f3 la asignaci\u00f3n stdev-&gt;mmio_mrpc. Adem\u00e1s, la referencia stdev-&gt;pdev no se contaba. Por lo tanto, en modo DMA, iowrite32() en stdev_release() causar\u00e1 un error de p\u00e1gina fatal, y el dma_free_coherent() posterior, si se alcanza, pasar\u00eda un puntero &amp;stdev-&gt;pdev-&gt;dev obsoleto. Para solucionarlo, mueva el apagado de MRPC DMA a switchtec_pci_remove(), despu\u00e9s de stdev_kill(). Contar stdev-&gt;pdev ref ahora es opcional, pero puede evitar accidentes futuros. Reproducible a trav\u00e9s del script en https://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com"
+          }
+        ],
+        "id": "CVE-2023-52617",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:09.057",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0233b836312e39a3c763fb53512b3fa455b473b3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1d83c85922647758c1f1e4806a4c5c3cf591a20a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4a5d0528cf19dbf060313dffbe047bc11c90c24c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d8c293549946ee5078ed0ab77793cec365559355"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/df25461119d987b8c81d232cfe4411e91dcabe66"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e129c7fa7070fbce57feb0bfc5eaa65eef44b693"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ff1c7e2fb9e9c3f53715fbe04d3ac47b80be7eb8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

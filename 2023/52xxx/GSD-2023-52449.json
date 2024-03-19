@@ -187,52 +187,176 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "96DBDF46-FDFD-43F5-BB27-3C70C7E1DDD2",
+                    "versionEndExcluding": "4.19.306",
+                    "versionStartIncluding": "2.6.31",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "991BF737-6083-429B-ACD5-FB27D4143E2F",
+                    "versionEndExcluding": "5.4.268",
+                    "versionStartIncluding": "4.20",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5D2E4F24-2FBB-4434-8598-2B1499E566B5",
+                    "versionEndExcluding": "5.10.209",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E25E1389-4B0F-407A-9C94-5908FF3EE88B",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2C4951FA-80C0-4B4C-9836-6E5035DEB0F9",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmtd: Fix gluebi NULL pointer dereference caused by ftl notifier\n\nIf both ftl.ko and gluebi.ko are loaded, the notifier of ftl\ntriggers NULL pointer dereference when trying to access\n\u2018gluebi->desc\u2019 in gluebi_read().\n\nubi_gluebi_init\n  ubi_register_volume_notifier\n    ubi_enumerate_volumes\n      ubi_notify_all\n        gluebi_notify    nb->notifier_call()\n          gluebi_create\n            mtd_device_register\n              mtd_device_parse_register\n                add_mtd_device\n                  blktrans_notify_add   not->add()\n                    ftl_add_mtd         tr->add_mtd()\n                      scan_header\n                        mtd_read\n                          mtd_read_oob\n                            mtd_read_oob_std\n                              gluebi_read   mtd->read()\n                                gluebi->desc - NULL\n\nDetailed reproduction information available at the Link [1],\n\nIn the normal case, obtain gluebi->desc in the gluebi_get_device(),\nand access gluebi->desc in the gluebi_read(). However,\ngluebi_get_device() is not executed in advance in the\nftl_add_mtd() process, which leads to NULL pointer dereference.\n\nThe solution for the gluebi module is to run jffs2 on the UBI\nvolume without considering working with ftl or mtdblock [2].\nTherefore, this problem can be avoided by preventing gluebi from\ncreating the mtdblock device after creating mtd partition of the\ntype MTD_UBIVOLUME."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: mtd: corrige la desreferencia del puntero NULL de Gluebi causada por el notificador ftl. Si se cargan tanto ftl.ko como pegamentobi.ko, el notificador de ftl activa la desreferencia del puntero NULL al intentar acceder a 'gluebi-. &gt;desc' en pegamentobi_read(). ubi_gluebi_init ubi_register_volume_notifier ubi_enumerate_volumes ubi_notify_all pegamentobi_notify nb-&gt;notifier_call() pegamentobi_create mtd_device_register mtd_device_parse_register add_mtd_device blktrans_notify_add not-&gt;add() ftl_add_mtd tr-&gt;add_mtd() scan_header mtd_read mtd_read_oob mtd_read_oob_std pegamentobi_read mtd-&gt;read() pegamentobi-&gt;desc - NULL Informaci\u00f3n detallada de reproducci\u00f3n disponible en el enlace [1], en el caso normal, obtenga pegamentobi-&gt;desc en pegamentobi_get_device() y acceda a pegamentobi-&gt;desc en pegamentobi_read(). Sin embargo, pegamentobi_get_device() no se ejecuta de antemano en el proceso ftl_add_mtd(), lo que conduce a la desreferencia del puntero NULL. La soluci\u00f3n para el m\u00f3dulo pegamentobi es ejecutar jffs2 en el volumen UBI sin considerar trabajar con ftl o mtdblock [2]. Por lo tanto, este problema se puede evitar evitando que pegamentobi cree el dispositivo mtdblock despu\u00e9s de crear la partici\u00f3n mtd del tipo MTD_UBIVOLUME."
           }
         ],
         "id": "CVE-2023-52449",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-18T18:38:16.350",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 5.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:08.677",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/001a3f59d8c914ef8273461d4bf495df384cc5f8"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/1bf4fe14e97cda621522eb2f28b0a4e87c5b0745"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5389407bba1eab1266c6d83e226fb0840cb98dd5"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/a43bdc376deab5fff1ceb93dca55bcab8dbdc1d6"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/aeba358bcc8ffddf9b4a9bd0e5ec9eb338d46022"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/b36aaa64d58aaa2f2cbc8275e89bae76a2b6c3dc"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/cfd7c9d260dc0a3baaea05a122a19ab91e193c65"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/d8ac2537763b54d278b80b2b080e1652523c7d4c"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-476"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

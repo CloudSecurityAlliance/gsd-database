@@ -154,40 +154,134 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "AA78B893-1AFA-45A8-B893-D137A10AE798",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "4.20",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2C4951FA-80C0-4B4C-9836-6E5035DEB0F9",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Reject variable offset alu on PTR_TO_FLOW_KEYS\n\nFor PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off\nfor validation. However, variable offset ptr alu is not prohibited\nfor this ptr kind. So the variable offset is not checked.\n\nThe following prog is accepted:\n\n  func#0 @0\n  0: R1=ctx() R10=fp0\n  0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()\n  1: (79) r7 = *(u64 *)(r6 +144)        ; R6_w=ctx() R7_w=flow_keys()\n  2: (b7) r8 = 1024                     ; R8_w=1024\n  3: (37) r8 /= 1                       ; R8_w=scalar()\n  4: (57) r8 &= 1024                    ; R8_w=scalar(smin=smin32=0,\n  smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400))\n  5: (0f) r7 += r8\n  mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1\n  mark_precise: frame0: regs=r8 stack= before 4: (57) r8 &= 1024\n  mark_precise: frame0: regs=r8 stack= before 3: (37) r8 /= 1\n  mark_precise: frame0: regs=r8 stack= before 2: (b7) r8 = 1024\n  6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off\n  =(0x0; 0x400)) R8_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=1024,\n  var_off=(0x0; 0x400))\n  6: (79) r0 = *(u64 *)(r7 +0)          ; R0_w=scalar()\n  7: (95) exit\n\nThis prog loads flow_keys to r7, and adds the variable offset r8\nto r7, and finally causes out-of-bounds access:\n\n  BUG: unable to handle page fault for address: ffffc90014c80038\n  [...]\n  Call Trace:\n   <TASK>\n   bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]\n   __bpf_prog_run include/linux/filter.h:651 [inline]\n   bpf_prog_run include/linux/filter.h:658 [inline]\n   bpf_prog_run_pin_on_cpu include/linux/filter.h:675 [inline]\n   bpf_flow_dissect+0x15f/0x350 net/core/flow_dissector.c:991\n   bpf_prog_test_run_flow_dissector+0x39d/0x620 net/bpf/test_run.c:1359\n   bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]\n   __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475\n   __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]\n   __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]\n   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:5559\n   do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n   do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83\n   entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nFix this by rejecting ptr alu with variable offset on flow_keys.\nApplying the patch rejects the program with \"R7 pointer arithmetic\non flow_keys prohibited\"."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: bpf: Rechazar variable offset alu en PTR_TO_FLOW_KEYS Para PTR_TO_FLOW_KEYS, check_flow_keys_access() solo usa fijo para la validaci\u00f3n. Sin embargo, el desplazamiento variable ptr alu no est\u00e1 prohibido para este tipo de ptr. Por lo tanto, el desplazamiento variable no se verifica. Se acepta el siguiente programa: func#0 @0 0: R1=ctx() R10=fp0 0: (bf) r6 = r1; R1=ctx() R6_w=ctx() 1: (79) r7 = *(u64 *)(r6 +144) ; R6_w=ctx() R7_w=flujo_keys() 2: (b7) r8 = 1024 ; R8_w=1024 3: (37) r8 /= 1 ; R8_w=escalar() 4: (57) r8 &amp;= 1024 ; R8_w=escalar(smin=smin32=0, smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400)) 5: (0f) r7 += r8 mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1 mark_precise: frame0: regs=r8 pila= antes de 4: (57) r8 &amp;= 1024 mark_precise: frame0: regs=r8 pila= antes de 3: (37) r8 /= 1 mark_precise: frame0: regs=r8 pila= antes de 2: (b7 ) r8 = 1024 6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off =(0x0; 0x400)) R8_w=escalar(smin=smin32=0,smax=umax=smax32= umax32=1024, var_off=(0x0; 0x400)) 6: (79) r0 = *(u64 *)(r7 +0) ; R0_w=scalar() 7: (95) salida Este programa carga flow_keys en r7, agrega la variable offset r8 a r7 y finalmente causa acceso fuera de l\u00edmites: ERROR: no se puede manejar el error de p\u00e1gina para la direcci\u00f3n: ffffc90014c80038 [. ..] Seguimiento de llamadas:  bpf_dispatcher_nop_func include/linux/bpf.h:1231 [en l\u00ednea] __bpf_prog_run include/linux/filter.h:651 [en l\u00ednea] bpf_prog_run include/linux/filter.h:658 [en l\u00ednea] bpf_prog_run_pin_on_cpu include /linux/filter.h:675 [Inline] BPF_FLOW_DISSECT+0x15f/0x350 net/Core/Flow_Dissector.C: 991 BPF_Prog_Test_Run_Flow_Dissector+0x39D/0x620 NET/BPF/Test_Run.C: 1359 BPF_PRF_TISM 4107 [ en l\u00ednea] __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475 __do_sys_bpf kernel/bpf/syscall.c:5561 [en l\u00ednea] __se_sys_bpf kernel/bpf/syscall.c:5559 [en l\u00ednea] __x64_sys_bpf+0x73 /0xb0 kernel/bpf /syscall.c:5559 do_syscall_x64 arch/x86/entry/common.c:52 [inline] do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83 Entry_SYSCALL_64_after_hwframe+0x63/0x6b Solucionar esto rechazando ptr alu con variable compensaci\u00f3n en flow_keys. La aplicaci\u00f3n del parche rechaza el programa con \"La aritm\u00e9tica de puntero R7 en flow_keys est\u00e1 prohibida\"."
           }
         ],
         "id": "CVE-2024-26589",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-18T17:56:56.953",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:09.050",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/1b500d5d6cecf98dd6ca88bc9e7ae1783c83e6d3"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/22c7fa171a02d310e3a3f6ed46a698ca8a0060ed"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/29ffa63f21bcdcef3e36b03cccf9d0cd031f6ab0"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/4108b86e324da42f7ed425bd71632fd844300dc8"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/e8d3872b617c21100c5ee4f64e513997a68c2e3d"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-119"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

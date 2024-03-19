@@ -33,6 +33,60 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nllc: Drop support for ETH_P_TR_802_2.\n\nsyzbot reported an uninit-value bug below. [0]\n\nllc supports ETH_P_802_2 (0x0004) and used to support ETH_P_TR_802_2\n(0x0011), and syzbot abused the latter to trigger the bug.\n\n  write$tun(r0, &(0x7f0000000040)={@val={0x0, 0x11}, @val, @mpls={[], @llc={@snap={0xaa, 0x1, ')', \"90e5dd\"}}}}, 0x16)\n\nllc_conn_handler() initialises local variables {saddr,daddr}.mac\nbased on skb in llc_pdu_decode_sa()/llc_pdu_decode_da() and passes\nthem to __llc_lookup().\n\nHowever, the initialisation is done only when skb->protocol is\nhtons(ETH_P_802_2), otherwise, __llc_lookup_established() and\n__llc_lookup_listener() will read garbage.\n\nThe missing initialisation existed prior to commit 211ed865108e\n(\"net: delete all instances of special processing for token ring\").\n\nIt removed the part to kick out the token ring stuff but forgot to\nclose the door allowing ETH_P_TR_802_2 packets to sneak into llc_rcv().\n\nLet's remove llc_tr_packet_type and complete the deprecation.\n\n[0]:\nBUG: KMSAN: uninit-value in __llc_lookup_established+0xe9d/0xf90\n __llc_lookup_established+0xe9d/0xf90\n __llc_lookup net/llc/llc_conn.c:611 [inline]\n llc_conn_handler+0x4bd/0x1360 net/llc/llc_conn.c:791\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n __netif_receive_skb_one_core net/core/dev.c:5527 [inline]\n __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5641\n netif_receive_skb_internal net/core/dev.c:5727 [inline]\n netif_receive_skb+0x58/0x660 net/core/dev.c:5786\n tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555\n tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002\n tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n call_write_iter include/linux/fs.h:2020 [inline]\n new_sync_write fs/read_write.c:491 [inline]\n vfs_write+0x8ef/0x1490 fs/read_write.c:584\n ksys_write+0x20f/0x4c0 fs/read_write.c:637\n __do_sys_write fs/read_write.c:649 [inline]\n __se_sys_write fs/read_write.c:646 [inline]\n __x64_sys_write+0x93/0xd0 fs/read_write.c:646\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x44/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nLocal variable daddr created at:\n llc_conn_handler+0x53/0x1360 net/llc/llc_conn.c:783\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n\nCPU: 1 PID: 5004 Comm: syz-executor994 Not tainted 6.6.0-syzkaller-14500-g1c41041124bd #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: llc: Eliminaci\u00f3n del soporte para ETH_P_TR_802_2. syzbot inform\u00f3 un error de valor uninit a continuaci\u00f3n. [0] llc admite ETH_P_802_2 (0x0004) y sol\u00eda admitir ETH_P_TR_802_2 (0x0011), y syzbot abus\u00f3 de este \u00faltimo para desencadenar el error. escribir$tun(r0, &amp;(0x7f0000000040)={@val={0x0, 0x11}, @val, @mpls={[], @llc={@snap={0xaa, 0x1, ')', \"90e5dd\" }}}}, 0x16) llc_conn_handler() inicializa las variables locales {saddr,daddr}.mac basadas en skb en llc_pdu_decode_sa()/llc_pdu_decode_da() y las pasa a __llc_lookup(). Sin embargo, la inicializaci\u00f3n se realiza solo cuando skb-&gt;protocol es htons(ETH_P_802_2); de lo contrario, __llc_lookup_establecido() y __llc_lookup_listener() leer\u00e1n basura. La inicializaci\u00f3n faltante exist\u00eda antes de el commit 211ed865108e (\"net: eliminar todas las instancias de procesamiento especial para Token Ring\"). Quit\u00f3 la parte para expulsar el token ring, pero se olvid\u00f3 de cerrar la puerta permitiendo que los paquetes ETH_P_TR_802_2 se colaran en llc_rcv(). Eliminemos llc_tr_packet_type y completemos la desaprobaci\u00f3n. [0]: ERROR: KMSAN: valor uninit en __llc_lookup_establecido+0xe9d/0xf90 __llc_lookup_establecido+0xe9d/0xf90 __llc_lookup net/llc/llc_conn.c:611 [en l\u00ednea] llc_conn_handler+0x4bd/0x1360 net/llc/llc_conn.c:79 1 llc_rcv +0xfbb/0x14a0 net/llc/llc_input.c:206 __netif_receive_skb_one_core net/core/dev.c:5527 [en l\u00ednea] __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5641 netif_receive_skb_internal net/core/dev.c:5727 [en l\u00ednea] netif_receive_skb+0x58/0x660 net/core/dev.c:5786 tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555 tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002 tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048 call_write_iter include/linux/fs.h:2020 [en l\u00ednea] new_sync_write fs/read_write.c:491 [en l\u00ednea] vfs_write+0x8ef/0x1490 fs/read_write.c:584 ksys_write+0x20f/0x4c0 fs/read_write.c:637 __do_sys_write fs/read_write.c:649 [en l\u00ednea] __se_sys_write fs/read_write.c:646 [en l\u00ednea] __x64_sys_write+0x93/0xd0 fs/read_write.c:646 do_syscall_x64 arch/x86/entry/common. c: 51 [en l\u00ednea] do_syscall_64+0x44/0x110 arch/x86/entry/comunes.c: 82 entry_syscall_64_after_hwframe+0x63/0x6b local variable daddr creado FBB /0x14a0 net/llc/llc_input.c:206 CPU: 1 PID: 5004 Comm: syz-executor994 No contaminado 6.6.0-syzkaller-14500-g1c41041124bd #0 Nombre de hardware: Google Google Compute Engine/Google Compute Engine, BIOS Google 10 /09/2023"
+          }
+        ],
+        "id": "CVE-2024-26635",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:10.203",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/165ad1e22779685c3ed3dd349c6c4c632309cc62"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/660c3053d992b68fee893a0e9ec9159228cffdc6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9ccdef19cf9497c2803b005369668feb91cacdfd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b8e8838f82f332ae80c643dbb1ca4418d0628097"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c0fe2fe7a5a291dfcf6dc64301732c8d3dc6a828"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/df57fc2f2abf548aa889a36ab0bdcc94a75399dc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e3f9bed9bee261e3347131764e42aeedf1ffea61"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f1f34a515fb1e25e85dee94f781e7869ae351fb8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

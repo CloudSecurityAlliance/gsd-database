@@ -33,6 +33,40 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtw88: sdio: Honor the host max_req_size in the RX path\n\nLukas reports skb_over_panic errors on his Banana Pi BPI-CM4 which comes\nwith an Amlogic A311D (G12B) SoC and a RTL8822CS SDIO wifi/Bluetooth\ncombo card. The error he observed is identical to what has been fixed\nin commit e967229ead0e (\"wifi: rtw88: sdio: Check the HISR RX_REQUEST\nbit in rtw_sdio_rx_isr()\") but that commit didn't fix Lukas' problem.\n\nLukas found that disabling or limiting RX aggregation works around the\nproblem for some time (but does not fully fix it). In the following\ndiscussion a few key topics have been discussed which have an impact on\nthis problem:\n- The Amlogic A311D (G12B) SoC has a hardware bug in the SDIO controller\n  which prevents DMA transfers. Instead all transfers need to go through\n  the controller SRAM which limits transfers to 1536 bytes\n- rtw88 chips don't split incoming (RX) packets, so if a big packet is\n  received this is forwarded to the host in it's original form\n- rtw88 chips can do RX aggregation, meaning more multiple incoming\n  packets can be pulled by the host from the card with one MMC/SDIO\n  transfer. This Depends on settings in the REG_RXDMA_AGG_PG_TH\n  register (BIT_RXDMA_AGG_PG_TH limits the number of packets that will\n  be aggregated, BIT_DMA_AGG_TO_V1 configures a timeout for aggregation\n  and BIT_EN_PRE_CALC makes the chip honor the limits more effectively)\n\nUse multiple consecutive reads in rtw_sdio_read_port() and limit the\nnumber of bytes which are copied by the host from the card in one\nMMC/SDIO transfer. This allows receiving a buffer that's larger than\nthe hosts max_req_size (number of bytes which can be transferred in\none MMC/SDIO transfer). As a result of this the skb_over_panic error\nis gone as the rtw88 driver is now able to receive more than 1536 bytes\nfrom the card (either because the incoming packet is larger than that\nor because multiple packets have been aggregated).\n\nIn case of an receive errors (-EILSEQ has been observed by Lukas) we\nneed to drain the remaining data from the card's buffer, otherwise the\ncard will return corrupt data for the next rtw_sdio_read_port() call."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: wifi: rtw88: sdio: respeta el host max_req_size en la ruta RX. Lukas informa errores skb_over_panic en su Banana Pi BPI-CM4 que viene con un SoC Amlogic A311D (G12B) y un RTL8822CS. Tarjeta combinada SDIO wifi/Bluetooth. El error que observ\u00f3 es id\u00e9ntico a lo que se solucion\u00f3 en el commit e967229ead0e (\"wifi: rtw88: sdio: verifique el bit HISR RX_REQUEST en rtw_sdio_rx_isr()\") pero esa confirmaci\u00f3n no solucion\u00f3 el problema de Lukas. Lukas descubri\u00f3 que deshabilitar o limitar la agregaci\u00f3n de RX soluciona el problema durante alg\u00fan tiempo (pero no lo soluciona por completo). En la siguiente discusi\u00f3n se discutieron algunos temas clave que tienen un impacto en este problema: - El SoC Amlogic A311D (G12B) tiene un error de hardware en el controlador SDIO que impide las transferencias DMA. En lugar de ello, todas las transferencias deben pasar por el controlador SRAM, que limita las transferencias a 1536 bytes. Los chips rtw88 no dividen los paquetes entrantes (RX), por lo que si se recibe un paquete grande, este se reenv\u00eda al host en su forma original. Los chips rtw88 pueden realice la agregaci\u00f3n RX, lo que significa que el host puede extraer m\u00e1s paquetes entrantes de la tarjeta con una transferencia MMC/SDIO. Esto depende de la configuraci\u00f3n en el registro REG_RXDMA_AGG_PG_TH (BIT_RXDMA_AGG_PG_TH limita la cantidad de paquetes que se agregar\u00e1n, BIT_DMA_AGG_TO_V1 configura un tiempo de espera para la agregaci\u00f3n y BIT_EN_PRE_CALC hace que el chip respete los l\u00edmites de manera m\u00e1s efectiva) Use m\u00faltiples lecturas consecutivas en rtw_sdio_read_port() y limite la cantidad de bytes que el host copia desde la tarjeta en una transferencia MMC/SDIO. Esto permite recibir un b\u00fafer que es mayor que el max_req_size del host (n\u00famero de bytes que se pueden transferir en una transferencia MMC/SDIO). Como resultado de esto, el error skb_over_panic desapareci\u00f3 ya que el controlador rtw88 ahora puede recibir m\u00e1s de 1536 bytes de la tarjeta (ya sea porque el paquete entrante es m\u00e1s grande o porque se han agregado varios paquetes). En caso de errores de recepci\u00f3n (Lukas ha observado -EILSEQ), debemos drenar los datos restantes del b\u00fafer de la tarjeta; de lo contrario, la tarjeta devolver\u00e1 datos corruptos para la siguiente llamada a rtw_sdio_read_port()."
+          }
+        ],
+        "id": "CVE-2023-52611",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:08.157",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/00384f565a91c08c4bedae167f749b093d10e3fe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0e9ffff72a0674cd6656314dbd99cdd2123a3030"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5b5ddf21b978ec315cab9d9e7e6ac7374791a8c7"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

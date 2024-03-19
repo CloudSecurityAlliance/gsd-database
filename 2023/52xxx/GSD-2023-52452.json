@@ -132,32 +132,106 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5506E74E-8B6D-44EB-8689-EA6ED09F7FFB",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "5.12",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Fix accesses to uninit stack slots\n\nPrivileged programs are supposed to be able to read uninitialized stack\nmemory (ever since 6715df8d5) but, before this patch, these accesses\nwere permitted inconsistently. In particular, accesses were permitted\nabove state->allocated_stack, but not below it. In other words, if the\nstack was already \"large enough\", the access was permitted, but\notherwise the access was rejected instead of being allowed to \"grow the\nstack\". This undesired rejection was happening in two places:\n- in check_stack_slot_within_bounds()\n- in check_stack_range_initialized()\nThis patch arranges for these accesses to be permitted. A bunch of tests\nthat were relying on the old rejection had to change; all of them were\nchanged to add also run unprivileged, in which case the old behavior\npersists. One tests couldn't be updated - global_func16 - because it\ncan't run unprivileged for other reasons.\n\nThis patch also fixes the tracking of the stack size for variable-offset\nreads. This second fix is bundled in the same commit as the first one\nbecause they're inter-related. Before this patch, writes to the stack\nusing registers containing a variable offset (as opposed to registers\nwith fixed, known values) were not properly contributing to the\nfunction's needed stack size. As a result, it was possible for a program\nto verify, but then to attempt to read out-of-bounds data at runtime\nbecause a too small stack had been allocated for it.\n\nEach function tracks the size of the stack it needs in\nbpf_subprog_info.stack_depth, which is maintained by\nupdate_stack_depth(). For regular memory accesses, check_mem_access()\nwas calling update_state_depth() but it was passing in only the fixed\npart of the offset register, ignoring the variable offset. This was\nincorrect; the minimum possible value of that register should be used\ninstead.\n\nThis tracking is now fixed by centralizing the tracking of stack size in\ngrow_stack_state(), and by lifting the calls to grow_stack_state() to\ncheck_stack_access_within_bounds() as suggested by Andrii. The code is\nnow simpler and more convincingly tracks the correct maximum stack size.\ncheck_stack_range_initialized() can now rely on enough stack having been\nallocated for the access; this helps with the fix for the first issue.\n\nA few tests were changed to also check the stack depth computation. The\none that fails without this patch is verifier_var_off:stack_write_priv_vs_unpriv."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: bpf: corrige los accesos a las ranuras de la pila uninit. Se supone que los programas privilegiados pueden leer la memoria de la pila no inicializada (desde 6715df8d5) pero, antes de este parche, estos accesos se permit\u00edan de forma inconsistente. En particular, se permit\u00edan accesos por encima de state-&gt;allocated_stack, pero no por debajo de \u00e9l. En otras palabras, si la pila ya era \"lo suficientemente grande\", se permit\u00eda el acceso, pero en caso contrario se rechazaba el acceso en lugar de permitir \"hacer crecer la pila\". Este rechazo no deseado ocurr\u00eda en dos lugares: - en check_stack_slot_within_bounds() - en check_stack_range_initialized() Este parche dispone que estos accesos sean permitidos. Un mont\u00f3n de pruebas que depend\u00edan del antiguo rechazo tuvieron que cambiar; todos ellos se cambiaron para agregar que tambi\u00e9n se ejecutan sin privilegios, en cuyo caso el comportamiento anterior persiste. Una prueba no se pudo actualizar (global_func16) porque no se puede ejecutar sin privilegios por otros motivos. Este parche tambi\u00e9n corrige el seguimiento del tama\u00f1o de la pila para lecturas con desplazamiento variable. Esta segunda soluci\u00f3n se incluye en la misma confirmaci\u00f3n que la primera porque est\u00e1n interrelacionadas. Antes de este parche, las escrituras en la pila usando registros que conten\u00edan un desplazamiento variable (a diferencia de registros con valores fijos y conocidos) no contribu\u00edan adecuadamente al tama\u00f1o de pila necesario de la funci\u00f3n. Como resultado, era posible que un programa verificara, pero luego intentara leer datos fuera de l\u00edmites en tiempo de ejecuci\u00f3n porque se le hab\u00eda asignado una pila demasiado peque\u00f1a. Cada funci\u00f3n rastrea el tama\u00f1o de la pila que necesita en bpf_subprog_info.stack_ Depth, que es mantenido por update_stack_ Depth(). Para accesos regulares a la memoria, check_mem_access() estaba llamando a update_state_ Depth() pero pasaba solo la parte fija del registro de compensaci\u00f3n, ignorando la variable compensaci\u00f3n. Esto era incorrecto; en su lugar se debe utilizar el valor m\u00ednimo posible de ese registro. Este seguimiento ahora se soluciona centralizando el seguimiento del tama\u00f1o de la pila en grow_stack_state() y elevando las llamadas a grow_stack_state() a check_stack_access_within_bounds() como lo sugiere Andrii. El c\u00f3digo ahora es m\u00e1s simple y rastrea de manera m\u00e1s convincente el tama\u00f1o m\u00e1ximo de pila correcto. check_stack_range_initialized() ahora puede confiar en que se haya asignado suficiente pila para el acceso; esto ayuda con la soluci\u00f3n del primer problema. Se cambiaron algunas pruebas para verificar tambi\u00e9n el c\u00e1lculo de la profundidad de la pila. El que falla sin este parche es verifier_var_off:stack_write_priv_vs_unpriv."
           }
         ],
         "id": "CVE-2023-52452",
-        "lastModified": "2024-02-22T19:07:27.197",
-        "metrics": {},
+        "lastModified": "2024-03-18T18:24:33.550",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-22T17:15:08.830",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/0954982db8283016bf38e9db2da5adf47a102e19"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/6b4a64bafd107e521c01eec3453ce94a3fb38529"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/fbcf372c8eda2290470268e0afb5ab5d5f5d5fde"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-665"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

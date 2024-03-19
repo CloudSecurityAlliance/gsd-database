@@ -33,6 +33,52 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: add sanity checks to rx zerocopy\n\nTCP rx zerocopy intent is to map pages initially allocated\nfrom NIC drivers, not pages owned by a fs.\n\nThis patch adds to can_map_frag() these additional checks:\n\n- Page must not be a compound one.\n- page->mapping must be NULL.\n\nThis fixes the panic reported by ZhangPeng.\n\nsyzbot was able to loopback packets built with sendfile(),\nmapping pages owned by an ext4 file to TCP rx zerocopy.\n\nr3 = socket$inet_tcp(0x2, 0x1, 0x0)\nmmap(&(0x7f0000ff9000/0x4000)=nil, 0x4000, 0x0, 0x12, r3, 0x0)\nr4 = socket$inet_tcp(0x2, 0x1, 0x0)\nbind$inet(r4, &(0x7f0000000000)={0x2, 0x4e24, @multicast1}, 0x10)\nconnect$inet(r4, &(0x7f00000006c0)={0x2, 0x4e24, @empty}, 0x10)\nr5 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)\nfallocate(r5, 0x0, 0x0, 0x85b8)\nsendfile(r4, r5, 0x0, 0x8ba0)\ngetsockopt$inet_tcp_TCP_ZEROCOPY_RECEIVE(r4, 0x6, 0x23,\n    &(0x7f00000001c0)={&(0x7f0000ffb000/0x3000)=nil, 0x3000, 0x0, 0x0, 0x0,\n    0x0, 0x0, 0x0, 0x0}, &(0x7f0000000440)=0x40)\nr6 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: tcp: agregue controles de seguridad a rx zerocopy La intenci\u00f3n de TCP rx zerocopy es mapear p\u00e1ginas inicialmente asignadas desde controladores NIC, no p\u00e1ginas propiedad de un fs. Este parche a\u00f1ade a can_map_frag() estas comprobaciones adicionales: - La p\u00e1gina no debe ser compuesta. - p\u00e1gina-&gt;mapeo debe ser NULL. Esto soluciona el p\u00e1nico informado por ZhangPeng. syzbot pudo realizar un loopback de paquetes creados con sendfile(), asignando p\u00e1ginas propiedad de un archivo ext4 a TCP rx zerocopy. r3 = socket$inet_tcp(0x2, 0x1, 0x0) mmap(&amp;(0x7f0000ff9000/0x4000)=nil, 0x4000, 0x0, 0x12, r3, 0x0) r4 = socket$inet_tcp(0x2, 0x1, 0x0) bind$inet(r4 , &amp;(0x7f0000000000)={0x2, 0x4e24, @multicast1}, 0x10) connect$inet(r4, &amp;(0x7f00000006c0)={0x2, 0x4e24, @empty}, 0x10) r5 = openat$dir(0xffffffffffffff9c, &amp;(0x7f00) 000000c0 )='./file0\\x00', 0x181e42, 0x0) fallocate(r5, 0x0, 0x0, 0x85b8) sendfile(r4, r5, 0x0, 0x8ba0) getsockopt$inet_tcp_TCP_ZEROCOPY_RECEIVE(r4, 0x6, 0x23, &amp;(0x7f00000) 001c0)={ &amp;(0x7f0000ffb000/0x3000)=nil, 0x3000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, &amp;(0x7f0000000440)=0x40) r6 = openat$dir(0xffffffffffffff9c, &amp;(0x7f000) 00000c0)='./archivo0 \\x00', 0x181e42, 0x0)"
+          }
+        ],
+        "id": "CVE-2024-26640",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:11.043",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1b8adcc0e2c584fec778add7777fe28e20781e60"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/577e4432f3ac810049cb7e6b71f4d96ec7c6e894"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/718f446e60316bf606946f7f42367d691d21541e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b383d4ea272fe5795877506dcce5aad1f6330e5e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d15cc0f66884ef2bed28c7ccbb11c102aa3a0760"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f48bf9a83b1666d934247cb58a9887d7b3127b6f"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

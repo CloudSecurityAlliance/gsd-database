@@ -33,6 +33,60 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix race between mmput() and do_exit()\n\nTask A calls binder_update_page_range() to allocate and insert pages on\na remote address space from Task B. For this, Task A pins the remote mm\nvia mmget_not_zero() first. This can race with Task B do_exit() and the\nfinal mmput() refcount decrement will come from Task A.\n\n  Task A            | Task B\n  ------------------+------------------\n  mmget_not_zero()  |\n                    |  do_exit()\n                    |    exit_mm()\n                    |      mmput()\n  mmput()           |\n    exit_mmap()     |\n      remove_vma()  |\n        fput()      |\n\nIn this case, the work of ____fput() from Task B is queued up in Task A\nas TWA_RESUME. So in theory, Task A returns to userspace and the cleanup\nwork gets executed. However, Task A instead sleep, waiting for a reply\nfrom Task B that never comes (it's dead).\n\nThis means the binder_deferred_release() is blocked until an unrelated\nbinder event forces Task A to go back to userspace. All the associated\ndeath notifications will also be delayed until then.\n\nIn order to fix this use mmput_async() that will schedule the work in\nthe corresponding mm->async_put_work WQ instead of Task A."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: binder: corrige la ejecuci\u00f3n entre mmput() y do_exit() La tarea A llama a binder_update_page_range() para asignar e insertar p\u00e1ginas en un espacio de direcciones remoto desde la tarea B. Para esto, la tarea A fija el mm remoto a trav\u00e9s de mmget_not_zero() primero. Esto puede competir con la Tarea B do_exit() y la disminuci\u00f3n final del recuento de mmput() provendr\u00e1 de la Tarea A. Tarea A | Tarea B ------------------+------------------ mmget_not_zero() | | hacer_salir() | salida_mm() | mmput() mmput() | salida_mmap() | eliminar_vma() | salida() | En este caso, el trabajo de ____fput() de la Tarea B se pone en cola en la Tarea A como TWA_RESUME. Entonces, en teor\u00eda, la Tarea A regresa al espacio de usuario y se ejecuta el trabajo de limpieza. Sin embargo, la Tarea A duerme, esperando una respuesta de la Tarea B que nunca llega (est\u00e1 muerta). Esto significa que binder_deferred_release() est\u00e1 bloqueado hasta que un evento de carpeta no relacionado obligue a la Tarea A a regresar al espacio de usuario. Todas las notificaciones de defunci\u00f3n asociadas tambi\u00e9n se retrasar\u00e1n hasta entonces. Para solucionar este problema, utilice mmput_async() que programar\u00e1 el trabajo en el mm-&gt;async_put_work WQ correspondiente en lugar de la Tarea A."
+          }
+        ],
+        "id": "CVE-2023-52609",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:07.743",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/252a2a5569eb9f8d16428872cc24dea1ac0bb097"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6696f76c32ff67fec26823fc2df46498e70d9bf3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/67f16bf2cc1698fd50e01ee8a2becc5a8e6d3a3e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/77d210e8db4d61d43b2d16df66b1ec46fad2ee01"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7e7a0d86542b0ea903006d3f42f33c4f7ead6918"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/95b1d336b0642198b56836b89908d07b9a0c9608"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/98fee5bee97ad47b527a997d5786410430d1f0e9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9a9ab0d963621d9d12199df9817e66982582d5a5"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

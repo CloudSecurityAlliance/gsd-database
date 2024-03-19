@@ -33,6 +33,40 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm, kmsan: fix infinite recursion due to RCU critical section\n\nAlexander Potapenko writes in [1]: \"For every memory access in the code\ninstrumented by KMSAN we call kmsan_get_metadata() to obtain the metadata\nfor the memory being accessed.  For virtual memory the metadata pointers\nare stored in the corresponding `struct page`, therefore we need to call\nvirt_to_page() to get them.\n\nAccording to the comment in arch/x86/include/asm/page.h,\nvirt_to_page(kaddr) returns a valid pointer iff virt_addr_valid(kaddr) is\ntrue, so KMSAN needs to call virt_addr_valid() as well.\n\nTo avoid recursion, kmsan_get_metadata() must not call instrumented code,\ntherefore ./arch/x86/include/asm/kmsan.h forks parts of\narch/x86/mm/physaddr.c to check whether a virtual address is valid or not.\n\nBut the introduction of rcu_read_lock() to pfn_valid() added instrumented\nRCU API calls to virt_to_page_or_null(), which is called by\nkmsan_get_metadata(), so there is an infinite recursion now.  I do not\nthink it is correct to stop that recursion by doing\nkmsan_enter_runtime()/kmsan_exit_runtime() in kmsan_get_metadata(): that\nwould prevent instrumented functions called from within the runtime from\ntracking the shadow values, which might introduce false positives.\"\n\nFix the issue by switching pfn_valid() to the _sched() variant of\nrcu_read_lock/unlock(), which does not require calling into RCU.  Given\nthe critical section in pfn_valid() is very small, this is a reasonable\ntrade-off (with preemptible RCU).\n\nKMSAN further needs to be careful to suppress calls into the scheduler,\nwhich would be another source of recursion.  This can be done by wrapping\nthe call to pfn_valid() into preempt_disable/enable_no_resched().  The\ndownside is that this sacrifices breaking scheduling guarantees; however,\na kernel compiled with KMSAN has already given up any performance\nguarantees due to being heavily instrumented.\n\nNote, KMSAN code already disables tracing via Makefile, and since mmzone.h\nis included, it is not necessary to use the notrace variant, which is\ngenerally preferred in all other cases."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: mm, kmsan: corrige la recursividad infinita debido a la secci\u00f3n cr\u00edtica de RCU Alexander Potapenko escribe en [1]: \"Para cada acceso a memoria en el c\u00f3digo instrumentado por KMSAN llamamos kmsan_get_metadata() para obtener los metadatos de la memoria a la que se accede. Para la memoria virtual, los punteros de metadatos se almacenan en la `p\u00e1gina de estructura` correspondiente, por lo tanto, necesitamos llamar a virt_to_page() para obtenerlos. De acuerdo con el comentario en arch/x86/include/asm/page .h, virt_to_page(kaddr) devuelve un puntero v\u00e1lido si virt_addr_valid(kaddr) es verdadero, por lo que KMSAN tambi\u00e9n necesita llamar a virt_addr_valid(). Para evitar la recursividad, kmsan_get_metadata() no debe llamar al c\u00f3digo instrumentado, por lo tanto ./arch/x86/ include/asm/kmsan.h bifurca partes de arch/x86/mm/physaddr.c para verificar si una direcci\u00f3n virtual es v\u00e1lida o no, pero la introducci\u00f3n de rcu_read_lock() a pfn_valid() agreg\u00f3 llamadas API de RCU instrumentadas a virt_to_page_or_null() , que es llamado por kmsan_get_metadata(), por lo que ahora hay una recursividad infinita. No creo que sea correcto detener esa recursividad haciendo kmsan_enter_runtime()/kmsan_exit_runtime() en kmsan_get_metadata(): eso evitar\u00eda que las funciones instrumentadas llamadas desde el tiempo de ejecuci\u00f3n rastreen los valores ocultos, lo que podr\u00eda introducir falsos positivos. problema al cambiar pfn_valid() a la variante _sched() de rcu_read_lock/unlock(), que no requiere llamar a RCU. Dado que la secci\u00f3n cr\u00edtica en pfn_valid() es muy peque\u00f1a, esta es una compensaci\u00f3n razonable (con RCU interrumpible ). Adem\u00e1s, KMSAN debe tener cuidado de suprimir las llamadas al programador, lo que ser\u00eda otra fuente de recursividad. Esto se puede hacer envolviendo la llamada a pfn_valid() en preempt_disable/enable_no_resched(). La desventaja es que esto sacrifica la interrupci\u00f3n de la programaci\u00f3n. garant\u00edas; sin embargo, un kernel compilado con KMSAN ya ha renunciado a cualquier garant\u00eda de rendimiento debido a que est\u00e1 fuertemente instrumentado. Tenga en cuenta que el c\u00f3digo KMSAN ya deshabilita el seguimiento a trav\u00e9s de Makefile y, dado que mmzone.h est\u00e1 incluido, no es necesario usar la variante notrace, que generalmente se prefiere en todos los dem\u00e1s casos."
+          }
+        ],
+        "id": "CVE-2024-26639",
+        "lastModified": "2024-03-18T12:38:25.490",
+        "metrics": {},
+        "published": "2024-03-18T11:15:10.880",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5a33420599fa0288792537e6872fd19cc8607ea6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6335c0cdb2ea0ea02c999e04d34fd84f69fb27ff"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dc904345e3771aa01d0b8358b550802fdc6fe00b"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
