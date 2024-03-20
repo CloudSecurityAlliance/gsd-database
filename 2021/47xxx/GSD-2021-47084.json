@@ -180,49 +180,16 @@
         "descriptions": [
           {
             "lang": "en",
-            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nhamradio: defer ax25 kfree after unregister_netdev\n\nThere is a possible race condition (use-after-free) like below\n\n (USE)                       |  (FREE)\nax25_sendmsg                 |\n ax25_queue_xmit             |\n  dev_queue_xmit             |\n   __dev_queue_xmit          |\n    __dev_xmit_skb           |\n     sch_direct_xmit         | ...\n      xmit_one               |\n       netdev_start_xmit     | tty_ldisc_kill\n        __netdev_start_xmit  |  mkiss_close\n         ax_xmit             |   kfree\n          ax_encaps          |\n                             |\n\nEven though there are two synchronization primitives before the kfree:\n1. wait_for_completion(&ax->dead). This can prevent the race with\nroutines from mkiss_ioctl. However, it cannot stop the routine coming\nfrom upper layer, i.e., the ax25_sendmsg.\n\n2. netif_stop_queue(ax->dev). It seems that this line of code aims to\nhalt the transmit queue but it fails to stop the routine that already\nbeing xmit.\n\nThis patch reorder the kfree after the unregister_netdev to avoid the\npossible UAF as the unregister_netdev() is well synchronized and won't\nreturn if there is a running routine."
+            "value": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
           }
         ],
         "id": "CVE-2021-47084",
-        "lastModified": "2024-03-05T13:41:01.900",
+        "lastModified": "2024-03-19T14:15:07.540",
         "metrics": {},
         "published": "2024-03-04T18:15:07.253",
-        "references": [
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/3e0588c291d6ce225f2b891753ca41d45ba42469"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/450121075a6a6f1d50f97225d3396315309d61a1"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/896193a02a2981e60c40d4614fd095ce92135ccd"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/8a1a314965a17c62084a056b4f2cb7a770854c90"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/b5b193d0c67180fefdc664650138e3b7959df615"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/cb6c99aedd2c843056a598a8907a6128cb07603b"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/eaa816a86e629cbcc0a94f38391fee09231628c7"
-          },
-          {
-            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-            "url": "https://git.kernel.org/stable/c/ef5f7bfa19e3fc366f4c6d1a841ceaddf7a9f5d4"
-          }
-        ],
+        "references": [],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Rejected"
       }
     }
   }
