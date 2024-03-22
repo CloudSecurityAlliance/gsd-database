@@ -147,6 +147,103 @@
         "advisory": "GHSA-6q4w-9x56-rmwq",
         "discovery": "UNKNOWN"
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Deno is a JavaScript, TypeScript, and WebAssembly runtime. In version 1.39.0, use of raw file descriptors in `op_node_ipc_pipe()` leads to premature close of arbitrary file descriptors, allowing standard input to be re-opened as a different resource resulting in permission prompt bypass. Node child_process IPC relies on the JS side to pass the raw IPC file descriptor to `op_node_ipc_pipe()`, which returns a `IpcJsonStreamResource` ID associated with the file descriptor. On closing the resource, the raw file descriptor is closed together.\n\nUse of raw file descriptors in `op_node_ipc_pipe()` leads to premature close of arbitrary file descriptors. This allow standard input (fd 0) to be closed and re-opened for a different resource, which allows a silent permission prompt bypass. This is exploitable by an attacker controlling the code executed inside a Deno runtime to obtain arbitrary code execution on the host machine regardless of permissions.\n\nThis bug is known to be exploitable. There is a working exploit that achieves arbitrary code execution by bypassing prompts from zero permissions, additionally abusing the fact that Cache API lacks filesystem permission checks. The attack can be conducted silently as stderr can also be closed, suppressing all prompt outputs.\n\nVersion 1.39.1 fixes the bug.\n"
+          },
+          {
+            "lang": "es",
+            "value": "Deno es un tiempo de ejecuci\u00f3n de JavaScript, TypeScript y WebAssembly. En la versi\u00f3n 1.39.0, el uso de descriptores de archivos sin formato en `op_node_ipc_pipe()` conduce al cierre prematuro de descriptores de archivos arbitrarios, lo que permite volver a abrir la entrada est\u00e1ndar como un recurso diferente, lo que da como resultado la omisi\u00f3n de la solicitud de permiso. El nodo child_process IPC depende del lado JS para pasar el descriptor de archivo IPC sin formato a `op_node_ipc_pipe()`, que devuelve un ID de `IpcJsonStreamResource` asociado con el descriptor de archivo. Al cerrar el recurso, el descriptor del archivo sin formato se cierra junto. El uso de descriptores de archivos sin formato en `op_node_ipc_pipe()` conduce al cierre prematuro de descriptores de archivos arbitrarios. Esto permite cerrar y volver a abrir la entrada est\u00e1ndar (fd 0) para un recurso diferente, lo que permite omitir la solicitud de permiso silenciosa. Esto es explotable por un atacante que controla el c\u00f3digo ejecutado dentro de un tiempo de ejecuci\u00f3n de Deno para obtener la ejecuci\u00f3n de c\u00f3digo arbitrario en la m\u00e1quina host, independientemente de los permisos. Se sabe que este error es explotable. Existe un exploit funcional que logra la ejecuci\u00f3n de c\u00f3digo arbitrario al evadir solicitudes de permisos cero, abusando adem\u00e1s del hecho de que la API de cach\u00e9 carece de comprobaciones de permisos del sistema de archivos. El ataque se puede realizar de forma silenciosa ya que stderr tambi\u00e9n se puede cerrar, suprimiendo todas las salidas de aviso. La versi\u00f3n 1.39.1 corrige el error."
+          }
+        ],
+        "id": "CVE-2024-27933",
+        "lastModified": "2024-03-21T12:58:51.093",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.2,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "HIGH",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.5,
+              "impactScore": 6.0,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-03-21T02:52:22.197",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L214"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L220"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L225"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L241"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L256"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L265"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/blob/v1.39.0/runtime/permissions/prompter.rs#L99"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/commit/55fac9f5ead6d30996400e8597c969b675c5a22b"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/commit/5a91a065b882215dde209baf626247e54c21a392"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/security/advisories/GHSA-6q4w-9x56-rmwq"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-863"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
+          }
+        ]
+      }
     }
   }
 }
