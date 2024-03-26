@@ -33,6 +33,60 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ni2c: i801: Don't generate an interrupt on bus reset\n\nNow that the i2c-i801 driver supports interrupts, setting the KILL bit\nin a attempt to recover from a timed out transaction triggers an\ninterrupt. Unfortunately, the interrupt handler (i801_isr) is not\nprepared for this situation and will try to process the interrupt as\nif it was signaling the end of a successful transaction. In the case\nof a block transaction, this can result in an out-of-range memory\naccess.\n\nThis condition was reproduced several times by syzbot:\nhttps://syzkaller.appspot.com/bug?extid=ed71512d469895b5b34e\nhttps://syzkaller.appspot.com/bug?extid=8c8dedc0ba9e03f6c79e\nhttps://syzkaller.appspot.com/bug?extid=c8ff0b6d6c73d81b610e\nhttps://syzkaller.appspot.com/bug?extid=33f6c360821c399d69eb\nhttps://syzkaller.appspot.com/bug?extid=be15dc0b1933f04b043a\nhttps://syzkaller.appspot.com/bug?extid=b4d3fd1dfd53e90afd79\n\nSo disable interrupts while trying to reset the bus. Interrupts will\nbe enabled again for the following transaction."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: i2c: i801: no genera una interrupci\u00f3n al restablecer el bus Ahora que el controlador i2c-i801 admite interrupciones, configurar el bit KILL en un intento de recuperarse de una transacci\u00f3n con tiempo de espera agotado se activa una interrupci\u00f3n. Desafortunadamente, el controlador de interrupciones (i801_isr) no est\u00e1 preparado para esta situaci\u00f3n e intentar\u00e1 procesar la interrupci\u00f3n como si estuviera indicando el final de una transacci\u00f3n exitosa. En el caso de una transacci\u00f3n en bloque, esto puede resultar en un acceso a la memoria fuera de rango. Esta condici\u00f3n fue reproducida varias veces por syzbot: https://syzkaller.appspot.com/bug?extid=ed71512d469895b5b34e https://syzkaller.appspot.com/bug?extid=8c8dedc0ba9e03f6c79e https://syzkaller.appspot.com/bug ?extid=c8ff0b6d6c73d81b610e https://syzkaller.appspot.com/bug?extid=33f6c360821c399d69eb https://syzkaller.appspot.com/bug?extid=be15dc0b1933f04b043a https://syzkaller.appspot.com/bug?extid=b 4d3fd1dfd53e90afd79 Entonces deshabilite las interrupciones al intentar restablecer el bus. Las interrupciones se habilitar\u00e1n nuevamente para la siguiente transacci\u00f3n."
+          }
+        ],
+        "id": "CVE-2021-47153",
+        "lastModified": "2024-03-25T13:47:14.087",
+        "metrics": {},
+        "published": "2024-03-25T09:15:09.407",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/04cc05e3716ae31b17ecdab7bc55c8170def1b8b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/09c9e79f4c10cfb6b9e0e1b4dd355232e4b5a3b3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1f583d3813f204449037cd2acbfc09168171362a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b523feb7e8e44652f92f3babb953a976e7ccbbef"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c70e1ba2e7e65255a0ce004f531dd90dada97a8c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dfa8929e117b0228a7765f5c3f5988a4a028f3c6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e4d8716c3dcec47f1557024add24e1f3c09eb24b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f9469082126cebb7337db3992d143f5e4edfe629"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

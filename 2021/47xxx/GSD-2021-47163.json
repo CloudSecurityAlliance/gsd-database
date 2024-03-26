@@ -1,0 +1,42 @@
+{
+  "namespaces": {
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ntipc: wait and exit until all work queues are done\n\nOn some host, a crash could be triggered simply by repeating these\ncommands several times:\n\n  # modprobe tipc\n  # tipc bearer enable media udp name UDP1 localip 127.0.0.1\n  # rmmod tipc\n\n  [] BUG: unable to handle kernel paging request at ffffffffc096bb00\n  [] Workqueue: events 0xffffffffc096bb00\n  [] Call Trace:\n  []  ? process_one_work+0x1a7/0x360\n  []  ? worker_thread+0x30/0x390\n  []  ? create_worker+0x1a0/0x1a0\n  []  ? kthread+0x116/0x130\n  []  ? kthread_flush_work_fn+0x10/0x10\n  []  ? ret_from_fork+0x35/0x40\n\nWhen removing the TIPC module, the UDP tunnel sock will be delayed to\nrelease in a work queue as sock_release() can't be done in rtnl_lock().\nIf the work queue is schedule to run after the TIPC module is removed,\nkernel will crash as the work queue function cleanup_beareri() code no\nlonger exists when trying to invoke it.\n\nTo fix it, this patch introduce a member wq_count in tipc_net to track\nthe numbers of work queues in schedule, and  wait and exit until all\nwork queues are done in tipc_exit_net()."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: tipc: espere y salga hasta que todas las colas de trabajo est\u00e9n terminadas. En algunos hosts, se podr\u00eda desencadenar un bloqueo simplemente repitiendo estos comandos varias veces: # modprobe tipc # tipc portador habilitar media udp nombre UDP1 localip 127.0.0.1 # rmmod tipc [] ERROR: no se puede manejar la solicitud de paginaci\u00f3n del kernel en ffffffffc096bb00 [] Cola de trabajo: eventos 0xffffffffc096bb00 [] Seguimiento de llamadas: []? proceso_one_work+0x1a7/0x360 []? hilo_trabajador+0x30/0x390 []? crear_trabajador+0x1a0/0x1a0 []? kthread+0x116/0x130 []? kthread_flush_work_fn+0x10/0x10 []? ret_from_fork+0x35/0x40 Al retirar el m\u00f3dulo TIPC, el calcet\u00edn del t\u00fanel UDP se retrasar\u00e1 para liberarse en una cola de trabajo, ya que sock_release() no se puede realizar en rtnl_lock(). Si la cola de trabajo est\u00e1 programada para ejecutarse despu\u00e9s de eliminar el m\u00f3dulo TIPC, el kernel fallar\u00e1 porque el c\u00f3digo de la funci\u00f3n de cola de trabajo cleanup_beareri() ya no existe al intentar invocarlo. Para solucionarlo, este parche introduce un miembro wq_count en tipc_net para rastrear el n\u00famero de colas de trabajo programadas y esperar y salir hasta que todas las colas de trabajo est\u00e9n terminadas en tipc_exit_net()."
+          }
+        ],
+        "id": "CVE-2021-47163",
+        "lastModified": "2024-03-25T13:47:14.087",
+        "metrics": {},
+        "published": "2024-03-25T10:15:08.530",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/04c26faa51d1e2fe71cf13c45791f5174c37f986"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5195ec5e365a2a9331bfeb585b613a6e94f98dba"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b9f5b7ad4ac3af006443f535b1ce7bff1d130d7d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d1f76dfadaf8f47ed1753f97dbcbd41c16215ffa"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
+    }
+  }
+}

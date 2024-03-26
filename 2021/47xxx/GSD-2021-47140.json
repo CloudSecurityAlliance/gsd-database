@@ -33,6 +33,36 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\niommu/amd: Clear DMA ops when switching domain\n\nSince commit 08a27c1c3ecf (\"iommu: Add support to change default domain\nof an iommu group\") a user can switch a device between IOMMU and direct\nDMA through sysfs. This doesn't work for AMD IOMMU at the moment because\ndev->dma_ops is not cleared when switching from a DMA to an identity\nIOMMU domain. The DMA layer thus attempts to use the dma-iommu ops on an\nidentity domain, causing an oops:\n\n  # echo 0000:00:05.0 > /sys/sys/bus/pci/drivers/e1000e/unbind\n  # echo identity > /sys/bus/pci/devices/0000:00:05.0/iommu_group/type\n  # echo 0000:00:05.0 > /sys/sys/bus/pci/drivers/e1000e/bind\n   ...\n  BUG: kernel NULL pointer dereference, address: 0000000000000028\n   ...\n   Call Trace:\n    iommu_dma_alloc\n    e1000e_setup_tx_resources\n    e1000e_open\n\nSince iommu_change_dev_def_domain() calls probe_finalize() again, clear\nthe dma_ops there like Vt-d does."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: iommu/amd: borra las operaciones de DMA al cambiar de dominio. Desde el commit 08a27c1c3ecf (\"iommu: agrega soporte para cambiar el dominio predeterminado de un grupo iommu\"), un usuario puede cambiar un dispositivo entre IOMMU y DMA directo a trav\u00e9s de sysfs. Esto no funciona para AMD IOMMU en este momento porque dev-&gt;dma_ops no se borra al cambiar de un DMA a un dominio IOMMU de identidad. Por lo tanto, la capa DMA intenta utilizar las operaciones dma-iommu en un dominio de identidad, lo que provoca un error: # echo 0000:00:05.0 &gt; /sys/sys/bus/pci/drivers/e1000e/unbind # echo Identity &gt; /sys/ bus/pci/devices/0000:00:05.0/iommu_group/type # echo 0000:00:05.0 &gt; /sys/sys/bus/pci/drivers/e1000e/bind ... ERROR: desreferencia del puntero NULL del kernel, direcci\u00f3n: 0000000000000028 ... Seguimiento de llamadas: iommu_dma_alloc e1000e_setup_tx_resources e1000e_open Dado que iommu_change_dev_def_domain() llama a probe_finalize() nuevamente, borre dma_ops all\u00ed como lo hace Vt-d."
+          }
+        ],
+        "id": "CVE-2021-47140",
+        "lastModified": "2024-03-25T13:47:14.087",
+        "metrics": {},
+        "published": "2024-03-25T09:15:08.740",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d6177a6556f853785867e2ec6d5b7f4906f0d809"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f3f2cf46291a693eab21adb94171b0128c2a9ec1"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
