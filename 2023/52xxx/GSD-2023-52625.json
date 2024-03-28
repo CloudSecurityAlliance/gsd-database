@@ -40,10 +40,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Refactor DMCUB enter/exit idle interface\n\n[Why]\nWe can hang in place trying to send commands when the DMCUB isn't\npowered on.\n\n[How]\nWe need to exit out of the idle state prior to sending a command,\nbut the process that performs the exit also invokes a command itself.\n\nFixing this issue involves the following:\n\n1. Using a software state to track whether or not we need to start\n   the process to exit idle or notify idle.\n\nIt's possible for the hardware to have exited an idle state without\ndriver knowledge, but entering one is always restricted to a driver\nallow - which makes the SW state vs HW state mismatch issue purely one\nof optimization, which should seldomly be hit, if at all.\n\n2. Refactor any instances of exit/notify idle to use a single wrapper\n   that maintains this SW state.\n\nThis works simialr to dc_allow_idle_optimizations, but works at the\nDMCUB level and makes sure the state is marked prior to any notify/exit\nidle so we don't enter an infinite loop.\n\n3. Make sure we exit out of idle prior to sending any commands or\n   waiting for DMCUB idle.\n\nThis patch takes care of 1/2. A future patch will take care of wrapping\nDMCUB command submission with calls to this new interface."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: drm/amd/display: Refactor DMCUB entra/sale de la interfaz inactiva [Por qu\u00e9] Podemos quedarnos quietos intentando enviar comandos cuando el DMCUB no est\u00e1 encendido. [C\u00f3mo] Necesitamos salir del estado inactivo antes de enviar un comando, pero el proceso que realiza la salida tambi\u00e9n invoca un comando en s\u00ed. Solucionar este problema implica lo siguiente: 1. Usar un estado de software para rastrear si necesitamos o no iniciar el proceso para salir de inactivo o notificarlo. Es posible que el hardware haya salido de un estado inactivo sin el conocimiento del controlador, pero ingresar a uno siempre est\u00e1 restringido a un permiso del controlador, lo que hace que el problema de discrepancia entre el estado del SW y el estado del HW sea puramente de optimizaci\u00f3n, que rara vez deber\u00eda solucionarse, en todo caso. . 2. Refactorice cualquier instancia de salida/notificaci\u00f3n inactiva para utilizar un contenedor \u00fanico que mantenga este estado de software. Esto funciona de manera similar a dc_allow_idle_optimizations, pero funciona en el nivel DMCUB y garantiza que el estado est\u00e9 marcado antes de cualquier notificaci\u00f3n/salida inactiva para que no entremos en un bucle infinito. 3. Aseg\u00farese de salir del modo inactivo antes de enviar cualquier comando o esperar a que DMCUB est\u00e9 inactivo. Este parche se ocupa de la mitad. Un parche futuro se encargar\u00e1 de empaquetar el env\u00edo de comandos DMCUB con llamadas a esta nueva interfaz."
           }
         ],
         "id": "CVE-2023-52625",
-        "lastModified": "2024-03-26T18:15:09.040",
+        "lastModified": "2024-03-27T12:29:41.530",
         "metrics": {},
         "published": "2024-03-26T18:15:09.040",
         "references": [
@@ -57,7 +61,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

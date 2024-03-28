@@ -40,10 +40,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal: intel: hfi: Add syscore callbacks for system-wide PM\n\nThe kernel allocates a memory buffer and provides its location to the\nhardware, which uses it to update the HFI table. This allocation occurs\nduring boot and remains constant throughout runtime.\n\nWhen resuming from hibernation, the restore kernel allocates a second\nmemory buffer and reprograms the HFI hardware with the new location as\npart of a normal boot. The location of the second memory buffer may\ndiffer from the one allocated by the image kernel.\n\nWhen the restore kernel transfers control to the image kernel, its HFI\nbuffer becomes invalid, potentially leading to memory corruption if the\nhardware writes to it (the hardware continues to use the buffer from the\nrestore kernel).\n\nIt is also possible that the hardware \"forgets\" the address of the memory\nbuffer when resuming from \"deep\" suspend. Memory corruption may also occur\nin such a scenario.\n\nTo prevent the described memory corruption, disable HFI when preparing to\nsuspend or hibernate. Enable it when resuming.\n\nAdd syscore callbacks to handle the package of the boot CPU (packages of\nnon-boot CPUs are handled via CPU offline). Syscore ops always run on the\nboot CPU. Additionally, HFI only needs to be disabled during \"deep\" suspend\nand hibernation. Syscore ops only run in these cases.\n\n[ rjw: Comment adjustment, subject and changelog edits ]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: t\u00e9rmica: intel: hfi: agregar devoluciones de llamada de syscore para PM en todo el sistema El kernel asigna un b\u00fafer de memoria y proporciona su ubicaci\u00f3n al hardware, que lo utiliza para actualizar la tabla HFI. Esta asignaci\u00f3n ocurre durante el arranque y permanece constante durante el tiempo de ejecuci\u00f3n. Al salir de la hibernaci\u00f3n, el kernel de restauraci\u00f3n asigna un segundo b\u00fafer de memoria y reprograma el hardware HFI con la nueva ubicaci\u00f3n como parte de un inicio normal. La ubicaci\u00f3n del segundo b\u00fafer de memoria puede diferir de la asignada por el n\u00facleo de la imagen. Cuando el kernel de restauraci\u00f3n transfiere el control al kernel de imagen, su b\u00fafer HFI deja de ser v\u00e1lido, lo que puede provocar da\u00f1os en la memoria si el hardware escribe en \u00e9l (el hardware contin\u00faa usando el b\u00fafer del kernel de restauraci\u00f3n). Tambi\u00e9n es posible que el hardware \"olvide\" la direcci\u00f3n del b\u00fafer de memoria al reanudar desde una suspensi\u00f3n \"profunda\". En tal escenario tambi\u00e9n puede ocurrir corrupci\u00f3n de memoria. Para evitar la corrupci\u00f3n de memoria descrita, desactive HFI cuando se prepare para suspender o hibernar. Habil\u00edtelo al reanudar. Agregue devoluciones de llamada de syscore para manejar el paquete de la CPU de arranque (los paquetes de CPU que no son de arranque se manejan a trav\u00e9s de la CPU sin conexi\u00f3n). Las operaciones de Syscore siempre se ejecutan en la CPU de arranque. Adem\u00e1s, HFI solo necesita desactivarse durante la suspensi\u00f3n e hibernaci\u00f3n \"profundas\". Las operaciones de Syscore solo se ejecutan en estos casos. [rjw: ajuste de comentarios, ediciones de asunto y registro de cambios]"
           }
         ],
         "id": "CVE-2024-26646",
-        "lastModified": "2024-03-26T18:15:09.910",
+        "lastModified": "2024-03-27T12:29:41.530",
         "metrics": {},
         "published": "2024-03-26T18:15:09.910",
         "references": [
@@ -65,7 +69,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

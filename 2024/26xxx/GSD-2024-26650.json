@@ -40,10 +40,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nplatform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe\n\np2sb_bar() unhides P2SB device to get resources from the device. It\nguards the operation by locking pci_rescan_remove_lock so that parallel\nrescans do not find the P2SB device. However, this lock causes deadlock\nwhen PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan\nlocks pci_rescan_remove_lock and probes PCI devices. When PCI devices\ncall p2sb_bar() during probe, it locks pci_rescan_remove_lock again.\nHence the deadlock.\n\nTo avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().\nInstead, do the lock at fs_initcall. Introduce p2sb_cache_resources()\nfor fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),\nrefer the cache and return to the caller.\n\nBefore operating the device at P2SB DEVFN for resource cache, check\nthat its device class is PCI_CLASS_MEMORY_OTHER 0x0580 that PCH\nspecifications define. This avoids unexpected operation to other devices\nat the same DEVFN.\n\nTested-by Klara Modin <klarasmodin@gmail.com>"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: plataforma/x86: p2sb: permitir llamadas a p2sb_bar() durante la sonda del dispositivo PCI p2sb_bar() muestra el dispositivo P2SB para obtener recursos del dispositivo. Protege la operaci\u00f3n bloqueando pci_rescan_remove_lock para que los rescaneos paralelos no encuentren el dispositivo P2SB. Sin embargo, este bloqueo provoca un interbloqueo cuando /sys/bus/pci/rescan activa la nueva exploraci\u00f3n del bus PCI. La nueva exploraci\u00f3n bloquea pci_rescan_remove_lock y sondea los dispositivos PCI. Cuando los dispositivos PCI llaman a p2sb_bar() durante la prueba, bloquea pci_rescan_remove_lock nuevamente. De ah\u00ed el punto muerto. Para evitar el punto muerto, no bloquee pci_rescan_remove_lock en p2sb_bar(). En su lugar, realice el bloqueo en fs_initcall. Introduzca p2sb_cache_resources() para fs_initcall que obtiene y almacena en cach\u00e9 los recursos de P2SB. En p2sb_bar(), consulte el cach\u00e9 y regrese a la persona que llama. Antes de operar el dispositivo en P2SB DEVFN para cach\u00e9 de recursos, verifique que su clase de dispositivo sea PCI_CLASS_MEMORY_OTHER 0x0580 que definen las especificaciones PCH. Esto evita el funcionamiento inesperado de otros dispositivos en el mismo DEVFN. Probado por Klara Modin "
           }
         ],
         "id": "CVE-2024-26650",
-        "lastModified": "2024-03-26T18:15:10.530",
+        "lastModified": "2024-03-27T12:29:41.530",
         "metrics": {},
         "published": "2024-03-26T18:15:10.530",
         "references": [
@@ -65,7 +69,7 @@
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Received"
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
