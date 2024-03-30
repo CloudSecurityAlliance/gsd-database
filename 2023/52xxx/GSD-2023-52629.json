@@ -33,6 +33,32 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsh: push-switch: Reorder cleanup operations to avoid use-after-free bug\n\nThe original code puts flush_work() before timer_shutdown_sync()\nin switch_drv_remove(). Although we use flush_work() to stop\nthe worker, it could be rescheduled in switch_timer(). As a result,\na use-after-free bug can occur. The details are shown below:\n\n      (cpu 0)                    |      (cpu 1)\nswitch_drv_remove()              |\n flush_work()                    |\n  ...                            |  switch_timer // timer\n                                 |   schedule_work(&psw->work)\n timer_shutdown_sync()           |\n ...                             |  switch_work_handler // worker\n kfree(psw) // free              |\n                                 |   psw->state = 0 // use\n\nThis patch puts timer_shutdown_sync() before flush_work() to\nmitigate the bugs. As a result, the worker and timer will be\nstopped safely before the deallocate operations."
+          }
+        ],
+        "id": "CVE-2023-52629",
+        "lastModified": "2024-03-29T12:45:02.937",
+        "metrics": {},
+        "published": "2024-03-29T10:15:09.327",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/246f80a0b17f8f582b2c0996db02998239057c65"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/610dbd8ac271aa36080aac50b928d700ee3fe4de"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
