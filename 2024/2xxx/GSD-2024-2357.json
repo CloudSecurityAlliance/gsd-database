@@ -1,5 +1,129 @@
 {
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2024-2357"
+      ],
+      "details": "The Libreswan Project was notified of an issue causing libreswan to restart under some IKEv2 retransmit scenarios when a connection is configured to use PreSharedKeys (authby=secret) and the connection cannot find a matching configured secret. When such a connection is automatically added on startup using the auto= keyword, it can cause repeated crashes leading to a Denial of Service.",
+      "id": "GSD-2024-2357",
+      "modified": "2024-04-02T05:02:53.319464Z",
+      "schema_version": "1.4.0"
+    }
+  },
   "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "security@libreswan.org",
+        "ID": "CVE-2024-2357",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "libreswan",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unaffected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "4.1",
+                                "status": "unaffected",
+                                "version": "3.0",
+                                "versionType": "semver"
+                              },
+                              {
+                                "lessThanOrEqual": "4.12",
+                                "status": "affected",
+                                "version": "4.2",
+                                "versionType": "semver"
+                              },
+                              {
+                                "status": "unaffected",
+                                "version": "5.0"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "The Libreswan Project (www.libreswan.org)"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "value": "The vulnerability can only be triggered for connections with ikev2=yes and authby=secret"
+        }
+      ],
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Andrew Vaughn"
+        }
+      ],
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "The Libreswan Project was notified of an issue causing libreswan to restart under some IKEv2 retransmit scenarios when a connection is configured to use PreSharedKeys (authby=secret) and the connection cannot find a matching configured secret. When such a connection is automatically added on startup using the auto= keyword, it can cause repeated crashes leading to a Denial of Service."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "IKEv2 misconfiguration can cause libreswan to abort and restart"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://libreswan.org/security/CVE-2024-2357",
+            "refsource": "MISC",
+            "url": "https://libreswan.org/security/CVE-2024-2357"
+          }
+        ]
+      },
+      "solution": [
+        {
+          "lang": "en",
+          "value": "This issue is fixed in 4.13, 5.0 and all later versions."
+        }
+      ],
+      "work_around": [
+        {
+          "lang": "en",
+          "value": "As a workaround, one can place an unguessable long random default secret in /etc/ipsec.secrets, for example using the following command:\n\n echo -e \"# CVE-2024-2357 workaround\n: PSK \"$(openssl rand -hex 32)\"\" >> /etc/ipsec.secrets\n\nThis will ensure a PSK secret is always found, but it will always be wrong, and thus authentication will still properly fail."
+        }
+      ]
+    },
     "nvd.nist.gov": {
       "cve": {
         "descriptions": [

@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-46839"
       ],
+      "details": "PCI devices can make use of a functionality called phantom functions,\nthat when enabled allows the device to generate requests using the IDs\nof functions that are otherwise unpopulated.  This allows a device to\nextend the number of outstanding requests.\n\nSuch phantom functions need an IOMMU context setup, but failure to\nsetup the context is not fatal when the device is assigned.  Not\nfailing device assignment when such failure happens can lead to the\nprimary device being assigned to a guest, while some of the phantom\nfunctions are assigned to a different domain.\n",
       "id": "GSD-2023-46839",
       "modified": "2023-12-13T01:20:53.321876Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,54 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@xen.org",
         "ID": "CVE-2023-46839",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Xen",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "unknown",
+                            "versions": [
+                              {
+                                "status": "unknown",
+                                "version": "consult Xen advisory XSA-449"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Xen"
+            }
+          ]
+        }
+      },
+      "configuration": [
+        {
+          "lang": "en",
+          "value": "Systems running all version of Xen are affected.\n\nOnly x86 systems are vulnerable.  Arm systems are not vulnerable.\n\nOnly systems using PCI passthrough of devices with phantom functions\nare affected.\n"
+        }
+      ],
+      "credits": [
+        {
+          "lang": "en",
+          "value": "This issue was discovered by Roger Pau Monn\u00e9 of XenServer.\n"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,10 +78,37 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "PCI devices can make use of a functionality called phantom functions,\nthat when enabled allows the device to generate requests using the IDs\nof functions that are otherwise unpopulated.  This allows a device to\nextend the number of outstanding requests.\n\nSuch phantom functions need an IOMMU context setup, but failure to\nsetup the context is not fatal when the device is assigned.  Not\nfailing device assignment when such failure happens can lead to the\nprimary device being assigned to a guest, while some of the phantom\nfunctions are assigned to a different domain.\n"
           }
         ]
-      }
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://xenbits.xenproject.org/xsa/advisory-449.html",
+            "refsource": "MISC",
+            "url": "https://xenbits.xenproject.org/xsa/advisory-449.html"
+          }
+        ]
+      },
+      "work_around": [
+        {
+          "lang": "en",
+          "value": "There is no mitigation (other than not passing through PCI devices\nwith phantom functions to guests).\n"
+        }
+      ]
     },
     "nvd.nist.gov": {
       "cve": {

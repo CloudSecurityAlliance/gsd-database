@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47119"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: fix memory leak in ext4_fill_super\n\nBuffer head references must be released before calling kill_bdev();\notherwise the buffer head (and its page referenced by b_data) will not\nbe freed by kill_bdev, and subsequently that bh will be leaked.\n\nIf blocksizes differ, sb_set_blocksize() will kill current buffers and\npage cache by using kill_bdev(). And then super block will be reread\nagain but using correct blocksize this time. sb_set_blocksize() didn't\nfully free superblock page and buffer head, and being busy, they were\nnot freed and instead leaked.\n\nThis can easily be reproduced by calling an infinite loop of:\n\n  systemctl start <ext4_on_lvm>.mount, and\n  systemctl stop <ext4_on_lvm>.mount\n\n... since systemd creates a cgroup for each slice which it mounts, and\nthe bh leak get amplified by a dying memory cgroup that also never\ngets freed, and memory consumption is much more easily noticed.",
       "id": "GSD-2021-47119",
       "modified": "2024-03-05T06:03:55.103085Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47119",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "ac27a0ec112a",
+                          "version_value": "01d349a481f0"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.19"
+                              },
+                              {
+                                "lessThan": "2.6.19",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.43",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.12.*",
+                                "status": "unaffected",
+                                "version": "5.12.10",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.13",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +91,41 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: fix memory leak in ext4_fill_super\n\nBuffer head references must be released before calling kill_bdev();\notherwise the buffer head (and its page referenced by b_data) will not\nbe freed by kill_bdev, and subsequently that bh will be leaked.\n\nIf blocksizes differ, sb_set_blocksize() will kill current buffers and\npage cache by using kill_bdev(). And then super block will be reread\nagain but using correct blocksize this time. sb_set_blocksize() didn't\nfully free superblock page and buffer head, and being busy, they were\nnot freed and instead leaked.\n\nThis can easily be reproduced by calling an infinite loop of:\n\n  systemctl start <ext4_on_lvm>.mount, and\n  systemctl stop <ext4_on_lvm>.mount\n\n... since systemd creates a cgroup for each slice which it mounts, and\nthe bh leak get amplified by a dying memory cgroup that also never\ngets freed, and memory consumption is much more easily noticed."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-8df59b4913de"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/01d349a481f0591230300a9171330136f9159bcd",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/01d349a481f0591230300a9171330136f9159bcd"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1385b23396d511d5233b8b921ac3058b3f86a5e1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1385b23396d511d5233b8b921ac3058b3f86a5e1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/afd09b617db3786b6ef3dc43e28fe728cfea84df",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/afd09b617db3786b6ef3dc43e28fe728cfea84df"
           }
         ]
       }

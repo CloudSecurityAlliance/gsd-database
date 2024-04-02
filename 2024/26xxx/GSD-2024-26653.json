@@ -33,6 +33,28 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: misc: ljca: Fix double free in error handling path\n\nWhen auxiliary_device_add() returns error and then calls\nauxiliary_device_uninit(), callback function ljca_auxdev_release\ncalls kfree(auxdev->dev.platform_data) to free the parameter data\nof the function ljca_new_client_device. The callers of\nljca_new_client_device shouldn't call kfree() again\nin the error handling path to free the platform data.\n\nFix this by cleaning up the redundant kfree() in all callers and\nadding kfree() the passed in platform_data on errors which happen\nbefore auxiliary_device_init() succeeds ."
+          }
+        ],
+        "id": "CVE-2024-26653",
+        "lastModified": "2024-04-01T12:49:00.877",
+        "metrics": {},
+        "published": "2024-04-01T09:15:51.010",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7c9631969287a5366bc8e39cd5abff154b35fb80"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

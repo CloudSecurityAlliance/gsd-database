@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-50726"
       ],
+      "details": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. \"Local sync\" is an Argo CD feature that allows developers to temporarily override an Application's manifests with locally-defined manifests. Use of the feature should generally be limited to highly-trusted users, since it allows the user to bypass any merge protections in git. An improper validation bug allows users who have `create` privileges but not `override` privileges to sync local manifests on app creation. All other restrictions, including AppProject restrictions are still enforced. The only restriction which is not enforced is that the manifests come from some approved git/Helm/OCI source. The bug was introduced in 1.2.0-rc1 when the local manifest sync feature was added. The bug has been patched in Argo CD versions 2.10.3, 2.9.8, and 2.8.12. Users are advised to upgrade. Users unable to upgrade may mitigate the risk of branch protection bypass by removing `applications, create` RBAC access. The only way to eliminate the issue without removing RBAC access is to upgrade to a patched version.",
       "id": "GSD-2023-50726",
       "modified": "2023-12-13T01:20:31.276869Z",
       "schema_version": "1.4.0"
@@ -22,9 +23,41 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2023-50726",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "argo-cd",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 1.2.0-rc1, < 2.8.12"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.9.0, < 2.9.8"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2.10.0, < 2.10.3"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "argoproj"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -33,9 +66,63 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. \"Local sync\" is an Argo CD feature that allows developers to temporarily override an Application's manifests with locally-defined manifests. Use of the feature should generally be limited to highly-trusted users, since it allows the user to bypass any merge protections in git. An improper validation bug allows users who have `create` privileges but not `override` privileges to sync local manifests on app creation. All other restrictions, including AppProject restrictions are still enforced. The only restriction which is not enforced is that the manifests come from some approved git/Helm/OCI source. The bug was introduced in 1.2.0-rc1 when the local manifest sync feature was added. The bug has been patched in Argo CD versions 2.10.3, 2.9.8, and 2.8.12. Users are advised to upgrade. Users unable to upgrade may mitigate the risk of branch protection bypass by removing `applications, create` RBAC access. The only way to eliminate the issue without removing RBAC access is to upgrade to a patched version."
           }
         ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "LOW",
+            "baseScore": 6.4,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "LOW",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:L/A:L",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-269",
+                "lang": "eng",
+                "value": "CWE-269: Improper Privilege Management"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-g623-jcgg-mhmm",
+            "refsource": "MISC",
+            "url": "https://github.com/argoproj/argo-cd/security/advisories/GHSA-g623-jcgg-mhmm"
+          },
+          {
+            "name": "https://github.com/argoproj/argo-cd/commit/3b8f673f06c2d228e01cbc830e5cb57cef008978",
+            "refsource": "MISC",
+            "url": "https://github.com/argoproj/argo-cd/commit/3b8f673f06c2d228e01cbc830e5cb57cef008978"
+          },
+          {
+            "name": "https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac",
+            "refsource": "MISC",
+            "url": "https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-g623-jcgg-mhmm",
+        "discovery": "UNKNOWN"
       }
     },
     "nvd.nist.gov": {
