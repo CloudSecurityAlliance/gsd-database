@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26670"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: entry: fix ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n\nCurrently the ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround isn't\nquite right, as it is supposed to be applied after the last explicit\nmemory access, but is immediately followed by an LDR.\n\nThe ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround is used to\nhandle Cortex-A520 erratum 2966298 and Cortex-A510 erratum 3117295,\nwhich are described in:\n\n* https://developer.arm.com/documentation/SDEN2444153/0600/?lang=en\n* https://developer.arm.com/documentation/SDEN1873361/1600/?lang=en\n\nIn both cases the workaround is described as:\n\n| If pagetable isolation is disabled, the context switch logic in the\n| kernel can be updated to execute the following sequence on affected\n| cores before exiting to EL0, and after all explicit memory accesses:\n|\n| 1. A non-shareable TLBI to any context and/or address, including\n|    unused contexts or addresses, such as a `TLBI VALE1 Xzr`.\n|\n| 2. A DSB NSH to guarantee completion of the TLBI.\n\nThe important part being that the TLBI+DSB must be placed \"after all\nexplicit memory accesses\".\n\nUnfortunately, as-implemented, the TLBI+DSB is immediately followed by\nan LDR, as we have:\n\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n| \teret\n| alternative_else_nop_endif\n|\n| [ ... KPTI exception return path ... ]\n\nThis patch fixes this by reworking the logic to place the TLBI+DSB\nimmediately before the ERET, after all explicit memory accesses.\n\nThe ERET is currently in a separate alternative block, and alternatives\ncannot be nested. To account for this, the alternative block for\nARM64_UNMAP_KERNEL_AT_EL0 is replaced with a single alternative branch\nto skip the KPTI logic, with the new shape of the logic being:\n\n| alternative_insn \"b .L_skip_tramp_exit_\\@\", nop, ARM64_UNMAP_KERNEL_AT_EL0\n| \t[ ... KPTI exception return path ... ]\n| .L_skip_tramp_exit_\\@:\n|\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n|\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| \teret\n\nThe new structure means that the workaround is only applied when KPTI is\nnot in use; this is fine as noted in the documented implications of the\nerratum:\n\n| Pagetable isolation between EL0 and higher level ELs prevents the\n| issue from occurring.\n\n... and as per the workaround description quoted above, the workaround\nis only necessary \"If pagetable isolation is disabled\".",
       "id": "GSD-2024-26670",
       "modified": "2024-02-20T06:02:29.146023Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26670",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "471470bc7052",
+                          "version_value": "58eb5c07f417"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.6"
+                              },
+                              {
+                                "lessThan": "6.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.15",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: entry: fix ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n\nCurrently the ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround isn't\nquite right, as it is supposed to be applied after the last explicit\nmemory access, but is immediately followed by an LDR.\n\nThe ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround is used to\nhandle Cortex-A520 erratum 2966298 and Cortex-A510 erratum 3117295,\nwhich are described in:\n\n* https://developer.arm.com/documentation/SDEN2444153/0600/?lang=en\n* https://developer.arm.com/documentation/SDEN1873361/1600/?lang=en\n\nIn both cases the workaround is described as:\n\n| If pagetable isolation is disabled, the context switch logic in the\n| kernel can be updated to execute the following sequence on affected\n| cores before exiting to EL0, and after all explicit memory accesses:\n|\n| 1. A non-shareable TLBI to any context and/or address, including\n|    unused contexts or addresses, such as a `TLBI VALE1 Xzr`.\n|\n| 2. A DSB NSH to guarantee completion of the TLBI.\n\nThe important part being that the TLBI+DSB must be placed \"after all\nexplicit memory accesses\".\n\nUnfortunately, as-implemented, the TLBI+DSB is immediately followed by\nan LDR, as we have:\n\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n| \teret\n| alternative_else_nop_endif\n|\n| [ ... KPTI exception return path ... ]\n\nThis patch fixes this by reworking the logic to place the TLBI+DSB\nimmediately before the ERET, after all explicit memory accesses.\n\nThe ERET is currently in a separate alternative block, and alternatives\ncannot be nested. To account for this, the alternative block for\nARM64_UNMAP_KERNEL_AT_EL0 is replaced with a single alternative branch\nto skip the KPTI logic, with the new shape of the logic being:\n\n| alternative_insn \"b .L_skip_tramp_exit_\\@\", nop, ARM64_UNMAP_KERNEL_AT_EL0\n| \t[ ... KPTI exception return path ... ]\n| .L_skip_tramp_exit_\\@:\n|\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n|\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| \teret\n\nThe new structure means that the workaround is only applied when KPTI is\nnot in use; this is fine as noted in the documented implications of the\nerratum:\n\n| Pagetable isolation between EL0 and higher level ELs prevents the\n| issue from occurring.\n\n... and as per the workaround description quoted above, the workaround\nis only necessary \"If pagetable isolation is disabled\"."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/58eb5c07f41704464b9acc09ab0707b6769db6c0",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/58eb5c07f41704464b9acc09ab0707b6769db6c0"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/baa0aaac16432019651e0d60c41cd34a0c3c3477",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/baa0aaac16432019651e0d60c41cd34a0c3c3477"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/832dd634bd1b4e3bbe9f10b9c9ba5db6f6f2b97f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/832dd634bd1b4e3bbe9f10b9c9ba5db6f6f2b97f"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: entry: fix ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n\nCurrently the ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround isn't\nquite right, as it is supposed to be applied after the last explicit\nmemory access, but is immediately followed by an LDR.\n\nThe ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD workaround is used to\nhandle Cortex-A520 erratum 2966298 and Cortex-A510 erratum 3117295,\nwhich are described in:\n\n* https://developer.arm.com/documentation/SDEN2444153/0600/?lang=en\n* https://developer.arm.com/documentation/SDEN1873361/1600/?lang=en\n\nIn both cases the workaround is described as:\n\n| If pagetable isolation is disabled, the context switch logic in the\n| kernel can be updated to execute the following sequence on affected\n| cores before exiting to EL0, and after all explicit memory accesses:\n|\n| 1. A non-shareable TLBI to any context and/or address, including\n|    unused contexts or addresses, such as a `TLBI VALE1 Xzr`.\n|\n| 2. A DSB NSH to guarantee completion of the TLBI.\n\nThe important part being that the TLBI+DSB must be placed \"after all\nexplicit memory accesses\".\n\nUnfortunately, as-implemented, the TLBI+DSB is immediately followed by\nan LDR, as we have:\n\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n| \teret\n| alternative_else_nop_endif\n|\n| [ ... KPTI exception return path ... ]\n\nThis patch fixes this by reworking the logic to place the TLBI+DSB\nimmediately before the ERET, after all explicit memory accesses.\n\nThe ERET is currently in a separate alternative block, and alternatives\ncannot be nested. To account for this, the alternative block for\nARM64_UNMAP_KERNEL_AT_EL0 is replaced with a single alternative branch\nto skip the KPTI logic, with the new shape of the logic being:\n\n| alternative_insn \"b .L_skip_tramp_exit_\\@\", nop, ARM64_UNMAP_KERNEL_AT_EL0\n| \t[ ... KPTI exception return path ... ]\n| .L_skip_tramp_exit_\\@:\n|\n| \tldr\tlr, [sp, #S_LR]\n| \tadd\tsp, sp, #PT_REGS_SIZE\t\t// restore sp\n|\n| alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD\n| \ttlbi\tvale1, xzr\n| \tdsb\tnsh\n| alternative_else_nop_endif\n| \teret\n\nThe new structure means that the workaround is only applied when KPTI is\nnot in use; this is fine as noted in the documented implications of the\nerratum:\n\n| Pagetable isolation between EL0 and higher level ELs prevents the\n| issue from occurring.\n\n... and as per the workaround description quoted above, the workaround\nis only necessary \"If pagetable isolation is disabled\"."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: arm64: entrada: arreglar ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD Actualmente, la soluci\u00f3n alternativa ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD no es del todo correcta, ya que se supone que debe aplicarse despu\u00e9s del \u00faltimo acceso expl\u00edcito a la memoria, pero va seguida inmediatamente por un LDR. La soluci\u00f3n alternativa ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD se utiliza para manejar las erratas Cortex-A520 2966298 y Cortex-A510 erratas 3117295, que se describen en: * https://developer.arm.com/documentation/SDEN2444153/0600/?lang=en * https:// desarrollador.arm.com/documentation/SDEN1873361/1600/?lang=en En ambos casos, la soluci\u00f3n se describe como: | Si el aislamiento de la tabla de p\u00e1ginas est\u00e1 deshabilitado, la l\u00f3gica de cambio de contexto en | El kernel se puede actualizar para ejecutar la siguiente secuencia en los afectados | n\u00facleos antes de salir a EL0 y despu\u00e9s de todos los accesos expl\u00edcitos a la memoria: | | 1. Un TLBI que no se puede compartir en cualquier contexto y/o direcci\u00f3n, incluido | contextos o direcciones no utilizados, como `TLBI VALE1 Xzr`. | | 2. Un OSD NSH para garantizar la finalizaci\u00f3n del TLBI. La parte importante es que el TLBI+DSB debe colocarse \"despu\u00e9s de todos los accesos expl\u00edcitos a la memoria\". Desafortunadamente, tal como se implement\u00f3, el TLBI+DSB es seguido inmediatamente por un LDR, como tenemos: | Alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD | tlbi vale1, xzr | dsb nsh | alternativa_else_nop_endif | alternativa_si_no ARM64_UNMAP_KERNEL_AT_EL0 | ldr lr, [sp, #S_LR] | agregar sp, sp, #PT_REGS_SIZE // restaurar sp | eremita | alternativa_else_nop_endif | | [... Ruta de retorno de excepci\u00f3n KPTI...] Este parche soluciona este problema reelaborando la l\u00f3gica para colocar TLBI+DSB inmediatamente antes de ERET, despu\u00e9s de todos los accesos expl\u00edcitos a la memoria. El ERET se encuentra actualmente en un bloque alternativo separado y las alternativas no se pueden anidar. Para tener en cuenta esto, el bloque alternativo para ARM64_UNMAP_KERNEL_AT_EL0 se reemplaza con una \u00fanica rama alternativa para omitir la l\u00f3gica KPTI, siendo la nueva forma de la l\u00f3gica: | Alternative_insn \"b .L_skip_tramp_exit_\\@\", nop, ARM64_UNMAP_KERNEL_AT_EL0 | [... Ruta de retorno de excepci\u00f3n KPTI...] | .L_skip_tramp_exit_\\@: | | ldr lr, [sp, #S_LR] | agregar sp, sp, #PT_REGS_SIZE // restaurar sp | | Alternative_if ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD | tlbi vale1, xzr | dsb nsh | alternativa_else_nop_endif | eret La nueva estructura significa que la soluci\u00f3n alternativa s\u00f3lo se aplica cuando KPTI no est\u00e1 en uso; esto est\u00e1 bien, como se indica en las implicaciones documentadas de la fe de erratas: | El aislamiento de la tabla de paginaci\u00f3n entre EL0 y los EL de nivel superior evita que | que ocurra el problema. ... y seg\u00fan la descripci\u00f3n de la soluci\u00f3n citada anteriormente, la soluci\u00f3n s\u00f3lo es necesaria \"si el aislamiento de la tabla de p\u00e1ginas est\u00e1 deshabilitado\"."
+          }
+        ],
+        "id": "CVE-2024-26670",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:43.760",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/58eb5c07f41704464b9acc09ab0707b6769db6c0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/832dd634bd1b4e3bbe9f10b9c9ba5db6f6f2b97f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/baa0aaac16432019651e0d60c41cd34a0c3c3477"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

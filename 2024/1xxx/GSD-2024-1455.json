@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-1455"
       ],
+      "details": "The XMLOutputParser in LangChain uses the etree module from the XML parser in the standard python library which has some XML vulnerabilities; see: https://docs.python.org/3/library/xml.html\n\nThis primarily affects users that combine an LLM (or agent) with the `XMLOutputParser` and expose the component via an endpoint on a web-service. \n\nThis would allow a malicious party to attempt to manipulate the LLM to produce a malicious payload for the parser that would compromise the availability of the service.\n\nA successful attack is predicated on:\n\n1. Usage of XMLOutputParser\n2. Passing of malicious input into the XMLOutputParser either directly or by trying to manipulate an LLM to do so on the users behalf\n3. Exposing the component via a web-service",
       "id": "GSD-2024-1455",
       "modified": "2024-02-13T06:02:27.274112Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,34 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@huntr.com",
         "ID": "CVE-2024-1455",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "langchain-ai/langchain",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<=",
+                          "version_name": "unspecified",
+                          "version_value": "latest"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "langchain-ai"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +55,53 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "The XMLOutputParser in LangChain uses the etree module from the XML parser in the standard python library which has some XML vulnerabilities; see: https://docs.python.org/3/library/xml.html\n\nThis primarily affects users that combine an LLM (or agent) with the `XMLOutputParser` and expose the component via an endpoint on a web-service. \n\nThis would allow a malicious party to attempt to manipulate the LLM to produce a malicious payload for the parser that would compromise the availability of the service.\n\nA successful attack is predicated on:\n\n1. Usage of XMLOutputParser\n2. Passing of malicious input into the XMLOutputParser either directly or by trying to manipulate an LLM to do so on the users behalf\n3. Exposing the component via a web-service"
           }
         ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 5.9,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "version": "3.0"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-776",
+                "lang": "eng",
+                "value": "CWE-776 Improper Restriction of Recursive Entity References in DTDs"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://huntr.com/bounties/4353571f-c70d-4bfd-ac08-3a89cecb45b6",
+            "refsource": "MISC",
+            "url": "https://huntr.com/bounties/4353571f-c70d-4bfd-ac08-3a89cecb45b6"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "4353571f-c70d-4bfd-ac08-3a89cecb45b6",
+        "discovery": "EXTERNAL"
       }
     },
     "nvd.nist.gov": {

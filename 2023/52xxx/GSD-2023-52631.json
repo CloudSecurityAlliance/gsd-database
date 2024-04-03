@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52631"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nfs/ntfs3: Fix an NULL dereference bug\n\nThe issue here is when this is called from ntfs_load_attr_list().  The\n\"size\" comes from le32_to_cpu(attr->res.data_size) so it can't overflow\non a 64bit systems but on 32bit systems the \"+ 1023\" can overflow and\nthe result is zero.  This means that the kmalloc will succeed by\nreturning the ZERO_SIZE_PTR and then the memcpy() will crash with an\nOops on the next line.",
       "id": "GSD-2023-52631",
       "modified": "2024-03-07T06:01:45.419478Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52631",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "be71b5cba2e6",
+                          "version_value": "ae4acad41b0f"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.15"
+                              },
+                              {
+                                "lessThan": "5.15",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.78",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.17",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,95 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nfs/ntfs3: Fix an NULL dereference bug\n\nThe issue here is when this is called from ntfs_load_attr_list().  The\n\"size\" comes from le32_to_cpu(attr->res.data_size) so it can't overflow\non a 64bit systems but on 32bit systems the \"+ 1023\" can overflow and\nthe result is zero.  This means that the kmalloc will succeed by\nreturning the ZERO_SIZE_PTR and then the memcpy() will crash with an\nOops on the next line."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ae4acad41b0f93f1c26cc0fc9135bb79d8282d0b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ae4acad41b0f93f1c26cc0fc9135bb79d8282d0b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ec1bedd797588fe38fc11cba26d77bb1d9b194c6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ec1bedd797588fe38fc11cba26d77bb1d9b194c6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fb7bcd1722bc9bc55160378f5f99c01198fd14a7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fb7bcd1722bc9bc55160378f5f99c01198fd14a7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/686820fe141ea0220fc6fdfc7e5694f915cf64b2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/686820fe141ea0220fc6fdfc7e5694f915cf64b2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b2dd7b953c25ffd5912dda17e980e7168bebcf6c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b2dd7b953c25ffd5912dda17e980e7168bebcf6c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nfs/ntfs3: Fix an NULL dereference bug\n\nThe issue here is when this is called from ntfs_load_attr_list().  The\n\"size\" comes from le32_to_cpu(attr->res.data_size) so it can't overflow\non a 64bit systems but on 32bit systems the \"+ 1023\" can overflow and\nthe result is zero.  This means that the kmalloc will succeed by\nreturning the ZERO_SIZE_PTR and then the memcpy() will crash with an\nOops on the next line."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: fs/ntfs3: corrige un error de desreferencia NULL El problema aqu\u00ed es cuando se llama desde ntfs_load_attr_list(). El \"tama\u00f1o\" proviene de le32_to_cpu(attr-&gt;res.data_size), por lo que no puede desbordarse en sistemas de 64 bits, pero en sistemas de 32 bits el \"+ 1023\" puede desbordarse y el resultado es cero. Esto significa que kmalloc tendr\u00e1 \u00e9xito al devolver ZERO_SIZE_PTR y luego memcpy() fallar\u00e1 con un Ups en la siguiente l\u00ednea."
+          }
+        ],
+        "id": "CVE-2023-52631",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:40.900",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/686820fe141ea0220fc6fdfc7e5694f915cf64b2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ae4acad41b0f93f1c26cc0fc9135bb79d8282d0b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b2dd7b953c25ffd5912dda17e980e7168bebcf6c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec1bedd797588fe38fc11cba26d77bb1d9b194c6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fb7bcd1722bc9bc55160378f5f99c01198fd14a7"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

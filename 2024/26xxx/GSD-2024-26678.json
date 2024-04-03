@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26678"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/efistub: Use 1:1 file:memory mapping for PE/COFF .compat section\n\nThe .compat section is a dummy PE section that contains the address of\nthe 32-bit entrypoint of the 64-bit kernel image if it is bootable from\n32-bit firmware (i.e., CONFIG_EFI_MIXED=y)\n\nThis section is only 8 bytes in size and is only referenced from the\nloader, and so it is placed at the end of the memory view of the image,\nto avoid the need for padding it to 4k, which is required for sections\nappearing in the middle of the image.\n\nUnfortunately, this violates the PE/COFF spec, and even if most EFI\nloaders will work correctly (including the Tianocore reference\nimplementation), PE loaders do exist that reject such images, on the\nbasis that both the file and memory views of the file contents should be\ndescribed by the section headers in a monotonically increasing manner\nwithout leaving any gaps.\n\nSo reorganize the sections to avoid this issue. This results in a slight\npadding overhead (< 4k) which can be avoided if desired by disabling\nCONFIG_EFI_MIXED (which is only needed in rare cases these days)",
       "id": "GSD-2024-26678",
       "modified": "2024-02-20T06:02:29.069701Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,64 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26678",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3e3eabe26dc8",
+                          "version_value": "4adeeff8c123"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.7"
+                              },
+                              {
+                                "lessThan": "6.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +85,68 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/efistub: Use 1:1 file:memory mapping for PE/COFF .compat section\n\nThe .compat section is a dummy PE section that contains the address of\nthe 32-bit entrypoint of the 64-bit kernel image if it is bootable from\n32-bit firmware (i.e., CONFIG_EFI_MIXED=y)\n\nThis section is only 8 bytes in size and is only referenced from the\nloader, and so it is placed at the end of the memory view of the image,\nto avoid the need for padding it to 4k, which is required for sections\nappearing in the middle of the image.\n\nUnfortunately, this violates the PE/COFF spec, and even if most EFI\nloaders will work correctly (including the Tianocore reference\nimplementation), PE loaders do exist that reject such images, on the\nbasis that both the file and memory views of the file contents should be\ndescribed by the section headers in a monotonically increasing manner\nwithout leaving any gaps.\n\nSo reorganize the sections to avoid this issue. This results in a slight\npadding overhead (< 4k) which can be avoided if desired by disabling\nCONFIG_EFI_MIXED (which is only needed in rare cases these days)"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4adeeff8c12321cd453412a659c3c0eeb9bb2397",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4adeeff8c12321cd453412a659c3c0eeb9bb2397"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1ad55cecf22f05f1c884adf63cc09d3c3e609ebf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1ad55cecf22f05f1c884adf63cc09d3c3e609ebf"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/efistub: Use 1:1 file:memory mapping for PE/COFF .compat section\n\nThe .compat section is a dummy PE section that contains the address of\nthe 32-bit entrypoint of the 64-bit kernel image if it is bootable from\n32-bit firmware (i.e., CONFIG_EFI_MIXED=y)\n\nThis section is only 8 bytes in size and is only referenced from the\nloader, and so it is placed at the end of the memory view of the image,\nto avoid the need for padding it to 4k, which is required for sections\nappearing in the middle of the image.\n\nUnfortunately, this violates the PE/COFF spec, and even if most EFI\nloaders will work correctly (including the Tianocore reference\nimplementation), PE loaders do exist that reject such images, on the\nbasis that both the file and memory views of the file contents should be\ndescribed by the section headers in a monotonically increasing manner\nwithout leaving any gaps.\n\nSo reorganize the sections to avoid this issue. This results in a slight\npadding overhead (< 4k) which can be avoided if desired by disabling\nCONFIG_EFI_MIXED (which is only needed in rare cases these days)"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: x86/efistub: use archivo 1:1: mapeo de memoria para PE/COFF secci\u00f3n .compat La secci\u00f3n .compat es una secci\u00f3n PE ficticia que contiene la direcci\u00f3n del punto de entrada de 32 bits de la imagen del kernel de 64 bits si se puede iniciar desde firmware de 32 bits (es decir, CONFIG_EFI_MIXED=y) Esta secci\u00f3n tiene solo 8 bytes de tama\u00f1o y solo se hace referencia a ella desde el cargador, por lo que se coloca al final de la memoria. vista de la imagen, para evitar la necesidad de rellenarla a 4k, lo cual es necesario para las secciones que aparecen en el medio de la imagen. Desafortunadamente, esto viola la especificaci\u00f3n PE/COFF, e incluso si la mayor\u00eda de los cargadores EFI funcionan correctamente (incluida la implementaci\u00f3n de referencia de Tianocore), existen cargadores PE que rechazan dichas im\u00e1genes, bas\u00e1ndose en que tanto las vistas de archivo como de memoria del contenido del archivo deben ser descritos por los encabezados de las secciones de manera mon\u00f3tonamente creciente sin dejar espacios en blanco. As\u00ed que reorganice las secciones para evitar este problema. Esto da como resultado una ligera sobrecarga de relleno (&lt; 4k) que se puede evitar si se desea deshabilitando CONFIG_EFI_MIXED (que solo es necesario en casos excepcionales en estos d\u00edas)"
+          }
+        ],
+        "id": "CVE-2024-26678",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:44.307",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1ad55cecf22f05f1c884adf63cc09d3c3e609ebf"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4adeeff8c12321cd453412a659c3c0eeb9bb2397"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

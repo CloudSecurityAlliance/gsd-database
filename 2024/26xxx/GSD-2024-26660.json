@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26660"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Implement bounds check for stream encoder creation in DCN301\n\n'stream_enc_regs' array is an array of dcn10_stream_enc_registers\nstructures. The array is initialized with four elements, corresponding\nto the four calls to stream_enc_regs() in the array initializer. This\nmeans that valid indices for this array are 0, 1, 2, and 3.\n\nThe error message 'stream_enc_regs' 4 <= 5 below, is indicating that\nthere is an attempt to access this array with an index of 5, which is\nout of bounds. This could lead to undefined behavior\n\nHere, eng_id is used as an index to access the stream_enc_regs array. If\neng_id is 5, this would result in an out-of-bounds access on the\nstream_enc_regs array.\n\nThus fixing Buffer overflow error in dcn301_stream_encoder_create\nreported by Smatch:\ndrivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn301/dcn301_resource.c:1011 dcn301_stream_encoder_create() error: buffer overflow 'stream_enc_regs' 4 <= 5",
       "id": "GSD-2024-26660",
       "modified": "2024-02-20T06:02:29.278669Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26660",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3a83e4e64bb1",
+                          "version_value": "42442f74314d"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.11"
+                              },
+                              {
+                                "lessThan": "5.11",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.78",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.17",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,95 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Implement bounds check for stream encoder creation in DCN301\n\n'stream_enc_regs' array is an array of dcn10_stream_enc_registers\nstructures. The array is initialized with four elements, corresponding\nto the four calls to stream_enc_regs() in the array initializer. This\nmeans that valid indices for this array are 0, 1, 2, and 3.\n\nThe error message 'stream_enc_regs' 4 <= 5 below, is indicating that\nthere is an attempt to access this array with an index of 5, which is\nout of bounds. This could lead to undefined behavior\n\nHere, eng_id is used as an index to access the stream_enc_regs array. If\neng_id is 5, this would result in an out-of-bounds access on the\nstream_enc_regs array.\n\nThus fixing Buffer overflow error in dcn301_stream_encoder_create\nreported by Smatch:\ndrivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn301/dcn301_resource.c:1011 dcn301_stream_encoder_create() error: buffer overflow 'stream_enc_regs' 4 <= 5"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/42442f74314d41ddc68227047036fa3e78940054",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/42442f74314d41ddc68227047036fa3e78940054"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/efdd665ce1a1634b8c1dad5e7f6baaef3e131d0a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/efdd665ce1a1634b8c1dad5e7f6baaef3e131d0a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cd9bd10c59e3c1446680514fd3097c5b00d3712d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cd9bd10c59e3c1446680514fd3097c5b00d3712d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a938eab9586eea31cfd129a507f552efae14d738",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a938eab9586eea31cfd129a507f552efae14d738"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/58fca355ad37dcb5f785d9095db5f748b79c5dc2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/58fca355ad37dcb5f785d9095db5f748b79c5dc2"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Implement bounds check for stream encoder creation in DCN301\n\n'stream_enc_regs' array is an array of dcn10_stream_enc_registers\nstructures. The array is initialized with four elements, corresponding\nto the four calls to stream_enc_regs() in the array initializer. This\nmeans that valid indices for this array are 0, 1, 2, and 3.\n\nThe error message 'stream_enc_regs' 4 <= 5 below, is indicating that\nthere is an attempt to access this array with an index of 5, which is\nout of bounds. This could lead to undefined behavior\n\nHere, eng_id is used as an index to access the stream_enc_regs array. If\neng_id is 5, this would result in an out-of-bounds access on the\nstream_enc_regs array.\n\nThus fixing Buffer overflow error in dcn301_stream_encoder_create\nreported by Smatch:\ndrivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn301/dcn301_resource.c:1011 dcn301_stream_encoder_create() error: buffer overflow 'stream_enc_regs' 4 <= 5"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: drm/amd/display: implementar la verificaci\u00f3n de los l\u00edmites para la creaci\u00f3n del codificador de flujo en la matriz DCN301 'stream_enc_regs' es una matriz de estructuras dcn10_stream_enc_registers. La matriz se inicializa con cuatro elementos, correspondientes a las cuatro llamadas a stream_enc_regs() en el inicializador de la matriz. Esto significa que los \u00edndices v\u00e1lidos para esta matriz son 0, 1, 2 y 3. El mensaje de error 'stream_enc_regs' 4 &lt;= 5 a continuaci\u00f3n indica que hay un intento de acceder a esta matriz con un \u00edndice de 5, que no est\u00e1 disponible. de los l\u00edmites. Esto podr\u00eda provocar un comportamiento indefinido. Aqu\u00ed, eng_id se utiliza como \u00edndice para acceder a la matriz stream_enc_regs. Si eng_id es 5, esto dar\u00eda como resultado un acceso fuera de los l\u00edmites en la matriz stream_enc_regs. Solucionando as\u00ed el error de desbordamiento de b\u00fafer en dcn301_stream_encoder_create informado por Smatch: drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn301/dcn301_resource.c:1011 dcn301_stream_encoder_create() error: desbordamiento de b\u00fafer 'stream_enc_regs' 4 &lt;= 5"
+          }
+        ],
+        "id": "CVE-2024-26660",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:43.053",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/42442f74314d41ddc68227047036fa3e78940054"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/58fca355ad37dcb5f785d9095db5f748b79c5dc2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a938eab9586eea31cfd129a507f552efae14d738"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cd9bd10c59e3c1446680514fd3097c5b00d3712d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/efdd665ce1a1634b8c1dad5e7f6baaef3e131d0a"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

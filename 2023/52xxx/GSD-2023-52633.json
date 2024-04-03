@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52633"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\num: time-travel: fix time corruption\n\nIn 'basic' time-travel mode (without =inf-cpu or =ext), we\nstill get timer interrupts. These can happen at arbitrary\npoints in time, i.e. while in timer_read(), which pushes\ntime forward just a little bit. Then, if we happen to get\nthe interrupt after calculating the new time to push to,\nbut before actually finishing that, the interrupt will set\nthe time to a value that's incompatible with the forward,\nand we'll crash because time goes backwards when we do the\nforwarding.\n\nFix this by reading the time_travel_time, calculating the\nadjustment, and doing the adjustment all with interrupts\ndisabled.",
       "id": "GSD-2023-52633",
       "modified": "2024-03-07T06:01:45.481777Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,72 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52633",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "0c7478a2da3f"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.77",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.16",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +93,95 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\num: time-travel: fix time corruption\n\nIn 'basic' time-travel mode (without =inf-cpu or =ext), we\nstill get timer interrupts. These can happen at arbitrary\npoints in time, i.e. while in timer_read(), which pushes\ntime forward just a little bit. Then, if we happen to get\nthe interrupt after calculating the new time to push to,\nbut before actually finishing that, the interrupt will set\nthe time to a value that's incompatible with the forward,\nand we'll crash because time goes backwards when we do the\nforwarding.\n\nFix this by reading the time_travel_time, calculating the\nadjustment, and doing the adjustment all with interrupts\ndisabled."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/0c7478a2da3f5fe106b4658338873d50c86ac7ab",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0c7478a2da3f5fe106b4658338873d50c86ac7ab"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4f7dad73df4cdb2b7042103d3922745d040ad025",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4f7dad73df4cdb2b7042103d3922745d040ad025"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/de3e9d8e8d1ae0a4d301109d1ec140796901306c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/de3e9d8e8d1ae0a4d301109d1ec140796901306c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b427f55e9d4185f6f17cc1e3296eb8d0c4425283",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b427f55e9d4185f6f17cc1e3296eb8d0c4425283"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/abe4eaa8618bb36c2b33e9cdde0499296a23448c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/abe4eaa8618bb36c2b33e9cdde0499296a23448c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\num: time-travel: fix time corruption\n\nIn 'basic' time-travel mode (without =inf-cpu or =ext), we\nstill get timer interrupts. These can happen at arbitrary\npoints in time, i.e. while in timer_read(), which pushes\ntime forward just a little bit. Then, if we happen to get\nthe interrupt after calculating the new time to push to,\nbut before actually finishing that, the interrupt will set\nthe time to a value that's incompatible with the forward,\nand we'll crash because time goes backwards when we do the\nforwarding.\n\nFix this by reading the time_travel_time, calculating the\nadjustment, and doing the adjustment all with interrupts\ndisabled."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: um: viaje en el tiempo: corrige la corrupci\u00f3n del tiempo En el modo de viaje en el tiempo 'b\u00e1sico' (sin =inf-cpu o =ext), todav\u00eda obtenemos interrupciones del temporizador. Esto puede suceder en momentos arbitrarios en el tiempo, es decir, mientras est\u00e1 en timer_read(), lo que adelanta un poco el tiempo. Luego, si recibimos la interrupci\u00f3n despu\u00e9s de calcular el nuevo tiempo al que enviar, pero antes de finalizarlo, la interrupci\u00f3n establecer\u00e1 el tiempo en un valor que es incompatible con el avance, y fallaremos porque el tiempo retrocede cuando hacer el reenv\u00edo. Solucione este problema leyendo time_travel_time, calculando el ajuste y realizando el ajuste, todo con las interrupciones desactivadas."
+          }
+        ],
+        "id": "CVE-2023-52633",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:41.097",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0c7478a2da3f5fe106b4658338873d50c86ac7ab"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4f7dad73df4cdb2b7042103d3922745d040ad025"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/abe4eaa8618bb36c2b33e9cdde0499296a23448c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b427f55e9d4185f6f17cc1e3296eb8d0c4425283"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/de3e9d8e8d1ae0a4d301109d1ec140796901306c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-29180"
       ],
+      "details": "Prior to versions 7.1.0, 6.1.2, and 5.3.4, the webpack-dev-middleware development middleware for devpack does not validate the supplied URL address sufficiently before returning the local file. It is possible to access any file on the developer's machine. The middleware can either work with the physical filesystem when reading the files or it can use a virtualized in-memory `memfs` filesystem. If `writeToDisk` configuration option is set to `true`, the physical filesystem is used. The `getFilenameFromUrl` method is used to parse URL and build the local file path. The public path prefix is stripped from the URL, and the `unsecaped` path suffix is appended to the `outputPath`. As the URL is not unescaped and normalized automatically before calling the midlleware, it is possible to use `%2e` and `%2f` sequences to perform path traversal attack.\n\nDevelopers using `webpack-dev-server` or `webpack-dev-middleware` are affected by the issue. When the project is started, an attacker might access any file on the developer's machine and exfiltrate the content. If the development server is listening on a public IP address (or `0.0.0.0`), an attacker on the local network can access the local files without any interaction from the victim (direct connection to the port). If the server allows access from third-party domains, an attacker can send a malicious link to the victim. When visited, the client side script can connect to the local server and exfiltrate the local files. Starting with fixed versions 7.1.0, 6.1.2, and 5.3.4, the URL is unescaped and normalized before any further processing.",
       "id": "GSD-2024-29180",
       "modified": "2024-04-02T05:02:57.458989Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,41 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-29180",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "webpack-dev-middleware",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 7.0.0, < 7.1.0"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 6.0.0, < 6.1.2"
+                        },
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 5.3.4"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "webpack"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +62,93 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Prior to versions 7.1.0, 6.1.2, and 5.3.4, the webpack-dev-middleware development middleware for devpack does not validate the supplied URL address sufficiently before returning the local file. It is possible to access any file on the developer's machine. The middleware can either work with the physical filesystem when reading the files or it can use a virtualized in-memory `memfs` filesystem. If `writeToDisk` configuration option is set to `true`, the physical filesystem is used. The `getFilenameFromUrl` method is used to parse URL and build the local file path. The public path prefix is stripped from the URL, and the `unsecaped` path suffix is appended to the `outputPath`. As the URL is not unescaped and normalized automatically before calling the midlleware, it is possible to use `%2e` and `%2f` sequences to perform path traversal attack.\n\nDevelopers using `webpack-dev-server` or `webpack-dev-middleware` are affected by the issue. When the project is started, an attacker might access any file on the developer's machine and exfiltrate the content. If the development server is listening on a public IP address (or `0.0.0.0`), an attacker on the local network can access the local files without any interaction from the victim (direct connection to the port). If the server allows access from third-party domains, an attacker can send a malicious link to the victim. When visited, the client side script can connect to the local server and exfiltrate the local files. Starting with fixed versions 7.1.0, 6.1.2, and 5.3.4, the URL is unescaped and normalized before any further processing."
           }
         ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.4,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:N/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-22",
+                "lang": "eng",
+                "value": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/security/advisories/GHSA-wr3j-pwj9-hqq6",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/security/advisories/GHSA-wr3j-pwj9-hqq6"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/commit/189c4ac7d2344ec132a4689e74dc837ec5be0132",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/commit/189c4ac7d2344ec132a4689e74dc837ec5be0132"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/commit/9670b3495da518fe667ff3428c5e4cb9f2f3d353",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/commit/9670b3495da518fe667ff3428c5e4cb9f2f3d353"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/commit/e10008c762e4d5821ed6990348dabf0d4d93a10e",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/commit/e10008c762e4d5821ed6990348dabf0d4d93a10e"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/blob/7ed24e0b9f53ad1562343f9f517f0f0ad2a70377/src/utils/getFilenameFromUrl.js#L82",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/blob/7ed24e0b9f53ad1562343f9f517f0f0ad2a70377/src/utils/getFilenameFromUrl.js#L82"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/blob/7ed24e0b9f53ad1562343f9f517f0f0ad2a70377/src/utils/setupOutputFileSystem.js#L21",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/blob/7ed24e0b9f53ad1562343f9f517f0f0ad2a70377/src/utils/setupOutputFileSystem.js#L21"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v5.3.4",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v5.3.4"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v6.1.2",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v6.1.2"
+          },
+          {
+            "name": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v7.1.0",
+            "refsource": "MISC",
+            "url": "https://github.com/webpack/webpack-dev-middleware/releases/tag/v7.1.0"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-wr3j-pwj9-hqq6",
+        "discovery": "UNKNOWN"
       }
     },
     "nvd.nist.gov": {

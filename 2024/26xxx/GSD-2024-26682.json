@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26682"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mac80211: improve CSA/ECSA connection refusal\n\nAs mentioned in the previous commit, we pretty quickly found\nthat some APs have ECSA elements stuck in their probe response,\nso using that to not attempt to connect while CSA is happening\nwe never connect to such an AP.\n\nImprove this situation by checking more carefully and ignoring\nthe ECSA if cfg80211 has previously detected the ECSA element\nbeing stuck in the probe response.\n\nAdditionally, allow connecting to an AP that's switching to a\nchannel it's already using, unless it's using quiet mode. In\nthis case, we may just have to adjust bandwidth later. If it's\nactually switching channels, it's better not to try to connect\nin the middle of that.",
       "id": "GSD-2024-26682",
       "modified": "2024-02-20T06:02:29.130490Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,64 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26682",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "c09c4f31998b",
+                          "version_value": "ea88bde8e3fe"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.7"
+                              },
+                              {
+                                "lessThan": "6.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +85,68 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mac80211: improve CSA/ECSA connection refusal\n\nAs mentioned in the previous commit, we pretty quickly found\nthat some APs have ECSA elements stuck in their probe response,\nso using that to not attempt to connect while CSA is happening\nwe never connect to such an AP.\n\nImprove this situation by checking more carefully and ignoring\nthe ECSA if cfg80211 has previously detected the ECSA element\nbeing stuck in the probe response.\n\nAdditionally, allow connecting to an AP that's switching to a\nchannel it's already using, unless it's using quiet mode. In\nthis case, we may just have to adjust bandwidth later. If it's\nactually switching channels, it's better not to try to connect\nin the middle of that."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ea88bde8e3fefbe4268f6991375dd629895a090a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ea88bde8e3fefbe4268f6991375dd629895a090a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/35e2385dbe787936c793d70755a5177d267a40aa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/35e2385dbe787936c793d70755a5177d267a40aa"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mac80211: improve CSA/ECSA connection refusal\n\nAs mentioned in the previous commit, we pretty quickly found\nthat some APs have ECSA elements stuck in their probe response,\nso using that to not attempt to connect while CSA is happening\nwe never connect to such an AP.\n\nImprove this situation by checking more carefully and ignoring\nthe ECSA if cfg80211 has previously detected the ECSA element\nbeing stuck in the probe response.\n\nAdditionally, allow connecting to an AP that's switching to a\nchannel it's already using, unless it's using quiet mode. In\nthis case, we may just have to adjust bandwidth later. If it's\nactually switching channels, it's better not to try to connect\nin the middle of that."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: \"wifi: mac80211: improve CSA/ECSA connection refusal\". Como se mencion\u00f3 en el commit anterior, descubrimos r\u00e1pidamente que algunos AP tienen elementos ECSA atascados en su respuesta de sondeo, por lo que no se pueden usar si intentamos conectarnos mientras se realiza CSA, nunca nos conectaremos a dicho AP. Mejore esta situaci\u00f3n verificando m\u00e1s cuidadosamente e ignorando ECSA si cfg80211 ha detectado previamente que el elemento ECSA est\u00e1 atascado en la respuesta de la sonda. Adem\u00e1s, permita conectarse a un AP que est\u00e9 cambiando a un canal que ya est\u00e9 usando, a menos que est\u00e9 usando el modo silencioso. En este caso, es posible que tengamos que ajustar el ancho de banda m\u00e1s adelante. Si en realidad est\u00e1 cambiando de canal, es mejor no intentar conectarse en medio de eso."
+          }
+        ],
+        "id": "CVE-2024-26682",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:44.637",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/35e2385dbe787936c793d70755a5177d267a40aa"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ea88bde8e3fefbe4268f6991375dd629895a090a"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

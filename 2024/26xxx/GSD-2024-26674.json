@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26674"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/lib: Revert to _ASM_EXTABLE_UA() for {get,put}_user() fixups\n\nDuring memory error injection test on kernels >= v6.4, the kernel panics\nlike below. However, this issue couldn't be reproduced on kernels <= v6.3.\n\n  mce: [Hardware Error]: CPU 296: Machine Check Exception: f Bank 1: bd80000000100134\n  mce: [Hardware Error]: RIP 10:<ffffffff821b9776> {__get_user_nocheck_4+0x6/0x20}\n  mce: [Hardware Error]: TSC 411a93533ed ADDR 346a8730040 MISC 86\n  mce: [Hardware Error]: PROCESSOR 0:a06d0 TIME 1706000767 SOCKET 1 APIC 211 microcode 80001490\n  mce: [Hardware Error]: Run the above through 'mcelog --ascii'\n  mce: [Hardware Error]: Machine check: Data load in unrecoverable area of kernel\n  Kernel panic - not syncing: Fatal local machine check\n\nThe MCA code can recover from an in-kernel #MC if the fixup type is\nEX_TYPE_UACCESS, explicitly indicating that the kernel is attempting to\naccess userspace memory. However, if the fixup type is EX_TYPE_DEFAULT\nthe only thing that is raised for an in-kernel #MC is a panic.\n\nex_handler_uaccess() would warn if users gave a non-canonical addresses\n(with bit 63 clear) to {get, put}_user(), which was unexpected.\n\nTherefore, commit\n\n  b19b74bc99b1 (\"x86/mm: Rework address range check in get_user() and put_user()\")\n\nreplaced _ASM_EXTABLE_UA() with _ASM_EXTABLE() for {get, put}_user()\nfixups. However, the new fixup type EX_TYPE_DEFAULT results in a panic.\n\nCommit\n\n  6014bc27561f (\"x86-64: make access_ok() independent of LAM\")\n\nadded the check gp_fault_address_ok() right before the WARN_ONCE() in\nex_handler_uaccess() to not warn about non-canonical user addresses due\nto LAM.\n\nWith that in place, revert back to _ASM_EXTABLE_UA() for {get,put}_user()\nexception fixups in order to be able to handle in-kernel MCEs correctly\nagain.\n\n  [ bp: Massage commit message. ]",
       "id": "GSD-2024-26674",
       "modified": "2024-02-20T06:02:29.228128Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26674",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "b19b74bc99b1",
+                          "version_value": "2aed1b6c33af"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.4"
+                              },
+                              {
+                                "lessThan": "6.4",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.17",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,77 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/lib: Revert to _ASM_EXTABLE_UA() for {get,put}_user() fixups\n\nDuring memory error injection test on kernels >= v6.4, the kernel panics\nlike below. However, this issue couldn't be reproduced on kernels <= v6.3.\n\n  mce: [Hardware Error]: CPU 296: Machine Check Exception: f Bank 1: bd80000000100134\n  mce: [Hardware Error]: RIP 10:<ffffffff821b9776> {__get_user_nocheck_4+0x6/0x20}\n  mce: [Hardware Error]: TSC 411a93533ed ADDR 346a8730040 MISC 86\n  mce: [Hardware Error]: PROCESSOR 0:a06d0 TIME 1706000767 SOCKET 1 APIC 211 microcode 80001490\n  mce: [Hardware Error]: Run the above through 'mcelog --ascii'\n  mce: [Hardware Error]: Machine check: Data load in unrecoverable area of kernel\n  Kernel panic - not syncing: Fatal local machine check\n\nThe MCA code can recover from an in-kernel #MC if the fixup type is\nEX_TYPE_UACCESS, explicitly indicating that the kernel is attempting to\naccess userspace memory. However, if the fixup type is EX_TYPE_DEFAULT\nthe only thing that is raised for an in-kernel #MC is a panic.\n\nex_handler_uaccess() would warn if users gave a non-canonical addresses\n(with bit 63 clear) to {get, put}_user(), which was unexpected.\n\nTherefore, commit\n\n  b19b74bc99b1 (\"x86/mm: Rework address range check in get_user() and put_user()\")\n\nreplaced _ASM_EXTABLE_UA() with _ASM_EXTABLE() for {get, put}_user()\nfixups. However, the new fixup type EX_TYPE_DEFAULT results in a panic.\n\nCommit\n\n  6014bc27561f (\"x86-64: make access_ok() independent of LAM\")\n\nadded the check gp_fault_address_ok() right before the WARN_ONCE() in\nex_handler_uaccess() to not warn about non-canonical user addresses due\nto LAM.\n\nWith that in place, revert back to _ASM_EXTABLE_UA() for {get,put}_user()\nexception fixups in order to be able to handle in-kernel MCEs correctly\nagain.\n\n  [ bp: Massage commit message. ]"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2aed1b6c33afd8599d01c6532bbecb829480a674",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2aed1b6c33afd8599d01c6532bbecb829480a674"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2da241c5ed78d0978228a1150735539fe1a60eca",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2da241c5ed78d0978228a1150735539fe1a60eca"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8eed4e00a370b37b4e5985ed983dccedd555ea9d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8eed4e00a370b37b4e5985ed983dccedd555ea9d"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/lib: Revert to _ASM_EXTABLE_UA() for {get,put}_user() fixups\n\nDuring memory error injection test on kernels >= v6.4, the kernel panics\nlike below. However, this issue couldn't be reproduced on kernels <= v6.3.\n\n  mce: [Hardware Error]: CPU 296: Machine Check Exception: f Bank 1: bd80000000100134\n  mce: [Hardware Error]: RIP 10:<ffffffff821b9776> {__get_user_nocheck_4+0x6/0x20}\n  mce: [Hardware Error]: TSC 411a93533ed ADDR 346a8730040 MISC 86\n  mce: [Hardware Error]: PROCESSOR 0:a06d0 TIME 1706000767 SOCKET 1 APIC 211 microcode 80001490\n  mce: [Hardware Error]: Run the above through 'mcelog --ascii'\n  mce: [Hardware Error]: Machine check: Data load in unrecoverable area of kernel\n  Kernel panic - not syncing: Fatal local machine check\n\nThe MCA code can recover from an in-kernel #MC if the fixup type is\nEX_TYPE_UACCESS, explicitly indicating that the kernel is attempting to\naccess userspace memory. However, if the fixup type is EX_TYPE_DEFAULT\nthe only thing that is raised for an in-kernel #MC is a panic.\n\nex_handler_uaccess() would warn if users gave a non-canonical addresses\n(with bit 63 clear) to {get, put}_user(), which was unexpected.\n\nTherefore, commit\n\n  b19b74bc99b1 (\"x86/mm: Rework address range check in get_user() and put_user()\")\n\nreplaced _ASM_EXTABLE_UA() with _ASM_EXTABLE() for {get, put}_user()\nfixups. However, the new fixup type EX_TYPE_DEFAULT results in a panic.\n\nCommit\n\n  6014bc27561f (\"x86-64: make access_ok() independent of LAM\")\n\nadded the check gp_fault_address_ok() right before the WARN_ONCE() in\nex_handler_uaccess() to not warn about non-canonical user addresses due\nto LAM.\n\nWith that in place, revert back to _ASM_EXTABLE_UA() for {get,put}_user()\nexception fixups in order to be able to handle in-kernel MCEs correctly\nagain.\n\n  [ bp: Massage commit message. ]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: x86/lib: vuelva a _ASM_EXTABLE_UA() para reparaciones de {get,put}_user() Durante la prueba de inyecci\u00f3n de errores de memoria en kernels &gt;= v6.4, el kernel entra en p\u00e1nico como se muestra a continuaci\u00f3n. Sin embargo, este problema no se pudo reproducir en kernels &lt;= v6.3. mce: [Error de hardware]: CPU 296: Excepci\u00f3n de verificaci\u00f3n de la m\u00e1quina: f Banco 1: bd80000000100134 mce: [Error de hardware]: RIP 10: {__get_user_nocheck_4+0x6/0x20} mce: [Error de hardware]: TSC 411a93533ed ADDR 346a87300 40 MISC 86 mce: [Error de hardware]: PROCESADOR 0:a06d0 HORA 1706000767 SOCKET 1 APIC 211 microc\u00f3digo 80001490 mce: [Error de hardware]: Ejecute lo anterior a trav\u00e9s de 'mcelog --ascii' mce: [Error de hardware]: Verificaci\u00f3n de la m\u00e1quina: Carga de datos en un \u00e1rea irrecuperable del kernel P\u00e1nico del kernel - no se sincroniza: verificaci\u00f3n fatal de la m\u00e1quina local El c\u00f3digo MCA se puede recuperar de un #MC en el kernel si el tipo de reparaci\u00f3n es EX_TYPE_UACCESS, lo que indica expl\u00edcitamente que el kernel est\u00e1 intentando acceder a la memoria del espacio de usuario. Sin embargo, si el tipo de reparaci\u00f3n es EX_TYPE_DEFAULT, lo \u00fanico que se genera para un #MC en el kernel es p\u00e1nico. ex_handler_uaccess() advertir\u00eda si los usuarios proporcionaban direcciones no can\u00f3nicas (con el bit 63 claro) a {get, put}_user(), lo cual era inesperado. Por lo tanto, el commit b19b74bc99b1 (\"x86/mm: Reelaborar la verificaci\u00f3n del rango de direcciones en get_user() y put_user()\") reemplaz\u00f3 _ASM_EXTABLE_UA() con _ASM_EXTABLE() para las correcciones de {get, put}_user(). Sin embargo, el nuevo tipo de reparaci\u00f3n EX_TYPE_DEFAULT provoca p\u00e1nico. El commit 6014bc27561f (\"x86-64: hacer que access_ok() sea independiente de LAM\") agreg\u00f3 la verificaci\u00f3n gp_fault_address_ok() justo antes de WARN_ONCE() en ex_handler_uaccess() para no advertir sobre direcciones de usuarios no can\u00f3nicas debido a LAM. Una vez implementado esto, vuelva a _ASM_EXTABLE_UA() para corregir excepciones de {get,put}_user() para poder manejar correctamente los MCE en el kernel nuevamente. [pb: mensaje de commit. ]"
+          }
+        ],
+        "id": "CVE-2024-26674",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:44.033",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2aed1b6c33afd8599d01c6532bbecb829480a674"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2da241c5ed78d0978228a1150735539fe1a60eca"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8eed4e00a370b37b4e5985ed983dccedd555ea9d"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

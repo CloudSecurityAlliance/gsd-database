@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26680"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: atlantic: Fix DMA mapping for PTP hwts ring\n\nFunction aq_ring_hwts_rx_alloc() maps extra AQ_CFG_RXDS_DEF bytes\nfor PTP HWTS ring but then generic aq_ring_free() does not take this\ninto account.\nCreate and use a specific function to free HWTS ring to fix this\nissue.\n\nTrace:\n[  215.351607] ------------[ cut here ]------------\n[  215.351612] DMA-API: atlantic 0000:4b:00.0: device driver frees DMA memory with different size [device address=0x00000000fbdd0000] [map size=34816 bytes] [unmap size=32768 bytes]\n[  215.351635] WARNING: CPU: 33 PID: 10759 at kernel/dma/debug.c:988 check_unmap+0xa6f/0x2360\n...\n[  215.581176] Call Trace:\n[  215.583632]  <TASK>\n[  215.585745]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.590114]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.594497]  ? debug_dma_free_coherent+0x196/0x210\n[  215.599305]  ? check_unmap+0xa6f/0x2360\n[  215.603147]  ? __warn+0xca/0x1d0\n[  215.606391]  ? check_unmap+0xa6f/0x2360\n[  215.610237]  ? report_bug+0x1ef/0x370\n[  215.613921]  ? handle_bug+0x3c/0x70\n[  215.617423]  ? exc_invalid_op+0x14/0x50\n[  215.621269]  ? asm_exc_invalid_op+0x16/0x20\n[  215.625480]  ? check_unmap+0xa6f/0x2360\n[  215.629331]  ? mark_lock.part.0+0xca/0xa40\n[  215.633445]  debug_dma_free_coherent+0x196/0x210\n[  215.638079]  ? __pfx_debug_dma_free_coherent+0x10/0x10\n[  215.643242]  ? slab_free_freelist_hook+0x11d/0x1d0\n[  215.648060]  dma_free_attrs+0x6d/0x130\n[  215.651834]  aq_ring_free+0x193/0x290 [atlantic]\n[  215.656487]  aq_ptp_ring_free+0x67/0x110 [atlantic]\n...\n[  216.127540] ---[ end trace 6467e5964dd2640b ]---\n[  216.132160] DMA-API: Mapped at:\n[  216.132162]  debug_dma_alloc_coherent+0x66/0x2f0\n[  216.132165]  dma_alloc_attrs+0xf5/0x1b0\n[  216.132168]  aq_ring_hwts_rx_alloc+0x150/0x1f0 [atlantic]\n[  216.132193]  aq_ptp_ring_alloc+0x1bb/0x540 [atlantic]\n[  216.132213]  aq_nic_init+0x4a1/0x760 [atlantic]",
       "id": "GSD-2024-26680",
       "modified": "2024-02-20T06:02:29.115852Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26680",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "94ad94558b0f",
+                          "version_value": "466ceebe48cb"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.5"
+                              },
+                              {
+                                "lessThan": "5.5",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.78",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.17",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: atlantic: Fix DMA mapping for PTP hwts ring\n\nFunction aq_ring_hwts_rx_alloc() maps extra AQ_CFG_RXDS_DEF bytes\nfor PTP HWTS ring but then generic aq_ring_free() does not take this\ninto account.\nCreate and use a specific function to free HWTS ring to fix this\nissue.\n\nTrace:\n[  215.351607] ------------[ cut here ]------------\n[  215.351612] DMA-API: atlantic 0000:4b:00.0: device driver frees DMA memory with different size [device address=0x00000000fbdd0000] [map size=34816 bytes] [unmap size=32768 bytes]\n[  215.351635] WARNING: CPU: 33 PID: 10759 at kernel/dma/debug.c:988 check_unmap+0xa6f/0x2360\n...\n[  215.581176] Call Trace:\n[  215.583632]  <TASK>\n[  215.585745]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.590114]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.594497]  ? debug_dma_free_coherent+0x196/0x210\n[  215.599305]  ? check_unmap+0xa6f/0x2360\n[  215.603147]  ? __warn+0xca/0x1d0\n[  215.606391]  ? check_unmap+0xa6f/0x2360\n[  215.610237]  ? report_bug+0x1ef/0x370\n[  215.613921]  ? handle_bug+0x3c/0x70\n[  215.617423]  ? exc_invalid_op+0x14/0x50\n[  215.621269]  ? asm_exc_invalid_op+0x16/0x20\n[  215.625480]  ? check_unmap+0xa6f/0x2360\n[  215.629331]  ? mark_lock.part.0+0xca/0xa40\n[  215.633445]  debug_dma_free_coherent+0x196/0x210\n[  215.638079]  ? __pfx_debug_dma_free_coherent+0x10/0x10\n[  215.643242]  ? slab_free_freelist_hook+0x11d/0x1d0\n[  215.648060]  dma_free_attrs+0x6d/0x130\n[  215.651834]  aq_ring_free+0x193/0x290 [atlantic]\n[  215.656487]  aq_ptp_ring_free+0x67/0x110 [atlantic]\n...\n[  216.127540] ---[ end trace 6467e5964dd2640b ]---\n[  216.132160] DMA-API: Mapped at:\n[  216.132162]  debug_dma_alloc_coherent+0x66/0x2f0\n[  216.132165]  dma_alloc_attrs+0xf5/0x1b0\n[  216.132168]  aq_ring_hwts_rx_alloc+0x150/0x1f0 [atlantic]\n[  216.132193]  aq_ptp_ring_alloc+0x1bb/0x540 [atlantic]\n[  216.132213]  aq_nic_init+0x4a1/0x760 [atlantic]"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/466ceebe48cbba3f4506f165fca7111f9eb8bb12",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/466ceebe48cbba3f4506f165fca7111f9eb8bb12"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/004fe5b7f59286a926a45e0cafc7870e9cdddd56",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/004fe5b7f59286a926a45e0cafc7870e9cdddd56"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e42e334c645575be5432adee224975d4f536fdb1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e42e334c645575be5432adee224975d4f536fdb1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2e7d3b67630dfd8f178c41fa2217aa00e79a5887",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2e7d3b67630dfd8f178c41fa2217aa00e79a5887"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: atlantic: Fix DMA mapping for PTP hwts ring\n\nFunction aq_ring_hwts_rx_alloc() maps extra AQ_CFG_RXDS_DEF bytes\nfor PTP HWTS ring but then generic aq_ring_free() does not take this\ninto account.\nCreate and use a specific function to free HWTS ring to fix this\nissue.\n\nTrace:\n[  215.351607] ------------[ cut here ]------------\n[  215.351612] DMA-API: atlantic 0000:4b:00.0: device driver frees DMA memory with different size [device address=0x00000000fbdd0000] [map size=34816 bytes] [unmap size=32768 bytes]\n[  215.351635] WARNING: CPU: 33 PID: 10759 at kernel/dma/debug.c:988 check_unmap+0xa6f/0x2360\n...\n[  215.581176] Call Trace:\n[  215.583632]  <TASK>\n[  215.585745]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.590114]  ? show_trace_log_lvl+0x1c4/0x2df\n[  215.594497]  ? debug_dma_free_coherent+0x196/0x210\n[  215.599305]  ? check_unmap+0xa6f/0x2360\n[  215.603147]  ? __warn+0xca/0x1d0\n[  215.606391]  ? check_unmap+0xa6f/0x2360\n[  215.610237]  ? report_bug+0x1ef/0x370\n[  215.613921]  ? handle_bug+0x3c/0x70\n[  215.617423]  ? exc_invalid_op+0x14/0x50\n[  215.621269]  ? asm_exc_invalid_op+0x16/0x20\n[  215.625480]  ? check_unmap+0xa6f/0x2360\n[  215.629331]  ? mark_lock.part.0+0xca/0xa40\n[  215.633445]  debug_dma_free_coherent+0x196/0x210\n[  215.638079]  ? __pfx_debug_dma_free_coherent+0x10/0x10\n[  215.643242]  ? slab_free_freelist_hook+0x11d/0x1d0\n[  215.648060]  dma_free_attrs+0x6d/0x130\n[  215.651834]  aq_ring_free+0x193/0x290 [atlantic]\n[  215.656487]  aq_ptp_ring_free+0x67/0x110 [atlantic]\n...\n[  216.127540] ---[ end trace 6467e5964dd2640b ]---\n[  216.132160] DMA-API: Mapped at:\n[  216.132162]  debug_dma_alloc_coherent+0x66/0x2f0\n[  216.132165]  dma_alloc_attrs+0xf5/0x1b0\n[  216.132168]  aq_ring_hwts_rx_alloc+0x150/0x1f0 [atlantic]\n[  216.132193]  aq_ptp_ring_alloc+0x1bb/0x540 [atlantic]\n[  216.132213]  aq_nic_init+0x4a1/0x760 [atlantic]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net: atlantic: corrige el mapeo DMA para el anillo PTP hwts. La funci\u00f3n aq_ring_hwts_rx_alloc() asigna bytes AQ_CFG_RXDS_DEF adicionales para el anillo PTP HWTS, pero luego el aq_ring_free() gen\u00e9rico no tiene esto en cuenta. Cree y utilice una funci\u00f3n espec\u00edfica para liberar el anillo HWTS y solucionar este problema. Seguimiento: [215.351607] ------------[ cortar aqu\u00ed ]------------ [ 215.351612] DMA-API: atlantic 0000:4b:00.0: el controlador de dispositivo se libera Memoria DMA con diferente tama\u00f1o [direcci\u00f3n del dispositivo=0x00000000fbdd0000] [tama\u00f1o del mapa=34816 bytes] [tama\u00f1o de desasignaci\u00f3n=32768 bytes] [215.351635] ADVERTENCIA: CPU: 33 PID: 10759 en kernel/dma/debug.c:988 check_unmap+0xa6f/ 0x2360... [215.581176] Seguimiento de llamadas: [215.583632]  [215.585745]? show_trace_log_lvl+0x1c4/0x2df [215.590114]? show_trace_log_lvl+0x1c4/0x2df [215.594497]? debug_dma_free_coherent+0x196/0x210 [215.599305]? check_unmap+0xa6f/0x2360 [215.603147]? __advertir+0xca/0x1d0 [215.606391] ? check_unmap+0xa6f/0x2360 [215.610237]? report_bug+0x1ef/0x370 [215.613921]? handle_bug+0x3c/0x70 [215.617423]? exc_invalid_op+0x14/0x50 [215.621269]? asm_exc_invalid_op+0x16/0x20 [215.625480]? check_unmap+0xa6f/0x2360 [215.629331]? mark_lock.part.0+0xca/0xa40 [215.633445] debug_dma_free_coherent+0x196/0x210 [215.638079]? __pfx_debug_dma_free_coherent+0x10/0x10 [215.643242] ? slab_free_freelist_hook+0x11d/0x1d0 [ 215.648060] dma_free_attrs+0x6d/0x130 [ 215.651834] aq_ring_free+0x193/0x290 [atl\u00e1ntico] [ 215.656487] aq_ptp_ring_free+0x67/0x110 [atl\u00e1ntico]... [216.127540] ---[fin de seguimiento 6467e5964dd2640b]- -- [ 216.132160] DMA-API: Asignado en: [ 216.132162] debug_dma_alloc_coherent+0x66/0x2f0 [ 216.132165] dma_alloc_attrs+0xf5/0x1b0 [ 216.132168] aq_ring_hwts_rx_alloc+0x150 /0x1f0 [atl\u00e1ntico] [ 216.132193] aq_ptp_ring_alloc+0x1bb/0x540 [atl\u00e1ntico] [216.132213] aq_nic_init+0x4a1/0x760 [atl\u00e1ntico]"
+          }
+        ],
+        "id": "CVE-2024-26680",
+        "lastModified": "2024-04-02T12:50:42.233",
+        "metrics": {},
+        "published": "2024-04-02T07:15:44.490",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/004fe5b7f59286a926a45e0cafc7870e9cdddd56"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2e7d3b67630dfd8f178c41fa2217aa00e79a5887"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/466ceebe48cbba3f4506f165fca7111f9eb8bb12"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e42e334c645575be5432adee224975d4f536fdb1"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

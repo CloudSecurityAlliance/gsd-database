@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52628"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nftables: exthdr: fix 4-byte stack OOB write\n\nIf priv->len is a multiple of 4, then dst[len / 4] can write past\nthe destination array which leads to stack corruption.\n\nThis construct is necessary to clean the remainder of the register\nin case ->len is NOT a multiple of the register size, so make it\nconditional just like nft_payload.c does.\n\nThe bug was added in 4.1 cycle and then copied/inherited when\ntcp/sctp and ip option support was added.\n\nBug reported by Zero Day Initiative project (ZDI-CAN-21950,\nZDI-CAN-21951, ZDI-CAN-21961).",
       "id": "GSD-2023-52628",
       "modified": "2024-03-07T06:01:45.571270Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52628",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "dbb5281a1f84",
+                          "version_value": "a7d86a77c33b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.1"
+                              },
+                              {
+                                "lessThan": "4.1",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.198",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.132",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.54",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.5.*",
+                                "status": "unaffected",
+                                "version": "6.5.4",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.6",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +103,51 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nftables: exthdr: fix 4-byte stack OOB write\n\nIf priv->len is a multiple of 4, then dst[len / 4] can write past\nthe destination array which leads to stack corruption.\n\nThis construct is necessary to clean the remainder of the register\nin case ->len is NOT a multiple of the register size, so make it\nconditional just like nft_payload.c does.\n\nThe bug was added in 4.1 cycle and then copied/inherited when\ntcp/sctp and ip option support was added.\n\nBug reported by Zero Day Initiative project (ZDI-CAN-21950,\nZDI-CAN-21951, ZDI-CAN-21961)."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-b4257b672505"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/a7d86a77c33ba1c357a7504341172cc1507f0698",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a7d86a77c33ba1c357a7504341172cc1507f0698"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1ad7b189cc1411048434e8595ffcbe7873b71082",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1ad7b189cc1411048434e8595ffcbe7873b71082"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d9ebfc0f21377690837ebbd119e679243e0099cc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d9ebfc0f21377690837ebbd119e679243e0099cc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c8f292322ff16b9a2272a67de396c09a50e09dce",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c8f292322ff16b9a2272a67de396c09a50e09dce"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fd94d9dadee58e09b49075240fe83423eb1dcd36",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fd94d9dadee58e09b49075240fe83423eb1dcd36"
           }
         ]
       }

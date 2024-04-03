@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-1522"
       ],
+      "details": "The parisneo/lollms-webui does not have CSRF protections. As a result, an attacker is able to execute arbitrary OS commands via the `/execute_code` API endpoint by tricking a user into visiting a specially crafted webpage.",
       "id": "GSD-2024-1522",
       "modified": "2024-02-15T06:02:24.009806Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,34 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@huntr.com",
         "ID": "CVE-2024-1522",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "parisneo/lollms-webui",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "unspecified",
+                          "version_value": "9.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "parisneo"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +55,61 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "The parisneo/lollms-webui does not have CSRF protections. As a result, an attacker is able to execute arbitrary OS commands via the `/execute_code` API endpoint by tricking a user into visiting a specially crafted webpage."
           }
         ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-352",
+                "lang": "eng",
+                "value": "CWE-352 Cross-Site Request Forgery (CSRF)"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://huntr.com/bounties/687cef92-3432-4d6c-af92-868eccabbb71",
+            "refsource": "MISC",
+            "url": "https://huntr.com/bounties/687cef92-3432-4d6c-af92-868eccabbb71"
+          },
+          {
+            "name": "https://github.com/parisneo/lollms-webui/commit/0b51063119cfb5e391925d232a4af1de9dc32e2b",
+            "refsource": "MISC",
+            "url": "https://github.com/parisneo/lollms-webui/commit/0b51063119cfb5e391925d232a4af1de9dc32e2b"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "687cef92-3432-4d6c-af92-868eccabbb71",
+        "discovery": "EXTERNAL"
       }
     },
     "nvd.nist.gov": {
@@ -39,13 +117,17 @@
         "descriptions": [
           {
             "lang": "en",
-            "value": "I have activated the CORS because I had a development ui that uses another port number then I forgot to remove it.\n\nSo what I just did is :\n- First removed the cors configuration that allows everyone to access it :\nbefore:\n```python\n    sio = socketio.AsyncServer(async_mode=\"asgi\", cors_allowed_origins=\"*\", ping_timeout=1200, ping_interval=30)  # Enable CORS for every one\n```\nafter:\n```python\n    cert_file_path = lollms_paths.personal_certificates/\"cert.pem\"\n    key_file_path = lollms_paths.personal_certificates/\"key.pem\"\n    if os.path.exists(cert_file_path) and os.path.exists(key_file_path):\n        is_https = True\n    else:\n        is_https = False        \n\n    # Create a Socket.IO server\n    sio = socketio.AsyncServer(async_mode=\"asgi\", cors_allowed_origins=config.allowed_origins+[f\"https://localhost:{config['port']}\" if is_https else f\"http://localhost:{config['port']}\"], ping_timeout=1200, ping_interval=30)  # Enable CORS for selected origins\n```\n\n- Second, I have updated lollms to have two modes (a headless mode and a ui mode).\nAnd updated the /execute_code to block if the server is headless or is exposed\n```python\n@router.post(\"/execute_code\")\nasync def execute_code(request: Request):\n    \"\"\"\n    Executes Python code and returns the output.\n\n    :param request: The HTTP request object.\n    :return: A JSON response with the status of the operation.\n    \"\"\"\n    if lollmsElfServer.config.headless_server_mode:\n        return {\"status\":False,\"error\":\"Code execution is blocked when in headless mode for obvious security reasons!\"}\n\n    if lollmsElfServer.config.host==\"0.0.0.0\":\n        return {\"status\":False,\"error\":\"Code execution is blocked when the server is exposed outside for very obvipous reasons!\"}\n\n    try:\n        data = (await request.json())\n        code = data[\"code\"]\n        discussion_id = int(data.get(\"discussion_id\",\"unknown_discussion\"))\n        message_id = int(data.get(\"message_id\",\"unknown_message\"))\n        language = data.get(\"language\",\"python\")\n        \n\n\n        if language==\"python\":\n            ASCIIColors.info(\"Executing python code:\")\n            ASCIIColors.yellow(code)\n            return execute_python(code, discussion_id, message_id)\n        if language==\"javascript\":\n            ASCIIColors.info(\"Executing javascript code:\")\n            ASCIIColors.yellow(code)\n            return execute_javascript(code, discussion_id, message_id)\n        if language in [\"html\",\"html5\",\"svg\"]:\n            ASCIIColors.info(\"Executing javascript code:\")\n            ASCIIColors.yellow(code)\n            return execute_html(code, discussion_id, message_id)\n        \n        elif language==\"latex\":\n            ASCIIColors.info(\"Executing latex code:\")\n            ASCIIColors.yellow(code)\n            return execute_latex(code, discussion_id, message_id)\n        elif language in [\"bash\",\"shell\",\"cmd\",\"powershell\"]:\n            ASCIIColors.info(\"Executing shell code:\")\n            ASCIIColors.yellow(code)\n            return execute_bash(code, discussion_id, message_id)\n        elif language in [\"mermaid\"]:\n            ASCIIColors.info(\"Executing mermaid code:\")\n            ASCIIColors.yellow(code)\n            return execute_mermaid(code, discussion_id, message_id)\n        elif language in [\"graphviz\",\"dot\"]:\n            ASCIIColors.info(\"Executing graphviz code:\")\n            ASCIIColors.yellow(code)\n            return execute_graphviz(code, discussion_id, message_id)\n        return {\"status\": False, \"error\": \"Unsupported language\", \"execution_time\": 0}\n    except Exception as ex:\n        trace_exception(ex)\n        lollmsElfServer.error(ex)\n        return {\"status\":False,\"error\":str(ex)}\n```\n\nI also added an optional https mode and looking forward to add a full authentication with cookies and a personal session etc.\n\n\nAll updates will be in V 9.1 \n\n\nAgain, thanks alot for your work. I will make it harder next time, but if you find more bugs, just be my guest :)"
+            "value": "The parisneo/lollms-webui does not have CSRF protections. As a result, an attacker is able to execute arbitrary OS commands via the `/execute_code` API endpoint by tricking a user into visiting a specially crafted webpage."
+          },
+          {
+            "lang": "es",
+            "value": "Activ\u00e9 CORS porque ten\u00eda una interfaz de usuario de desarrollo que usa otro n\u00famero de puerto y luego olvid\u00e9 eliminarla. Entonces, lo que acabo de hacer es: - Primero elimin\u00e9 la configuraci\u00f3n de cors que permite a todos acceder a ella: antes: ```python sio = socketio.AsyncServer(async_mode=\"asgi\", cors_allowed_origins=\"*\", ping_timeout=1200, ping_interval= 30) # Habilite CORS para cada ``` despu\u00e9s de: ```python cert_file_path = lollms_paths.personal_certificates/\"cert.pem\" key_file_path = lollms_paths.personal_certificates/\"key.pem\" si os.path.exists(cert_file_path) y os .path.exists(key_file_path): is_https = True else: is_https = False # Crear un servidor Socket.IO sio = socketio.AsyncServer(async_mode=\"asgi\", cors_allowed_origins=config.allowed_origins+[f\"https://localhost:{ config['port']}\" if is_https else f\"http://localhost:{config['port']}\"], ping_timeout=1200, ping_interval=30) # Habilitar CORS para or\u00edgenes seleccionados ``` - Segundo, He actualizado lollms para que tenga dos modos (un modo sin cabeza y un modo ui). Y actualiz\u00f3 /execute_code para bloquear si el servidor no tiene cabeza o est\u00e1 expuesto ```python @router.post(\"/execute_code\") async def ejecutar_code(request: Request): \"\"\" Ejecuta el c\u00f3digo Python y devuelve la salida. : solicitud de par\u00e1metro: el objeto de solicitud HTTP. :return: una respuesta JSON con el estado de la operaci\u00f3n. \"\"\" if lollmsElfServer.config.headless_server_mode: return {\"status\":False,\"error\":\"La ejecuci\u00f3n del c\u00f3digo est\u00e1 bloqueada cuando est\u00e1 en \u00a1modo sin cabeza por razones obvias de seguridad!\"} if lollmsElfServer.config.host==\"0.0.0.0\": return {\"status\":False,\"error\":\"La ejecuci\u00f3n del c\u00f3digo se bloquea cuando el servidor est\u00e1 expuesto al exterior por razones muy obvias !\"} intente: datos = (espera solicitud.json()) c\u00f3digo = datos[\"c\u00f3digo\"] id_discusi\u00f3n = int(data.get(\"id_discusi\u00f3n\",\"discusi\u00f3n_desconocida\")) id_mensaje = int(data.get(\"id_mensaje) \",\"unknown_message\")) language = data.get(\"language\",\"python\") if language==\"python\": ASCIIColors.info(\"Ejecutando c\u00f3digo python:\") ASCIIColors.amarillo(c\u00f3digo) return ejecutar_python(c\u00f3digo) , id_discusi\u00f3n, id_mensaje) if idioma==\"javascript\": ASCIIColors.info(\"Ejecutando c\u00f3digo javascript:\") ASCIIColors.amarillo(c\u00f3digo) devuelve ejecutar_javascript(c\u00f3digo, id_discusi\u00f3n, id_mensaje) si el idioma est\u00e1 en [\"html\",\"html5\" ,\"svg\"]: ASCIIColors.info(\"Ejecutando c\u00f3digo javascript:\") ASCIIColors.amarillo(c\u00f3digo) return ejecutar_html(c\u00f3digo, id_discusi\u00f3n, id_mensaje) elif language==\"latex\": ASCIIColors.info(\"Ejecutando c\u00f3digo latex:\" ) ASCIIColors.amarillo(c\u00f3digo) devuelve ejecutar_latex(c\u00f3digo, id_discusi\u00f3n, id_mensaje) lenguaje elif en [\"bash\",\"shell\",\"cmd\",\"powershell\"]: ASCIIColors.info(\"Ejecutando c\u00f3digo de shell:\") ASCIIColors. amarillo(c\u00f3digo) devuelve ejecutar_bash(c\u00f3digo, id_discusi\u00f3n, id_mensaje) idioma elif en [\"sirena\"]: ASCIIColors.info(\"Ejecutando c\u00f3digo de sirena:\") ASCIIColors.amarillo(c\u00f3digo) devuelve ejecutar_mermaid(c\u00f3digo, id_discusi\u00f3n, id_mensaje) idioma elif en [\"graphviz\",\"punto\"]: ASCIIColors.info(\"Ejecutando c\u00f3digo Graphviz:\") ASCIIColors.amarillo(c\u00f3digo) return ejecutar_graphviz(c\u00f3digo, id_discusi\u00f3n, id_mensaje) return {\"status\": False, \"error\": \" Idioma no admitido\", \"execution_time\": 0} excepto excepci\u00f3n como por ejemplo: trace_exception(ex) lollmsElfServer.error(ex) return {\"status\":False,\"error\":str(ex)} ``` Tambi\u00e9n agregu\u00e9 un opcional modo https y esperamos agregar una autenticaci\u00f3n completa con cookies y una sesi\u00f3n personal, etc. Todas las actualizaciones estar\u00e1n en la versi\u00f3n 9.1 nuevamente, muchas gracias por su trabajo. Lo har\u00e9 m\u00e1s dif\u00edcil la pr\u00f3xima vez, pero si encuentras m\u00e1s errores, s\u00e9 mi invitado :)"
           }
         ],
         "id": "CVE-2024-1522",
-        "lastModified": "2024-04-01T01:12:59.077",
+        "lastModified": "2024-04-02T19:15:46.807",
         "metrics": {
-          "cvssMetricV30": [
+          "cvssMetricV31": [
             {
               "cvssData": {
                 "attackComplexity": "LOW",
@@ -58,8 +140,8 @@
                 "privilegesRequired": "NONE",
                 "scope": "UNCHANGED",
                 "userInteraction": "REQUIRED",
-                "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-                "version": "3.0"
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+                "version": "3.1"
               },
               "exploitabilityScore": 2.8,
               "impactScore": 5.9,
