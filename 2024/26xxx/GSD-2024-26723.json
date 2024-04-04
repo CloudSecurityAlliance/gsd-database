@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26723"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nlan966x: Fix crash when adding interface under a lag\n\nThere is a crash when adding one of the lan966x interfaces under a lag\ninterface. The issue can be reproduced like this:\nip link add name bond0 type bond miimon 100 mode balance-xor\nip link set dev eth0 master bond0\n\nThe reason is because when adding a interface under the lag it would go\nthrough all the ports and try to figure out which other ports are under\nthat lag interface. And the issue is that lan966x can have ports that are\nNULL pointer as they are not probed. So then iterating over these ports\nit would just crash as they are NULL pointers.\nThe fix consists in actually checking for NULL pointers before accessing\nsomething from the ports. Like we do in other places.",
       "id": "GSD-2024-26723",
       "modified": "2024-02-20T06:02:29.313370Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26723",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "cabc9d49333d",
+                          "version_value": "b9357489c46c"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.1"
+                              },
+                              {
+                                "lessThan": "6.1",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nlan966x: Fix crash when adding interface under a lag\n\nThere is a crash when adding one of the lan966x interfaces under a lag\ninterface. The issue can be reproduced like this:\nip link add name bond0 type bond miimon 100 mode balance-xor\nip link set dev eth0 master bond0\n\nThe reason is because when adding a interface under the lag it would go\nthrough all the ports and try to figure out which other ports are under\nthat lag interface. And the issue is that lan966x can have ports that are\nNULL pointer as they are not probed. So then iterating over these ports\nit would just crash as they are NULL pointers.\nThe fix consists in actually checking for NULL pointers before accessing\nsomething from the ports. Like we do in other places."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b9357489c46c7a43999964628db8b47d3a1f8672",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b9357489c46c7a43999964628db8b47d3a1f8672"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/48fae67d837488c87379f0c9f27df7391718477c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/48fae67d837488c87379f0c9f27df7391718477c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2a492f01228b7d091dfe38974ef40dccf8f9f2f1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2a492f01228b7d091dfe38974ef40dccf8f9f2f1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/15faa1f67ab405d47789d4702f587ec7df7ef03e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/15faa1f67ab405d47789d4702f587ec7df7ef03e"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nlan966x: Fix crash when adding interface under a lag\n\nThere is a crash when adding one of the lan966x interfaces under a lag\ninterface. The issue can be reproduced like this:\nip link add name bond0 type bond miimon 100 mode balance-xor\nip link set dev eth0 master bond0\n\nThe reason is because when adding a interface under the lag it would go\nthrough all the ports and try to figure out which other ports are under\nthat lag interface. And the issue is that lan966x can have ports that are\nNULL pointer as they are not probed. So then iterating over these ports\nit would just crash as they are NULL pointers.\nThe fix consists in actually checking for NULL pointers before accessing\nsomething from the ports. Like we do in other places."
+          }
+        ],
+        "id": "CVE-2024-26723",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:54.143",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/15faa1f67ab405d47789d4702f587ec7df7ef03e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2a492f01228b7d091dfe38974ef40dccf8f9f2f1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/48fae67d837488c87379f0c9f27df7391718477c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b9357489c46c7a43999964628db8b47d3a1f8672"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

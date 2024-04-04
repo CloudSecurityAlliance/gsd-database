@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26720"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again\n\n(struct dirty_throttle_control *)->thresh is an unsigned long, but is\npassed as the u32 divisor argument to div_u64().  On architectures where\nunsigned long is 64 bytes, the argument will be implicitly truncated.\n\nUse div64_u64() instead of div_u64() so that the value used in the \"is\nthis a safe division\" check is the same as the divisor.\n\nAlso, remove redundant cast of the numerator to u64, as that should happen\nimplicitly.\n\nThis would be difficult to exploit in memcg domain, given the ratio-based\narithmetic domain_drity_limits() uses, but is much easier in global\nwriteback domain with a BDI_CAP_STRICTLIMIT-backing device, using e.g. \nvm.dirty_bytes=(1<<32)*PAGE_SIZE so that dtc->thresh == (1<<32)",
       "id": "GSD-2024-26720",
       "modified": "2024-02-20T06:02:29.231871Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26720",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "f6789593d5ce",
+                          "version_value": "c593d26fb5d5"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.16"
+                              },
+                              {
+                                "lessThan": "3.16",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again\n\n(struct dirty_throttle_control *)->thresh is an unsigned long, but is\npassed as the u32 divisor argument to div_u64().  On architectures where\nunsigned long is 64 bytes, the argument will be implicitly truncated.\n\nUse div64_u64() instead of div_u64() so that the value used in the \"is\nthis a safe division\" check is the same as the divisor.\n\nAlso, remove redundant cast of the numerator to u64, as that should happen\nimplicitly.\n\nThis would be difficult to exploit in memcg domain, given the ratio-based\narithmetic domain_drity_limits() uses, but is much easier in global\nwriteback domain with a BDI_CAP_STRICTLIMIT-backing device, using e.g. \nvm.dirty_bytes=(1<<32)*PAGE_SIZE so that dtc->thresh == (1<<32)"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/c593d26fb5d577ef31b6e49a31e08ae3ebc1bc1e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c593d26fb5d577ef31b6e49a31e08ae3ebc1bc1e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1f12e4b3284d6c863f272eb2de0d4248ed211cf4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1f12e4b3284d6c863f272eb2de0d4248ed211cf4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/81e7d2530d458548b90a5c5e76b77ad5e5d1c0df",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/81e7d2530d458548b90a5c5e76b77ad5e5d1c0df"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5099871b370335809c0fd1abad74d9c7c205d43f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5099871b370335809c0fd1abad74d9c7c205d43f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/16b1025eaa8fc223ab4273ece20d1c3a4211a95d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/16b1025eaa8fc223ab4273ece20d1c3a4211a95d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ec18ec230301583395576915d274b407743d8f6c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ec18ec230301583395576915d274b407743d8f6c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/65977bed167a92e87085e757fffa5798f7314c9f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/65977bed167a92e87085e757fffa5798f7314c9f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9319b647902cbd5cc884ac08a8a6d54ce111fc78",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9319b647902cbd5cc884ac08a8a6d54ce111fc78"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again\n\n(struct dirty_throttle_control *)->thresh is an unsigned long, but is\npassed as the u32 divisor argument to div_u64().  On architectures where\nunsigned long is 64 bytes, the argument will be implicitly truncated.\n\nUse div64_u64() instead of div_u64() so that the value used in the \"is\nthis a safe division\" check is the same as the divisor.\n\nAlso, remove redundant cast of the numerator to u64, as that should happen\nimplicitly.\n\nThis would be difficult to exploit in memcg domain, given the ratio-based\narithmetic domain_drity_limits() uses, but is much easier in global\nwriteback domain with a BDI_CAP_STRICTLIMIT-backing device, using e.g. \nvm.dirty_bytes=(1<<32)*PAGE_SIZE so that dtc->thresh == (1<<32)"
+          }
+        ],
+        "id": "CVE-2024-26720",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:53.993",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/16b1025eaa8fc223ab4273ece20d1c3a4211a95d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1f12e4b3284d6c863f272eb2de0d4248ed211cf4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5099871b370335809c0fd1abad74d9c7c205d43f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/65977bed167a92e87085e757fffa5798f7314c9f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/81e7d2530d458548b90a5c5e76b77ad5e5d1c0df"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9319b647902cbd5cc884ac08a8a6d54ce111fc78"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c593d26fb5d577ef31b6e49a31e08ae3ebc1bc1e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec18ec230301583395576915d274b407743d8f6c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

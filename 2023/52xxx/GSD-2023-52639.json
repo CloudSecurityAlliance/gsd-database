@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2023-52639"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: s390: vsie: fix race during shadow creation\n\nRight now it is possible to see gmap->private being zero in\nkvm_s390_vsie_gmap_notifier resulting in a crash.  This is due to the\nfact that we add gmap->private == kvm after creation:\n\nstatic int acquire_gmap_shadow(struct kvm_vcpu *vcpu,\n                               struct vsie_page *vsie_page)\n{\n[...]\n        gmap = gmap_shadow(vcpu->arch.gmap, asce, edat);\n        if (IS_ERR(gmap))\n                return PTR_ERR(gmap);\n        gmap->private = vcpu->kvm;\n\nLet children inherit the private field of the parent.",
       "id": "GSD-2023-52639",
       "modified": "2024-03-07T06:01:45.344082Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2023-52639",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "a3508fbe9dc6",
+                          "version_value": "5df3b81a567e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.8"
+                              },
+                              {
+                                "lessThan": "4.8",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.82",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.22",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: s390: vsie: fix race during shadow creation\n\nRight now it is possible to see gmap->private being zero in\nkvm_s390_vsie_gmap_notifier resulting in a crash.  This is due to the\nfact that we add gmap->private == kvm after creation:\n\nstatic int acquire_gmap_shadow(struct kvm_vcpu *vcpu,\n                               struct vsie_page *vsie_page)\n{\n[...]\n        gmap = gmap_shadow(vcpu->arch.gmap, asce, edat);\n        if (IS_ERR(gmap))\n                return PTR_ERR(gmap);\n        gmap->private = vcpu->kvm;\n\nLet children inherit the private field of the parent."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/5df3b81a567eb565029563f26f374ae3803a1dfc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5df3b81a567eb565029563f26f374ae3803a1dfc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f5572c0323cf8b4f1f0618178648a25b8fb8a380",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f5572c0323cf8b4f1f0618178648a25b8fb8a380"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28bb27824f25f36e5f80229a358d66ee09244082",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28bb27824f25f36e5f80229a358d66ee09244082"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fe752331d4b361d43cfd0b89534b4b2176057c32",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fe752331d4b361d43cfd0b89534b4b2176057c32"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: s390: vsie: fix race during shadow creation\n\nRight now it is possible to see gmap->private being zero in\nkvm_s390_vsie_gmap_notifier resulting in a crash.  This is due to the\nfact that we add gmap->private == kvm after creation:\n\nstatic int acquire_gmap_shadow(struct kvm_vcpu *vcpu,\n                               struct vsie_page *vsie_page)\n{\n[...]\n        gmap = gmap_shadow(vcpu->arch.gmap, asce, edat);\n        if (IS_ERR(gmap))\n                return PTR_ERR(gmap);\n        gmap->private = vcpu->kvm;\n\nLet children inherit the private field of the parent."
+          }
+        ],
+        "id": "CVE-2023-52639",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:51.467",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28bb27824f25f36e5f80229a358d66ee09244082"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5df3b81a567eb565029563f26f374ae3803a1dfc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f5572c0323cf8b4f1f0618178648a25b8fb8a380"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fe752331d4b361d43cfd0b89534b4b2176057c32"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

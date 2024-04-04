@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26692"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb: Fix regression in writes when non-standard maximum write size negotiated\n\nThe conversion to netfs in the 6.3 kernel caused a regression when\nmaximum write size is set by the server to an unexpected value which is\nnot a multiple of 4096 (similarly if the user overrides the maximum\nwrite size by setting mount parm \"wsize\", but sets it to a value that\nis not a multiple of 4096).  When negotiated write size is not a\nmultiple of 4096 the netfs code can skip the end of the final\npage when doing large sequential writes, causing data corruption.\n\nThis section of code is being rewritten/removed due to a large\nnetfs change, but until that point (ie for the 6.3 kernel until now)\nwe can not support non-standard maximum write sizes.\n\nAdd a warning if a user specifies a wsize on mount that is not\na multiple of 4096 (and round down), also add a change where we\nround down the maximum write size if the server negotiates a value\nthat is not a multiple of 4096 (we also have to check to make sure that\nwe do not round it down to zero).",
       "id": "GSD-2024-26692",
       "modified": "2024-02-20T06:02:29.064798Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26692",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "d08089f649a0",
+                          "version_value": "4145ccff546e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.3"
+                              },
+                              {
+                                "lessThan": "6.3",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb: Fix regression in writes when non-standard maximum write size negotiated\n\nThe conversion to netfs in the 6.3 kernel caused a regression when\nmaximum write size is set by the server to an unexpected value which is\nnot a multiple of 4096 (similarly if the user overrides the maximum\nwrite size by setting mount parm \"wsize\", but sets it to a value that\nis not a multiple of 4096).  When negotiated write size is not a\nmultiple of 4096 the netfs code can skip the end of the final\npage when doing large sequential writes, causing data corruption.\n\nThis section of code is being rewritten/removed due to a large\nnetfs change, but until that point (ie for the 6.3 kernel until now)\nwe can not support non-standard maximum write sizes.\n\nAdd a warning if a user specifies a wsize on mount that is not\na multiple of 4096 (and round down), also add a change where we\nround down the maximum write size if the server negotiates a value\nthat is not a multiple of 4096 (we also have to check to make sure that\nwe do not round it down to zero)."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4145ccff546ea868428b3e0fe6818c6261b574a9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4145ccff546ea868428b3e0fe6818c6261b574a9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/63c35afd50e28b49c5b75542045a8c42b696dab9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/63c35afd50e28b49c5b75542045a8c42b696dab9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4860abb91f3d7fbaf8147d54782149bb1fc45892",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4860abb91f3d7fbaf8147d54782149bb1fc45892"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb: Fix regression in writes when non-standard maximum write size negotiated\n\nThe conversion to netfs in the 6.3 kernel caused a regression when\nmaximum write size is set by the server to an unexpected value which is\nnot a multiple of 4096 (similarly if the user overrides the maximum\nwrite size by setting mount parm \"wsize\", but sets it to a value that\nis not a multiple of 4096).  When negotiated write size is not a\nmultiple of 4096 the netfs code can skip the end of the final\npage when doing large sequential writes, causing data corruption.\n\nThis section of code is being rewritten/removed due to a large\nnetfs change, but until that point (ie for the 6.3 kernel until now)\nwe can not support non-standard maximum write sizes.\n\nAdd a warning if a user specifies a wsize on mount that is not\na multiple of 4096 (and round down), also add a change where we\nround down the maximum write size if the server negotiates a value\nthat is not a multiple of 4096 (we also have to check to make sure that\nwe do not round it down to zero)."
+          }
+        ],
+        "id": "CVE-2024-26692",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:52.610",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4145ccff546ea868428b3e0fe6818c6261b574a9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4860abb91f3d7fbaf8147d54782149bb1fc45892"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/63c35afd50e28b49c5b75542045a8c42b696dab9"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

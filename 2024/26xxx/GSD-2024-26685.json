@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26685"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix potential bug in end_buffer_async_write\n\nAccording to a syzbot report, end_buffer_async_write(), which handles the\ncompletion of block device writes, may detect abnormal condition of the\nbuffer async_write flag and cause a BUG_ON failure when using nilfs2.\n\nNilfs2 itself does not use end_buffer_async_write().  But, the async_write\nflag is now used as a marker by commit 7f42ec394156 (\"nilfs2: fix issue\nwith race condition of competition between segments for dirty blocks\") as\na means of resolving double list insertion of dirty blocks in\nnilfs_lookup_dirty_data_buffers() and nilfs_lookup_node_buffers() and the\nresulting crash.\n\nThis modification is safe as long as it is used for file data and b-tree\nnode blocks where the page caches are independent.  However, it was\nirrelevant and redundant to also introduce async_write for segment summary\nand super root blocks that share buffers with the backing device.  This\nled to the possibility that the BUG_ON check in end_buffer_async_write\nwould fail as described above, if independent writebacks of the backing\ndevice occurred in parallel.\n\nThe use of async_write for segment summary buffers has already been\nremoved in a previous change.\n\nFix this issue by removing the manipulation of the async_write flag for\nthe remaining super root block buffer.",
       "id": "GSD-2024-26685",
       "modified": "2024-02-20T06:02:29.306104Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26685",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "7f42ec394156",
+                          "version_value": "c4a09fdac625"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.12"
+                              },
+                              {
+                                "lessThan": "3.12",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix potential bug in end_buffer_async_write\n\nAccording to a syzbot report, end_buffer_async_write(), which handles the\ncompletion of block device writes, may detect abnormal condition of the\nbuffer async_write flag and cause a BUG_ON failure when using nilfs2.\n\nNilfs2 itself does not use end_buffer_async_write().  But, the async_write\nflag is now used as a marker by commit 7f42ec394156 (\"nilfs2: fix issue\nwith race condition of competition between segments for dirty blocks\") as\na means of resolving double list insertion of dirty blocks in\nnilfs_lookup_dirty_data_buffers() and nilfs_lookup_node_buffers() and the\nresulting crash.\n\nThis modification is safe as long as it is used for file data and b-tree\nnode blocks where the page caches are independent.  However, it was\nirrelevant and redundant to also introduce async_write for segment summary\nand super root blocks that share buffers with the backing device.  This\nled to the possibility that the BUG_ON check in end_buffer_async_write\nwould fail as described above, if independent writebacks of the backing\ndevice occurred in parallel.\n\nThe use of async_write for segment summary buffers has already been\nremoved in a previous change.\n\nFix this issue by removing the manipulation of the async_write flag for\nthe remaining super root block buffer."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/c4a09fdac625e64abe478dcf88bfa20406616928",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c4a09fdac625e64abe478dcf88bfa20406616928"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d31c8721e816eff5ca6573cc487754f357c093cd",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d31c8721e816eff5ca6573cc487754f357c093cd"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f3e4963566f58726d3265a727116a42b591f6596",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f3e4963566f58726d3265a727116a42b591f6596"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8fa90634ec3e9cc50f42dd605eec60f2d146ced8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8fa90634ec3e9cc50f42dd605eec60f2d146ced8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6589f0f72f8edd1fa11adce4eedbd3615f2e78ab",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6589f0f72f8edd1fa11adce4eedbd3615f2e78ab"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2c3bdba00283a6c7a5b19481a59a730f46063803",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2c3bdba00283a6c7a5b19481a59a730f46063803"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/626daab3811b772086aef1bf8eed3ffe6f523eff",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/626daab3811b772086aef1bf8eed3ffe6f523eff"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5bc09b397cbf1221f8a8aacb1152650c9195b02b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5bc09b397cbf1221f8a8aacb1152650c9195b02b"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix potential bug in end_buffer_async_write\n\nAccording to a syzbot report, end_buffer_async_write(), which handles the\ncompletion of block device writes, may detect abnormal condition of the\nbuffer async_write flag and cause a BUG_ON failure when using nilfs2.\n\nNilfs2 itself does not use end_buffer_async_write().  But, the async_write\nflag is now used as a marker by commit 7f42ec394156 (\"nilfs2: fix issue\nwith race condition of competition between segments for dirty blocks\") as\na means of resolving double list insertion of dirty blocks in\nnilfs_lookup_dirty_data_buffers() and nilfs_lookup_node_buffers() and the\nresulting crash.\n\nThis modification is safe as long as it is used for file data and b-tree\nnode blocks where the page caches are independent.  However, it was\nirrelevant and redundant to also introduce async_write for segment summary\nand super root blocks that share buffers with the backing device.  This\nled to the possibility that the BUG_ON check in end_buffer_async_write\nwould fail as described above, if independent writebacks of the backing\ndevice occurred in parallel.\n\nThe use of async_write for segment summary buffers has already been\nremoved in a previous change.\n\nFix this issue by removing the manipulation of the async_write flag for\nthe remaining super root block buffer."
+          }
+        ],
+        "id": "CVE-2024-26685",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:52.210",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2c3bdba00283a6c7a5b19481a59a730f46063803"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5bc09b397cbf1221f8a8aacb1152650c9195b02b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/626daab3811b772086aef1bf8eed3ffe6f523eff"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6589f0f72f8edd1fa11adce4eedbd3615f2e78ab"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8fa90634ec3e9cc50f42dd605eec60f2d146ced8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c4a09fdac625e64abe478dcf88bfa20406616928"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d31c8721e816eff5ca6573cc487754f357c093cd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f3e4963566f58726d3265a727116a42b591f6596"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

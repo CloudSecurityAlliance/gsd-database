@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26718"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndm-crypt, dm-verity: disable tasklets\n\nTasklets have an inherent problem with memory corruption. The function\ntasklet_action_common calls tasklet_trylock, then it calls the tasklet\ncallback and then it calls tasklet_unlock. If the tasklet callback frees\nthe structure that contains the tasklet or if it calls some code that may\nfree it, tasklet_unlock will write into free memory.\n\nThe commits 8e14f610159d and d9a02e016aaf try to fix it for dm-crypt, but\nit is not a sufficient fix and the data corruption can still happen [1].\nThere is no fix for dm-verity and dm-verity will write into free memory\nwith every tasklet-processed bio.\n\nThere will be atomic workqueues implemented in the kernel 6.9 [2]. They\nwill have better interface and they will not suffer from the memory\ncorruption problem.\n\nBut we need something that stops the memory corruption now and that can be\nbackported to the stable kernels. So, I'm proposing this commit that\ndisables tasklets in both dm-crypt and dm-verity. This commit doesn't\nremove the tasklet support, because the tasklet code will be reused when\natomic workqueues will be implemented.\n\n[1] https://lore.kernel.org/all/d390d7ee-f142-44d3-822a-87949e14608b@suse.de/T/\n[2] https://lore.kernel.org/lkml/20240130091300.2968534-1-tj@kernel.org/",
       "id": "GSD-2024-26718",
       "modified": "2024-02-20T06:02:29.316745Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26718",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5721d4e5a9cd",
+                          "version_value": "30884a44e0ce"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.9"
+                              },
+                              {
+                                "lessThan": "5.9",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndm-crypt, dm-verity: disable tasklets\n\nTasklets have an inherent problem with memory corruption. The function\ntasklet_action_common calls tasklet_trylock, then it calls the tasklet\ncallback and then it calls tasklet_unlock. If the tasklet callback frees\nthe structure that contains the tasklet or if it calls some code that may\nfree it, tasklet_unlock will write into free memory.\n\nThe commits 8e14f610159d and d9a02e016aaf try to fix it for dm-crypt, but\nit is not a sufficient fix and the data corruption can still happen [1].\nThere is no fix for dm-verity and dm-verity will write into free memory\nwith every tasklet-processed bio.\n\nThere will be atomic workqueues implemented in the kernel 6.9 [2]. They\nwill have better interface and they will not suffer from the memory\ncorruption problem.\n\nBut we need something that stops the memory corruption now and that can be\nbackported to the stable kernels. So, I'm proposing this commit that\ndisables tasklets in both dm-crypt and dm-verity. This commit doesn't\nremove the tasklet support, because the tasklet code will be reused when\natomic workqueues will be implemented.\n\n[1] https://lore.kernel.org/all/d390d7ee-f142-44d3-822a-87949e14608b@suse.de/T/\n[2] https://lore.kernel.org/lkml/20240130091300.2968534-1-tj@kernel.org/"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/30884a44e0cedc3dfda8c22432f3ba4078ec2d94",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/30884a44e0cedc3dfda8c22432f3ba4078ec2d94"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5735a2671ffb70ea29ca83969fe01316ee2ed6fc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5735a2671ffb70ea29ca83969fe01316ee2ed6fc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0c45a20cbe68bc4d681734f5c03891124a274257",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0c45a20cbe68bc4d681734f5c03891124a274257"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0a9bab391e336489169b95cb0d4553d921302189",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0a9bab391e336489169b95cb0d4553d921302189"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndm-crypt, dm-verity: disable tasklets\n\nTasklets have an inherent problem with memory corruption. The function\ntasklet_action_common calls tasklet_trylock, then it calls the tasklet\ncallback and then it calls tasklet_unlock. If the tasklet callback frees\nthe structure that contains the tasklet or if it calls some code that may\nfree it, tasklet_unlock will write into free memory.\n\nThe commits 8e14f610159d and d9a02e016aaf try to fix it for dm-crypt, but\nit is not a sufficient fix and the data corruption can still happen [1].\nThere is no fix for dm-verity and dm-verity will write into free memory\nwith every tasklet-processed bio.\n\nThere will be atomic workqueues implemented in the kernel 6.9 [2]. They\nwill have better interface and they will not suffer from the memory\ncorruption problem.\n\nBut we need something that stops the memory corruption now and that can be\nbackported to the stable kernels. So, I'm proposing this commit that\ndisables tasklets in both dm-crypt and dm-verity. This commit doesn't\nremove the tasklet support, because the tasklet code will be reused when\natomic workqueues will be implemented.\n\n[1] https://lore.kernel.org/all/d390d7ee-f142-44d3-822a-87949e14608b@suse.de/T/\n[2] https://lore.kernel.org/lkml/20240130091300.2968534-1-tj@kernel.org/"
+          }
+        ],
+        "id": "CVE-2024-26718",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:53.897",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0a9bab391e336489169b95cb0d4553d921302189"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0c45a20cbe68bc4d681734f5c03891124a274257"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/30884a44e0cedc3dfda8c22432f3ba4078ec2d94"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5735a2671ffb70ea29ca83969fe01316ee2ed6fc"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

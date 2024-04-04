@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26691"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: Fix circular locking dependency\n\nThe rule inside kvm enforces that the vcpu->mutex is taken *inside*\nkvm->lock. The rule is violated by the pkvm_create_hyp_vm() which acquires\nthe kvm->lock while already holding the vcpu->mutex lock from\nkvm_vcpu_ioctl(). Avoid the circular locking dependency altogether by\nprotecting the hyp vm handle with the config_lock, much like we already\ndo for other forms of VM-scoped data.",
       "id": "GSD-2024-26691",
       "modified": "2024-02-20T06:02:29.270428Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,60 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26691",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "3d16cebf0112"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +81,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: Fix circular locking dependency\n\nThe rule inside kvm enforces that the vcpu->mutex is taken *inside*\nkvm->lock. The rule is violated by the pkvm_create_hyp_vm() which acquires\nthe kvm->lock while already holding the vcpu->mutex lock from\nkvm_vcpu_ioctl(). Avoid the circular locking dependency altogether by\nprotecting the hyp vm handle with the config_lock, much like we already\ndo for other forms of VM-scoped data."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/3d16cebf01127f459dcfeb79ed77bd68b124c228",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3d16cebf01127f459dcfeb79ed77bd68b124c228"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3ab1c40a1e915e350d9181a4603af393141970cc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3ab1c40a1e915e350d9181a4603af393141970cc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/10c02aad111df02088d1a81792a709f6a7eca6cc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/10c02aad111df02088d1a81792a709f6a7eca6cc"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: Fix circular locking dependency\n\nThe rule inside kvm enforces that the vcpu->mutex is taken *inside*\nkvm->lock. The rule is violated by the pkvm_create_hyp_vm() which acquires\nthe kvm->lock while already holding the vcpu->mutex lock from\nkvm_vcpu_ioctl(). Avoid the circular locking dependency altogether by\nprotecting the hyp vm handle with the config_lock, much like we already\ndo for other forms of VM-scoped data."
+          }
+        ],
+        "id": "CVE-2024-26691",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:52.550",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/10c02aad111df02088d1a81792a709f6a7eca6cc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3ab1c40a1e915e350d9181a4603af393141970cc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3d16cebf01127f459dcfeb79ed77bd68b124c228"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

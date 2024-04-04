@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26690"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: stmmac: protect updates of 64-bit statistics counters\n\nAs explained by a comment in <linux/u64_stats_sync.h>, write side of struct\nu64_stats_sync must ensure mutual exclusion, or one seqcount update could\nbe lost on 32-bit platforms, thus blocking readers forever. Such lockups\nhave been observed in real world after stmmac_xmit() on one CPU raced with\nstmmac_napi_poll_tx() on another CPU.\n\nTo fix the issue without introducing a new lock, split the statics into\nthree parts:\n\n1. fields updated only under the tx queue lock,\n2. fields updated only during NAPI poll,\n3. fields updated only from interrupt context,\n\nUpdates to fields in the first two groups are already serialized through\nother locks. It is sufficient to split the existing struct u64_stats_sync\nso that each group has its own.\n\nNote that tx_set_ic_bit is updated from both contexts. Split this counter\nso that each context gets its own, and calculate their sum to get the total\nvalue in stmmac_get_ethtool_stats().\n\nFor the third group, multiple interrupts may be processed by different CPUs\nat the same time, but interrupts on the same CPU will not nest. Move fields\nfrom this group to a newly created per-cpu struct stmmac_pcpu_stats.",
       "id": "GSD-2024-26690",
       "modified": "2024-02-20T06:02:29.270193Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26690",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "133466c3bbe1",
+                          "version_value": "9680b2ab54ba"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.6"
+                              },
+                              {
+                                "lessThan": "6.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: stmmac: protect updates of 64-bit statistics counters\n\nAs explained by a comment in <linux/u64_stats_sync.h>, write side of struct\nu64_stats_sync must ensure mutual exclusion, or one seqcount update could\nbe lost on 32-bit platforms, thus blocking readers forever. Such lockups\nhave been observed in real world after stmmac_xmit() on one CPU raced with\nstmmac_napi_poll_tx() on another CPU.\n\nTo fix the issue without introducing a new lock, split the statics into\nthree parts:\n\n1. fields updated only under the tx queue lock,\n2. fields updated only during NAPI poll,\n3. fields updated only from interrupt context,\n\nUpdates to fields in the first two groups are already serialized through\nother locks. It is sufficient to split the existing struct u64_stats_sync\nso that each group has its own.\n\nNote that tx_set_ic_bit is updated from both contexts. Split this counter\nso that each context gets its own, and calculate their sum to get the total\nvalue in stmmac_get_ethtool_stats().\n\nFor the third group, multiple interrupts may be processed by different CPUs\nat the same time, but interrupts on the same CPU will not nest. Move fields\nfrom this group to a newly created per-cpu struct stmmac_pcpu_stats."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/9680b2ab54ba8d72581100e8c45471306101836e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9680b2ab54ba8d72581100e8c45471306101836e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e6af0f082a4b87b99ad033003be2a904a1791b3f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e6af0f082a4b87b99ad033003be2a904a1791b3f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: stmmac: protect updates of 64-bit statistics counters\n\nAs explained by a comment in <linux/u64_stats_sync.h>, write side of struct\nu64_stats_sync must ensure mutual exclusion, or one seqcount update could\nbe lost on 32-bit platforms, thus blocking readers forever. Such lockups\nhave been observed in real world after stmmac_xmit() on one CPU raced with\nstmmac_napi_poll_tx() on another CPU.\n\nTo fix the issue without introducing a new lock, split the statics into\nthree parts:\n\n1. fields updated only under the tx queue lock,\n2. fields updated only during NAPI poll,\n3. fields updated only from interrupt context,\n\nUpdates to fields in the first two groups are already serialized through\nother locks. It is sufficient to split the existing struct u64_stats_sync\nso that each group has its own.\n\nNote that tx_set_ic_bit is updated from both contexts. Split this counter\nso that each context gets its own, and calculate their sum to get the total\nvalue in stmmac_get_ethtool_stats().\n\nFor the third group, multiple interrupts may be processed by different CPUs\nat the same time, but interrupts on the same CPU will not nest. Move fields\nfrom this group to a newly created per-cpu struct stmmac_pcpu_stats."
+          }
+        ],
+        "id": "CVE-2024-26690",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:52.487",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9680b2ab54ba8d72581100e8c45471306101836e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e6af0f082a4b87b99ad033003be2a904a1791b3f"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -36,7 +36,7 @@
                         {
                           "version_affected": "<",
                           "version_name": "198de43d758c",
-                          "version_value": "051e0840ffa8"
+                          "version_value": "9d66ae0e7bb7"
                         },
                         {
                           "version_value": "not down converted",
@@ -51,6 +51,30 @@
                                 "lessThan": "2.6.23",
                                 "status": "unaffected",
                                 "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.84",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.24",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.3",
                                 "versionType": "custom"
                               },
                               {
@@ -84,7 +108,7 @@
         ]
       },
       "generator": {
-        "engine": "bippy-b4257b672505"
+        "engine": "bippy-d3b290d2becc"
       },
       "problemtype": {
         "problemtype_data": [
@@ -101,6 +125,26 @@
       "references": {
         "reference_data": [
           {
+            "name": "https://git.kernel.org/stable/c/9d66ae0e7bb78b54e1e0525456c6b54e1d132046",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9d66ae0e7bb78b54e1e0525456c6b54e1d132046"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/61d4787692c1fccdc268ffa7a891f9c149f50901",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/61d4787692c1fccdc268ffa7a891f9c149f50901"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e955e8a7f38a856fc6534ba4e6bffd4d5cc80ac3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e955e8a7f38a856fc6534ba4e6bffd4d5cc80ac3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3c907bf56905de7d27b329afaf59c2fb35d17b04",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3c907bf56905de7d27b329afaf59c2fb35d17b04"
+          },
+          {
             "name": "https://git.kernel.org/stable/c/051e0840ffa8ab25554d6b14b62c9ab9e4901457",
             "refsource": "MISC",
             "url": "https://git.kernel.org/stable/c/051e0840ffa8ab25554d6b14b62c9ab9e4901457"
@@ -114,16 +158,36 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nALSA: sh: aica: reorder cleanup operations to avoid UAF bugs\n\nThe dreamcastcard->timer could schedule the spu_dma_work and the\nspu_dma_work could also arm the dreamcastcard->timer.\n\nWhen the snd_pcm_substream is closing, the aica_channel will be\ndeallocated. But it could still be dereferenced in the worker\nthread. The reason is that del_timer() will return directly\nregardless of whether the timer handler is running or not and\nthe worker could be rescheduled in the timer handler. As a result,\nthe UAF bug will happen. The racy situation is shown below:\n\n      (Thread 1)                 |      (Thread 2)\nsnd_aicapcm_pcm_close()          |\n ...                             |  run_spu_dma() //worker\n                                 |    mod_timer()\n  flush_work()                   |\n  del_timer()                    |  aica_period_elapsed() //timer\n  kfree(dreamcastcard->channel)  |    schedule_work()\n                                 |  run_spu_dma() //worker\n  ...                            |    dreamcastcard->channel-> //USE\n\nIn order to mitigate this bug and other possible corner cases,\ncall mod_timer() conditionally in run_spu_dma(), then implement\nPCM sync_stop op to cancel both the timer and worker. The sync_stop\nop will be called from PCM core appropriately when needed."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: ALSA: sh: aica: reordenar operaciones de limpieza para evitar errores UAF. El dreamcastcard-&gt;timer podr\u00eda programar el spu_dma_work y el spu_dma_work tambi\u00e9n podr\u00eda armar el dreamcastcard-&gt;timer. Cuando se cierre snd_pcm_substream, se desasignar\u00e1 aica_channel. Pero a\u00fan se podr\u00eda eliminar la referencia en el hilo del trabajador. La raz\u00f3n es que del_timer() regresar\u00e1 directamente independientemente de si el controlador del temporizador se est\u00e1 ejecutando o no y el trabajador podr\u00eda reprogramarse en el controlador del temporizador. Como resultado, se producir\u00e1 el error UAF. La situaci\u00f3n picante se muestra a continuaci\u00f3n: (Thread 1) | (Thread 2) snd_aicapcm_pcm_close() | ... | run_spu_dma() //worker | mod_timer() flush_work() | del_timer() | aica_period_elapsed() //timer kfree(dreamcastcard-&gt;channel) | schedule_work() | run_spu_dma() //worker ... | dreamcastcard-&gt;channel-&gt; //USE Para mitigar este error y otros posibles casos extremos, llame a mod_timer() condicionalmente en run_spu_dma(), luego implemente la operaci\u00f3n PCM sync_stop para cancelar tanto el temporizador como el trabajador. La operaci\u00f3n sync_stop se llamar\u00e1 desde el n\u00facleo PCM de forma adecuada cuando sea necesario."
           }
         ],
         "id": "CVE-2024-26654",
-        "lastModified": "2024-04-01T12:49:00.877",
+        "lastModified": "2024-04-03T14:15:16.690",
         "metrics": {},
         "published": "2024-04-01T09:15:51.063",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/051e0840ffa8ab25554d6b14b62c9ab9e4901457"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3c907bf56905de7d27b329afaf59c2fb35d17b04"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/61d4787692c1fccdc268ffa7a891f9c149f50901"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9d66ae0e7bb78b54e1e0525456c6b54e1d132046"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e955e8a7f38a856fc6534ba4e6bffd4d5cc80ac3"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

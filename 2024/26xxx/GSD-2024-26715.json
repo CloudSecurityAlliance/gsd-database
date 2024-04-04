@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26715"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend\n\nIn current scenario if Plug-out and Plug-In performed continuously\nthere could be a chance while checking for dwc->gadget_driver in\ndwc3_gadget_suspend, a NULL pointer dereference may occur.\n\nCall Stack:\n\n\tCPU1:                           CPU2:\n\tgadget_unbind_driver            dwc3_suspend_common\n\tdwc3_gadget_stop                dwc3_gadget_suspend\n                                        dwc3_disconnect_gadget\n\nCPU1 basically clears the variable and CPU2 checks the variable.\nConsider CPU1 is running and right before gadget_driver is cleared\nand in parallel CPU2 executes dwc3_gadget_suspend where it finds\ndwc->gadget_driver which is not NULL and resumes execution and then\nCPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where\nit checks dwc->gadget_driver is already NULL because of which the\nNULL pointer deference occur.",
       "id": "GSD-2024-26715",
       "modified": "2024-02-20T06:02:29.314552Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26715",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "9772b47a4c29",
+                          "version_value": "88936ceab6b4"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.6"
+                              },
+                              {
+                                "lessThan": "4.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,91 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend\n\nIn current scenario if Plug-out and Plug-In performed continuously\nthere could be a chance while checking for dwc->gadget_driver in\ndwc3_gadget_suspend, a NULL pointer dereference may occur.\n\nCall Stack:\n\n\tCPU1:                           CPU2:\n\tgadget_unbind_driver            dwc3_suspend_common\n\tdwc3_gadget_stop                dwc3_gadget_suspend\n                                        dwc3_disconnect_gadget\n\nCPU1 basically clears the variable and CPU2 checks the variable.\nConsider CPU1 is running and right before gadget_driver is cleared\nand in parallel CPU2 executes dwc3_gadget_suspend where it finds\ndwc->gadget_driver which is not NULL and resumes execution and then\nCPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where\nit checks dwc->gadget_driver is already NULL because of which the\nNULL pointer deference occur."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/88936ceab6b426f1312327e9ef849c215c6007a7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/88936ceab6b426f1312327e9ef849c215c6007a7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/57e2e42ccd3cd6183228269715ed032f44536751",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/57e2e42ccd3cd6183228269715ed032f44536751"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c7ebd8149ee519d27232e6e4940e9c02071b568b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c7ebd8149ee519d27232e6e4940e9c02071b568b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/36695d5eeeefe5a64b47d0336e7c8fc144e78182",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/36695d5eeeefe5a64b47d0336e7c8fc144e78182"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/61a348857e869432e6a920ad8ea9132e8d44c316",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/61a348857e869432e6a920ad8ea9132e8d44c316"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend\n\nIn current scenario if Plug-out and Plug-In performed continuously\nthere could be a chance while checking for dwc->gadget_driver in\ndwc3_gadget_suspend, a NULL pointer dereference may occur.\n\nCall Stack:\n\n\tCPU1:                           CPU2:\n\tgadget_unbind_driver            dwc3_suspend_common\n\tdwc3_gadget_stop                dwc3_gadget_suspend\n                                        dwc3_disconnect_gadget\n\nCPU1 basically clears the variable and CPU2 checks the variable.\nConsider CPU1 is running and right before gadget_driver is cleared\nand in parallel CPU2 executes dwc3_gadget_suspend where it finds\ndwc->gadget_driver which is not NULL and resumes execution and then\nCPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where\nit checks dwc->gadget_driver is already NULL because of which the\nNULL pointer deference occur."
+          }
+        ],
+        "id": "CVE-2024-26715",
+        "lastModified": "2024-04-03T17:24:18.150",
+        "metrics": {},
+        "published": "2024-04-03T15:15:53.750",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/36695d5eeeefe5a64b47d0336e7c8fc144e78182"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/57e2e42ccd3cd6183228269715ed032f44536751"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/61a348857e869432e6a920ad8ea9132e8d44c316"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/88936ceab6b426f1312327e9ef849c215c6007a7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c7ebd8149ee519d27232e6e4940e9c02071b568b"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
