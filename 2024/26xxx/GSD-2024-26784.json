@@ -33,6 +33,36 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npmdomain: arm: Fix NULL dereference on scmi_perf_domain removal\n\nOn unloading of the scmi_perf_domain module got the below splat, when in\nthe DT provided to the system under test the '#power-domain-cells' property\nwas missing. Indeed, this particular setup causes the probe to bail out\nearly without giving any error, which leads to the ->remove() callback gets\nto run too, but without all the expected initialized structures in place.\n\nAdd a check and bail out early on remove too.\n\n Call trace:\n  scmi_perf_domain_remove+0x28/0x70 [scmi_perf_domain]\n  scmi_dev_remove+0x28/0x40 [scmi_core]\n  device_remove+0x54/0x90\n  device_release_driver_internal+0x1dc/0x240\n  driver_detach+0x58/0xa8\n  bus_remove_driver+0x78/0x108\n  driver_unregister+0x38/0x70\n  scmi_driver_unregister+0x28/0x180 [scmi_core]\n  scmi_perf_domain_driver_exit+0x18/0xb78 [scmi_perf_domain]\n  __arm64_sys_delete_module+0x1a8/0x2c0\n  invoke_syscall+0x50/0x128\n  el0_svc_common.constprop.0+0x48/0xf0\n  do_el0_svc+0x24/0x38\n  el0_svc+0x34/0xb8\n  el0t_64_sync_handler+0x100/0x130\n  el0t_64_sync+0x190/0x198\n Code: a90153f3 f9403c14 f9414800 955f8a05 (b9400a80)\n ---[ end trace 0000000000000000 ]---"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: pmdomain: arm: corrigi\u00f3 la desreferencia NULL en la eliminaci\u00f3n de scmi_perf_domain Al descargar el m\u00f3dulo scmi_perf_domain obtuvo el siguiente s\u00edmbolo, cuando en el DT se proporcion\u00f3 al SYSTEM bajo prueba el '#power-domain- Faltaba la propiedad de las c\u00e9lulas. De hecho, esta configuraci\u00f3n particular hace que la sonda se retire antes de tiempo sin dar ning\u00fan error, lo que lleva a que la devoluci\u00f3n de llamada -&gt;remove() tambi\u00e9n se ejecute, pero sin todas las estructuras inicializadas esperadas en su lugar. Agregue un cheque y salve anticipadamente la eliminaci\u00f3n tambi\u00e9n. Seguimiento de llamadas: scmi_perf_domain_remove+0x28/0x70 [scmi_perf_domain] scmi_dev_remove+0x28/0x40 [scmi_core] device_remove+0x54/0x90 device_release_driver_internal+0x1dc/0x240 driver_detach+0x58/0xa8 bus_remove_driver+0x78 /0x108 controlador_unregister+0x38/0x70 scmi_driver_unregister+0x28/0x180 [ scmi_core] scmi_perf_domain_driver_exit+0x18/0xb78 [scmi_perf_domain] __arm64_sys_delete_module+0x1a8/0x2c0 invoke_syscall+0x50/0x128 el0_svc_common.constprop.0+0x48/0xf0 do_el0_svc+0x2 4/0x38 el0_svc+0x34/0xb8 el0t_64_sync_handler+0x100/0x130 el0t_64_sync+0x190/0x198 C\u00f3digo : a90153f3 f9403c14 f9414800 955f8a05 (b9400a80) ---[ final de seguimiento 00000000000000000 ]---"
+          }
+        ],
+        "id": "CVE-2024-26784",
+        "lastModified": "2024-04-04T12:48:41.700",
+        "metrics": {},
+        "published": "2024-04-04T09:15:08.133",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/eb5555d422d0fc325e1574a7353d3c616f82d8b5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f6aaf131e4d4a9a26040ecc018eb70ab8b3d355d"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

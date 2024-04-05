@@ -33,6 +33,44 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ntls: fix use-after-free on failed backlog decryption\n\nWhen the decrypt request goes to the backlog and crypto_aead_decrypt\nreturns -EBUSY, tls_do_decryption will wait until all async\ndecryptions have completed. If one of them fails, tls_do_decryption\nwill return -EBADMSG and tls_decrypt_sg jumps to the error path,\nreleasing all the pages. But the pages have been passed to the async\ncallback, and have already been released by tls_decrypt_done.\n\nThe only true async case is when crypto_aead_decrypt returns\n -EINPROGRESS. With -EBUSY, we already waited so we can tell\ntls_sw_recvmsg that the data is available for immediate copy, but we\nneed to notify tls_decrypt_sg (via the new ->async_done flag) that the\nmemory has already been released."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: tls: corrige el use-after-free en el descifrado fallido del trabajo pendiente Cuando la solicitud de descifrado va al trabajo pendiente y crypto_aead_decrypt devuelve -EBUSY, tls_do_decryption esperar\u00e1 hasta que se hayan completado todos los descifrados as\u00edncronos. Si uno de ellos falla, tls_do_decryption devolver\u00e1 -EBADMSG y tls_decrypt_sg salta a la ruta del error, liberando todas las p\u00e1ginas. Pero las p\u00e1ginas se pasaron a la devoluci\u00f3n de llamada as\u00edncrona y tls_decrypt_done ya las public\u00f3. El \u00fanico caso as\u00edncrono verdadero es cuando crypto_aead_decrypt devuelve -EINPROGRESS. Con -EBUSY, ya esperamos para poder decirle a tls_sw_recvmsg que los datos est\u00e1n disponibles para copia inmediata, pero debemos notificar a tls_decrypt_sg (a trav\u00e9s del nuevo indicador -&gt;async_done) que la memoria ya ha sido liberada."
+          }
+        ],
+        "id": "CVE-2024-26800",
+        "lastModified": "2024-04-04T14:15:09.897",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.003",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/13114dc5543069f7b97991e3b79937b6da05f5b0"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1ac9fb84bc7ecd4bc6428118301d9d864d2a58d1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/81be85353b0f5a7b660635634b655329b429eefe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f2b85a4cc763841843de693bbd7308fe9a2c4c89"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

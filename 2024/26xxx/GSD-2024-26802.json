@@ -33,6 +33,48 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nstmmac: Clear variable when destroying workqueue\n\nCurrently when suspending driver and stopping workqueue it is checked whether\nworkqueue is not NULL and if so, it is destroyed.\nFunction destroy_workqueue() does drain queue and does clear variable, but\nit does not set workqueue variable to NULL. This can cause kernel/module\npanic if code attempts to clear workqueue that was not initialized.\n\nThis scenario is possible when resuming suspended driver in stmmac_resume(),\nbecause there is no handling for failed stmmac_hw_setup(),\nwhich can fail and return if DMA engine has failed to initialize,\nand workqueue is initialized after DMA engine.\nShould DMA engine fail to initialize, resume will proceed normally,\nbut interface won't work and TX queue will eventually timeout,\ncausing 'Reset adapter' error.\nThis then does destroy workqueue during reset process.\nAnd since workqueue is initialized after DMA engine and can be skipped,\nit will cause kernel/module panic.\n\nTo secure against this possible crash, set workqueue variable to NULL when\ndestroying workqueue.\n\nLog/backtrace from crash goes as follows:\n[88.031977]------------[ cut here ]------------\n[88.031985]NETDEV WATCHDOG: eth0 (sxgmac): transmit queue 1 timed out\n[88.032017]WARNING: CPU: 0 PID: 0 at net/sched/sch_generic.c:477 dev_watchdog+0x390/0x398\n           <Skipping backtrace for watchdog timeout>\n[88.032251]---[ end trace e70de432e4d5c2c0 ]---\n[88.032282]sxgmac 16d88000.ethernet eth0: Reset adapter.\n[88.036359]------------[ cut here ]------------\n[88.036519]Call trace:\n[88.036523] flush_workqueue+0x3e4/0x430\n[88.036528] drain_workqueue+0xc4/0x160\n[88.036533] destroy_workqueue+0x40/0x270\n[88.036537] stmmac_fpe_stop_wq+0x4c/0x70\n[88.036541] stmmac_release+0x278/0x280\n[88.036546] __dev_close_many+0xcc/0x158\n[88.036551] dev_close_many+0xbc/0x190\n[88.036555] dev_close.part.0+0x70/0xc0\n[88.036560] dev_close+0x24/0x30\n[88.036564] stmmac_service_task+0x110/0x140\n[88.036569] process_one_work+0x1d8/0x4a0\n[88.036573] worker_thread+0x54/0x408\n[88.036578] kthread+0x164/0x170\n[88.036583] ret_from_fork+0x10/0x20\n[88.036588]---[ end trace e70de432e4d5c2c1 ]---\n[88.036597]Unable to handle kernel NULL pointer dereference at virtual address 0000000000000004"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: stmmac: Borrar variable al destruir la cola de trabajo Actualmente, al suspender el controlador y detener la cola de trabajo, se verifica si la cola de trabajo no es NULL y, de ser as\u00ed, se destruye. La funci\u00f3n destroy_workqueue() drena la cola y borra la variable, pero no establece la variable de la cola de trabajo en NULL. Esto puede causar p\u00e1nico en el n\u00facleo/m\u00f3dulo si el c\u00f3digo intenta borrar la cola de trabajo que no se inicializ\u00f3. Este escenario es posible al reanudar el controlador suspendido en stmmac_resume(), porque no hay control para stmmac_hw_setup() fallido, que puede fallar y regresar si el motor DMA no se pudo inicializar y la cola de trabajo se inicializa despu\u00e9s del motor DMA. Si el motor DMA no se inicializa, la reanudaci\u00f3n se realizar\u00e1 normalmente, pero la interfaz no funcionar\u00e1 y la cola de TX eventualmente expirar\u00e1, lo que provocar\u00e1 el error \"Restablecer adaptador\". Esto luego destruye la cola de trabajo durante el proceso de reinicio. Y dado que la cola de trabajo se inicializa despu\u00e9s del motor DMA y se puede omitir, provocar\u00e1 p\u00e1nico en el n\u00facleo/m\u00f3dulo. Para protegerse contra este posible bloqueo, establezca la variable workqueue en NULL al destruir workqueue. El registro/rastreo del fallo es el siguiente: [88.031977]------------[ cortar aqu\u00ed ]------------ [88.031985]NETDEV WATCHDOG: eth0 (sxgmac) : Se agot\u00f3 el tiempo de espera de la cola de transmisi\u00f3n 1 [88.032017] ADVERTENCIA: CPU: 0 PID: 0 en net/sched/sch_generic.c:477 dev_watchdog+0x390/0x398  [88.032251]---[fin de rastreo e70de432e4d5c2c0] --- [88.032282]sxgmac 16d88000.ethernet eth0: Restablecer el adaptador. [88.036359]------------[ cortar aqu\u00ed ]------------ [88.036519]Rastreo de llamadas: [88.036523] Flush_workqueue+0x3e4/0x430 [88.036528] Drain_workqueue+ 0xc4/0x160 [88.036533] destroy_workqueue+0x40/0x270 [88.036537] stmmac_fpe_stop_wq+0x4c/0x70 [88.036541] stmmac_release+0x278/0x280 [88.036546] __dev_close_many+0xcc/0 x158 [88.036551] dev_close_many+0xbc/0x190 [88.036555] dev_close.part. 0+0x70/0xc0 [88.036560] dev_close+0x24/0x30 [88.036564] stmmac_service_task+0x110/0x140 [88.036569] Process_one_work+0x1d8/0x4a0 [88.036573] trabajador_thread+0x54/0x408 [8 8.036578] kthread+0x164/0x170 [88.036583] ret_from_fork+ 0x10/0x20 [88.036588]---[fin de seguimiento e70de432e4d5c2c1]--- [88.036597]No se puede manejar la desreferencia del puntero NULL del kernel en la direcci\u00f3n virtual 0000000000000004"
+          }
+        ],
+        "id": "CVE-2024-26802",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.110",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/17ccd9798fe0beda3db212cfa3ebe373f605cbd6"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/699b103e48ce32d03fc86c35b37ee8ae4288c7e3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8af411bbba1f457c33734795f024d0ef26d0963f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8e99556301172465c8fe33c7f78c39a3d4ce8462"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f72cf22dccc94038cbbaa1029cb575bf52e5cbc8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

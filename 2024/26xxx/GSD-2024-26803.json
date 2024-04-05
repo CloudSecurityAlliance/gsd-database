@@ -33,6 +33,48 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: veth: clear GRO when clearing XDP even when down\n\nveth sets NETIF_F_GRO automatically when XDP is enabled,\nbecause both features use the same NAPI machinery.\n\nThe logic to clear NETIF_F_GRO sits in veth_disable_xdp() which\nis called both on ndo_stop and when XDP is turned off.\nTo avoid the flag from being cleared when the device is brought\ndown, the clearing is skipped when IFF_UP is not set.\nBringing the device down should indeed not modify its features.\n\nUnfortunately, this means that clearing is also skipped when\nXDP is disabled _while_ the device is down. And there's nothing\non the open path to bring the device features back into sync.\nIOW if user enables XDP, disables it and then brings the device\nup we'll end up with a stray GRO flag set but no NAPI instances.\n\nWe don't depend on the GRO flag on the datapath, so the datapath\nwon't crash. We will crash (or hang), however, next time features\nare sync'ed (either by user via ethtool or peer changing its config).\nThe GRO flag will go away, and veth will try to disable the NAPIs.\nBut the open path never created them since XDP was off, the GRO flag\nwas a stray. If NAPI was initialized before we'll hang in napi_disable().\nIf it never was we'll crash trying to stop uninitialized hrtimer.\n\nMove the GRO flag updates to the XDP enable / disable paths,\ninstead of mixing them with the ndo_open / ndo_close paths."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net: veth: borra GRO al borrar XDP incluso cuando est\u00e1 desactivado veth configura NETIF_F_GRO autom\u00e1ticamente cuando XDP est\u00e1 habilitado, porque ambas funciones utilizan la misma maquinaria NAPI. La l\u00f3gica para borrar NETIF_F_GRO se encuentra en veth_disable_xdp(), que se llama tanto en ndo_stop como cuando XDP est\u00e1 desactivado. Para evitar que la bandera se borre cuando se baja el dispositivo, la eliminaci\u00f3n se omite cuando IFF_UP no est\u00e1 configurado. De hecho, bajar el dispositivo no deber\u00eda modificar sus caracter\u00edsticas. Desafortunadamente, esto significa que la limpieza tambi\u00e9n se omite cuando XDP est\u00e1 deshabilitado _mientras_ el dispositivo est\u00e1 inactivo. Y no hay nada en el camino abierto para volver a sincronizar las funciones del dispositivo. IOW, si el usuario habilita XDP, lo deshabilita y luego enciende el dispositivo, terminaremos con un indicador GRO perdido pero sin instancias NAPI. No dependemos del indicador GRO en la ruta de datos, por lo que la ruta de datos no fallar\u00e1. Nos bloquearemos (o colgaremos), sin embargo, la pr\u00f3xima vez que se sincronicen las funciones (ya sea por el usuario a trav\u00e9s de ethtool o por un compa\u00f1ero cambiando su configuraci\u00f3n). La bandera GRO desaparecer\u00e1 y Veth intentar\u00e1 desactivar las NAPI. Pero el camino abierto nunca los cre\u00f3 ya que XDP estaba desactivado, la bandera GRO estaba perdida. Si NAPI se inicializ\u00f3 antes, colgaremos napi_disable(). Si nunca fue as\u00ed, fallaremos al intentar detener el hrtimer no inicializado. Mueva las actualizaciones del indicador GRO a las rutas de activaci\u00f3n/desactivaci\u00f3n de XDP, en lugar de mezclarlas con las rutas ndo_open/ndo_close."
+          }
+        ],
+        "id": "CVE-2024-26803",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.163",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/16edf51f33f52dff70ed455bc40a6cc443c04664"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7985d73961bbb4e726c1be7b9cd26becc7be8325"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8f7a3894e58e6f5d5815533cfde60e3838947941"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f011c103e654d83dc85f057a7d1bd0960d02831c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fe9f801355f0b47668419f30f1fac1cf4539e736"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

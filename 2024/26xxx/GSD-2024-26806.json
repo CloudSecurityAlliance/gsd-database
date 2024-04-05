@@ -33,6 +33,36 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: cadence-qspi: remove system-wide suspend helper calls from runtime PM hooks\n\nThe ->runtime_suspend() and ->runtime_resume() callbacks are not\nexpected to call spi_controller_suspend() and spi_controller_resume().\nRemove calls to those in the cadence-qspi driver.\n\nThose helpers have two roles currently:\n - They stop/start the queue, including dealing with the kworker.\n - They toggle the SPI controller SPI_CONTROLLER_SUSPENDED flag. It\n   requires acquiring ctlr->bus_lock_mutex.\n\nStep one is irrelevant because cadence-qspi is not queued. Step two\nhowever has two implications:\n - A deadlock occurs, because ->runtime_resume() is called in a context\n   where the lock is already taken (in the ->exec_op() callback, where\n   the usage count is incremented).\n - It would disallow all operations once the device is auto-suspended.\n\nHere is a brief call tree highlighting the mutex deadlock:\n\nspi_mem_exec_op()\n        ...\n        spi_mem_access_start()\n                mutex_lock(&ctlr->bus_lock_mutex)\n\n        cqspi_exec_mem_op()\n                pm_runtime_resume_and_get()\n                        cqspi_resume()\n                                spi_controller_resume()\n                                        mutex_lock(&ctlr->bus_lock_mutex)\n                ...\n\n        spi_mem_access_end()\n                mutex_unlock(&ctlr->bus_lock_mutex)\n        ..."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: spi: cadence-qspi: elimina las llamadas auxiliares de suspensi\u00f3n en todo el sistema desde los ganchos PM en tiempo de ejecuci\u00f3n No se espera que las devoluciones de llamada -&gt;runtime_suspend() y -&gt;runtime_resume() llamen a spi_controller_suspend() y spi_controller_resume(). Elimina llamadas a aquellos en el controlador cadence-qspi. Esos ayudantes tienen actualmente dos funciones: - Detienen/inician la cola, incluido el trato con el kworker. - Alternan el indicador SPI_CONTROLLER_SUSPENDED del controlador SPI. Requiere adquirir ctlr-&gt;bus_lock_mutex. El primer paso es irrelevante porque cadence-qspi no est\u00e1 en cola. Sin embargo, el segundo paso tiene dos implicaciones: - Se produce un punto muerto, porque -&gt;runtime_resume() se llama en un contexto donde el bloqueo ya est\u00e1 tomado (en la devoluci\u00f3n de llamada -&gt;exec_op(), donde se incrementa el recuento de uso). - No permitir\u00eda todas las operaciones una vez que el dispositivo se autosuspenda. Aqu\u00ed hay un breve \u00e1rbol de llamadas que resalta el interbloqueo mutex: spi_mem_exec_op() ... spi_mem_access_start() mutex_lock(&amp;ctlr-&gt;bus_lock_mutex) cqspi_exec_mem_op() pm_runtime_resume_and_get() cqspi_resume() spi_controller_resume() mutex_lock(&amp;ctlr-&gt;bus_lock_mutex) ... spi_mem _acceso_end () mutex_unlock(&amp;ctlr-&gt;bus_lock_mutex) ..."
+          }
+        ],
+        "id": "CVE-2024-26806",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.333",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/041562ebc4759c9932b59a06527f8753b86da365"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/959043afe53ae80633e810416cee6076da6e91c6"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

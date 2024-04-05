@@ -33,6 +33,52 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmmc: mmci: stm32: fix DMA API overlapping mappings warning\n\nTurning on CONFIG_DMA_API_DEBUG_SG results in the following warning:\n\nDMA-API: mmci-pl18x 48220000.mmc: cacheline tracking EEXIST,\noverlapping mappings aren't supported\nWARNING: CPU: 1 PID: 51 at kernel/dma/debug.c:568\nadd_dma_entry+0x234/0x2f4\nModules linked in:\nCPU: 1 PID: 51 Comm: kworker/1:2 Not tainted 6.1.28 #1\nHardware name: STMicroelectronics STM32MP257F-EV1 Evaluation Board (DT)\nWorkqueue: events_freezable mmc_rescan\nCall trace:\nadd_dma_entry+0x234/0x2f4\ndebug_dma_map_sg+0x198/0x350\n__dma_map_sg_attrs+0xa0/0x110\ndma_map_sg_attrs+0x10/0x2c\nsdmmc_idma_prep_data+0x80/0xc0\nmmci_prep_data+0x38/0x84\nmmci_start_data+0x108/0x2dc\nmmci_request+0xe4/0x190\n__mmc_start_request+0x68/0x140\nmmc_start_request+0x94/0xc0\nmmc_wait_for_req+0x70/0x100\nmmc_send_tuning+0x108/0x1ac\nsdmmc_execute_tuning+0x14c/0x210\nmmc_execute_tuning+0x48/0xec\nmmc_sd_init_uhs_card.part.0+0x208/0x464\nmmc_sd_init_card+0x318/0x89c\nmmc_attach_sd+0xe4/0x180\nmmc_rescan+0x244/0x320\n\nDMA API debug brings to light leaking dma-mappings as dma_map_sg and\ndma_unmap_sg are not correctly balanced.\n\nIf an error occurs in mmci_cmd_irq function, only mmci_dma_error\nfunction is called and as this API is not managed on stm32 variant,\ndma_unmap_sg is never called in this error path."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: mmc: mmci: stm32: corregir la advertencia de asignaciones superpuestas de la API DMA Al activar CONFIG_DMA_API_DEBUG_SG se genera la siguiente advertencia: DMA-API: mmci-pl18x 48220000.mmc: seguimiento de l\u00ednea de cach\u00e9 EEXIST, asignaciones superpuestas no son compatibles ADVERTENCIA: CPU: 1 PID: 51 en kernel/dma/debug.c:568 add_dma_entry+0x234/0x2f4 M\u00f3dulos vinculados en: CPU: 1 PID: 51 Comm: kworker/1:2 Not tainted 6.1.28 # 1 Nombre del hardware: STMicroelectronics STM32MP257F-EV1 Placa de evaluaci\u00f3n (DT) Cola de trabajo: events_freezable mmc_rescan Rastreo de llamadas: add_dma_entry+0x234/0x2f4 debug_dma_map_sg+0x198/0x350 __dma_map_sg_attrs+0xa0/0x110 dma_map_sg_attrs+0x1 0/0x2c sdmmc_idma_prep_data+0x80/0xc0 mmci_prep_data+0x38/0x84 mmci_start_data+0x108/0x2dc mmci_request+0xe4/0x190 __mmc_start_request+0x68/0x140 mmc_start_request+0x94/0xc0 mmc_wait_for_req+0x70/0x100 mmc_send_tuning+0x108/0x1ac sdmmc_execute_tuning+0x 14c/0x210 mmc_execute_tuning+0x48/0xec mmc_sd_init_uhs_card.part.0+0x208/0x464 mmc_sd_init_card +0x318/0x89c mmc_attach_sd+0xe4/0x180 mmc_rescan+0x244/0x320 La depuraci\u00f3n de la API de DMA saca a la luz asignaciones de dma con fugas, ya que dma_map_sg y dma_unmap_sg no est\u00e1n correctamente equilibrados. Si se produce un error en la funci\u00f3n mmci_cmd_irq, solo se llama a la funci\u00f3n mmci_dma_error y como esta API no se administra en la variante stm32, nunca se llama a dma_unmap_sg en esta ruta de error."
+          }
+        ],
+        "id": "CVE-2024-26787",
+        "lastModified": "2024-04-04T12:48:41.700",
+        "metrics": {},
+        "published": "2024-04-04T09:15:08.297",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0224cbc53ba82b84affa7619b6d1b1a254bc2c53"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/176e66269f0de327375fc0ea51c12c2f5a97e4c4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5ae5060e17a3fc38e54c3e5bd8abd6b1d5bfae7c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6b1ba3f9040be5efc4396d86c9752cdc564730be"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/70af82bb9c897faa25a44e4181f36c60312b71ef"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d610a307225951929b9dff807788439454476f85"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

@@ -33,6 +33,56 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: ip_tunnel: prevent perpetual headroom growth\n\nsyzkaller triggered following kasan splat:\nBUG: KASAN: use-after-free in __skb_flow_dissect+0x19d1/0x7a50 net/core/flow_dissector.c:1170\nRead of size 1 at addr ffff88812fb4000e by task syz-executor183/5191\n[..]\n kasan_report+0xda/0x110 mm/kasan/report.c:588\n __skb_flow_dissect+0x19d1/0x7a50 net/core/flow_dissector.c:1170\n skb_flow_dissect_flow_keys include/linux/skbuff.h:1514 [inline]\n ___skb_get_hash net/core/flow_dissector.c:1791 [inline]\n __skb_get_hash+0xc7/0x540 net/core/flow_dissector.c:1856\n skb_get_hash include/linux/skbuff.h:1556 [inline]\n ip_tunnel_xmit+0x1855/0x33c0 net/ipv4/ip_tunnel.c:748\n ipip_tunnel_xmit+0x3cc/0x4e0 net/ipv4/ipip.c:308\n __netdev_start_xmit include/linux/netdevice.h:4940 [inline]\n netdev_start_xmit include/linux/netdevice.h:4954 [inline]\n xmit_one net/core/dev.c:3548 [inline]\n dev_hard_start_xmit+0x13d/0x6d0 net/core/dev.c:3564\n __dev_queue_xmit+0x7c1/0x3d60 net/core/dev.c:4349\n dev_queue_xmit include/linux/netdevice.h:3134 [inline]\n neigh_connected_output+0x42c/0x5d0 net/core/neighbour.c:1592\n ...\n ip_finish_output2+0x833/0x2550 net/ipv4/ip_output.c:235\n ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:323\n ..\n iptunnel_xmit+0x5b4/0x9b0 net/ipv4/ip_tunnel_core.c:82\n ip_tunnel_xmit+0x1dbc/0x33c0 net/ipv4/ip_tunnel.c:831\n ipgre_xmit+0x4a1/0x980 net/ipv4/ip_gre.c:665\n __netdev_start_xmit include/linux/netdevice.h:4940 [inline]\n netdev_start_xmit include/linux/netdevice.h:4954 [inline]\n xmit_one net/core/dev.c:3548 [inline]\n dev_hard_start_xmit+0x13d/0x6d0 net/core/dev.c:3564\n ...\n\nThe splat occurs because skb->data points past skb->head allocated area.\nThis is because neigh layer does:\n  __skb_pull(skb, skb_network_offset(skb));\n\n... but skb_network_offset() returns a negative offset and __skb_pull()\narg is unsigned.  IOW, we skb->data gets \"adjusted\" by a huge value.\n\nThe negative value is returned because skb->head and skb->data distance is\nmore than 64k and skb->network_header (u16) has wrapped around.\n\nThe bug is in the ip_tunnel infrastructure, which can cause\ndev->needed_headroom to increment ad infinitum.\n\nThe syzkaller reproducer consists of packets getting routed via a gre\ntunnel, and route of gre encapsulated packets pointing at another (ipip)\ntunnel.  The ipip encapsulation finds gre0 as next output device.\n\nThis results in the following pattern:\n\n1). First packet is to be sent out via gre0.\nRoute lookup found an output device, ipip0.\n\n2).\nip_tunnel_xmit for gre0 bumps gre0->needed_headroom based on the future\noutput device, rt.dev->needed_headroom (ipip0).\n\n3).\nip output / start_xmit moves skb on to ipip0. which runs the same\ncode path again (xmit recursion).\n\n4).\nRouting step for the post-gre0-encap packet finds gre0 as output device\nto use for ipip0 encapsulated packet.\n\ntunl0->needed_headroom is then incremented based on the (already bumped)\ngre0 device headroom.\n\nThis repeats for every future packet:\n\ngre0->needed_headroom gets inflated because previous packets' ipip0 step\nincremented rt->dev (gre0) headroom, and ipip0 incremented because gre0\nneeded_headroom was increased.\n\nFor each subsequent packet, gre/ipip0->needed_headroom grows until\npost-expand-head reallocations result in a skb->head/data distance of\nmore than 64k.\n\nOnce that happens, skb->network_header (u16) wraps around when\npskb_expand_head tries to make sure that skb_network_offset() is unchanged\nafter the headroom expansion/reallocation.\n\nAfter this skb_network_offset(skb) returns a different (and negative)\nresult post headroom expansion.\n\nThe next trip to neigh layer (or anything else that would __skb_pull the\nnetwork header) makes skb->data point to a memory location outside\nskb->head area.\n\nv2: Cap the needed_headroom update to an arbitarily chosen upperlimit to\nprevent perpetual increase instead of dropping the headroom increment\ncompletely."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: net: ip_tunnel: evita el crecimiento perpetuo del espacio libre syzkaller activado despu\u00e9s de kasan splat: ERROR: KASAN: use-after-free en __skb_flow_dissect+0x19d1/0x7a50 net/core/flow_dissector.c:1170 Lectura del tama\u00f1o 1 en la direcci\u00f3n ffff88812fb4000e mediante la tarea syz-executor183/5191 [..] kasan_report+0xda/0x110 mm/kasan/report.c:588 __skb_flow_dissect+0x19d1/0x7a50 net/core/flow_dissector.c:1170 skb_flow_dissect_flow_key incluir/linux /skbuff.h:1514 [en l\u00ednea] ___skb_get_hash net/core/flow_dissector.c:1791 [en l\u00ednea] __skb_get_hash+0xc7/0x540 net/core/flow_dissector.c:1856 skb_get_hash include/linux/skbuff.h:1556 [en l\u00ednea] ip_tunnel_xmit +0x1855/0x33c0 net/ipv4/ip_tunnel.c:748 ipip_tunnel_xmit+0x3cc/0x4e0 net/ipv4/ipip.c:308 __netdev_start_xmit include/linux/netdevice.h:4940 [en l\u00ednea] netdev_start_xmit include/linux/netdevice.h:4954 [en l\u00ednea] xmit_one net/core/dev.c:3548 [en l\u00ednea] dev_hard_start_xmit+0x13d/0x6d0 net/core/dev.c:3564 __dev_queue_xmit+0x7c1/0x3d60 net/core/dev.c:4349 dev_queue_xmit include/linux/netdevice .h:3134 [en l\u00ednea] neigh_connected_output+0x42c/0x5d0 net/core/neighbour.c:1592 ... ip_finish_output2+0x833/0x2550 net/ipv4/ip_output.c:235 ip_finish_output+0x31/0x310 net/ipv4/ip_output.c :323 .. iptunnel_xmit+0x5b4/0x9b0 net/ipv4/ip_tunnel_core.c:82 ip_tunnel_xmit+0x1dbc/0x33c0 net/ipv4/ip_tunnel.c:831 ipgre_xmit+0x4a1/0x980 net/ipv4/ip_gre.c:665 __netdev_start_xmit incluir /linux /netdevice.h:4940 [en l\u00ednea] netdev_start_xmit include/linux/netdevice.h:4954 [en l\u00ednea] xmit_one net/core/dev.c:3548 [en l\u00ednea] dev_hard_start_xmit+0x13d/0x6d0 net/core/dev.c:3564 . .. El s\u00edmbolo se produce porque skb-&gt;data apunta m\u00e1s all\u00e1 del \u00e1rea asignada de skb-&gt;head. Esto se debe a que la capa vecina hace: __skb_pull(skb, skb_network_offset(skb)); ... pero skb_network_offset() devuelve un desplazamiento negativo y el argumento __skb_pull() no est\u00e1 firmado. OIA, nosotros, skb-&gt;los datos, se \"ajustan\" en un valor enorme. El valor negativo se devuelve porque la distancia de skb-&gt;head y skb-&gt;data es superior a 64k y skb-&gt;network_header (u16) se ha ajustado. El error est\u00e1 en la infraestructura ip_tunnel, lo que puede hacer que dev-&gt;needed_headroom se incremente hasta el infinito. El reproductor syzkaller consta de paquetes que se enrutan a trav\u00e9s de un t\u00fanel gre y una ruta de paquetes encapsulados gre que apuntan a otro t\u00fanel (ipip). La encapsulaci\u00f3n ipip encuentra gre0 como el siguiente dispositivo de salida. Esto da como resultado el siguiente patr\u00f3n: 1). El primer paquete se enviar\u00e1 a trav\u00e9s de gre0. La b\u00fasqueda de ruta encontr\u00f3 un dispositivo de salida, ipip0. 2). ip_tunnel_xmit para gre0 aumenta gre0-&gt;needed_headroom seg\u00fan el dispositivo de salida futuro, rt.dev-&gt;needed_headroom (ipip0). 3). ipoutput/start_xmit mueve skb a ipip0. que ejecuta la misma ruta de c\u00f3digo nuevamente (xmit recursividad). 4). El paso de enrutamiento para el paquete post-gre0-encap encuentra gre0 como dispositivo de salida para usar con el paquete encapsulado ipip0. tunl0-&gt;needed_headroom luego se incrementa seg\u00fan el espacio libre del dispositivo gre0 (ya aumentado). Esto se repite para cada paquete futuro: gre0-&gt;needed_headroom se infla porque el paso ipip0 de los paquetes anteriores increment\u00f3 el espacio libre rt-&gt;dev (gre0), y ipip0 se increment\u00f3 porque se aument\u00f3 el espacio necesario_headroom de gre0. Para cada paquete posterior, gre/ipip0-&gt;needed_headroom crece hasta que las reasignaciones posteriores a la expansi\u00f3n del cabezal dan como resultado una distancia skb-&gt;head/data de m\u00e1s de 64k. Una vez que eso sucede, skb-&gt;network_header (u16) se ajusta cuando pskb_expand_head intenta asegurarse de que skb_network_offset() no cambie despu\u00e9s de la expansi\u00f3n/reasignaci\u00f3n del espacio libre. Despu\u00e9s de esto, skb_network_offset(skb) devuelve un resultado diferente (y negativo) posterior a la expansi\u00f3n del espacio libre.---trucado---"
+          }
+        ],
+        "id": "CVE-2024-26804",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.217",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/049d7989c67e8dd50f07a2096dbafdb41331fb9b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2e95350fe9db9d53c701075060ac8ac883b68aee"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5ae1e9922bbdbaeb9cfbe91085ab75927488ac0f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a0a1db40b23e8ff86dea2786c5ea1470bb23ecb9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ab63de24ebea36fe73ac7121738595d704b66d96"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/afec0c5cd2ed71ca95a8b36a5e6d03333bf34282"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f81e94d2dcd2397137edcb8b85f4c5bed5d22383"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

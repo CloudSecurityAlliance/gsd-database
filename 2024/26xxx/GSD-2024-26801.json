@@ -33,6 +33,60 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: Avoid potential use-after-free in hci_error_reset\n\nWhile handling the HCI_EV_HARDWARE_ERROR event, if the underlying\nBT controller is not responding, the GPIO reset mechanism would\nfree the hci_dev and lead to a use-after-free in hci_error_reset.\n\nHere's the call trace observed on a ChromeOS device with Intel AX201:\n   queue_work_on+0x3e/0x6c\n   __hci_cmd_sync_sk+0x2ee/0x4c0 [bluetooth <HASH:3b4a6>]\n   ? init_wait_entry+0x31/0x31\n   __hci_cmd_sync+0x16/0x20 [bluetooth <HASH:3b4a 6>]\n   hci_error_reset+0x4f/0xa4 [bluetooth <HASH:3b4a 6>]\n   process_one_work+0x1d8/0x33f\n   worker_thread+0x21b/0x373\n   kthread+0x13a/0x152\n   ? pr_cont_work+0x54/0x54\n   ? kthread_blkcg+0x31/0x31\n    ret_from_fork+0x1f/0x30\n\nThis patch holds the reference count on the hci_dev while processing\na HCI_EV_HARDWARE_ERROR event to avoid potential crash."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: Bluetooth: evite el posible use-after-free en hci_error_reset Mientras se maneja el evento HCI_EV_HARDWARE_ERROR, si el controlador BT subyacente no responde, el mecanismo de reinicio de GPIO liberar\u00eda hci_dev y provocar\u00eda un error. use-after-free en hci_error_reset. Este es el seguimiento de llamadas observado en un dispositivo ChromeOS con Intel AX201: queue_work_on+0x3e/0x6c __hci_cmd_sync_sk+0x2ee/0x4c0 [bluetooth ] ? init_wait_entry+0x31/0x31 __hci_cmd_sync+0x16/0x20 [bluetooth ] hci_error_reset+0x4f/0xa4 [bluetooth ] Process_one_work+0x1d8/0x33f trabajador_thread+0x21b/0x373 kthread+0x13a /0x152 ? pr_cont_work+0x54/0x54? kthread_blkcg+0x31/0x31 ret_from_fork+0x1f/0x30 Este parche mantiene el recuento de referencias en hci_dev mientras procesa un evento HCI_EV_HARDWARE_ERROR para evitar posibles fallas."
+          }
+        ],
+        "id": "CVE-2024-26801",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.050",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2449007d3f73b2842c9734f45f0aadb522daf592"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2ab9a19d896f5a0dd386e1f001c5309bc35f433b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/45085686b9559bfbe3a4f41d3d695a520668f5e1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6dd0a9dfa99f8990a08eb8fdd8e79bee31c7d8e2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/98fb98fd37e42fd4ce13ff657ea64503e24b6090"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/da4569d450b193e39e87119fd316c0291b585d14"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dd594cdc24f2e48dab441732e6dfcafd6b0711d1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e0b278650f07acf2e0932149183458468a731c03"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

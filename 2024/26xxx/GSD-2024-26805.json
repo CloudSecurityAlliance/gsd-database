@@ -33,6 +33,60 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetlink: Fix kernel-infoleak-after-free in __skb_datagram_iter\n\nsyzbot reported the following uninit-value access issue [1]:\n\nnetlink_to_full_skb() creates a new `skb` and puts the `skb->data`\npassed as a 1st arg of netlink_to_full_skb() onto new `skb`. The data\nsize is specified as `len` and passed to skb_put_data(). This `len`\nis based on `skb->end` that is not data offset but buffer offset. The\n`skb->end` contains data and tailroom. Since the tailroom is not\ninitialized when the new `skb` created, KMSAN detects uninitialized\nmemory area when copying the data.\n\nThis patch resolved this issue by correct the len from `skb->end` to\n`skb->len`, which is the actual data offset.\n\nBUG: KMSAN: kernel-infoleak-after-free in instrument_copy_to_user include/linux/instrumented.h:114 [inline]\nBUG: KMSAN: kernel-infoleak-after-free in copy_to_user_iter lib/iov_iter.c:24 [inline]\nBUG: KMSAN: kernel-infoleak-after-free in iterate_ubuf include/linux/iov_iter.h:29 [inline]\nBUG: KMSAN: kernel-infoleak-after-free in iterate_and_advance2 include/linux/iov_iter.h:245 [inline]\nBUG: KMSAN: kernel-infoleak-after-free in iterate_and_advance include/linux/iov_iter.h:271 [inline]\nBUG: KMSAN: kernel-infoleak-after-free in _copy_to_iter+0x364/0x2520 lib/iov_iter.c:186\n instrument_copy_to_user include/linux/instrumented.h:114 [inline]\n copy_to_user_iter lib/iov_iter.c:24 [inline]\n iterate_ubuf include/linux/iov_iter.h:29 [inline]\n iterate_and_advance2 include/linux/iov_iter.h:245 [inline]\n iterate_and_advance include/linux/iov_iter.h:271 [inline]\n _copy_to_iter+0x364/0x2520 lib/iov_iter.c:186\n copy_to_iter include/linux/uio.h:197 [inline]\n simple_copy_to_iter+0x68/0xa0 net/core/datagram.c:532\n __skb_datagram_iter+0x123/0xdc0 net/core/datagram.c:420\n skb_copy_datagram_iter+0x5c/0x200 net/core/datagram.c:546\n skb_copy_datagram_msg include/linux/skbuff.h:3960 [inline]\n packet_recvmsg+0xd9c/0x2000 net/packet/af_packet.c:3482\n sock_recvmsg_nosec net/socket.c:1044 [inline]\n sock_recvmsg net/socket.c:1066 [inline]\n sock_read_iter+0x467/0x580 net/socket.c:1136\n call_read_iter include/linux/fs.h:2014 [inline]\n new_sync_read fs/read_write.c:389 [inline]\n vfs_read+0x8f6/0xe00 fs/read_write.c:470\n ksys_read+0x20f/0x4c0 fs/read_write.c:613\n __do_sys_read fs/read_write.c:623 [inline]\n __se_sys_read fs/read_write.c:621 [inline]\n __x64_sys_read+0x93/0xd0 fs/read_write.c:621\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was stored to memory at:\n skb_put_data include/linux/skbuff.h:2622 [inline]\n netlink_to_full_skb net/netlink/af_netlink.c:181 [inline]\n __netlink_deliver_tap_skb net/netlink/af_netlink.c:298 [inline]\n __netlink_deliver_tap+0x5be/0xc90 net/netlink/af_netlink.c:325\n netlink_deliver_tap net/netlink/af_netlink.c:338 [inline]\n netlink_deliver_tap_kernel net/netlink/af_netlink.c:347 [inline]\n netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]\n netlink_unicast+0x10f1/0x1250 net/netlink/af_netlink.c:1368\n netlink_sendmsg+0x1238/0x13d0 net/netlink/af_netlink.c:1910\n sock_sendmsg_nosec net/socket.c:730 [inline]\n __sock_sendmsg net/socket.c:745 [inline]\n ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584\n ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638\n __sys_sendmsg net/socket.c:2667 [inline]\n __do_sys_sendmsg net/socket.c:2676 [inline]\n __se_sys_sendmsg net/socket.c:2674 [inline]\n __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\n free_pages_prepare mm/page_alloc.c:1087 [inline]\n free_unref_page_prepare+0xb0/0xa40 mm/page_alloc.c:2347\n free_unref_page_list+0xeb/0x1100 mm/page_alloc.c:2533\n release_pages+0x23d3/0x2410 mm/swap.c:1042\n free_pages_and_swap_cache+0xd9/0xf0 mm/swap_state.c:316\n tlb_batch_pages\n---truncated---"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: netlink: Fix kernel-infoleak-after-free en __skb_datagram_iter syzbot inform\u00f3 el siguiente problema de acceso al valor uninit [1]: netlink_to_full_skb() crea un nuevo `skb` y coloca el ` skb-&gt;data` pas\u00f3 como primer argumento de netlink_to_full_skb() al nuevo `skb`. El tama\u00f1o de los datos se especifica como `len` y se pasa a skb_put_data(). Este `len` se basa en `skb-&gt;end` que no es un desplazamiento de datos sino un desplazamiento del b\u00fafer. El `skb-&gt;end` contiene datos y espacio de adaptaci\u00f3n. Dado que el tailroom no se inicializa cuando se crea el nuevo `skb`, KMSAN detecta un \u00e1rea de memoria no inicializada al copiar los datos. Este parche resolvi\u00f3 este problema corrigiendo la longitud de `skb-&gt;end` a `skb-&gt;len`, que es el desplazamiento de datos real. ERROR: KMSAN: kernel-infoleak-after-free en instrument_copy_to_user include/linux/instrumented.h:114 [en l\u00ednea] ERROR: KMSAN: kernel-infoleak-after-free en copy_to_user_iter lib/iov_iter.c:24 [en l\u00ednea] ERROR: KMSAN: kernel-infoleak-after-free en iterate_ubuf include/linux/iov_iter.h:29 [en l\u00ednea] ERROR: KMSAN: kernel-infoleak-after-free en iterate_and_advance2 include/linux/iov_iter.h:245 [en l\u00ednea] ERROR: KMSAN: kernel-infoleak-after-free en iterate_and_advance include/linux/iov_iter.h:271 [en l\u00ednea] ERROR: KMSAN: kernel-infoleak-after-free en _copy_to_iter+0x364/0x2520 lib/iov_iter.c:186 instrument_copy_to_user include/ linux/instrumented.h:114 [en l\u00ednea] copy_to_user_iter lib/iov_iter.c:24 [en l\u00ednea] iterate_ubuf include/linux/iov_iter.h:29 [en l\u00ednea] iterate_and_advance2 include/linux/iov_iter.h:245 [en l\u00ednea] iterate_and_advance include/ linux/iov_iter.h:271 [en l\u00ednea] _copy_to_iter+0x364/0x2520 lib/iov_iter.c:186 copy_to_iter include/linux/uio.h:197 [en l\u00ednea] simple_copy_to_iter+0x68/0xa0 net/core/datagram.c:532 __skb_datagram_iter +0x123/0xdc0 net/core/datagram.c:420 skb_copy_datagram_iter+0x5c/0x200 net/core/datagram.c:546 skb_copy_datagram_msg include/linux/skbuff.h:3960 [en l\u00ednea] paquete_recvmsg+0xd9c/0x2000 net/packet/af_packet .c:3482 sock_recvmsg_nosec net/socket.c:1044 [en l\u00ednea] sock_recvmsg net/socket.c:1066 [en l\u00ednea] sock_read_iter+0x467/0x580 net/socket.c:1136 call_read_iter include/linux/fs.h:2014 [en l\u00ednea ] new_sync_read fs/read_write.c:389 [en l\u00ednea] vfs_read+0x8f6/0xe00 fs/read_write.c:470 ksys_read+0x20f/0x4c0 fs/read_write.c:613 __do_sys_read fs/read_write.c:623 [en l\u00ednea] __se_sys_read fs/ read_write.c:621 [en l\u00ednea] __x64_sys_read+0x93/0xd0 fs/read_write.c:621 do_syscall_x64 arch/x86/entry/common.c:52 [en l\u00ednea] do_syscall_64+0x44/0x110 arch/x86/entry/common.c: 83 Entry_SYSCALL_64_after_hwframe+0x63/0x6b Uninit se almacen\u00f3 en la memoria en: skb_put_data include/linux/skbuff.h:2622 [en l\u00ednea] netlink_to_full_skb net/netlink/af_netlink.c:181 [en l\u00ednea] __netlink_deliver_tap_skb net/netlink/af_netlink.c:298 [ en l\u00ednea] __netlink_deliver_tap+0x5be/0xc90 net/netlink/af_netlink.c:325 netlink_deliver_tap net/netlink/af_netlink.c:338 [en l\u00ednea] netlink_deliver_tap_kernel net/netlink/af_netlink.c:347 [en l\u00ednea] netlink_unicast_kernel net/netlink/af_netlink.c :1341 [en l\u00ednea] netlink_unicast+0x10f1/0x1250 net/netlink/af_netlink.c:1368 netlink_sendmsg+0x1238/0x13d0 net/netlink/af_netlink.c:1910 sock_sendmsg_nosec net/socket.c:730 [en l\u00ednea] __sock_sendmsg net/socket.c :745 [en l\u00ednea] ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584 ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638 __sys_sendmsg net/socket.c:2667 [en l\u00ednea] __do_sys_sendmsg net/socket.c:267 6 [en l\u00ednea ] __se_sys_sendmsg net/socket.c:2674 [en l\u00ednea] __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674 do_syscall_x64 arch/x86/entry/common.c:52 [en l\u00ednea] do_syscall_64+0x44/0x110 arch/x86/ entrada/ common.c:83 Entry_SYSCALL_64_after_hwframe+0x63/0x6b Uninit se cre\u00f3 en: free_pages_prepare mm/page_alloc.c:1087 [en l\u00ednea] free_unref_page_prepare+0xb0/0xa40 mm/page_alloc.c:2347 ---truncado---"
+          }
+        ],
+        "id": "CVE-2024-26805",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:09.277",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0b27bf4c494d61e5663baa34c3edd7ccebf0ea44"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/59fc3e3d049e39e7d0d271f20dd5fb47c57faf1d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/661779e1fcafe1b74b3f3fe8e980c1e207fea1fd"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9ae51361da43270f4ba0eb924427a07e87e48777"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c71ed29d15b1a1ed6c464f8c3536996963046285"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d3ada42e534a83b618bbc1e490d23bf0fdae4736"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec343a55b687a452f5e87f3b52bf9f155864df65"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f19d1f98e60e68b11fc60839105dd02a30ec0d77"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

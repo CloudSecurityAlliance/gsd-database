@@ -125,10 +125,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\npowerpc/kasan: Limit KASAN thread size increase to 32KB\n\nKASAN is seen to increase stack usage, to the point that it was reported\nto lead to stack overflow on some 32-bit machines (see link).\n\nTo avoid overflows the stack size was doubled for KASAN builds in\ncommit 3e8635fb2e07 (\"powerpc/kasan: Force thread size increase with\nKASAN\").\n\nHowever with a 32KB stack size to begin with, the doubling leads to a\n64KB stack, which causes build errors:\n  arch/powerpc/kernel/switch.S:249: Error: operand out of range (0x000000000000fe50 is not between 0xffffffffffff8000 and 0x0000000000007fff)\n\nAlthough the asm could be reworked, in practice a 32KB stack seems\nsufficient even for KASAN builds - the additional usage seems to be in\nthe 2-3KB range for a 64-bit KASAN build.\n\nSo only increase the stack for KASAN if the stack size is < 32KB."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: powerpc/kasan: limitar el aumento del tama\u00f1o del subproceso KASAN a 32 KB. Se considera que KASAN aumenta el uso de la pila, hasta el punto de que se inform\u00f3 que provoca un desbordamiento de la pila en algunas m\u00e1quinas de 32 bits ( ver enlace). Para evitar desbordamientos, el tama\u00f1o de la pila se duplic\u00f3 para las compilaciones de KASAN en el commit 3e8635fb2e07 (\"powerpc/kasan: Forzar el aumento del tama\u00f1o del subproceso con KASAN\"). Sin embargo, con un tama\u00f1o de pila de 32 KB para empezar, la duplicaci\u00f3n conduce a una pila de 64 KB, lo que provoca errores de compilaci\u00f3n: arch/powerpc/kernel/switch.S:249: Error: operando fuera de rango (0x000000000000fe50 no est\u00e1 entre 0xffffffffffff8000 y 0x00000000000007fff) Aunque el conjunto podr\u00eda modificarse, en la pr\u00e1ctica una pila de 32 KB parece suficiente incluso para compilaciones KASAN; el uso adicional parece estar en el rango de 2 a 3 KB para una compilaci\u00f3n KASAN de 64 bits. Por lo tanto, solo aumente la pila para KASAN si el tama\u00f1o de la pila es &lt;32 KB."
           }
         ],
         "id": "CVE-2024-26710",
-        "lastModified": "2024-04-03T17:24:18.150",
+        "lastModified": "2024-04-04T14:15:09.567",
         "metrics": {},
         "published": "2024-04-03T15:15:53.487",
         "references": [
@@ -143,6 +147,10 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/b29b16bd836a838b7690f80e37f8376414c74cbe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f1acb109505d983779bbb7e20a1ee6244d2b5736"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

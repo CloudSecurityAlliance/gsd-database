@@ -33,6 +33,48 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nfbcon: always restore the old font data in fbcon_do_set_font()\n\nCommit a5a923038d70 (fbdev: fbcon: Properly revert changes when\nvc_resize() failed) started restoring old font data upon failure (of\nvc_resize()). But it performs so only for user fonts. It means that the\n\"system\"/internal fonts are not restored at all. So in result, the very\nfirst call to fbcon_do_set_font() performs no restore at all upon\nfailing vc_resize().\n\nThis can be reproduced by Syzkaller to crash the system on the next\ninvocation of font_get(). It's rather hard to hit the allocation failure\nin vc_resize() on the first font_set(), but not impossible. Esp. if\nfault injection is used to aid the execution/failure. It was\ndemonstrated by Sirius:\n  BUG: unable to handle page fault for address: fffffffffffffff8\n  #PF: supervisor read access in kernel mode\n  #PF: error_code(0x0000) - not-present page\n  PGD cb7b067 P4D cb7b067 PUD cb7d067 PMD 0\n  Oops: 0000 [#1] PREEMPT SMP KASAN\n  CPU: 1 PID: 8007 Comm: poc Not tainted 6.7.0-g9d1694dc91ce #20\n  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014\n  RIP: 0010:fbcon_get_font+0x229/0x800 drivers/video/fbdev/core/fbcon.c:2286\n  Call Trace:\n   <TASK>\n   con_font_get drivers/tty/vt/vt.c:4558 [inline]\n   con_font_op+0x1fc/0xf20 drivers/tty/vt/vt.c:4673\n   vt_k_ioctl drivers/tty/vt/vt_ioctl.c:474 [inline]\n   vt_ioctl+0x632/0x2ec0 drivers/tty/vt/vt_ioctl.c:752\n   tty_ioctl+0x6f8/0x1570 drivers/tty/tty_io.c:2803\n   vfs_ioctl fs/ioctl.c:51 [inline]\n  ...\n\nSo restore the font data in any case, not only for user fonts. Note the\nlater 'if' is now protected by 'old_userfont' and not 'old_data' as the\nlatter is always set now. (And it is supposed to be non-NULL. Otherwise\nwe would see the bug above again.)"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: fbcon: restaurar siempre los datos de fuentes antiguos en fbcon_do_set_font() commit a5a923038d70 (fbdev: fbcon: revertir correctamente los cambios cuando fall\u00f3 vc_resize()) comenz\u00f3 a restaurar los datos de fuentes antiguos en caso de falla (de vc_resize ()). Pero funciona s\u00f3lo para fuentes de usuario. Significa que las fuentes internas/del \"SYSTEM\" no se restauran en absoluto. Entonces, como resultado, la primera llamada a fbcon_do_set_font() no realiza ninguna restauraci\u00f3n al fallar vc_resize(). Syzkaller puede reproducir esto para bloquear el SYSTEM en la siguiente invocaci\u00f3n de font_get(). Es bastante dif\u00edcil solucionar el error de asignaci\u00f3n en vc_resize() en el primer font_set(), pero no imposible. Esp. si se utiliza la inyecci\u00f3n de fallos para ayudar en la ejecuci\u00f3n/fallo. Sirius lo demostr\u00f3: ERROR: no se puede manejar el error de p\u00e1gina para la direcci\u00f3n: fffffffffffffff8 #PF: acceso de lectura del supervisor en modo kernel #PF: error_code(0x0000) - p\u00e1gina no presente PGD cb7b067 P4D cb7b067 PUD cb7d067 PMD 0 Ups: 0000 [ #1] PREEMPT SMP KASAN CPU: 1 PID: 8007 Comm: poc No contaminado 6.7.0-g9d1694dc91ce #20 Nombre del hardware: PC est\u00e1ndar QEMU (i440FX + PIIX, 1996), BIOS 1.15.0-1 01/04/2014 RIP : 0010:fbcon_get_font+0x229/0x800 drivers/video/fbdev/core/fbcon.c:2286 Seguimiento de llamadas:  con_font_get drivers/tty/vt/vt.c:4558 [en l\u00ednea] con_font_op+0x1fc/0xf20 drivers/tty /vt/vt.c:4673 controladores vt_k_ioctl/tty/vt/vt_ioctl.c:474 [en l\u00ednea] vt_ioctl+0x632/0x2ec0 controladores/tty/vt/vt_ioctl.c:752 tty_ioctl+0x6f8/0x1570 controladores/tty/tty_io. c:2803 vfs_ioctl fs/ioctl.c:51 [en l\u00ednea] ... As\u00ed que restaure los datos de fuente en cualquier caso, no solo para las fuentes del usuario. Tenga en cuenta que el 'if' posterior ahora est\u00e1 protegido por 'old_userfont' y no por 'old_data' ya que este \u00faltimo siempre est\u00e1 configurado ahora. (Y se supone que no es NULL. De lo contrario, volver\u00edamos a ver el error anterior)."
+          }
+        ],
+        "id": "CVE-2024-26798",
+        "lastModified": "2024-04-04T12:48:22.650",
+        "metrics": {},
+        "published": "2024-04-04T09:15:08.897",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/00d6a284fcf3fad1b7e1b5bc3cd87cbfb60ce03f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/20a4b5214f7bee13c897477168c77bbf79683c3d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2f91a96b892fab2f2543b4a55740c5bee36b1a6b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/73a6bd68a1342f3a44cac9dffad81ad6a003e520"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a2c881413dcc5d801bdc9535e51270cc88cb9cd8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
