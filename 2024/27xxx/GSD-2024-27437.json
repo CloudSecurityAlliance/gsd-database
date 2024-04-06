@@ -33,6 +33,44 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Disable auto-enable of exclusive INTx IRQ\n\nCurrently for devices requiring masking at the irqchip for INTx, ie.\ndevices without DisINTx support, the IRQ is enabled in request_irq()\nand subsequently disabled as necessary to align with the masked status\nflag.  This presents a window where the interrupt could fire between\nthese events, resulting in the IRQ incrementing the disable depth twice.\nThis would be unrecoverable for a user since the masked flag prevents\nnested enables through vfio.\n\nInstead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx\nis never auto-enabled, then unmask as required."
+          }
+        ],
+        "id": "CVE-2024-27437",
+        "lastModified": "2024-04-05T12:40:52.763",
+        "metrics": {},
+        "published": "2024-04-05T09:15:09.443",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/139dfcc4d723ab13469881200c7d80f49d776060"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2a4a666c45107206605b7b5bc20545f8aabc4fa2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3b3491ad0f80d913e7d255941d4470f4a4d9bfda"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bf0bc84a20e6109ab07d5dc072067bd01eb931ec"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fe9a7082684eb059b925c535682e68c34d487d43"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
