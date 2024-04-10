@@ -94,11 +94,15 @@
         "descriptions": [
           {
             "lang": "en",
-            "value": "zlog 1.2.16 has a heap-based buffer overflow in struct zlog_rule_s while creating a new rule that is already defined in the provided configuration file. A regular user can achieve arbitrary code execution."
+            "value": "Heap based buffer flow in zlog v1.1.0 to v1.2.17 in zlog_rule_new().The size of record_name is MAXLEN_PATH(1024) + 1 but file_path may have data upto MAXLEN_CFG_LINE(MAXLEN_PATH*4) + 1. So a check was missing in zlog_rule_new() while copying the record_name from file_path + 1 which caused the buffer overflow. An attacker can exploit this vulnerability to overwrite the zlog_record_fn record_func function pointer to get arbitrary code execution or potentially cause remote code execution (RCE)."
+          },
+          {
+            "lang": "es",
+            "value": "zlog 1.2.16 tiene un desbordamiento de b\u00fafer de almacenamiento din\u00e1mico en la estructura zlog_rule_s mientras crea una nueva regla que ya est\u00e1 definida en el archivo de configuraci\u00f3n proporcionado. Un usuario normal puede lograr la ejecuci\u00f3n de c\u00f3digo arbitrario."
           }
         ],
         "id": "CVE-2024-22857",
-        "lastModified": "2024-03-07T13:52:27.110",
+        "lastModified": "2024-04-09T21:15:15.970",
         "metrics": {},
         "published": "2024-03-07T01:15:52.640",
         "references": [
@@ -109,6 +113,10 @@
           {
             "source": "cve@mitre.org",
             "url": "https://github.com/HardySimpson/zlog/blob/1a7b1a6fb956b92a4079ccc91f30da21f34ca063/src/rule.h#L30"
+          },
+          {
+            "source": "cve@mitre.org",
+            "url": "https://github.com/HardySimpson/zlog/pull/251"
           },
           {
             "source": "cve@mitre.org",
