@@ -1,0 +1,149 @@
+{
+  "gsd": {
+    "metadata": {
+      "exploitCode": "unknown",
+      "remediation": "unknown",
+      "reportConfidence": "confirmed",
+      "type": "vulnerability"
+    },
+    "osvSchema": {
+      "aliases": [
+        "CVE-2021-47214"
+      ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nhugetlb, userfaultfd: fix reservation restore on userfaultfd error\n\nCurrently in the is_continue case in hugetlb_mcopy_atomic_pte(), if we\nbail out using \"goto out_release_unlock;\" in the cases where idx >=\nsize, or !huge_pte_none(), the code will detect that new_pagecache_page\n== false, and so call restore_reserve_on_error().  In this case I see\nrestore_reserve_on_error() delete the reservation, and the following\ncall to remove_inode_hugepages() will increment h->resv_hugepages\ncausing a 100% reproducible leak.\n\nWe should treat the is_continue case similar to adding a page into the\npagecache and set new_pagecache_page to true, to indicate that there is\nno reservation to restore on the error path, and we need not call\nrestore_reserve_on_error().  Rename new_pagecache_page to\npage_in_pagecache to make that clear.",
+      "id": "GSD-2021-47214",
+      "modified": "2024-04-11T05:05:09.682284Z",
+      "schema_version": "1.4.0"
+    }
+  },
+  "namespaces": {
+    "cve.org": {
+      "CVE_data_meta": {
+        "ASSIGNER": "cve@kernel.org",
+        "ID": "CVE-2021-47214",
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "c7b1850dfb41",
+                          "version_value": "b5069d44e2fb"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.14"
+                              },
+                              {
+                                "lessThan": "5.14",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
+      },
+      "data_format": "MITRE",
+      "data_type": "CVE",
+      "data_version": "4.0",
+      "description": {
+        "description_data": [
+          {
+            "lang": "eng",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nhugetlb, userfaultfd: fix reservation restore on userfaultfd error\n\nCurrently in the is_continue case in hugetlb_mcopy_atomic_pte(), if we\nbail out using \"goto out_release_unlock;\" in the cases where idx >=\nsize, or !huge_pte_none(), the code will detect that new_pagecache_page\n== false, and so call restore_reserve_on_error().  In this case I see\nrestore_reserve_on_error() delete the reservation, and the following\ncall to remove_inode_hugepages() will increment h->resv_hugepages\ncausing a 100% reproducible leak.\n\nWe should treat the is_continue case similar to adding a page into the\npagecache and set new_pagecache_page to true, to indicate that there is\nno reservation to restore on the error path, and we need not call\nrestore_reserve_on_error().  Rename new_pagecache_page to\npage_in_pagecache to make that clear."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b5069d44e2fbc4a9093d005b3ef0949add3dd27e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b5069d44e2fbc4a9093d005b3ef0949add3dd27e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cc30042df6fcc82ea18acf0dace831503e60a0b7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cc30042df6fcc82ea18acf0dace831503e60a0b7"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nhugetlb, userfaultfd: fix reservation restore on userfaultfd error\n\nCurrently in the is_continue case in hugetlb_mcopy_atomic_pte(), if we\nbail out using \"goto out_release_unlock;\" in the cases where idx >=\nsize, or !huge_pte_none(), the code will detect that new_pagecache_page\n== false, and so call restore_reserve_on_error().  In this case I see\nrestore_reserve_on_error() delete the reservation, and the following\ncall to remove_inode_hugepages() will increment h->resv_hugepages\ncausing a 100% reproducible leak.\n\nWe should treat the is_continue case similar to adding a page into the\npagecache and set new_pagecache_page to true, to indicate that there is\nno reservation to restore on the error path, and we need not call\nrestore_reserve_on_error().  Rename new_pagecache_page to\npage_in_pagecache to make that clear."
+          }
+        ],
+        "id": "CVE-2021-47214",
+        "lastModified": "2024-04-10T19:49:51.183",
+        "metrics": {},
+        "published": "2024-04-10T19:15:48.680",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b5069d44e2fbc4a9093d005b3ef0949add3dd27e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cc30042df6fcc82ea18acf0dace831503e60a0b7"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
+    }
+  }
+}

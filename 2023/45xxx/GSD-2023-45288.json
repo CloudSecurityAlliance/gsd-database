@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-45288"
       ],
+      "details": "An attacker may cause an HTTP/2 endpoint to read arbitrary amounts of header data by sending an excessive number of CONTINUATION frames. Maintaining HPACK state requires parsing and processing all HEADERS and CONTINUATION frames on a connection. When a request's headers exceed MaxHeaderBytes, no memory is allocated to store the excess headers, but they are still parsed. This permits an attacker to cause an HTTP/2 endpoint to read arbitrary amounts of header data, all associated with a request which is going to be rejected. These headers can include Huffman-encoded data which is significantly more expensive for the receiver to decode than for an attacker to send. The fix sets a limit on the amount of excess header frames we will process before closing a connection.",
       "id": "GSD-2023-45288",
       "modified": "2023-12-13T01:20:38.271432Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,65 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@golang.org",
         "ID": "CVE-2023-45288",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "net/http",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0",
+                          "version_value": "1.21.9"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "1.22.0-0",
+                          "version_value": "1.22.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Go standard library"
+            },
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "golang.org/x/net/http2",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "0",
+                          "version_value": "0.23.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "golang.org/x/net"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Bartek Nowotarski (https://nowotarski.info/)"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,7 +89,43 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "An attacker may cause an HTTP/2 endpoint to read arbitrary amounts of header data by sending an excessive number of CONTINUATION frames. Maintaining HPACK state requires parsing and processing all HEADERS and CONTINUATION frames on a connection. When a request's headers exceed MaxHeaderBytes, no memory is allocated to store the excess headers, but they are still parsed. This permits an attacker to cause an HTTP/2 endpoint to read arbitrary amounts of header data, all associated with a request which is going to be rejected. These headers can include Huffman-encoded data which is significantly more expensive for the receiver to decode than for an attacker to send. The fix sets a limit on the amount of excess header frames we will process before closing a connection."
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "CWE-400: Uncontrolled Resource Consumption"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://go.dev/issue/65051",
+            "refsource": "MISC",
+            "url": "https://go.dev/issue/65051"
+          },
+          {
+            "name": "https://go.dev/cl/576155",
+            "refsource": "MISC",
+            "url": "https://go.dev/cl/576155"
+          },
+          {
+            "name": "https://groups.google.com/g/golang-announce/c/YgW0sx8mN3M",
+            "refsource": "MISC",
+            "url": "https://groups.google.com/g/golang-announce/c/YgW0sx8mN3M"
+          },
+          {
+            "name": "https://pkg.go.dev/vuln/GO-2024-2687",
+            "refsource": "MISC",
+            "url": "https://pkg.go.dev/vuln/GO-2024-2687"
           }
         ]
       }

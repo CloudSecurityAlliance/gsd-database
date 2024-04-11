@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-22423"
       ],
+      "details": "yt-dlp is a youtube-dl fork with additional features and fixes. The patch that addressed CVE-2023-40581 attempted to prevent RCE when using `--exec` with `%q` by replacing double quotes with two double quotes. However, this escaping is not sufficient, and still allows expansion of environment variables. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2024.04.09 fixes this issue by properly escaping `%`. It replaces them with `%%cd:~,%`, a variable that expands to nothing, leaving only the leading percent. It is recommended to upgrade yt-dlp to version 2024.04.09 as soon as possible. Also, always be careful when using `--exec`, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade, avoid using any output template expansion in `--exec` other than `{}` (filepath); if expansion in `--exec` is needed, verify the fields you are using do not contain `\"`, `|` or `&`; and/or instead of using `--exec`, write the info json and load the fields from it instead.",
       "id": "GSD-2024-22423",
       "modified": "2024-01-11T06:02:11.784322Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-22423",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "yt-dlp",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 2021.04.11, < 2024.04.09"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "yt-dlp"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +54,83 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "yt-dlp is a youtube-dl fork with additional features and fixes. The patch that addressed CVE-2023-40581 attempted to prevent RCE when using `--exec` with `%q` by replacing double quotes with two double quotes. However, this escaping is not sufficient, and still allows expansion of environment variables. Support for output template expansion in `--exec`, along with this vulnerable behavior, was added to `yt-dlp` in version 2021.04.11. yt-dlp version 2024.04.09 fixes this issue by properly escaping `%`. It replaces them with `%%cd:~,%`, a variable that expands to nothing, leaving only the leading percent. It is recommended to upgrade yt-dlp to version 2024.04.09 as soon as possible. Also, always be careful when using `--exec`, because while this specific vulnerability has been patched, using unvalidated input in shell commands is inherently dangerous. For Windows users who are not able to upgrade, avoid using any output template expansion in `--exec` other than `{}` (filepath); if expansion in `--exec` is needed, verify the fields you are using do not contain `\"`, `|` or `&`; and/or instead of using `--exec`, write the info json and load the fields from it instead."
           }
         ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.4,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "CHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-78",
+                "lang": "eng",
+                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-hjq6-52gw-2g7p",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-hjq6-52gw-2g7p"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-42h4-v29r-42qg"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/de015e930747165dbb8fcd360f8775fd973b7d6e"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/commit/ff07792676f404ffff6ee61b5638c9dc1a33a37a",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/commit/ff07792676f404ffff6ee61b5638c9dc1a33a37a"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2021.04.11"
+          },
+          {
+            "name": "https://github.com/yt-dlp/yt-dlp/releases/tag/2024.04.09",
+            "refsource": "MISC",
+            "url": "https://github.com/yt-dlp/yt-dlp/releases/tag/2024.04.09"
+          },
+          {
+            "name": "https://www.kb.cert.org/vuls/id/123335",
+            "refsource": "MISC",
+            "url": "https://www.kb.cert.org/vuls/id/123335"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-hjq6-52gw-2g7p",
+        "discovery": "UNKNOWN"
       }
     },
     "nvd.nist.gov": {
@@ -43,7 +142,7 @@
           }
         ],
         "id": "CVE-2024-22423",
-        "lastModified": "2024-04-09T18:15:08.150",
+        "lastModified": "2024-04-10T16:15:09.793",
         "metrics": {
           "cvssMetricV31": [
             {
@@ -93,10 +192,14 @@
           {
             "source": "security-advisories@github.com",
             "url": "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-hjq6-52gw-2g7p"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://www.kb.cert.org/vuls/id/123335"
           }
         ],
         "sourceIdentifier": "security-advisories@github.com",
-        "vulnStatus": "Received",
+        "vulnStatus": "Awaiting Analysis",
         "weaknesses": [
           {
             "description": [

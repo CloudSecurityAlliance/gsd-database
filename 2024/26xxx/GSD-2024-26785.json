@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26785"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\niommufd: Fix protection fault in iommufd_test_syz_conv_iova\n\nSyzkaller reported the following bug:\n\n  general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN\n  KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]\n  Call Trace:\n   lock_acquire\n   lock_acquire+0x1ce/0x4f0\n   down_read+0x93/0x4a0\n   iommufd_test_syz_conv_iova+0x56/0x1f0\n   iommufd_test_access_rw.isra.0+0x2ec/0x390\n   iommufd_test+0x1058/0x1e30\n   iommufd_fops_ioctl+0x381/0x510\n   vfs_ioctl\n   __do_sys_ioctl\n   __se_sys_ioctl\n   __x64_sys_ioctl+0x170/0x1e0\n   do_syscall_x64\n   do_syscall_64+0x71/0x140\n\nThis is because the new iommufd_access_change_ioas() sets access->ioas to\nNULL during its process, so the lock might be gone in a concurrent racing\ncontext.\n\nFix this by doing the same access->ioas sanity as iommufd_access_rw() and\niommufd_access_pin_pages() functions do.",
       "id": "GSD-2024-26785",
       "modified": "2024-02-20T06:02:29.171351Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,64 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26785",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "9227da7816dd",
+                          "version_value": "fc719ecbca45"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.6"
+                              },
+                              {
+                                "lessThan": "6.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.9",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +85,36 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\niommufd: Fix protection fault in iommufd_test_syz_conv_iova\n\nSyzkaller reported the following bug:\n\n  general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN\n  KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]\n  Call Trace:\n   lock_acquire\n   lock_acquire+0x1ce/0x4f0\n   down_read+0x93/0x4a0\n   iommufd_test_syz_conv_iova+0x56/0x1f0\n   iommufd_test_access_rw.isra.0+0x2ec/0x390\n   iommufd_test+0x1058/0x1e30\n   iommufd_fops_ioctl+0x381/0x510\n   vfs_ioctl\n   __do_sys_ioctl\n   __se_sys_ioctl\n   __x64_sys_ioctl+0x170/0x1e0\n   do_syscall_x64\n   do_syscall_64+0x71/0x140\n\nThis is because the new iommufd_access_change_ioas() sets access->ioas to\nNULL during its process, so the lock might be gone in a concurrent racing\ncontext.\n\nFix this by doing the same access->ioas sanity as iommufd_access_rw() and\niommufd_access_pin_pages() functions do."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-e0c11145c45e"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/fc719ecbca45c9c046640d72baddba3d83e0bc0b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fc719ecbca45c9c046640d72baddba3d83e0bc0b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cf7c2789822db8b5efa34f5ebcf1621bc0008d48",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cf7c2789822db8b5efa34f5ebcf1621bc0008d48"
           }
         ]
       }

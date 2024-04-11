@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47198"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: lpfc: Fix use-after-free in lpfc_unreg_rpi() routine\n\nAn error is detected with the following report when unloading the driver:\n  \"KASAN: use-after-free in lpfc_unreg_rpi+0x1b1b\"\n\nThe NLP_REG_LOGIN_SEND nlp_flag is set in lpfc_reg_fab_ctrl_node(), but the\nflag is not cleared upon completion of the login.\n\nThis allows a second call to lpfc_unreg_rpi() to proceed with nlp_rpi set\nto LPFC_RPI_ALLOW_ERROR.  This results in a use after free access when used\nas an rpi_ids array index.\n\nFix by clearing the NLP_REG_LOGIN_SEND nlp_flag in\nlpfc_mbx_cmpl_fc_reg_login().",
       "id": "GSD-2021-47198",
       "modified": "2024-04-03T05:03:54.956494Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,54 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47198",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "dbebf865b323"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +75,64 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: lpfc: Fix use-after-free in lpfc_unreg_rpi() routine\n\nAn error is detected with the following report when unloading the driver:\n  \"KASAN: use-after-free in lpfc_unreg_rpi+0x1b1b\"\n\nThe NLP_REG_LOGIN_SEND nlp_flag is set in lpfc_reg_fab_ctrl_node(), but the\nflag is not cleared upon completion of the login.\n\nThis allows a second call to lpfc_unreg_rpi() to proceed with nlp_rpi set\nto LPFC_RPI_ALLOW_ERROR.  This results in a use after free access when used\nas an rpi_ids array index.\n\nFix by clearing the NLP_REG_LOGIN_SEND nlp_flag in\nlpfc_mbx_cmpl_fc_reg_login()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/dbebf865b3239595c1d4dba063b122862583b52a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/dbebf865b3239595c1d4dba063b122862583b52a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/79b20beccea3a3938a8500acef4e6b9d7c66142f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/79b20beccea3a3938a8500acef4e6b9d7c66142f"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: lpfc: Fix use-after-free in lpfc_unreg_rpi() routine\n\nAn error is detected with the following report when unloading the driver:\n  \"KASAN: use-after-free in lpfc_unreg_rpi+0x1b1b\"\n\nThe NLP_REG_LOGIN_SEND nlp_flag is set in lpfc_reg_fab_ctrl_node(), but the\nflag is not cleared upon completion of the login.\n\nThis allows a second call to lpfc_unreg_rpi() to proceed with nlp_rpi set\nto LPFC_RPI_ALLOW_ERROR.  This results in a use after free access when used\nas an rpi_ids array index.\n\nFix by clearing the NLP_REG_LOGIN_SEND nlp_flag in\nlpfc_mbx_cmpl_fc_reg_login()."
+          }
+        ],
+        "id": "CVE-2021-47198",
+        "lastModified": "2024-04-10T19:49:51.183",
+        "metrics": {},
+        "published": "2024-04-10T19:15:47.990",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/79b20beccea3a3938a8500acef4e6b9d7c66142f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dbebf865b3239595c1d4dba063b122862583b52a"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

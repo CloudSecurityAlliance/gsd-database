@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-27437"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Disable auto-enable of exclusive INTx IRQ\n\nCurrently for devices requiring masking at the irqchip for INTx, ie.\ndevices without DisINTx support, the IRQ is enabled in request_irq()\nand subsequently disabled as necessary to align with the masked status\nflag.  This presents a window where the interrupt could fire between\nthese events, resulting in the IRQ incrementing the disable depth twice.\nThis would be unrecoverable for a user since the masked flag prevents\nnested enables through vfio.\n\nInstead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx\nis never auto-enabled, then unmask as required.",
       "id": "GSD-2024-27437",
       "modified": "2024-02-26T06:02:26.796796Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-27437",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "89e1f7d4c66d",
+                          "version_value": "b7a2f0955ffc"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.6"
+                              },
+                              {
+                                "lessThan": "3.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.154",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.84",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.24",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +109,56 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Disable auto-enable of exclusive INTx IRQ\n\nCurrently for devices requiring masking at the irqchip for INTx, ie.\ndevices without DisINTx support, the IRQ is enabled in request_irq()\nand subsequently disabled as necessary to align with the masked status\nflag.  This presents a window where the interrupt could fire between\nthese events, resulting in the IRQ incrementing the disable depth twice.\nThis would be unrecoverable for a user since the masked flag prevents\nnested enables through vfio.\n\nInstead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx\nis never auto-enabled, then unmask as required."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b7a2f0955ffceffadfe098b40b50307431f45438",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b7a2f0955ffceffadfe098b40b50307431f45438"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/139dfcc4d723ab13469881200c7d80f49d776060",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/139dfcc4d723ab13469881200c7d80f49d776060"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2a4a666c45107206605b7b5bc20545f8aabc4fa2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2a4a666c45107206605b7b5bc20545f8aabc4fa2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3b3491ad0f80d913e7d255941d4470f4a4d9bfda",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3b3491ad0f80d913e7d255941d4470f4a4d9bfda"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bf0bc84a20e6109ab07d5dc072067bd01eb931ec",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bf0bc84a20e6109ab07d5dc072067bd01eb931ec"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fe9a7082684eb059b925c535682e68c34d487d43",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fe9a7082684eb059b925c535682e68c34d487d43"
           }
         ]
       }
@@ -40,10 +169,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Disable auto-enable of exclusive INTx IRQ\n\nCurrently for devices requiring masking at the irqchip for INTx, ie.\ndevices without DisINTx support, the IRQ is enabled in request_irq()\nand subsequently disabled as necessary to align with the masked status\nflag.  This presents a window where the interrupt could fire between\nthese events, resulting in the IRQ incrementing the disable depth twice.\nThis would be unrecoverable for a user since the masked flag prevents\nnested enables through vfio.\n\nInstead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx\nis never auto-enabled, then unmask as required."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: vfio/pci: deshabilita la habilitaci\u00f3n autom\u00e1tica de INTx IRQ exclusivo. Actualmente, para dispositivos que requieren enmascaramiento en el irqchip para INTx, es decir. En dispositivos sin soporte DisINTx, la IRQ se habilita en request_irq() y posteriormente se deshabilita seg\u00fan sea necesario para alinearse con el indicador de estado enmascarado. Esto presenta una ventana donde la interrupci\u00f3n podr\u00eda dispararse entre estos eventos, lo que hace que la IRQ incremente la profundidad de desactivaci\u00f3n dos veces. Esto ser\u00eda irrecuperable para un usuario ya que el indicador enmascarado impide las habilitaciones anidadas a trav\u00e9s de vfio. En su lugar, invierta la l\u00f3gica usando IRQF_NO_AUTOEN de modo que INTx exclusivo nunca se habilite autom\u00e1ticamente, luego desenmascare seg\u00fan sea necesario."
           }
         ],
         "id": "CVE-2024-27437",
-        "lastModified": "2024-04-05T12:40:52.763",
+        "lastModified": "2024-04-10T15:16:04.823",
         "metrics": {},
         "published": "2024-04-05T09:15:09.443",
         "references": [
@@ -58,6 +191,10 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/3b3491ad0f80d913e7d255941d4470f4a4d9bfda"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b7a2f0955ffceffadfe098b40b50307431f45438"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

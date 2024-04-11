@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47205"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: sunxi-ng: Unregister clocks/resets when unbinding\n\nCurrently, unbinding a CCU driver unmaps the device's MMIO region, while\nleaving its clocks/resets and their providers registered. This can cause\na page fault later when some clock operation tries to perform MMIO. Fix\nthis by separating the CCU initialization from the memory allocation,\nand then using a devres callback to unregister the clocks and resets.\n\nThis also fixes a memory leak of the `struct ccu_reset`, and uses the\ncorrect owner (the specific platform driver) for the clocks and resets.\n\nEarly OF clock providers are never unregistered, and limited error\nhandling is possible, so they are mostly unchanged. The error reporting\nis made more consistent by moving the message inside of_sunxi_ccu_probe.",
       "id": "GSD-2021-47205",
       "modified": "2024-04-03T05:03:54.978333Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,54 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47205",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "b5dd513daa70"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +75,64 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: sunxi-ng: Unregister clocks/resets when unbinding\n\nCurrently, unbinding a CCU driver unmaps the device's MMIO region, while\nleaving its clocks/resets and their providers registered. This can cause\na page fault later when some clock operation tries to perform MMIO. Fix\nthis by separating the CCU initialization from the memory allocation,\nand then using a devres callback to unregister the clocks and resets.\n\nThis also fixes a memory leak of the `struct ccu_reset`, and uses the\ncorrect owner (the specific platform driver) for the clocks and resets.\n\nEarly OF clock providers are never unregistered, and limited error\nhandling is possible, so they are mostly unchanged. The error reporting\nis made more consistent by moving the message inside of_sunxi_ccu_probe."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b5dd513daa70ee8f6d281a20bd28485ee9bb7db2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b5dd513daa70ee8f6d281a20bd28485ee9bb7db2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/9bec2b9c6134052994115d2d3374e96f2ccb9b9d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/9bec2b9c6134052994115d2d3374e96f2ccb9b9d"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: sunxi-ng: Unregister clocks/resets when unbinding\n\nCurrently, unbinding a CCU driver unmaps the device's MMIO region, while\nleaving its clocks/resets and their providers registered. This can cause\na page fault later when some clock operation tries to perform MMIO. Fix\nthis by separating the CCU initialization from the memory allocation,\nand then using a devres callback to unregister the clocks and resets.\n\nThis also fixes a memory leak of the `struct ccu_reset`, and uses the\ncorrect owner (the specific platform driver) for the clocks and resets.\n\nEarly OF clock providers are never unregistered, and limited error\nhandling is possible, so they are mostly unchanged. The error reporting\nis made more consistent by moving the message inside of_sunxi_ccu_probe."
+          }
+        ],
+        "id": "CVE-2021-47205",
+        "lastModified": "2024-04-10T19:49:51.183",
+        "metrics": {},
+        "published": "2024-04-10T19:15:48.310",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/9bec2b9c6134052994115d2d3374e96f2ccb9b9d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b5dd513daa70ee8f6d281a20bd28485ee9bb7db2"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -35,6 +35,11 @@
                       "version_data": [
                         {
                           "version_affected": "<",
+                          "version_name": "e2fc17fcc503",
+                          "version_value": "c6f8b3fcc627"
+                        },
+                        {
+                          "version_affected": "<",
                           "version_name": "ce3c4ad7f4ce",
                           "version_value": "e4cf8941664c"
                         },
@@ -51,6 +56,12 @@
                                 "lessThan": "5.19",
                                 "status": "unaffected",
                                 "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.154",
                                 "versionType": "custom"
                               },
                               {
@@ -102,7 +113,7 @@
         ]
       },
       "generator": {
-        "engine": "bippy-8df59b4913de"
+        "engine": "bippy-d175d3acf727"
       },
       "problemtype": {
         "problemtype_data": [
@@ -118,6 +129,11 @@
       },
       "references": {
         "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/c6f8b3fcc62725e4129f2c0fd550d022d4a7685a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c6f8b3fcc62725e4129f2c0fd550d022d4a7685a"
+          },
           {
             "name": "https://git.kernel.org/stable/c/e4cf8941664cae2f89f0189c29fe2ce8c6be0d03",
             "refsource": "MISC",
@@ -147,10 +163,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfsd: fix RELEASE_LOCKOWNER\n\nThe test on so_count in nfsd4_release_lockowner() is nonsense and\nharmful.  Revert to using check_for_locks(), changing that to not sleep.\n\nFirst: harmful.\nAs is documented in the kdoc comment for nfsd4_release_lockowner(), the\ntest on so_count can transiently return a false positive resulting in a\nreturn of NFS4ERR_LOCKS_HELD when in fact no locks are held.  This is\nclearly a protocol violation and with the Linux NFS client it can cause\nincorrect behaviour.\n\nIf RELEASE_LOCKOWNER is sent while some other thread is still\nprocessing a LOCK request which failed because, at the time that request\nwas received, the given owner held a conflicting lock, then the nfsd\nthread processing that LOCK request can hold a reference (conflock) to\nthe lock owner that causes nfsd4_release_lockowner() to return an\nincorrect error.\n\nThe Linux NFS client ignores that NFS4ERR_LOCKS_HELD error because it\nnever sends NFS4_RELEASE_LOCKOWNER without first releasing any locks, so\nit knows that the error is impossible.  It assumes the lock owner was in\nfact released so it feels free to use the same lock owner identifier in\nsome later locking request.\n\nWhen it does reuse a lock owner identifier for which a previous RELEASE\nfailed, it will naturally use a lock_seqid of zero.  However the server,\nwhich didn't release the lock owner, will expect a larger lock_seqid and\nso will respond with NFS4ERR_BAD_SEQID.\n\nSo clearly it is harmful to allow a false positive, which testing\nso_count allows.\n\nThe test is nonsense because ... well... it doesn't mean anything.\n\nso_count is the sum of three different counts.\n1/ the set of states listed on so_stateids\n2/ the set of active vfs locks owned by any of those states\n3/ various transient counts such as for conflicting locks.\n\nWhen it is tested against '2' it is clear that one of these is the\ntransient reference obtained by find_lockowner_str_locked().  It is not\nclear what the other one is expected to be.\n\nIn practice, the count is often 2 because there is precisely one state\non so_stateids.  If there were more, this would fail.\n\nIn my testing I see two circumstances when RELEASE_LOCKOWNER is called.\nIn one case, CLOSE is called before RELEASE_LOCKOWNER.  That results in\nall the lock states being removed, and so the lockowner being discarded\n(it is removed when there are no more references which usually happens\nwhen the lock state is discarded).  When nfsd4_release_lockowner() finds\nthat the lock owner doesn't exist, it returns success.\n\nThe other case shows an so_count of '2' and precisely one state listed\nin so_stateid.  It appears that the Linux client uses a separate lock\nowner for each file resulting in one lock state per lock owner, so this\ntest on '2' is safe.  For another client it might not be safe.\n\nSo this patch changes check_for_locks() to use the (newish)\nfind_any_file_locked() so that it doesn't take a reference on the\nnfs4_file and so never calls nfsd_file_put(), and so never sleeps.  With\nthis check is it safe to restore the use of check_for_locks() rather\nthan testing so_count against the mysterious '2'."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: nfsd: arreglar RELEASE_LOCKOWNER La prueba en so_count en nfsd4_release_lockowner() no tiene sentido y es da\u00f1ina. Vuelva a usar check_for_locks(), cambi\u00e1ndolo para no dormir. Primero: da\u00f1ino. Como se documenta en el comentario de kdoc para nfsd4_release_lockowner(), la prueba en so_count puede devolver transitoriamente un falso positivo, lo que resulta en una devoluci\u00f3n de NFS4ERR_LOCKS_HELD cuando en realidad no se mantienen bloqueos. Esto es claramente una violaci\u00f3n del protocolo y con el cliente NFS de Linux puede provocar un comportamiento incorrecto. Si se env\u00eda RELEASE_LOCKOWNER mientras alg\u00fan otro subproceso todav\u00eda est\u00e1 procesando una solicitud de LOCK que fall\u00f3 porque, en el momento en que se recibi\u00f3 esa solicitud, el propietario determinado ten\u00eda un bloqueo en conflicto, entonces el subproceso nfsd que procesa esa solicitud de LOCK puede contener una referencia (conflock) a el propietario del bloqueo que hace que nfsd4_release_lockowner() devuelva un error incorrecto. El cliente NFS de Linux ignora ese error NFS4ERR_LOCKS_HELD porque nunca env\u00eda NFS4_RELEASE_LOCKOWNER sin liberar primero ning\u00fan bloqueo, por lo que sabe que el error es imposible. Se supone que el propietario de la cerradura fue liberado, por lo que puede utilizar el mismo identificador de propietario de la cerradura en alguna solicitud de bloqueo posterior. Cuando reutiliza un identificador de propietario de bloqueo para el cual fall\u00f3 una RELEASE anterior, naturalmente usar\u00e1 un lock_seqid de cero. Sin embargo, el servidor, que no liber\u00f3 al propietario del bloqueo, esperar\u00e1 un lock_seqid mayor y, por lo tanto, responder\u00e1 con NFS4ERR_BAD_SEQID. Claramente es perjudicial permitir un falso positivo, lo que permite la prueba so_count. La prueba es una tonter\u00eda porque... bueno... no significa nada. so_count es la suma de tres recuentos diferentes. 1/ el conjunto de estados enumerados en so_stateids 2/ el conjunto de bloqueos vfs activos propiedad de cualquiera de esos estados 3/ varios recuentos transitorios, como bloqueos en conflicto. Cuando se prueba con '2', queda claro que una de ellas es la referencia transitoria obtenida por find_lockowner_str_locked(). No est\u00e1 claro cu\u00e1l se espera que sea el otro. En la pr\u00e1ctica, el recuento suele ser 2 porque hay precisamente un estado en so_stateids. Si hubiera m\u00e1s, esto fracasar\u00eda. En mis pruebas veo dos circunstancias en las que se llama a RELEASE_LOCKOWNER. En un caso, se llama a CLOSE antes de RELEASE_LOCKOWNER. Eso da como resultado que se eliminen todos los estados de bloqueo y, por lo tanto, se descarte el propietario de la cerradura (se elimina cuando no hay m\u00e1s referencias, lo que generalmente sucede cuando se descarta el estado de bloqueo). Cuando nfsd4_release_lockowner() descubre que el propietario del bloqueo no existe, devuelve \u00e9xito. El otro caso muestra un so_count de '2' y precisamente un estado listado en so_stateid. Parece que el cliente Linux utiliza un propietario de bloqueo independiente para cada archivo, lo que da como resultado un estado de bloqueo por propietario de bloqueo, por lo que esta prueba en '2' es segura. Para otro cliente puede que no sea seguro. Entonces, este parche cambia check_for_locks() para usar el (nuevo) find_any_file_locked() para que no tome una referencia en nfs4_file y as\u00ed nunca llame a nfsd_file_put(), y por lo tanto nunca duerma. Con esta verificaci\u00f3n, es seguro restaurar el uso de check_for_locks() en lugar de probar so_count con el misterioso '2'."
           }
         ],
         "id": "CVE-2024-26629",
-        "lastModified": "2024-03-13T14:28:45.217",
+        "lastModified": "2024-04-10T15:16:04.297",
         "metrics": {},
         "published": "2024-03-13T14:15:07.717",
         "references": [
@@ -161,6 +181,10 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/b7d2eee1f53899b53f069bba3a59a419fc3d331b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c6f8b3fcc62725e4129f2c0fd550d022d4a7685a"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-2511"
       ],
+      "details": "Issue summary: Some non-default TLS server configurations can cause unbounded\nmemory growth when processing TLSv1.3 sessions\n\nImpact summary: An attacker may exploit certain server configurations to trigger\nunbounded memory growth that would lead to a Denial of Service\n\nThis problem can occur in TLSv1.3 if the non-default SSL_OP_NO_TICKET option is\nbeing used (but not if early_data support is also configured and the default\nanti-replay protection is in use). In this case, under certain conditions, the\nsession cache can get into an incorrect state and it will fail to flush properly\nas it fills. The session cache will continue to grow in an unbounded manner. A\nmalicious client could deliberately create the scenario for this failure to\nforce a Denial of Service. It may also happen by accident in normal operation.\n\nThis issue only affects TLS servers supporting TLSv1.3. It does not affect TLS\nclients.\n\nThe FIPS modules in 3.2, 3.1 and 3.0 are not affected by this issue. OpenSSL\n1.0.2 is also not affected by this issue.",
       "id": "GSD-2024-2511",
       "modified": "2024-04-02T05:02:53.431059Z",
       "schema_version": "1.4.0"
@@ -18,10 +19,60 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "openssl-security@openssl.org",
         "ID": "CVE-2024-2511",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "OpenSSL",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.2.0",
+                          "version_value": "3.2.2"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.1.0",
+                          "version_value": "3.1.6"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.0.0",
+                          "version_value": "3.0.14"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "1.1.1",
+                          "version_value": "1.1.1y"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "OpenSSL"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "Manish Patidar (Hewlett Packard Enterprise)"
+        },
+        {
+          "lang": "en",
+          "value": "Matt Caswell"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -29,9 +80,56 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Issue summary: Some non-default TLS server configurations can cause unbounded\nmemory growth when processing TLSv1.3 sessions\n\nImpact summary: An attacker may exploit certain server configurations to trigger\nunbounded memory growth that would lead to a Denial of Service\n\nThis problem can occur in TLSv1.3 if the non-default SSL_OP_NO_TICKET option is\nbeing used (but not if early_data support is also configured and the default\nanti-replay protection is in use). In this case, under certain conditions, the\nsession cache can get into an incorrect state and it will fail to flush properly\nas it fills. The session cache will continue to grow in an unbounded manner. A\nmalicious client could deliberately create the scenario for this failure to\nforce a Denial of Service. It may also happen by accident in normal operation.\n\nThis issue only affects TLS servers supporting TLSv1.3. It does not affect TLS\nclients.\n\nThe FIPS modules in 3.2, 3.1 and 3.0 are not affected by this issue. OpenSSL\n1.0.2 is also not affected by this issue."
           }
         ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Improperly Controlled Sequential Memory Allocation"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.openssl.org/news/secadv/20240408.txt",
+            "refsource": "MISC",
+            "url": "https://www.openssl.org/news/secadv/20240408.txt"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/e9d7083e241670332e0443da0f0d4ffb52829f08",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/e9d7083e241670332e0443da0f0d4ffb52829f08"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/7e4d731b1c07201ad9374c1cd9ac5263bdf35bce",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/7e4d731b1c07201ad9374c1cd9ac5263bdf35bce"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/b52867a9f618bb955bed2a3ce3db4d4f97ed8e5d",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/b52867a9f618bb955bed2a3ce3db4d4f97ed8e5d"
+          },
+          {
+            "name": "https://github.openssl.org/openssl/extended-releases/commit/5f8d25770ae6437db119dfc951e207271a326640",
+            "refsource": "MISC",
+            "url": "https://github.openssl.org/openssl/extended-releases/commit/5f8d25770ae6437db119dfc951e207271a326640"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "UNKNOWN"
       }
     },
     "nvd.nist.gov": {

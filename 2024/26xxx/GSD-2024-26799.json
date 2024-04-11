@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26799"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoC: qcom: Fix uninitialized pointer dmactl\n\nIn the case where __lpass_get_dmactl_handle is called and the driver\nid dai_id is invalid the pointer dmactl is not being assigned a value,\nand dmactl contains a garbage value since it has not been initialized\nand so the null check may not work. Fix this to initialize dmactl to\nNULL. One could argue that modern compilers will set this to zero, but\nit is useful to keep this initialized as per the same way in functions\n__lpass_platform_codec_intf_init and lpass_cdc_dma_daiops_hw_params.\n\nCleans up clang scan build warning:\nsound/soc/qcom/lpass-cdc-dma.c:275:7: warning: Branch condition\nevaluates to a garbage value [core.uninitialized.Branch]",
       "id": "GSD-2024-26799",
       "modified": "2024-02-20T06:02:29.309061Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26799",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "b81af585ea54",
+                          "version_value": "99adc8b4d2f3"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.18"
+                              },
+                              {
+                                "lessThan": "5.18",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.21",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.9",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +91,41 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoC: qcom: Fix uninitialized pointer dmactl\n\nIn the case where __lpass_get_dmactl_handle is called and the driver\nid dai_id is invalid the pointer dmactl is not being assigned a value,\nand dmactl contains a garbage value since it has not been initialized\nand so the null check may not work. Fix this to initialize dmactl to\nNULL. One could argue that modern compilers will set this to zero, but\nit is useful to keep this initialized as per the same way in functions\n__lpass_platform_codec_intf_init and lpass_cdc_dma_daiops_hw_params.\n\nCleans up clang scan build warning:\nsound/soc/qcom/lpass-cdc-dma.c:275:7: warning: Branch condition\nevaluates to a garbage value [core.uninitialized.Branch]"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-e0c11145c45e"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/99adc8b4d2f38bf0d06483ec845bc48f60c3f8cf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/99adc8b4d2f38bf0d06483ec845bc48f60c3f8cf"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d5a7726e6ea62d447b79ab5baeb537ea6bdb225b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d5a7726e6ea62d447b79ab5baeb537ea6bdb225b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1382d8b55129875b2e07c4d2a7ebc790183769ee",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1382d8b55129875b2e07c4d2a7ebc790183769ee"
           }
         ]
       }

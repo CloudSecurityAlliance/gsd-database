@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26810"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Lock external INTx masking ops\n\nMask operations through config space changes to DisINTx may race INTx\nconfiguration changes via ioctl.  Create wrappers that add locking for\npaths outside of the core interrupt code.\n\nIn particular, irq_type is updated holding igate, therefore testing\nis_intx() requires holding igate.  For example clearing DisINTx from\nconfig space can otherwise race changes of the interrupt configuration.\n\nThis aligns interfaces which may trigger the INTx eventfd into two\ncamps, one side serialized by igate and the other only enabled while\nINTx is configured.  A subsequent patch introduces synchronization for\nthe latter flows.",
       "id": "GSD-2024-26810",
       "modified": "2024-02-20T06:02:29.247848Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26810",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "89e1f7d4c66d",
+                          "version_value": "ec73e0797292"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.6"
+                              },
+                              {
+                                "lessThan": "3.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.154",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.84",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.24",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +109,56 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Lock external INTx masking ops\n\nMask operations through config space changes to DisINTx may race INTx\nconfiguration changes via ioctl.  Create wrappers that add locking for\npaths outside of the core interrupt code.\n\nIn particular, irq_type is updated holding igate, therefore testing\nis_intx() requires holding igate.  For example clearing DisINTx from\nconfig space can otherwise race changes of the interrupt configuration.\n\nThis aligns interfaces which may trigger the INTx eventfd into two\ncamps, one side serialized by igate and the other only enabled while\nINTx is configured.  A subsequent patch introduces synchronization for\nthe latter flows."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ec73e079729258a05452356cf6d098bf1504d5a6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ec73e079729258a05452356cf6d098bf1504d5a6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3fe0ac10bd117df847c93408a9d428a453cd60e5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3fe0ac10bd117df847c93408a9d428a453cd60e5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/04a4a017b9ffd7b0f427b8c376688d14cb614651",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/04a4a017b9ffd7b0f427b8c376688d14cb614651"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6fe478d855b20ac1eb5da724afe16af5a2aaaa40",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6fe478d855b20ac1eb5da724afe16af5a2aaaa40"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/03505e3344b0576fd619416793a31eae9c5b73bf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/03505e3344b0576fd619416793a31eae9c5b73bf"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/810cd4bb53456d0503cc4e7934e063835152c1b7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/810cd4bb53456d0503cc4e7934e063835152c1b7"
           }
         ]
       }
@@ -40,10 +169,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Lock external INTx masking ops\n\nMask operations through config space changes to DisINTx may race INTx\nconfiguration changes via ioctl.  Create wrappers that add locking for\npaths outside of the core interrupt code.\n\nIn particular, irq_type is updated holding igate, therefore testing\nis_intx() requires holding igate.  For example clearing DisINTx from\nconfig space can otherwise race changes of the interrupt configuration.\n\nThis aligns interfaces which may trigger the INTx eventfd into two\ncamps, one side serialized by igate and the other only enabled while\nINTx is configured.  A subsequent patch introduces synchronization for\nthe latter flows."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: vfio/pci: bloquear operaciones de enmascaramiento INTx externas Las operaciones de enmascaramiento a trav\u00e9s de cambios en el espacio de configuraci\u00f3n a DisINTx pueden acelerar los cambios de configuraci\u00f3n de INTx a trav\u00e9s de ioctl. Cree contenedores que agreguen bloqueo para rutas fuera del c\u00f3digo de interrupci\u00f3n central. En particular, irq_type se actualiza manteniendo igate, por lo tanto, probar is_intx() requiere mantener igate. Por ejemplo, borrar DisINTx del espacio de configuraci\u00f3n puede acelerar los cambios en la configuraci\u00f3n de la interrupci\u00f3n. Esto alinea las interfaces que pueden desencadenar el evento INTx en dos campos, un lado serializado por igate y el otro solo habilitado mientras INTx est\u00e1 configurado. Un parche posterior introduce la sincronizaci\u00f3n para estos \u00faltimos flujos."
           }
         ],
         "id": "CVE-2024-26810",
-        "lastModified": "2024-04-05T12:40:52.763",
+        "lastModified": "2024-04-10T15:16:04.580",
         "metrics": {},
         "published": "2024-04-05T09:15:09.230",
         "references": [
@@ -66,6 +199,10 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/810cd4bb53456d0503cc4e7934e063835152c1b7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ec73e079729258a05452356cf6d098bf1504d5a6"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26740"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_mirred: use the backlog for mirred ingress\n\nThe test Davide added in commit ca22da2fbd69 (\"act_mirred: use the backlog\nfor nested calls to mirred ingress\") hangs our testing VMs every 10 or so\nruns, with the familiar tcp_v4_rcv -> tcp_v4_rcv deadlock reported by\nlockdep.\n\nThe problem as previously described by Davide (see Link) is that\nif we reverse flow of traffic with the redirect (egress -> ingress)\nwe may reach the same socket which generated the packet. And we may\nstill be holding its socket lock. The common solution to such deadlocks\nis to put the packet in the Rx backlog, rather than run the Rx path\ninline. Do that for all egress -> ingress reversals, not just once\nwe started to nest mirred calls.\n\nIn the past there was a concern that the backlog indirection will\nlead to loss of error reporting / less accurate stats. But the current\nworkaround does not seem to address the issue.",
       "id": "GSD-2024-26740",
       "modified": "2024-02-20T06:02:29.307887Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26740",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "53592b364001",
+                          "version_value": "7c787888d164"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.10"
+                              },
+                              {
+                                "lessThan": "4.10",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.19",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +91,41 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_mirred: use the backlog for mirred ingress\n\nThe test Davide added in commit ca22da2fbd69 (\"act_mirred: use the backlog\nfor nested calls to mirred ingress\") hangs our testing VMs every 10 or so\nruns, with the familiar tcp_v4_rcv -> tcp_v4_rcv deadlock reported by\nlockdep.\n\nThe problem as previously described by Davide (see Link) is that\nif we reverse flow of traffic with the redirect (egress -> ingress)\nwe may reach the same socket which generated the packet. And we may\nstill be holding its socket lock. The common solution to such deadlocks\nis to put the packet in the Rx backlog, rather than run the Rx path\ninline. Do that for all egress -> ingress reversals, not just once\nwe started to nest mirred calls.\n\nIn the past there was a concern that the backlog indirection will\nlead to loss of error reporting / less accurate stats. But the current\nworkaround does not seem to address the issue."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d3b290d2becc"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/7c787888d164689da8b1b115f3ef562c1e843af4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7c787888d164689da8b1b115f3ef562c1e843af4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/60ddea1600bc476e0f5e02bce0e29a460ccbf0be",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/60ddea1600bc476e0f5e02bce0e29a460ccbf0be"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/52f671db18823089a02f07efc04efdb2272ddc17",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/52f671db18823089a02f07efc04efdb2272ddc17"
           }
         ]
       }

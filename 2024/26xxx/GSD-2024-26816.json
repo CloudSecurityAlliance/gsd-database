@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26816"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86, relocs: Ignore relocations in .notes section\n\nWhen building with CONFIG_XEN_PV=y, .text symbols are emitted into\nthe .notes section so that Xen can find the \"startup_xen\" entry point.\nThis information is used prior to booting the kernel, so relocations\nare not useful. In fact, performing relocations against the .notes\nsection means that the KASLR base is exposed since /sys/kernel/notes\nis world-readable.\n\nTo avoid leaking the KASLR base without breaking unprivileged tools that\nare expecting to read /sys/kernel/notes, skip performing relocations in\nthe .notes section. The values readable in .notes are then identical to\nthose found in System.map.",
       "id": "GSD-2024-26816",
       "modified": "2024-02-20T06:02:29.129615Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,106 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26816",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5ead97c84fa7",
+                          "version_value": "13edb509abc9"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.23"
+                              },
+                              {
+                                "lessThan": "2.6.23",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.311",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.214",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.153",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +127,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86, relocs: Ignore relocations in .notes section\n\nWhen building with CONFIG_XEN_PV=y, .text symbols are emitted into\nthe .notes section so that Xen can find the \"startup_xen\" entry point.\nThis information is used prior to booting the kernel, so relocations\nare not useful. In fact, performing relocations against the .notes\nsection means that the KASLR base is exposed since /sys/kernel/notes\nis world-readable.\n\nTo avoid leaking the KASLR base without breaking unprivileged tools that\nare expecting to read /sys/kernel/notes, skip performing relocations in\nthe .notes section. The values readable in .notes are then identical to\nthose found in System.map."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/13edb509abc91c72152a11baaf0e7c060a312e03",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/13edb509abc91c72152a11baaf0e7c060a312e03"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/52018aa146e3cf76569a9b1e6e49a2b7c8d4a088",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/52018aa146e3cf76569a9b1e6e49a2b7c8d4a088"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a4e7ff1a74274e59a2de9bb57236542aa990d20a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a4e7ff1a74274e59a2de9bb57236542aa990d20a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c7cff9780297d55d97ad068b68b703cfe53ef9af",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c7cff9780297d55d97ad068b68b703cfe53ef9af"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/47635b112a64b7b208224962471e7e42f110e723",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/47635b112a64b7b208224962471e7e42f110e723"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/af2a9f98d884205145fd155304a6955822ccca1c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/af2a9f98d884205145fd155304a6955822ccca1c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ae7079238f6faf1b94accfccf334e98b46a0c0aa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ae7079238f6faf1b94accfccf334e98b46a0c0aa"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5cb59db49c9c0fccfd33b2209af4f7ae3c6ddf40",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5cb59db49c9c0fccfd33b2209af4f7ae3c6ddf40"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/aaa8736370db1a78f0e8434344a484f9fd20be3b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/aaa8736370db1a78f0e8434344a484f9fd20be3b"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86, relocs: Ignore relocations in .notes section\n\nWhen building with CONFIG_XEN_PV=y, .text symbols are emitted into\nthe .notes section so that Xen can find the \"startup_xen\" entry point.\nThis information is used prior to booting the kernel, so relocations\nare not useful. In fact, performing relocations against the .notes\nsection means that the KASLR base is exposed since /sys/kernel/notes\nis world-readable.\n\nTo avoid leaking the KASLR base without breaking unprivileged tools that\nare expecting to read /sys/kernel/notes, skip performing relocations in\nthe .notes section. The values readable in .notes are then identical to\nthose found in System.map."
+          }
+        ],
+        "id": "CVE-2024-26816",
+        "lastModified": "2024-04-10T19:49:51.183",
+        "metrics": {},
+        "published": "2024-04-10T14:15:07.490",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/13edb509abc91c72152a11baaf0e7c060a312e03"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/47635b112a64b7b208224962471e7e42f110e723"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/52018aa146e3cf76569a9b1e6e49a2b7c8d4a088"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5cb59db49c9c0fccfd33b2209af4f7ae3c6ddf40"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a4e7ff1a74274e59a2de9bb57236542aa990d20a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/aaa8736370db1a78f0e8434344a484f9fd20be3b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ae7079238f6faf1b94accfccf334e98b46a0c0aa"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/af2a9f98d884205145fd155304a6955822ccca1c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c7cff9780297d55d97ad068b68b703cfe53ef9af"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

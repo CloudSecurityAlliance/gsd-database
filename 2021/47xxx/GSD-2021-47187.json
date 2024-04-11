@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2021-47187"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: dts: qcom: msm8998: Fix CPU/L2 idle state latency and residency\n\nThe entry/exit latency and minimum residency in state for the idle\nstates of MSM8998 were ..bad: first of all, for all of them the\ntimings were written for CPU sleep but the min-residency-us param\nwas miscalculated (supposedly, while porting this from downstream);\nThen, the power collapse states are setting PC on both the CPU\ncluster *and* the L2 cache, which have different timings: in the\nspecific case of L2 the times are higher so these ones should be\ntaken into account instead of the CPU ones.\n\nThis parameter misconfiguration was not giving particular issues\nbecause on MSM8998 there was no CPU scaling at all, so cluster/L2\npower collapse was rarely (if ever) hit.\nWhen CPU scaling is enabled, though, the wrong timings will produce\nSoC unstability shown to the user as random, apparently error-less,\nsudden reboots and/or lockups.\n\nThis set of parameters are stabilizing the SoC when CPU scaling is\nON and when power collapse is frequently hit.",
       "id": "GSD-2021-47187",
       "modified": "2024-04-03T05:03:54.928588Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,66 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2021-47187",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "a14d7038ea20"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.162",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.82",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "5.16",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +87,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: dts: qcom: msm8998: Fix CPU/L2 idle state latency and residency\n\nThe entry/exit latency and minimum residency in state for the idle\nstates of MSM8998 were ..bad: first of all, for all of them the\ntimings were written for CPU sleep but the min-residency-us param\nwas miscalculated (supposedly, while porting this from downstream);\nThen, the power collapse states are setting PC on both the CPU\ncluster *and* the L2 cache, which have different timings: in the\nspecific case of L2 the times are higher so these ones should be\ntaken into account instead of the CPU ones.\n\nThis parameter misconfiguration was not giving particular issues\nbecause on MSM8998 there was no CPU scaling at all, so cluster/L2\npower collapse was rarely (if ever) hit.\nWhen CPU scaling is enabled, though, the wrong timings will produce\nSoC unstability shown to the user as random, apparently error-less,\nsudden reboots and/or lockups.\n\nThis set of parameters are stabilizing the SoC when CPU scaling is\nON and when power collapse is frequently hit."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/a14d7038ea201c5526375becfc43b9ba281b1e82",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a14d7038ea201c5526375becfc43b9ba281b1e82"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e52fecdd0c142b95c720683885b06ee3f0e065c8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e52fecdd0c142b95c720683885b06ee3f0e065c8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/118c826ef8b43efe0fda8faf419673707ee8c5e5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/118c826ef8b43efe0fda8faf419673707ee8c5e5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3f1dcaff642e75c1d2ad03f783fa8a3b1f56dd50",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3f1dcaff642e75c1d2ad03f783fa8a3b1f56dd50"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\narm64: dts: qcom: msm8998: Fix CPU/L2 idle state latency and residency\n\nThe entry/exit latency and minimum residency in state for the idle\nstates of MSM8998 were ..bad: first of all, for all of them the\ntimings were written for CPU sleep but the min-residency-us param\nwas miscalculated (supposedly, while porting this from downstream);\nThen, the power collapse states are setting PC on both the CPU\ncluster *and* the L2 cache, which have different timings: in the\nspecific case of L2 the times are higher so these ones should be\ntaken into account instead of the CPU ones.\n\nThis parameter misconfiguration was not giving particular issues\nbecause on MSM8998 there was no CPU scaling at all, so cluster/L2\npower collapse was rarely (if ever) hit.\nWhen CPU scaling is enabled, though, the wrong timings will produce\nSoC unstability shown to the user as random, apparently error-less,\nsudden reboots and/or lockups.\n\nThis set of parameters are stabilizing the SoC when CPU scaling is\nON and when power collapse is frequently hit."
+          }
+        ],
+        "id": "CVE-2021-47187",
+        "lastModified": "2024-04-10T19:49:51.183",
+        "metrics": {},
+        "published": "2024-04-10T19:15:47.480",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/118c826ef8b43efe0fda8faf419673707ee8c5e5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3f1dcaff642e75c1d2ad03f783fa8a3b1f56dd50"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a14d7038ea201c5526375becfc43b9ba281b1e82"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e52fecdd0c142b95c720683885b06ee3f0e065c8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

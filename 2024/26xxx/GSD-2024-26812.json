@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26812"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Create persistent INTx handler\n\nA vulnerability exists where the eventfd for INTx signaling can be\ndeconfigured, which unregisters the IRQ handler but still allows\neventfds to be signaled with a NULL context through the SET_IRQS ioctl\nor through unmask irqfd if the device interrupt is pending.\n\nIdeally this could be solved with some additional locking; the igate\nmutex serializes the ioctl and config space accesses, and the interrupt\nhandler is unregistered relative to the trigger, but the irqfd path\nruns asynchronous to those.  The igate mutex cannot be acquired from the\natomic context of the eventfd wake function.  Disabling the irqfd\nrelative to the eventfd registration is potentially incompatible with\nexisting userspace.\n\nAs a result, the solution implemented here moves configuration of the\nINTx interrupt handler to track the lifetime of the INTx context object\nand irq_type configuration, rather than registration of a particular\ntrigger eventfd.  Synchronization is added between the ioctl path and\neventfd_signal() wrapper such that the eventfd trigger can be\ndynamically updated relative to in-flight interrupts or irqfd callbacks.",
       "id": "GSD-2024-26812",
       "modified": "2024-02-20T06:02:29.183082Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26812",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "89e1f7d4c66d",
+                          "version_value": "4cb0d7532126"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.6"
+                              },
+                              {
+                                "lessThan": "3.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.154",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.84",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.24",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.3",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +109,56 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Create persistent INTx handler\n\nA vulnerability exists where the eventfd for INTx signaling can be\ndeconfigured, which unregisters the IRQ handler but still allows\neventfds to be signaled with a NULL context through the SET_IRQS ioctl\nor through unmask irqfd if the device interrupt is pending.\n\nIdeally this could be solved with some additional locking; the igate\nmutex serializes the ioctl and config space accesses, and the interrupt\nhandler is unregistered relative to the trigger, but the irqfd path\nruns asynchronous to those.  The igate mutex cannot be acquired from the\natomic context of the eventfd wake function.  Disabling the irqfd\nrelative to the eventfd registration is potentially incompatible with\nexisting userspace.\n\nAs a result, the solution implemented here moves configuration of the\nINTx interrupt handler to track the lifetime of the INTx context object\nand irq_type configuration, rather than registration of a particular\ntrigger eventfd.  Synchronization is added between the ioctl path and\neventfd_signal() wrapper such that the eventfd trigger can be\ndynamically updated relative to in-flight interrupts or irqfd callbacks."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4cb0d7532126d23145329826c38054b4e9a05e7c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4cb0d7532126d23145329826c38054b4e9a05e7c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7d29d4c72c1e196cce6969c98072a272d1a703b3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7d29d4c72c1e196cce6969c98072a272d1a703b3"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/69276a555c740acfbff13fb5769ee9c92e1c828e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/69276a555c740acfbff13fb5769ee9c92e1c828e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4c089cefe30924fbe20dd1ee92774ea1f5eca834",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4c089cefe30924fbe20dd1ee92774ea1f5eca834"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0e09cf81959d9f12b75ad5c6dd53d237432ed034",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0e09cf81959d9f12b75ad5c6dd53d237432ed034"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/18c198c96a815c962adc2b9b77909eec0be7df4d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/18c198c96a815c962adc2b9b77909eec0be7df4d"
           }
         ]
       }
@@ -40,10 +169,14 @@
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfio/pci: Create persistent INTx handler\n\nA vulnerability exists where the eventfd for INTx signaling can be\ndeconfigured, which unregisters the IRQ handler but still allows\neventfds to be signaled with a NULL context through the SET_IRQS ioctl\nor through unmask irqfd if the device interrupt is pending.\n\nIdeally this could be solved with some additional locking; the igate\nmutex serializes the ioctl and config space accesses, and the interrupt\nhandler is unregistered relative to the trigger, but the irqfd path\nruns asynchronous to those.  The igate mutex cannot be acquired from the\natomic context of the eventfd wake function.  Disabling the irqfd\nrelative to the eventfd registration is potentially incompatible with\nexisting userspace.\n\nAs a result, the solution implemented here moves configuration of the\nINTx interrupt handler to track the lifetime of the INTx context object\nand irq_type configuration, rather than registration of a particular\ntrigger eventfd.  Synchronization is added between the ioctl path and\neventfd_signal() wrapper such that the eventfd trigger can be\ndynamically updated relative to in-flight interrupts or irqfd callbacks."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: vfio/pci: crear un controlador INTx persistente Existe una vulnerabilidad donde se puede desconfigurar el eventfd para la se\u00f1alizaci\u00f3n INTx, lo que anula el registro del controlador IRQ pero a\u00fan permite que los eventfds se se\u00f1alen con un contexto NULL a trav\u00e9s de el SET_IRQS ioctl o mediante unmask irqfd si la interrupci\u00f3n del dispositivo est\u00e1 pendiente. Idealmente, esto podr\u00eda solucionarse con alg\u00fan bloqueo adicional; el igate mutex serializa los accesos al espacio ioctl y de configuraci\u00f3n, y el controlador de interrupciones no est\u00e1 registrado en relaci\u00f3n con el disparador, pero la ruta irqfd se ejecuta de forma asincr\u00f3nica con respecto a ellos. El mutex igate no se puede adquirir desde el contexto at\u00f3mico de la funci\u00f3n de activaci\u00f3n eventfd. Deshabilitar el irqfd en relaci\u00f3n con el registro de eventfd es potencialmente incompatible con el espacio de usuario existente. Como resultado, la soluci\u00f3n implementada aqu\u00ed mueve la configuraci\u00f3n del controlador de interrupciones INTx para rastrear la vida \u00fatil del objeto de contexto INTx y la configuraci\u00f3n irq_type, en lugar del registro de un evento desencadenante particular. Se agrega sincronizaci\u00f3n entre la ruta ioctl y el contenedor eventfd_signal() de modo que el disparador eventfd se pueda actualizar din\u00e1micamente en relaci\u00f3n con las interrupciones en curso o las devoluciones de llamada irqfd."
           }
         ],
         "id": "CVE-2024-26812",
-        "lastModified": "2024-04-05T12:40:52.763",
+        "lastModified": "2024-04-10T15:16:04.683",
         "metrics": {},
         "published": "2024-04-05T09:15:09.283",
         "references": [
@@ -58,6 +191,10 @@
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
             "url": "https://git.kernel.org/stable/c/4c089cefe30924fbe20dd1ee92774ea1f5eca834"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4cb0d7532126d23145329826c38054b4e9a05e7c"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
