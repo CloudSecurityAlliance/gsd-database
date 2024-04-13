@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-32003"
       ],
+      "details": "wn-dusk-plugin (Dusk plugin) is a plugin which integrates Laravel Dusk browser testing into Winter CMS. The Dusk plugin provides some special routes as part of its testing framework to allow a browser environment (such as headless Chrome) to act as a user in the Backend or User plugin without having to go through authentication. This route is `[[URL]]/_dusk/login/[[USER ID]]/[[MANAGER]]` - where `[[URL]]` is the base URL of the site, `[[USER ID]]` is the ID of the user account and `[[MANAGER]]` is the authentication manager (either `backend` for Backend, or `user` for the User plugin). If a configuration of a site using the Dusk plugin is set up in such a way that the Dusk plugin is available publicly and the test cases in Dusk are run with live data, this route may potentially be used to gain access to any user account in either the Backend or User plugin without authentication. As indicated in the `README`, this plugin should only be used in development and should *NOT* be used in a production instance. It is specifically recommended that the plugin be installed as a development dependency only in Composer. In order to remediate this issue, the special routes used above will now no longer be registered unless the `APP_ENV` environment variable is specifically set to `dusk`. Since Winter by default does not use this environment variable and it is not populated by default, it will only exist if Dusk's automatic configuration is used (which won't exhibit this vulnerability) or if a developer manually specifies it in their configuration. The automatic configuration performed by the Dusk plugin has also been hardened by default to use sane defaults and not allow external environment variables to leak into this configuration. This will only affect users in which the Winter CMS installation meets ALL the following criteria: 1. The Dusk plugin is installed in the Winter CMS instance. 2. The application is in production mode (ie. the `debug` config value is set to `true` in `config/app.php`). 3. The Dusk plugin's automatic configuration has been overridden, either by providing a custom `.env.dusk` file or by providing custom configuration in the `config/dusk` folder, or by providing configuration environment variables externally. 4. The environment has been configured to use production data in the database for testing, and not the temporary SQLite database that Dusk uses by default. 5. The application is connectable via the web. This issue has been fixed in version 2.1.0. Users are advised to upgrade.",
       "id": "GSD-2024-32003",
       "modified": "2024-04-11T05:03:18.994519Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-32003",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "wn-dusk-plugin",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 2.1.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "wintercms"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,117 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "wn-dusk-plugin (Dusk plugin) is a plugin which integrates Laravel Dusk browser testing into Winter CMS. The Dusk plugin provides some special routes as part of its testing framework to allow a browser environment (such as headless Chrome) to act as a user in the Backend or User plugin without having to go through authentication. This route is `[[URL]]/_dusk/login/[[USER ID]]/[[MANAGER]]` - where `[[URL]]` is the base URL of the site, `[[USER ID]]` is the ID of the user account and `[[MANAGER]]` is the authentication manager (either `backend` for Backend, or `user` for the User plugin). If a configuration of a site using the Dusk plugin is set up in such a way that the Dusk plugin is available publicly and the test cases in Dusk are run with live data, this route may potentially be used to gain access to any user account in either the Backend or User plugin without authentication. As indicated in the `README`, this plugin should only be used in development and should *NOT* be used in a production instance. It is specifically recommended that the plugin be installed as a development dependency only in Composer. In order to remediate this issue, the special routes used above will now no longer be registered unless the `APP_ENV` environment variable is specifically set to `dusk`. Since Winter by default does not use this environment variable and it is not populated by default, it will only exist if Dusk's automatic configuration is used (which won't exhibit this vulnerability) or if a developer manually specifies it in their configuration. The automatic configuration performed by the Dusk plugin has also been hardened by default to use sane defaults and not allow external environment variables to leak into this configuration. This will only affect users in which the Winter CMS installation meets ALL the following criteria: 1. The Dusk plugin is installed in the Winter CMS instance. 2. The application is in production mode (ie. the `debug` config value is set to `true` in `config/app.php`). 3. The Dusk plugin's automatic configuration has been overridden, either by providing a custom `.env.dusk` file or by providing custom configuration in the `config/dusk` folder, or by providing configuration environment variables externally. 4. The environment has been configured to use production data in the database for testing, and not the temporary SQLite database that Dusk uses by default. 5. The application is connectable via the web. This issue has been fixed in version 2.1.0. Users are advised to upgrade."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "REQUIRED",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-269",
+                "lang": "eng",
+                "value": "CWE-269: Improper Privilege Management"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/wintercms/wn-dusk-plugin/security/advisories/GHSA-chcp-g9j5-3xxx",
+            "refsource": "MISC",
+            "url": "https://github.com/wintercms/wn-dusk-plugin/security/advisories/GHSA-chcp-g9j5-3xxx"
+          },
+          {
+            "name": "https://github.com/wintercms/wn-dusk-plugin/blob/main/README.md",
+            "refsource": "MISC",
+            "url": "https://github.com/wintercms/wn-dusk-plugin/blob/main/README.md"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-chcp-g9j5-3xxx",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "wn-dusk-plugin (Dusk plugin) is a plugin which integrates Laravel Dusk browser testing into Winter CMS. The Dusk plugin provides some special routes as part of its testing framework to allow a browser environment (such as headless Chrome) to act as a user in the Backend or User plugin without having to go through authentication. This route is `[[URL]]/_dusk/login/[[USER ID]]/[[MANAGER]]` - where `[[URL]]` is the base URL of the site, `[[USER ID]]` is the ID of the user account and `[[MANAGER]]` is the authentication manager (either `backend` for Backend, or `user` for the User plugin). If a configuration of a site using the Dusk plugin is set up in such a way that the Dusk plugin is available publicly and the test cases in Dusk are run with live data, this route may potentially be used to gain access to any user account in either the Backend or User plugin without authentication. As indicated in the `README`, this plugin should only be used in development and should *NOT* be used in a production instance. It is specifically recommended that the plugin be installed as a development dependency only in Composer. In order to remediate this issue, the special routes used above will now no longer be registered unless the `APP_ENV` environment variable is specifically set to `dusk`. Since Winter by default does not use this environment variable and it is not populated by default, it will only exist if Dusk's automatic configuration is used (which won't exhibit this vulnerability) or if a developer manually specifies it in their configuration. The automatic configuration performed by the Dusk plugin has also been hardened by default to use sane defaults and not allow external environment variables to leak into this configuration. This will only affect users in which the Winter CMS installation meets ALL the following criteria: 1. The Dusk plugin is installed in the Winter CMS instance. 2. The application is in production mode (ie. the `debug` config value is set to `true` in `config/app.php`). 3. The Dusk plugin's automatic configuration has been overridden, either by providing a custom `.env.dusk` file or by providing custom configuration in the `config/dusk` folder, or by providing configuration environment variables externally. 4. The environment has been configured to use production data in the database for testing, and not the temporary SQLite database that Dusk uses by default. 5. The application is connectable via the web. This issue has been fixed in version 2.1.0. Users are advised to upgrade."
+          }
+        ],
+        "id": "CVE-2024-32003",
+        "lastModified": "2024-04-12T21:15:11.617",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "REQUIRED",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-12T21:15:11.617",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/wintercms/wn-dusk-plugin/blob/main/README.md"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/wintercms/wn-dusk-plugin/security/advisories/GHSA-chcp-g9j5-3xxx"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-269"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }

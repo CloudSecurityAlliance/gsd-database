@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-27309"
       ],
+      "details": "While an Apache Kafka cluster is being migrated from ZooKeeper mode to KRaft mode, in some cases ACLs will not be correctly enforced.\n\nTwo preconditions are needed to trigger the bug:\n1. The administrator decides to remove an ACL\n2. The resource associated with the removed ACL continues to have two or more other ACLs associated with it after the removal.\n\nWhen those two preconditions are met, Kafka will treat the resource as if it had only one ACL associated with it after the removal, rather than the two or more that would be correct.\n\nThe incorrect condition is cleared by removing all brokers in ZK mode, or by adding a new ACL to the affected resource. Once the migration is completed, there is no metadata loss (the ACLs all remain).\n\nThe full impact depends on the ACLs in use. If only ALLOW ACLs were configured during the migration, the impact would be limited to availability impact. if DENY ACLs were configured, the impact could include confidentiality and integrity impact depending on the ACLs configured, as the DENY ACLs might be ignored due to this vulnerability during the migration period.\n\n",
       "id": "GSD-2024-27309",
       "modified": "2024-02-23T06:03:43.529837Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,39 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security@apache.org",
         "ID": "CVE-2024-27309",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Apache Kafka",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<=",
+                          "version_name": "3.5.0",
+                          "version_value": "3.5.2"
+                        },
+                        {
+                          "version_affected": "<=",
+                          "version_name": "3.6.0",
+                          "version_value": "3.6.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Apache Software Foundation"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +60,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "While an Apache Kafka cluster is being migrated from ZooKeeper mode to KRaft mode, in some cases ACLs will not be correctly enforced.\n\nTwo preconditions are needed to trigger the bug:\n1. The administrator decides to remove an ACL\n2. The resource associated with the removed ACL continues to have two or more other ACLs associated with it after the removal.\n\nWhen those two preconditions are met, Kafka will treat the resource as if it had only one ACL associated with it after the removal, rather than the two or more that would be correct.\n\nThe incorrect condition is cleared by removing all brokers in ZK mode, or by adding a new ACL to the affected resource. Once the migration is completed, there is no metadata loss (the ACLs all remain).\n\nThe full impact depends on the ACLs in use. If only ALLOW ACLs were configured during the migration, the impact would be limited to availability impact. if DENY ACLs were configured, the impact could include confidentiality and integrity impact depending on the ACLs configured, as the DENY ACLs might be ignored due to this vulnerability during the migration period.\n\n"
+          }
+        ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-863",
+                "lang": "eng",
+                "value": "CWE-863 Incorrect Authorization"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://lists.apache.org/thread/6536rmzyg076lzzdw2xdktvnz163mjpy",
+            "refsource": "MISC",
+            "url": "https://lists.apache.org/thread/6536rmzyg076lzzdw2xdktvnz163mjpy"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "INTERNAL"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "While an Apache Kafka cluster is being migrated from ZooKeeper mode to KRaft mode, in some cases ACLs will not be correctly enforced.\n\nTwo preconditions are needed to trigger the bug:\n1. The administrator decides to remove an ACL\n2. The resource associated with the removed ACL continues to have two or more other ACLs associated with it after the removal.\n\nWhen those two preconditions are met, Kafka will treat the resource as if it had only one ACL associated with it after the removal, rather than the two or more that would be correct.\n\nThe incorrect condition is cleared by removing all brokers in ZK mode, or by adding a new ACL to the affected resource. Once the migration is completed, there is no metadata loss (the ACLs all remain).\n\nThe full impact depends on the ACLs in use. If only ALLOW ACLs were configured during the migration, the impact would be limited to availability impact. if DENY ACLs were configured, the impact could include confidentiality and integrity impact depending on the ACLs configured, as the DENY ACLs might be ignored due to this vulnerability during the migration period.\n\n"
+          },
+          {
+            "lang": "es",
+            "value": "Mientras se migra un cl\u00faster de Apache Kafka del modo ZooKeeper al modo KRaft, en algunos casos las ACL no se aplicar\u00e1n correctamente. Se necesitan dos condiciones previas para desencadenar el error: 1. El administrador decide eliminar una ACL. 2. El recurso asociado con la ACL eliminada contin\u00faa teniendo dos o m\u00e1s ACL asociadas despu\u00e9s de la eliminaci\u00f3n. Cuando se cumplen esas dos condiciones previas, Kafka tratar\u00e1 el recurso como si tuviera solo una ACL asociada despu\u00e9s de la eliminaci\u00f3n, en lugar de las dos o m\u00e1s que ser\u00edan correctas. La condici\u00f3n incorrecta se elimina eliminando todos los intermediarios en modo ZK o agregando una nueva ACL al recurso afectado. Una vez que se completa la migraci\u00f3n, no hay p\u00e9rdida de metadatos (todas las ACL permanecen). El impacto total depende de las ACL en uso. Si solo se configuraran ALLOW ACL durante la migraci\u00f3n, el impacto se limitar\u00eda al impacto en la disponibilidad. Si se configuraron DENY ACL, el impacto podr\u00eda incluir un impacto en la confidencialidad e integridad seg\u00fan las ACL configuradas, ya que DENY ACL podr\u00edan ignorarse debido a esta vulnerabilidad durante el per\u00edodo de migraci\u00f3n."
+          }
+        ],
+        "id": "CVE-2024-27309",
+        "lastModified": "2024-04-12T12:43:46.210",
+        "metrics": {},
+        "published": "2024-04-12T07:15:08.560",
+        "references": [
+          {
+            "source": "security@apache.org",
+            "url": "https://lists.apache.org/thread/6536rmzyg076lzzdw2xdktvnz163mjpy"
+          }
+        ],
+        "sourceIdentifier": "security@apache.org",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-863"
+              }
+            ],
+            "source": "security@apache.org",
+            "type": "Primary"
           }
         ]
       }
