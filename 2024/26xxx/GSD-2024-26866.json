@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26866"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: lpspi: Avoid potential use-after-free in probe()\n\nfsl_lpspi_probe() is allocating/disposing memory manually with\nspi_alloc_host()/spi_alloc_target(), but uses\ndevm_spi_register_controller(). In case of error after the latter call the\nmemory will be explicitly freed in the probe function by\nspi_controller_put() call, but used afterwards by \"devm\" management outside\nprobe() (spi_unregister_controller() <- devm_spi_unregister() below).\n\nUnable to handle kernel NULL pointer dereference at virtual address 0000000000000070\n...\nCall trace:\n kernfs_find_ns\n kernfs_find_and_get_ns\n sysfs_remove_group\n sysfs_remove_groups\n device_remove_attrs\n device_del\n spi_unregister_controller\n devm_spi_unregister\n release_nodes\n devres_release_all\n really_probe\n driver_probe_device\n __device_attach_driver\n bus_for_each_drv\n __device_attach\n device_initial_probe\n bus_probe_device\n deferred_probe_work_func\n process_one_work\n worker_thread\n kthread\n ret_from_fork",
       "id": "GSD-2024-26866",
       "modified": "2024-02-20T06:02:29.224654Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26866",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "5314987de5e5",
+                          "version_value": "da83ed350e46"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.10"
+                              },
+                              {
+                                "lessThan": "4.10",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: lpspi: Avoid potential use-after-free in probe()\n\nfsl_lpspi_probe() is allocating/disposing memory manually with\nspi_alloc_host()/spi_alloc_target(), but uses\ndevm_spi_register_controller(). In case of error after the latter call the\nmemory will be explicitly freed in the probe function by\nspi_controller_put() call, but used afterwards by \"devm\" management outside\nprobe() (spi_unregister_controller() <- devm_spi_unregister() below).\n\nUnable to handle kernel NULL pointer dereference at virtual address 0000000000000070\n...\nCall trace:\n kernfs_find_ns\n kernfs_find_and_get_ns\n sysfs_remove_group\n sysfs_remove_groups\n device_remove_attrs\n device_del\n spi_unregister_controller\n devm_spi_unregister\n release_nodes\n devres_release_all\n really_probe\n driver_probe_device\n __device_attach_driver\n bus_for_each_drv\n __device_attach\n device_initial_probe\n bus_probe_device\n deferred_probe_work_func\n process_one_work\n worker_thread\n kthread\n ret_from_fork"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/da83ed350e4604b976e94239b08d8e2e7eaee7ea",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/da83ed350e4604b976e94239b08d8e2e7eaee7ea"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1543418e82789cc383cd36d41469983c64e3fc7f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1543418e82789cc383cd36d41469983c64e3fc7f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/996ce839606afd0fef91355627868022aa73eb68",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/996ce839606afd0fef91355627868022aa73eb68"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2ae0ab0143fcc06190713ed81a6486ed0ad3c861",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2ae0ab0143fcc06190713ed81a6486ed0ad3c861"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: lpspi: Avoid potential use-after-free in probe()\n\nfsl_lpspi_probe() is allocating/disposing memory manually with\nspi_alloc_host()/spi_alloc_target(), but uses\ndevm_spi_register_controller(). In case of error after the latter call the\nmemory will be explicitly freed in the probe function by\nspi_controller_put() call, but used afterwards by \"devm\" management outside\nprobe() (spi_unregister_controller() <- devm_spi_unregister() below).\n\nUnable to handle kernel NULL pointer dereference at virtual address 0000000000000070\n...\nCall trace:\n kernfs_find_ns\n kernfs_find_and_get_ns\n sysfs_remove_group\n sysfs_remove_groups\n device_remove_attrs\n device_del\n spi_unregister_controller\n devm_spi_unregister\n release_nodes\n devres_release_all\n really_probe\n driver_probe_device\n __device_attach_driver\n bus_for_each_drv\n __device_attach\n device_initial_probe\n bus_probe_device\n deferred_probe_work_func\n process_one_work\n worker_thread\n kthread\n ret_from_fork"
+          }
+        ],
+        "id": "CVE-2024-26866",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:09.253",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1543418e82789cc383cd36d41469983c64e3fc7f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2ae0ab0143fcc06190713ed81a6486ed0ad3c861"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/996ce839606afd0fef91355627868022aa73eb68"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/da83ed350e4604b976e94239b08d8e2e7eaee7ea"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

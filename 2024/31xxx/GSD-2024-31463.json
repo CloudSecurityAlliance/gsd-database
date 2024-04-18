@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-31463"
       ],
+      "details": "Ironic-image is an OpenStack Ironic deployment packaged and configured by Metal3. When the reverse proxy mode is enabled by the `IRONIC_REVERSE_PROXY_SETUP` variable set to `true`, 1) HTTP basic credentials are validated on the HTTPD side in a separate container, not in the Ironic service itself and 2) Ironic listens in host network on a private port 6388 on localhost by default. As a result, when the reverse proxy mode is used, any Pod or local Unix user on the control plane Node can access the Ironic API on the private port without authentication. A similar problem affects Ironic Inspector (`INSPECTOR_REVERSE_PROXY_SETUP` set to `true`), although the attack potential is smaller there. This issue affects operators deploying ironic-image in the reverse proxy mode, which is the recommended mode when TLS is used (also recommended), with the `IRONIC_PRIVATE_PORT` variable unset or set to a numeric value. In this case, an attacker with enough privileges to launch a pod on the control plane with host networking can access Ironic API and use it to modify bare-metal machine, e.g. provision them with a new image or change their BIOS settings. This vulnerability is fixed in 24.1.1. ",
       "id": "GSD-2024-31463",
       "modified": "2024-04-11T05:03:20.650740Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-31463",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "ironic-image",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 24.1.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "metal3-io"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,130 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Ironic-image is an OpenStack Ironic deployment packaged and configured by Metal3. When the reverse proxy mode is enabled by the `IRONIC_REVERSE_PROXY_SETUP` variable set to `true`, 1) HTTP basic credentials are validated on the HTTPD side in a separate container, not in the Ironic service itself and 2) Ironic listens in host network on a private port 6388 on localhost by default. As a result, when the reverse proxy mode is used, any Pod or local Unix user on the control plane Node can access the Ironic API on the private port without authentication. A similar problem affects Ironic Inspector (`INSPECTOR_REVERSE_PROXY_SETUP` set to `true`), although the attack potential is smaller there. This issue affects operators deploying ironic-image in the reverse proxy mode, which is the recommended mode when TLS is used (also recommended), with the `IRONIC_PRIVATE_PORT` variable unset or set to a numeric value. In this case, an attacker with enough privileges to launch a pod on the control plane with host networking can access Ironic API and use it to modify bare-metal machine, e.g. provision them with a new image or change their BIOS settings. This vulnerability is fixed in 24.1.1. "
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "HIGH",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "NONE",
+            "baseScore": 4.7,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-288",
+                "lang": "eng",
+                "value": "CWE-288: Authentication Bypass Using an Alternate Path or Channel"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/metal3-io/ironic-image/security/advisories/GHSA-g2cm-9v5f-qg7r",
+            "refsource": "MISC",
+            "url": "https://github.com/metal3-io/ironic-image/security/advisories/GHSA-g2cm-9v5f-qg7r"
+          },
+          {
+            "name": "https://github.com/metal3-io/ironic-image/pull/494",
+            "refsource": "MISC",
+            "url": "https://github.com/metal3-io/ironic-image/pull/494"
+          },
+          {
+            "name": "https://github.com/metal3-io/ironic-image/commit/48e40bd30d49aefabac6fc80204a8650b13d10b4",
+            "refsource": "MISC",
+            "url": "https://github.com/metal3-io/ironic-image/commit/48e40bd30d49aefabac6fc80204a8650b13d10b4"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-g2cm-9v5f-qg7r",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Ironic-image is an OpenStack Ironic deployment packaged and configured by Metal3. When the reverse proxy mode is enabled by the `IRONIC_REVERSE_PROXY_SETUP` variable set to `true`, 1) HTTP basic credentials are validated on the HTTPD side in a separate container, not in the Ironic service itself and 2) Ironic listens in host network on a private port 6388 on localhost by default. As a result, when the reverse proxy mode is used, any Pod or local Unix user on the control plane Node can access the Ironic API on the private port without authentication. A similar problem affects Ironic Inspector (`INSPECTOR_REVERSE_PROXY_SETUP` set to `true`), although the attack potential is smaller there. This issue affects operators deploying ironic-image in the reverse proxy mode, which is the recommended mode when TLS is used (also recommended), with the `IRONIC_PRIVATE_PORT` variable unset or set to a numeric value. In this case, an attacker with enough privileges to launch a pod on the control plane with host networking can access Ironic API and use it to modify bare-metal machine, e.g. provision them with a new image or change their BIOS settings. This vulnerability is fixed in 24.1.1. "
+          },
+          {
+            "lang": "es",
+            "value": "Ironic-image es una implementaci\u00f3n de OpenStack Ironic empaquetada y configurada por Metal3. Cuando el modo de proxy inverso est\u00e1 habilitado mediante la variable `IRONIC_REVERSE_PROXY_SETUP` establecida en `true`, 1) las credenciales b\u00e1sicas HTTP se validan en el lado HTTPD en un contenedor separado, no en el servicio Ironic en s\u00ed y 2) Ironic escucha en la red host en un puerto privado 6388 en localhost de forma predeterminada. Como resultado, cuando se utiliza el modo de proxy inverso, cualquier usuario Pod o Unix local en el plano de control Node puede acceder a la API Ironic en el puerto privado sin autenticaci\u00f3n. Un problema similar afecta a Ironic Inspector (`INSPECTOR_REVERSE_PROXY_SETUP` establecido en `true`), aunque el potencial de ataque es menor all\u00ed. Este problema afecta a los operadores que implementan ironic-image en el modo de proxy inverso, que es el modo recomendado cuando se usa TLS (tambi\u00e9n recomendado), con la variable `IRONIC_PRIVATE_PORT` desarmada o configurada en un valor num\u00e9rico. En este caso, un atacante con privilegios suficientes para iniciar un pod en el plano de control con red de host puede acceder a la API Ironic y usarla para modificar la m\u00e1quina b\u00e1sica, por ejemplo, aprovisionarla con una nueva imagen o cambiar la configuraci\u00f3n del BIOS. Esta vulnerabilidad se soluciona en 24.1.1."
+          }
+        ],
+        "id": "CVE-2024-31463",
+        "lastModified": "2024-04-17T16:51:07.347",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "HIGH",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "NONE",
+                "baseScore": 4.7,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.0,
+              "impactScore": 3.6,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-17T16:15:08.637",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/metal3-io/ironic-image/commit/48e40bd30d49aefabac6fc80204a8650b13d10b4"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/metal3-io/ironic-image/pull/494"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/metal3-io/ironic-image/security/advisories/GHSA-g2cm-9v5f-qg7r"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-288"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }

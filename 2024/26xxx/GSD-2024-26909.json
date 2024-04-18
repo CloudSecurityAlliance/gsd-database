@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26909"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nsoc: qcom: pmic_glink_altmode: fix drm bridge use-after-free\n\nA recent DRM series purporting to simplify support for \"transparent\nbridges\" and handling of probe deferrals ironically exposed a\nuse-after-free issue on pmic_glink_altmode probe deferral.\n\nThis has manifested itself as the display subsystem occasionally failing\nto initialise and NULL-pointer dereferences during boot of machines like\nthe Lenovo ThinkPad X13s.\n\nSpecifically, the dp-hpd bridge is currently registered before all\nresources have been acquired which means that it can also be\nderegistered on probe deferrals.\n\nIn the meantime there is a race window where the new aux bridge driver\n(or PHY driver previously) may have looked up the dp-hpd bridge and\nstored a (non-reference-counted) pointer to the bridge which is about to\nbe deallocated.\n\nWhen the display controller is later initialised, this triggers a\nuse-after-free when attaching the bridges:\n\n\tdp -> aux -> dp-hpd (freed)\n\nwhich may, for example, result in the freed bridge failing to attach:\n\n\t[drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16\n\nor a NULL-pointer dereference:\n\n\tUnable to handle kernel NULL pointer dereference at virtual address 0000000000000000\n\t...\n\tCall trace:\n\t  drm_bridge_attach+0x70/0x1a8 [drm]\n\t  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]\n\t  drm_bridge_attach+0x80/0x1a8 [drm]\n\t  dp_bridge_init+0xa8/0x15c [msm]\n\t  msm_dp_modeset_init+0x28/0xc4 [msm]\n\nThe DRM bridge implementation is clearly fragile and implicitly built on\nthe assumption that bridges may never go away. In this case, the fix is\nto move the bridge registration in the pmic_glink_altmode driver to\nafter all resources have been looked up.\n\nIncidentally, with the new dp-hpd bridge implementation, which registers\nchild devices, this is also a requirement due to a long-standing issue\nin driver core that can otherwise lead to a probe deferral loop (see\ncommit fbc35b45f9f6 (\"Add documentation on meaning of -EPROBE_DEFER\")).\n\n[DB: slightly fixed commit message by adding the word 'commit']",
       "id": "GSD-2024-26909",
       "modified": "2024-02-20T06:02:29.155577Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26909",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "080b4e24852b",
+                          "version_value": "2bbd65c6ca56"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.3"
+                              },
+                              {
+                                "lessThan": "6.3",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsoc: qcom: pmic_glink_altmode: fix drm bridge use-after-free\n\nA recent DRM series purporting to simplify support for \"transparent\nbridges\" and handling of probe deferrals ironically exposed a\nuse-after-free issue on pmic_glink_altmode probe deferral.\n\nThis has manifested itself as the display subsystem occasionally failing\nto initialise and NULL-pointer dereferences during boot of machines like\nthe Lenovo ThinkPad X13s.\n\nSpecifically, the dp-hpd bridge is currently registered before all\nresources have been acquired which means that it can also be\nderegistered on probe deferrals.\n\nIn the meantime there is a race window where the new aux bridge driver\n(or PHY driver previously) may have looked up the dp-hpd bridge and\nstored a (non-reference-counted) pointer to the bridge which is about to\nbe deallocated.\n\nWhen the display controller is later initialised, this triggers a\nuse-after-free when attaching the bridges:\n\n\tdp -> aux -> dp-hpd (freed)\n\nwhich may, for example, result in the freed bridge failing to attach:\n\n\t[drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16\n\nor a NULL-pointer dereference:\n\n\tUnable to handle kernel NULL pointer dereference at virtual address 0000000000000000\n\t...\n\tCall trace:\n\t  drm_bridge_attach+0x70/0x1a8 [drm]\n\t  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]\n\t  drm_bridge_attach+0x80/0x1a8 [drm]\n\t  dp_bridge_init+0xa8/0x15c [msm]\n\t  msm_dp_modeset_init+0x28/0xc4 [msm]\n\nThe DRM bridge implementation is clearly fragile and implicitly built on\nthe assumption that bridges may never go away. In this case, the fix is\nto move the bridge registration in the pmic_glink_altmode driver to\nafter all resources have been looked up.\n\nIncidentally, with the new dp-hpd bridge implementation, which registers\nchild devices, this is also a requirement due to a long-standing issue\nin driver core that can otherwise lead to a probe deferral loop (see\ncommit fbc35b45f9f6 (\"Add documentation on meaning of -EPROBE_DEFER\")).\n\n[DB: slightly fixed commit message by adding the word 'commit']"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2bbd65c6ca567ed8dbbfc4fb945f57ce64bef342",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2bbd65c6ca567ed8dbbfc4fb945f57ce64bef342"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ef45aa2841e15b649e5417fe3d4de395fe462781",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ef45aa2841e15b649e5417fe3d4de395fe462781"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b979f2d50a099f3402418d7ff5f26c3952fb08bb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b979f2d50a099f3402418d7ff5f26c3952fb08bb"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsoc: qcom: pmic_glink_altmode: fix drm bridge use-after-free\n\nA recent DRM series purporting to simplify support for \"transparent\nbridges\" and handling of probe deferrals ironically exposed a\nuse-after-free issue on pmic_glink_altmode probe deferral.\n\nThis has manifested itself as the display subsystem occasionally failing\nto initialise and NULL-pointer dereferences during boot of machines like\nthe Lenovo ThinkPad X13s.\n\nSpecifically, the dp-hpd bridge is currently registered before all\nresources have been acquired which means that it can also be\nderegistered on probe deferrals.\n\nIn the meantime there is a race window where the new aux bridge driver\n(or PHY driver previously) may have looked up the dp-hpd bridge and\nstored a (non-reference-counted) pointer to the bridge which is about to\nbe deallocated.\n\nWhen the display controller is later initialised, this triggers a\nuse-after-free when attaching the bridges:\n\n\tdp -> aux -> dp-hpd (freed)\n\nwhich may, for example, result in the freed bridge failing to attach:\n\n\t[drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16\n\nor a NULL-pointer dereference:\n\n\tUnable to handle kernel NULL pointer dereference at virtual address 0000000000000000\n\t...\n\tCall trace:\n\t  drm_bridge_attach+0x70/0x1a8 [drm]\n\t  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]\n\t  drm_bridge_attach+0x80/0x1a8 [drm]\n\t  dp_bridge_init+0xa8/0x15c [msm]\n\t  msm_dp_modeset_init+0x28/0xc4 [msm]\n\nThe DRM bridge implementation is clearly fragile and implicitly built on\nthe assumption that bridges may never go away. In this case, the fix is\nto move the bridge registration in the pmic_glink_altmode driver to\nafter all resources have been looked up.\n\nIncidentally, with the new dp-hpd bridge implementation, which registers\nchild devices, this is also a requirement due to a long-standing issue\nin driver core that can otherwise lead to a probe deferral loop (see\ncommit fbc35b45f9f6 (\"Add documentation on meaning of -EPROBE_DEFER\")).\n\n[DB: slightly fixed commit message by adding the word 'commit']"
+          }
+        ],
+        "id": "CVE-2024-26909",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:11.360",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2bbd65c6ca567ed8dbbfc4fb945f57ce64bef342"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b979f2d50a099f3402418d7ff5f26c3952fb08bb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ef45aa2841e15b649e5417fe3d4de395fe462781"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

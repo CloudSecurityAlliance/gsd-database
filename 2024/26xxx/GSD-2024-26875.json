@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26875"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix uaf in pvr2_context_set_notify\n\n[Syzbot reported]\nBUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\nRead of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26\n\nCPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024\nWorkqueue: usb_hub_wq hub_event\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106\n print_address_description mm/kasan/report.c:377 [inline]\n print_report+0xc4/0x620 mm/kasan/report.c:488\n kasan_report+0xda/0x110 mm/kasan/report.c:601\n pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\n pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]\n pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272\n\nFreed by task 906:\nkasan_save_stack+0x33/0x50 mm/kasan/common.c:47\nkasan_save_track+0x14/0x30 mm/kasan/common.c:68\nkasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640\npoison_slab_object mm/kasan/common.c:241 [inline]\n__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257\nkasan_slab_free include/linux/kasan.h:184 [inline]\nslab_free_hook mm/slub.c:2121 [inline]\nslab_free mm/slub.c:4299 [inline]\nkfree+0x105/0x340 mm/slub.c:4409\npvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]\npvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158\n\n[Analyze]\nTask A set disconnect_flag = !0, which resulted in Task B's condition being met\nand releasing mp, leading to this issue.\n\n[Fix]\nPlace the disconnect_flag assignment operation after all code in pvr2_context_disconnect()\nto avoid this issue.",
       "id": "GSD-2024-26875",
       "modified": "2024-02-20T06:02:29.234571Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,106 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26875",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "e5be15c63804",
+                          "version_value": "ed8000e1e8e9"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.26"
+                              },
+                              {
+                                "lessThan": "2.6.26",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.311",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.214",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.153",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +127,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix uaf in pvr2_context_set_notify\n\n[Syzbot reported]\nBUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\nRead of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26\n\nCPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024\nWorkqueue: usb_hub_wq hub_event\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106\n print_address_description mm/kasan/report.c:377 [inline]\n print_report+0xc4/0x620 mm/kasan/report.c:488\n kasan_report+0xda/0x110 mm/kasan/report.c:601\n pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\n pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]\n pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272\n\nFreed by task 906:\nkasan_save_stack+0x33/0x50 mm/kasan/common.c:47\nkasan_save_track+0x14/0x30 mm/kasan/common.c:68\nkasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640\npoison_slab_object mm/kasan/common.c:241 [inline]\n__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257\nkasan_slab_free include/linux/kasan.h:184 [inline]\nslab_free_hook mm/slub.c:2121 [inline]\nslab_free mm/slub.c:4299 [inline]\nkfree+0x105/0x340 mm/slub.c:4409\npvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]\npvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158\n\n[Analyze]\nTask A set disconnect_flag = !0, which resulted in Task B's condition being met\nand releasing mp, leading to this issue.\n\n[Fix]\nPlace the disconnect_flag assignment operation after all code in pvr2_context_disconnect()\nto avoid this issue."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ed8000e1e8e9684ab6c30cf2b526c0cea039929c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ed8000e1e8e9684ab6c30cf2b526c0cea039929c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/d29ed08964cec8b9729bc55c7bb23f679d7a18fb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d29ed08964cec8b9729bc55c7bb23f679d7a18fb"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ab896d93fd6a2cd1afeb034c3cc9226cb499209f",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ab896d93fd6a2cd1afeb034c3cc9226cb499209f"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/eb6e9dce979c08210ff7249e5e0eceb8991bfcd7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/eb6e9dce979c08210ff7249e5e0eceb8991bfcd7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3a1ec89708d2e57e2712f46241282961b1a7a475",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3a1ec89708d2e57e2712f46241282961b1a7a475"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8e60b99f6b7ccb3badeb512f5eb613ad45904592",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8e60b99f6b7ccb3badeb512f5eb613ad45904592"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/40cd818fae875c424a8335009db33c7b5a07de3a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/40cd818fae875c424a8335009db33c7b5a07de3a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/eaa410e05bdf562c90b23cdf2d9327f9c4625e16",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/eaa410e05bdf562c90b23cdf2d9327f9c4625e16"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0a0b79ea55de8514e1750884e5fec77f9fdd01ee",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0a0b79ea55de8514e1750884e5fec77f9fdd01ee"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: pvrusb2: fix uaf in pvr2_context_set_notify\n\n[Syzbot reported]\nBUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\nRead of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26\n\nCPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024\nWorkqueue: usb_hub_wq hub_event\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106\n print_address_description mm/kasan/report.c:377 [inline]\n print_report+0xc4/0x620 mm/kasan/report.c:488\n kasan_report+0xda/0x110 mm/kasan/report.c:601\n pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35\n pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]\n pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272\n\nFreed by task 906:\nkasan_save_stack+0x33/0x50 mm/kasan/common.c:47\nkasan_save_track+0x14/0x30 mm/kasan/common.c:68\nkasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640\npoison_slab_object mm/kasan/common.c:241 [inline]\n__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257\nkasan_slab_free include/linux/kasan.h:184 [inline]\nslab_free_hook mm/slub.c:2121 [inline]\nslab_free mm/slub.c:4299 [inline]\nkfree+0x105/0x340 mm/slub.c:4409\npvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]\npvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158\n\n[Analyze]\nTask A set disconnect_flag = !0, which resulted in Task B's condition being met\nand releasing mp, leading to this issue.\n\n[Fix]\nPlace the disconnect_flag assignment operation after all code in pvr2_context_disconnect()\nto avoid this issue."
+          }
+        ],
+        "id": "CVE-2024-26875",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:09.723",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0a0b79ea55de8514e1750884e5fec77f9fdd01ee"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3a1ec89708d2e57e2712f46241282961b1a7a475"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/40cd818fae875c424a8335009db33c7b5a07de3a"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8e60b99f6b7ccb3badeb512f5eb613ad45904592"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ab896d93fd6a2cd1afeb034c3cc9226cb499209f"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d29ed08964cec8b9729bc55c7bb23f679d7a18fb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/eaa410e05bdf562c90b23cdf2d9327f9c4625e16"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/eb6e9dce979c08210ff7249e5e0eceb8991bfcd7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ed8000e1e8e9684ab6c30cf2b526c0cea039929c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

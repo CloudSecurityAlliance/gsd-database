@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26876"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/bridge: adv7511: fix crash on irq during probe\n\nMoved IRQ registration down to end of adv7511_probe().\n\nIf an IRQ already is pending during adv7511_probe\n(before adv7511_cec_init) then cec_received_msg_ts\ncould crash using uninitialized data:\n\n    Unable to handle kernel read from unreadable memory at virtual address 00000000000003d5\n    Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP\n    Call trace:\n     cec_received_msg_ts+0x48/0x990 [cec]\n     adv7511_cec_irq_process+0x1cc/0x308 [adv7511]\n     adv7511_irq_process+0xd8/0x120 [adv7511]\n     adv7511_irq_handler+0x1c/0x30 [adv7511]\n     irq_thread_fn+0x30/0xa0\n     irq_thread+0x14c/0x238\n     kthread+0x190/0x1a8",
       "id": "GSD-2024-26876",
       "modified": "2024-02-20T06:02:29.307407Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26876",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3b1b975003e4",
+                          "version_value": "955c12529306"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.15"
+                              },
+                              {
+                                "lessThan": "4.15",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/bridge: adv7511: fix crash on irq during probe\n\nMoved IRQ registration down to end of adv7511_probe().\n\nIf an IRQ already is pending during adv7511_probe\n(before adv7511_cec_init) then cec_received_msg_ts\ncould crash using uninitialized data:\n\n    Unable to handle kernel read from unreadable memory at virtual address 00000000000003d5\n    Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP\n    Call trace:\n     cec_received_msg_ts+0x48/0x990 [cec]\n     adv7511_cec_irq_process+0x1cc/0x308 [adv7511]\n     adv7511_irq_process+0xd8/0x120 [adv7511]\n     adv7511_irq_handler+0x1c/0x30 [adv7511]\n     irq_thread_fn+0x30/0xa0\n     irq_thread+0x14c/0x238\n     kthread+0x190/0x1a8"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/955c1252930677762e0db2b6b9e36938c887445c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/955c1252930677762e0db2b6b9e36938c887445c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/28a94271bd50e4cf498df0381f776f8ea40a289e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/28a94271bd50e4cf498df0381f776f8ea40a289e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/aeedaee5ef5468caf59e2bb1265c2116e0c9a924",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/aeedaee5ef5468caf59e2bb1265c2116e0c9a924"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/bridge: adv7511: fix crash on irq during probe\n\nMoved IRQ registration down to end of adv7511_probe().\n\nIf an IRQ already is pending during adv7511_probe\n(before adv7511_cec_init) then cec_received_msg_ts\ncould crash using uninitialized data:\n\n    Unable to handle kernel read from unreadable memory at virtual address 00000000000003d5\n    Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP\n    Call trace:\n     cec_received_msg_ts+0x48/0x990 [cec]\n     adv7511_cec_irq_process+0x1cc/0x308 [adv7511]\n     adv7511_irq_process+0xd8/0x120 [adv7511]\n     adv7511_irq_handler+0x1c/0x30 [adv7511]\n     irq_thread_fn+0x30/0xa0\n     irq_thread+0x14c/0x238\n     kthread+0x190/0x1a8"
+          }
+        ],
+        "id": "CVE-2024-26876",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:09.777",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/28a94271bd50e4cf498df0381f776f8ea40a289e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/955c1252930677762e0db2b6b9e36938c887445c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/aeedaee5ef5468caf59e2bb1265c2116e0c9a924"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

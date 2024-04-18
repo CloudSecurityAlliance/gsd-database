@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26818"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ntools/rtla: Fix clang warning about mount_point var size\n\nclang is reporting this warning:\n\n$ make HOSTCC=clang CC=clang LLVM_IAS=1\n[...]\nclang -O -g -DVERSION=\\\"6.8.0-rc3\\\" -flto=auto -fexceptions\n\t-fstack-protector-strong -fasynchronous-unwind-tables\n\t-fstack-clash-protection  -Wall -Werror=format-security\n\t-Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS\n\t$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c\n\nsrc/utils.c:548:66: warning: 'fscanf' may overflow; destination buffer in argument 3 has size 1024, but the corresponding specifier may require size 1025 [-Wfortify-source]\n  548 |         while (fscanf(fp, \"%*s %\" STR(MAX_PATH) \"s %99s %*s %*d %*d\\n\", mount_point, type) == 2) {\n      |                                                                         ^\n\nIncrease mount_point variable size to MAX_PATH+1 to avoid the overflow.",
       "id": "GSD-2024-26818",
       "modified": "2024-02-20T06:02:29.079316Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26818",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "a957cbc02531",
+                          "version_value": "8a585914c266"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.5"
+                              },
+                              {
+                                "lessThan": "6.5",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ntools/rtla: Fix clang warning about mount_point var size\n\nclang is reporting this warning:\n\n$ make HOSTCC=clang CC=clang LLVM_IAS=1\n[...]\nclang -O -g -DVERSION=\\\"6.8.0-rc3\\\" -flto=auto -fexceptions\n\t-fstack-protector-strong -fasynchronous-unwind-tables\n\t-fstack-clash-protection  -Wall -Werror=format-security\n\t-Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS\n\t$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c\n\nsrc/utils.c:548:66: warning: 'fscanf' may overflow; destination buffer in argument 3 has size 1024, but the corresponding specifier may require size 1025 [-Wfortify-source]\n  548 |         while (fscanf(fp, \"%*s %\" STR(MAX_PATH) \"s %99s %*s %*d %*d\\n\", mount_point, type) == 2) {\n      |                                                                         ^\n\nIncrease mount_point variable size to MAX_PATH+1 to avoid the overflow."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/8a585914c266dc044f53b5c83c170f79b45fcf9a",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8a585914c266dc044f53b5c83c170f79b45fcf9a"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6bdd43f62ab3bb5a306af7f0ab857af45777f5a8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6bdd43f62ab3bb5a306af7f0ab857af45777f5a8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/30369084ac6e27479a347899e74f523e6ca29b89",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/30369084ac6e27479a347899e74f523e6ca29b89"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ntools/rtla: Fix clang warning about mount_point var size\n\nclang is reporting this warning:\n\n$ make HOSTCC=clang CC=clang LLVM_IAS=1\n[...]\nclang -O -g -DVERSION=\\\"6.8.0-rc3\\\" -flto=auto -fexceptions\n\t-fstack-protector-strong -fasynchronous-unwind-tables\n\t-fstack-clash-protection  -Wall -Werror=format-security\n\t-Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS\n\t$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c\n\nsrc/utils.c:548:66: warning: 'fscanf' may overflow; destination buffer in argument 3 has size 1024, but the corresponding specifier may require size 1025 [-Wfortify-source]\n  548 |         while (fscanf(fp, \"%*s %\" STR(MAX_PATH) \"s %99s %*s %*d %*d\\n\", mount_point, type) == 2) {\n      |                                                                         ^\n\nIncrease mount_point variable size to MAX_PATH+1 to avoid the overflow."
+          }
+        ],
+        "id": "CVE-2024-26818",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T10:15:08.757",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/30369084ac6e27479a347899e74f523e6ca29b89"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6bdd43f62ab3bb5a306af7f0ab857af45777f5a8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8a585914c266dc044f53b5c83c170f79b45fcf9a"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

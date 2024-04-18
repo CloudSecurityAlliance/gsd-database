@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26898"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\naoe: fix the potential use-after-free problem in aoecmd_cfg_pkts\n\nThis patch is against CVE-2023-6270. The description of cve is:\n\n  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux\n  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on\n  `struct net_device`, and a use-after-free can be triggered by racing\n  between the free on the struct and the access through the `skbtxq`\n  global queue. This could lead to a denial of service condition or\n  potential code execution.\n\nIn aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial\ncode is finished. But the net_device ifp will still be used in\nlater tx()->dev_queue_xmit() in kthread. Which means that the\ndev_put(ifp) should NOT be called in the success path of skb\ninitial code in aoecmd_cfg_pkts(). Otherwise tx() may run into\nuse-after-free because the net_device is freed.\n\nThis patch removed the dev_put(ifp) in the success path in\naoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().",
       "id": "GSD-2024-26898",
       "modified": "2024-02-20T06:02:29.206934Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,106 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26898",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "7562f876cd93",
+                          "version_value": "ad80c34944d7"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.22"
+                              },
+                              {
+                                "lessThan": "2.6.22",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.311",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.214",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.153",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +127,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\naoe: fix the potential use-after-free problem in aoecmd_cfg_pkts\n\nThis patch is against CVE-2023-6270. The description of cve is:\n\n  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux\n  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on\n  `struct net_device`, and a use-after-free can be triggered by racing\n  between the free on the struct and the access through the `skbtxq`\n  global queue. This could lead to a denial of service condition or\n  potential code execution.\n\nIn aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial\ncode is finished. But the net_device ifp will still be used in\nlater tx()->dev_queue_xmit() in kthread. Which means that the\ndev_put(ifp) should NOT be called in the success path of skb\ninitial code in aoecmd_cfg_pkts(). Otherwise tx() may run into\nuse-after-free because the net_device is freed.\n\nThis patch removed the dev_put(ifp) in the success path in\naoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx()."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/ad80c34944d7175fa1f5c7a55066020002921a99",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ad80c34944d7175fa1f5c7a55066020002921a99"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1a54aa506b3b2f31496731039e49778f54eee881",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1a54aa506b3b2f31496731039e49778f54eee881"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/faf0b4c5e00bb680e8e43ac936df24d3f48c8e65",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/faf0b4c5e00bb680e8e43ac936df24d3f48c8e65"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7dd09fa80b0765ce68bfae92f4e2f395ccf0fba4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7dd09fa80b0765ce68bfae92f4e2f395ccf0fba4"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/74ca3ef68d2f449bc848c0a814cefc487bf755fa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/74ca3ef68d2f449bc848c0a814cefc487bf755fa"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/eb48680b0255a9e8a9bdc93d6a55b11c31262e62",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/eb48680b0255a9e8a9bdc93d6a55b11c31262e62"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/079cba4f4e307c69878226fdf5228c20aa1c969c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/079cba4f4e307c69878226fdf5228c20aa1c969c"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a16fbb80064634b254520a46395e36b87ca4731e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a16fbb80064634b254520a46395e36b87ca4731e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f98364e926626c678fb4b9004b75cacf92ff0662",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f98364e926626c678fb4b9004b75cacf92ff0662"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\naoe: fix the potential use-after-free problem in aoecmd_cfg_pkts\n\nThis patch is against CVE-2023-6270. The description of cve is:\n\n  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux\n  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on\n  `struct net_device`, and a use-after-free can be triggered by racing\n  between the free on the struct and the access through the `skbtxq`\n  global queue. This could lead to a denial of service condition or\n  potential code execution.\n\nIn aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial\ncode is finished. But the net_device ifp will still be used in\nlater tx()->dev_queue_xmit() in kthread. Which means that the\ndev_put(ifp) should NOT be called in the success path of skb\ninitial code in aoecmd_cfg_pkts(). Otherwise tx() may run into\nuse-after-free because the net_device is freed.\n\nThis patch removed the dev_put(ifp) in the success path in\naoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx()."
+          }
+        ],
+        "id": "CVE-2024-26898",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:10.820",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/079cba4f4e307c69878226fdf5228c20aa1c969c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1a54aa506b3b2f31496731039e49778f54eee881"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/74ca3ef68d2f449bc848c0a814cefc487bf755fa"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7dd09fa80b0765ce68bfae92f4e2f395ccf0fba4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a16fbb80064634b254520a46395e36b87ca4731e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ad80c34944d7175fa1f5c7a55066020002921a99"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/eb48680b0255a9e8a9bdc93d6a55b11c31262e62"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f98364e926626c678fb4b9004b75cacf92ff0662"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/faf0b4c5e00bb680e8e43ac936df24d3f48c8e65"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

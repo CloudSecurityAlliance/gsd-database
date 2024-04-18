@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26904"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: fix data race at btrfs_use_block_rsv() when accessing block reserve\n\nAt btrfs_use_block_rsv() we read the size of a block reserve without\nlocking its spinlock, which makes KCSAN complain because the size of a\nblock reserve is always updated while holding its spinlock. The report\nfrom KCSAN is the following:\n\n  [653.313148] BUG: KCSAN: data-race in btrfs_update_delayed_refs_rsv [btrfs] / btrfs_use_block_rsv [btrfs]\n\n  [653.314755] read to 0x000000017f5871b8 of 8 bytes by task 7519 on cpu 0:\n  [653.314779]  btrfs_use_block_rsv+0xe4/0x2f8 [btrfs]\n  [653.315606]  btrfs_alloc_tree_block+0xdc/0x998 [btrfs]\n  [653.316421]  btrfs_force_cow_block+0x220/0xe38 [btrfs]\n  [653.317242]  btrfs_cow_block+0x1ac/0x568 [btrfs]\n  [653.318060]  btrfs_search_slot+0xda2/0x19b8 [btrfs]\n  [653.318879]  btrfs_del_csums+0x1dc/0x798 [btrfs]\n  [653.319702]  __btrfs_free_extent.isra.0+0xc24/0x2028 [btrfs]\n  [653.320538]  __btrfs_run_delayed_refs+0xd3c/0x2390 [btrfs]\n  [653.321340]  btrfs_run_delayed_refs+0xae/0x290 [btrfs]\n  [653.322140]  flush_space+0x5e4/0x718 [btrfs]\n  [653.322958]  btrfs_preempt_reclaim_metadata_space+0x102/0x2f8 [btrfs]\n  [653.323781]  process_one_work+0x3b6/0x838\n  [653.323800]  worker_thread+0x75e/0xb10\n  [653.323817]  kthread+0x21a/0x230\n  [653.323836]  __ret_from_fork+0x6c/0xb8\n  [653.323855]  ret_from_fork+0xa/0x30\n\n  [653.323887] write to 0x000000017f5871b8 of 8 bytes by task 576 on cpu 3:\n  [653.323906]  btrfs_update_delayed_refs_rsv+0x1a4/0x250 [btrfs]\n  [653.324699]  btrfs_add_delayed_data_ref+0x468/0x6d8 [btrfs]\n  [653.325494]  btrfs_free_extent+0x76/0x120 [btrfs]\n  [653.326280]  __btrfs_mod_ref+0x6a8/0x6b8 [btrfs]\n  [653.327064]  btrfs_dec_ref+0x50/0x70 [btrfs]\n  [653.327849]  walk_up_proc+0x236/0xa50 [btrfs]\n  [653.328633]  walk_up_tree+0x21c/0x448 [btrfs]\n  [653.329418]  btrfs_drop_snapshot+0x802/0x1328 [btrfs]\n  [653.330205]  btrfs_clean_one_deleted_snapshot+0x184/0x238 [btrfs]\n  [653.330995]  cleaner_kthread+0x2b0/0x2f0 [btrfs]\n  [653.331781]  kthread+0x21a/0x230\n  [653.331800]  __ret_from_fork+0x6c/0xb8\n  [653.331818]  ret_from_fork+0xa/0x30\n\nSo add a helper to get the size of a block reserve while holding the lock.\nReading the field while holding the lock instead of using the data_race()\nannotation is used in order to prevent load tearing.",
       "id": "GSD-2024-26904",
       "modified": "2024-02-20T06:02:29.176425Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,72 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26904",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1da177e4c3f4",
+                          "version_value": "2daa2a8e895e"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +93,91 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: fix data race at btrfs_use_block_rsv() when accessing block reserve\n\nAt btrfs_use_block_rsv() we read the size of a block reserve without\nlocking its spinlock, which makes KCSAN complain because the size of a\nblock reserve is always updated while holding its spinlock. The report\nfrom KCSAN is the following:\n\n  [653.313148] BUG: KCSAN: data-race in btrfs_update_delayed_refs_rsv [btrfs] / btrfs_use_block_rsv [btrfs]\n\n  [653.314755] read to 0x000000017f5871b8 of 8 bytes by task 7519 on cpu 0:\n  [653.314779]  btrfs_use_block_rsv+0xe4/0x2f8 [btrfs]\n  [653.315606]  btrfs_alloc_tree_block+0xdc/0x998 [btrfs]\n  [653.316421]  btrfs_force_cow_block+0x220/0xe38 [btrfs]\n  [653.317242]  btrfs_cow_block+0x1ac/0x568 [btrfs]\n  [653.318060]  btrfs_search_slot+0xda2/0x19b8 [btrfs]\n  [653.318879]  btrfs_del_csums+0x1dc/0x798 [btrfs]\n  [653.319702]  __btrfs_free_extent.isra.0+0xc24/0x2028 [btrfs]\n  [653.320538]  __btrfs_run_delayed_refs+0xd3c/0x2390 [btrfs]\n  [653.321340]  btrfs_run_delayed_refs+0xae/0x290 [btrfs]\n  [653.322140]  flush_space+0x5e4/0x718 [btrfs]\n  [653.322958]  btrfs_preempt_reclaim_metadata_space+0x102/0x2f8 [btrfs]\n  [653.323781]  process_one_work+0x3b6/0x838\n  [653.323800]  worker_thread+0x75e/0xb10\n  [653.323817]  kthread+0x21a/0x230\n  [653.323836]  __ret_from_fork+0x6c/0xb8\n  [653.323855]  ret_from_fork+0xa/0x30\n\n  [653.323887] write to 0x000000017f5871b8 of 8 bytes by task 576 on cpu 3:\n  [653.323906]  btrfs_update_delayed_refs_rsv+0x1a4/0x250 [btrfs]\n  [653.324699]  btrfs_add_delayed_data_ref+0x468/0x6d8 [btrfs]\n  [653.325494]  btrfs_free_extent+0x76/0x120 [btrfs]\n  [653.326280]  __btrfs_mod_ref+0x6a8/0x6b8 [btrfs]\n  [653.327064]  btrfs_dec_ref+0x50/0x70 [btrfs]\n  [653.327849]  walk_up_proc+0x236/0xa50 [btrfs]\n  [653.328633]  walk_up_tree+0x21c/0x448 [btrfs]\n  [653.329418]  btrfs_drop_snapshot+0x802/0x1328 [btrfs]\n  [653.330205]  btrfs_clean_one_deleted_snapshot+0x184/0x238 [btrfs]\n  [653.330995]  cleaner_kthread+0x2b0/0x2f0 [btrfs]\n  [653.331781]  kthread+0x21a/0x230\n  [653.331800]  __ret_from_fork+0x6c/0xb8\n  [653.331818]  ret_from_fork+0xa/0x30\n\nSo add a helper to get the size of a block reserve while holding the lock.\nReading the field while holding the lock instead of using the data_race()\nannotation is used in order to prevent load tearing."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/2daa2a8e895e6dc2395f8628c011bcf1e019040d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2daa2a8e895e6dc2395f8628c011bcf1e019040d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ab1be3f1aa7799f99155488c28eacaef65eb68fb",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ab1be3f1aa7799f99155488c28eacaef65eb68fb"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f6d4d29a12655b42a13cec038c2902bb7efc50ed",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f6d4d29a12655b42a13cec038c2902bb7efc50ed"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/7e9422d35d574b646269ca46010a835ca074b310",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7e9422d35d574b646269ca46010a835ca074b310"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c7bb26b847e5b97814f522686068c5628e2b3646",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c7bb26b847e5b97814f522686068c5628e2b3646"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: fix data race at btrfs_use_block_rsv() when accessing block reserve\n\nAt btrfs_use_block_rsv() we read the size of a block reserve without\nlocking its spinlock, which makes KCSAN complain because the size of a\nblock reserve is always updated while holding its spinlock. The report\nfrom KCSAN is the following:\n\n  [653.313148] BUG: KCSAN: data-race in btrfs_update_delayed_refs_rsv [btrfs] / btrfs_use_block_rsv [btrfs]\n\n  [653.314755] read to 0x000000017f5871b8 of 8 bytes by task 7519 on cpu 0:\n  [653.314779]  btrfs_use_block_rsv+0xe4/0x2f8 [btrfs]\n  [653.315606]  btrfs_alloc_tree_block+0xdc/0x998 [btrfs]\n  [653.316421]  btrfs_force_cow_block+0x220/0xe38 [btrfs]\n  [653.317242]  btrfs_cow_block+0x1ac/0x568 [btrfs]\n  [653.318060]  btrfs_search_slot+0xda2/0x19b8 [btrfs]\n  [653.318879]  btrfs_del_csums+0x1dc/0x798 [btrfs]\n  [653.319702]  __btrfs_free_extent.isra.0+0xc24/0x2028 [btrfs]\n  [653.320538]  __btrfs_run_delayed_refs+0xd3c/0x2390 [btrfs]\n  [653.321340]  btrfs_run_delayed_refs+0xae/0x290 [btrfs]\n  [653.322140]  flush_space+0x5e4/0x718 [btrfs]\n  [653.322958]  btrfs_preempt_reclaim_metadata_space+0x102/0x2f8 [btrfs]\n  [653.323781]  process_one_work+0x3b6/0x838\n  [653.323800]  worker_thread+0x75e/0xb10\n  [653.323817]  kthread+0x21a/0x230\n  [653.323836]  __ret_from_fork+0x6c/0xb8\n  [653.323855]  ret_from_fork+0xa/0x30\n\n  [653.323887] write to 0x000000017f5871b8 of 8 bytes by task 576 on cpu 3:\n  [653.323906]  btrfs_update_delayed_refs_rsv+0x1a4/0x250 [btrfs]\n  [653.324699]  btrfs_add_delayed_data_ref+0x468/0x6d8 [btrfs]\n  [653.325494]  btrfs_free_extent+0x76/0x120 [btrfs]\n  [653.326280]  __btrfs_mod_ref+0x6a8/0x6b8 [btrfs]\n  [653.327064]  btrfs_dec_ref+0x50/0x70 [btrfs]\n  [653.327849]  walk_up_proc+0x236/0xa50 [btrfs]\n  [653.328633]  walk_up_tree+0x21c/0x448 [btrfs]\n  [653.329418]  btrfs_drop_snapshot+0x802/0x1328 [btrfs]\n  [653.330205]  btrfs_clean_one_deleted_snapshot+0x184/0x238 [btrfs]\n  [653.330995]  cleaner_kthread+0x2b0/0x2f0 [btrfs]\n  [653.331781]  kthread+0x21a/0x230\n  [653.331800]  __ret_from_fork+0x6c/0xb8\n  [653.331818]  ret_from_fork+0xa/0x30\n\nSo add a helper to get the size of a block reserve while holding the lock.\nReading the field while holding the lock instead of using the data_race()\nannotation is used in order to prevent load tearing."
+          }
+        ],
+        "id": "CVE-2024-26904",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:11.113",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2daa2a8e895e6dc2395f8628c011bcf1e019040d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7e9422d35d574b646269ca46010a835ca074b310"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ab1be3f1aa7799f99155488c28eacaef65eb68fb"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c7bb26b847e5b97814f522686068c5628e2b3646"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f6d4d29a12655b42a13cec038c2902bb7efc50ed"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26900"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd: fix kmemleak of rdev->serial\n\nIf kobject_add() is fail in bind_rdev_to_array(), 'rdev->serial' will be\nalloc not be freed, and kmemleak occurs.\n\nunreferenced object 0xffff88815a350000 (size 49152):\n  comm \"mdadm\", pid 789, jiffies 4294716910\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc f773277a):\n    [<0000000058b0a453>] kmemleak_alloc+0x61/0xe0\n    [<00000000366adf14>] __kmalloc_large_node+0x15e/0x270\n    [<000000002e82961b>] __kmalloc_node.cold+0x11/0x7f\n    [<00000000f206d60a>] kvmalloc_node+0x74/0x150\n    [<0000000034bf3363>] rdev_init_serial+0x67/0x170\n    [<0000000010e08fe9>] mddev_create_serial_pool+0x62/0x220\n    [<00000000c3837bf0>] bind_rdev_to_array+0x2af/0x630\n    [<0000000073c28560>] md_add_new_disk+0x400/0x9f0\n    [<00000000770e30ff>] md_ioctl+0x15bf/0x1c10\n    [<000000006cfab718>] blkdev_ioctl+0x191/0x3f0\n    [<0000000085086a11>] vfs_ioctl+0x22/0x60\n    [<0000000018b656fe>] __x64_sys_ioctl+0xba/0xe0\n    [<00000000e54e675e>] do_syscall_64+0x71/0x150\n    [<000000008b0ad622>] entry_SYSCALL_64_after_hwframe+0x6c/0x74",
       "id": "GSD-2024-26900",
       "modified": "2024-02-20T06:02:29.180529Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,70 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26900",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "963c555e75b0",
+                          "version_value": "6d32c832a885"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.3"
+                              },
+                              {
+                                "lessThan": "5.3",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +91,73 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd: fix kmemleak of rdev->serial\n\nIf kobject_add() is fail in bind_rdev_to_array(), 'rdev->serial' will be\nalloc not be freed, and kmemleak occurs.\n\nunreferenced object 0xffff88815a350000 (size 49152):\n  comm \"mdadm\", pid 789, jiffies 4294716910\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc f773277a):\n    [<0000000058b0a453>] kmemleak_alloc+0x61/0xe0\n    [<00000000366adf14>] __kmalloc_large_node+0x15e/0x270\n    [<000000002e82961b>] __kmalloc_node.cold+0x11/0x7f\n    [<00000000f206d60a>] kvmalloc_node+0x74/0x150\n    [<0000000034bf3363>] rdev_init_serial+0x67/0x170\n    [<0000000010e08fe9>] mddev_create_serial_pool+0x62/0x220\n    [<00000000c3837bf0>] bind_rdev_to_array+0x2af/0x630\n    [<0000000073c28560>] md_add_new_disk+0x400/0x9f0\n    [<00000000770e30ff>] md_ioctl+0x15bf/0x1c10\n    [<000000006cfab718>] blkdev_ioctl+0x191/0x3f0\n    [<0000000085086a11>] vfs_ioctl+0x22/0x60\n    [<0000000018b656fe>] __x64_sys_ioctl+0xba/0xe0\n    [<00000000e54e675e>] do_syscall_64+0x71/0x150\n    [<000000008b0ad622>] entry_SYSCALL_64_after_hwframe+0x6c/0x74"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/6d32c832a88513f65c2c2c9c75954ee8b387adea",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6d32c832a88513f65c2c2c9c75954ee8b387adea"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/4c1021ce46fc2fb6115f7e79d353941e6dcad366",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4c1021ce46fc2fb6115f7e79d353941e6dcad366"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6cf350658736681b9d6b0b6e58c5c76b235bb4c4",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6cf350658736681b9d6b0b6e58c5c76b235bb4c4"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd: fix kmemleak of rdev->serial\n\nIf kobject_add() is fail in bind_rdev_to_array(), 'rdev->serial' will be\nalloc not be freed, and kmemleak occurs.\n\nunreferenced object 0xffff88815a350000 (size 49152):\n  comm \"mdadm\", pid 789, jiffies 4294716910\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc f773277a):\n    [<0000000058b0a453>] kmemleak_alloc+0x61/0xe0\n    [<00000000366adf14>] __kmalloc_large_node+0x15e/0x270\n    [<000000002e82961b>] __kmalloc_node.cold+0x11/0x7f\n    [<00000000f206d60a>] kvmalloc_node+0x74/0x150\n    [<0000000034bf3363>] rdev_init_serial+0x67/0x170\n    [<0000000010e08fe9>] mddev_create_serial_pool+0x62/0x220\n    [<00000000c3837bf0>] bind_rdev_to_array+0x2af/0x630\n    [<0000000073c28560>] md_add_new_disk+0x400/0x9f0\n    [<00000000770e30ff>] md_ioctl+0x15bf/0x1c10\n    [<000000006cfab718>] blkdev_ioctl+0x191/0x3f0\n    [<0000000085086a11>] vfs_ioctl+0x22/0x60\n    [<0000000018b656fe>] __x64_sys_ioctl+0xba/0xe0\n    [<00000000e54e675e>] do_syscall_64+0x71/0x150\n    [<000000008b0ad622>] entry_SYSCALL_64_after_hwframe+0x6c/0x74"
+          }
+        ],
+        "id": "CVE-2024-26900",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:10.917",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4c1021ce46fc2fb6115f7e79d353941e6dcad366"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6cf350658736681b9d6b0b6e58c5c76b235bb4c4"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6d32c832a88513f65c2c2c9c75954ee8b387adea"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

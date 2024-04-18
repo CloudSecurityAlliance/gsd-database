@@ -187,52 +187,176 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "9505037C-AC94-4E5C-BF56-B3EAE3BEE109",
+                    "versionEndExcluding": "4.19.306",
+                    "versionStartIncluding": "4.12.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "35ADF607-EDCA-45AB-8FB6-9F2D40D47C0C",
+                    "versionEndExcluding": "5.4.268",
+                    "versionStartIncluding": "4.20.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "5D2E4F24-2FBB-4434-8598-2B1499E566B5",
+                    "versionEndExcluding": "5.10.209",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "E25E1389-4B0F-407A-9C94-5908FF3EE88B",
+                    "versionEndExcluding": "5.15.148",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "2C4951FA-80C0-4B4C-9836-6E5035DEB0F9",
+                    "versionEndExcluding": "6.1.75",
+                    "versionStartIncluding": "5.16.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BDBBEB0E-D13A-4567-8984-51C5375350B9",
+                    "versionEndExcluding": "6.6.14",
+                    "versionStartIncluding": "6.2.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0EA3778C-730B-464C-8023-18CA6AC0B807",
+                    "versionEndExcluding": "6.7.2",
+                    "versionStartIncluding": "6.7.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nEDAC/thunderx: Fix possible out-of-bounds string access\n\nEnabling -Wstringop-overflow globally exposes a warning for a common bug\nin the usage of strncat():\n\n  drivers/edac/thunderx_edac.c: In function 'thunderx_ocx_com_threaded_isr':\n  drivers/edac/thunderx_edac.c:1136:17: error: 'strncat' specified bound 1024 equals destination size [-Werror=stringop-overflow=]\n   1136 |                 strncat(msg, other, OCX_MESSAGE_SIZE);\n        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n   ...\n   1145 |                                 strncat(msg, other, OCX_MESSAGE_SIZE);\n   ...\n   1150 |                                 strncat(msg, other, OCX_MESSAGE_SIZE);\n\n   ...\n\nApparently the author of this driver expected strncat() to behave the\nway that strlcat() does, which uses the size of the destination buffer\nas its third argument rather than the length of the source buffer. The\nresult is that there is no check on the size of the allocated buffer.\n\nChange it to strlcat().\n\n  [ bp: Trim compiler output, fixup commit message. ]"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: EDAC/thunderx: corrige un posible acceso a cadenas fuera de los l\u00edmites Al habilitar -Wstringop-overflow globalmente se expone una advertencia para un error com\u00fan en el uso de strncat(): drivers/edac/ thunderx_edac.c: En la funci\u00f3n 'thunderx_ocx_com_threaded_isr': drivers/edac/thunderx_edac.c:1136:17: error: 'strncat' el l\u00edmite especificado 1024 es igual al tama\u00f1o de destino [-Werror=stringop-overflow=] 1136 | strncat(msj, otro, OCX_MESSAGE_SIZE); | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ... 1145 | strncat(msj, otro, OCX_MESSAGE_SIZE); ... 1150 | strncat(msj, otro, OCX_MESSAGE_SIZE); ... Aparentemente, el autor de este controlador esperaba que strncat() se comportara de la manera que lo hace strlcat(), que utiliza el tama\u00f1o del b\u00fafer de destino como tercer argumento en lugar de la longitud del b\u00fafer de origen. El resultado es que no se comprueba el tama\u00f1o del b\u00fafer asignado. C\u00e1mbielo a strlcat(). [bp: recortar la salida del compilador, mensaje de confirmaci\u00f3n de reparaci\u00f3n. ]"
           }
         ],
         "id": "CVE-2023-52464",
-        "lastModified": "2024-02-23T16:14:43.447",
-        "metrics": {},
+        "lastModified": "2024-04-17T20:03:39.197",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 7.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-23T15:15:08.647",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/426fae93c01dffa379225eb2bd4d3cdc42c6eec5"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/475c58e1a471e9b873e3e39958c64a2d278275c8"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/5da3b6e7196f0b4f3728e4e25eb20233a9ddfaf6"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/6aa7865ba7ff7f0ede0035180fb3b9400ceb405a"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/700cf4bead80fac994dcc43ae1ca5d86d8959b21"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/71c17ee02538802ceafc830f0736aa35b564e601"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/9dbac9fdae6e3b411fc4c3fca3bf48f70609c398"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/e1c86511241588efffaa49556196f09a498d5057"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-119"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26825"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfc: nci: free rx_data_reassembly skb on NCI device cleanup\n\nrx_data_reassembly skb is stored during NCI data exchange for processing\nfragmented packets. It is dropped only when the last fragment is processed\nor when an NTF packet with NCI_OP_RF_DEACTIVATE_NTF opcode is received.\nHowever, the NCI device may be deallocated before that which leads to skb\nleak.\n\nAs by design the rx_data_reassembly skb is bound to the NCI device and\nnothing prevents the device to be freed before the skb is processed in\nsome way and cleaned, free it on the NCI device cleanup.\n\nFound by Linux Verification Center (linuxtesting.org) with Syzkaller.",
       "id": "GSD-2024-26825",
       "modified": "2024-02-20T06:02:29.123773Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,100 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26825",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "6a2968aaf50c",
+                          "version_value": "7e9a8498658b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.2"
+                              },
+                              {
+                                "lessThan": "3.2",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.307",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.269",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.210",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +121,118 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfc: nci: free rx_data_reassembly skb on NCI device cleanup\n\nrx_data_reassembly skb is stored during NCI data exchange for processing\nfragmented packets. It is dropped only when the last fragment is processed\nor when an NTF packet with NCI_OP_RF_DEACTIVATE_NTF opcode is received.\nHowever, the NCI device may be deallocated before that which leads to skb\nleak.\n\nAs by design the rx_data_reassembly skb is bound to the NCI device and\nnothing prevents the device to be freed before the skb is processed in\nsome way and cleaned, free it on the NCI device cleanup.\n\nFound by Linux Verification Center (linuxtesting.org) with Syzkaller."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/7e9a8498658b398bf11b8e388005fa54e40aed81",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7e9a8498658b398bf11b8e388005fa54e40aed81"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/71349abe3aba7fedcab5b3fcd7aa82371fb5ccbf",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/71349abe3aba7fedcab5b3fcd7aa82371fb5ccbf"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2f6d16f0520d6505241629ee2f5c131b547d5f9d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2f6d16f0520d6505241629ee2f5c131b547d5f9d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/471c9ede8061357b43a116fa692e70d91941ac23",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/471c9ede8061357b43a116fa692e70d91941ac23"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/5c0c5ffaed73cbae6c317374dc32ba6cacc60895",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/5c0c5ffaed73cbae6c317374dc32ba6cacc60895"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/16d3f507b0fa70453dc54550df093d6e9ac630c1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/16d3f507b0fa70453dc54550df093d6e9ac630c1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a3d90fb5c23f29ba59c04005ae76c5228cef2be9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a3d90fb5c23f29ba59c04005ae76c5228cef2be9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bfb007aebe6bff451f7f3a4be19f4f286d0d5d9c",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bfb007aebe6bff451f7f3a4be19f4f286d0d5d9c"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfc: nci: free rx_data_reassembly skb on NCI device cleanup\n\nrx_data_reassembly skb is stored during NCI data exchange for processing\nfragmented packets. It is dropped only when the last fragment is processed\nor when an NTF packet with NCI_OP_RF_DEACTIVATE_NTF opcode is received.\nHowever, the NCI device may be deallocated before that which leads to skb\nleak.\n\nAs by design the rx_data_reassembly skb is bound to the NCI device and\nnothing prevents the device to be freed before the skb is processed in\nsome way and cleaned, free it on the NCI device cleanup.\n\nFound by Linux Verification Center (linuxtesting.org) with Syzkaller."
+          }
+        ],
+        "id": "CVE-2024-26825",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T10:15:09.130",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/16d3f507b0fa70453dc54550df093d6e9ac630c1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/2f6d16f0520d6505241629ee2f5c131b547d5f9d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/471c9ede8061357b43a116fa692e70d91941ac23"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/5c0c5ffaed73cbae6c317374dc32ba6cacc60895"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/71349abe3aba7fedcab5b3fcd7aa82371fb5ccbf"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7e9a8498658b398bf11b8e388005fa54e40aed81"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/a3d90fb5c23f29ba59c04005ae76c5228cef2be9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bfb007aebe6bff451f7f3a4be19f4f286d0d5d9c"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

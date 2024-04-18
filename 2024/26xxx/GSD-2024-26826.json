@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26826"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data re-injection from stale subflow\n\nWhen the MPTCP PM detects that a subflow is stale, all the packet\nscheduler must re-inject all the mptcp-level unacked data. To avoid\nacquiring unneeded locks, it first try to check if any unacked data\nis present at all in the RTX queue, but such check is currently\nbroken, as it uses TCP-specific helper on an MPTCP socket.\n\nFunnily enough fuzzers and static checkers are happy, as the accessed\nmemory still belongs to the mptcp_sock struct, and even from a\nfunctional perspective the recovery completed successfully, as\nthe short-cut test always failed.\n\nA recent unrelated TCP change - commit d5fed5addb2b (\"tcp: reorganize\ntcp_sock fast path variables\") - exposed the issue, as the tcp field\nreorganization makes the mptcp code always skip the re-inection.\n\nFix the issue dropping the bogus call: we are on a slow path, the early\noptimization proved once again to be evil.",
       "id": "GSD-2024-26826",
       "modified": "2024-02-20T06:02:29.147071Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,82 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26826",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "1e1d9d6f119c",
+                          "version_value": "6f95120f898b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.15"
+                              },
+                              {
+                                "lessThan": "5.15",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.149",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.79",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.18",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.6",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +103,91 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data re-injection from stale subflow\n\nWhen the MPTCP PM detects that a subflow is stale, all the packet\nscheduler must re-inject all the mptcp-level unacked data. To avoid\nacquiring unneeded locks, it first try to check if any unacked data\nis present at all in the RTX queue, but such check is currently\nbroken, as it uses TCP-specific helper on an MPTCP socket.\n\nFunnily enough fuzzers and static checkers are happy, as the accessed\nmemory still belongs to the mptcp_sock struct, and even from a\nfunctional perspective the recovery completed successfully, as\nthe short-cut test always failed.\n\nA recent unrelated TCP change - commit d5fed5addb2b (\"tcp: reorganize\ntcp_sock fast path variables\") - exposed the issue, as the tcp field\nreorganization makes the mptcp code always skip the re-inection.\n\nFix the issue dropping the bogus call: we are on a slow path, the early\noptimization proved once again to be evil."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/6f95120f898b40d13fd441225ef511307853c9c2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6f95120f898b40d13fd441225ef511307853c9c2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6673d9f1c2cd984390550dbdf7d5ae07b20abbf8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6673d9f1c2cd984390550dbdf7d5ae07b20abbf8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b609c783c535493aa3fca22c7e40a120370b1ca5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b609c783c535493aa3fca22c7e40a120370b1ca5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/624902eab7abcb8731b333ec73f206d38d839cd8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/624902eab7abcb8731b333ec73f206d38d839cd8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b6c620dc43ccb4e802894e54b651cf81495e9598",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b6c620dc43ccb4e802894e54b651cf81495e9598"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data re-injection from stale subflow\n\nWhen the MPTCP PM detects that a subflow is stale, all the packet\nscheduler must re-inject all the mptcp-level unacked data. To avoid\nacquiring unneeded locks, it first try to check if any unacked data\nis present at all in the RTX queue, but such check is currently\nbroken, as it uses TCP-specific helper on an MPTCP socket.\n\nFunnily enough fuzzers and static checkers are happy, as the accessed\nmemory still belongs to the mptcp_sock struct, and even from a\nfunctional perspective the recovery completed successfully, as\nthe short-cut test always failed.\n\nA recent unrelated TCP change - commit d5fed5addb2b (\"tcp: reorganize\ntcp_sock fast path variables\") - exposed the issue, as the tcp field\nreorganization makes the mptcp code always skip the re-inection.\n\nFix the issue dropping the bogus call: we are on a slow path, the early\noptimization proved once again to be evil."
+          }
+        ],
+        "id": "CVE-2024-26826",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T10:15:09.183",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/624902eab7abcb8731b333ec73f206d38d839cd8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6673d9f1c2cd984390550dbdf7d5ae07b20abbf8"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6f95120f898b40d13fd441225ef511307853c9c2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b609c783c535493aa3fca22c7e40a120370b1ca5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b6c620dc43ccb4e802894e54b651cf81495e9598"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -177,52 +177,175 @@
     },
     "nvd.nist.gov": {
       "cve": {
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D3914458-19C3-4C3A-BDE5-1709DBA9D80E",
+                    "versionEndExcluding": "4.4.274",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "4DCA3ED7-1EE2-4D08-97C9-09557F3C128B",
+                    "versionEndExcluding": "4.9.274",
+                    "versionStartIncluding": "4.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "D5A94E6B-B6AC-4702-BDDD-51C5530BC3BD",
+                    "versionEndExcluding": "4.14.238",
+                    "versionStartIncluding": "4.10.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "61AC89B5-56F8-45EC-A99A-3C21BEC35859",
+                    "versionEndExcluding": "4.19.196",
+                    "versionStartIncluding": "4.15.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "1ACDB254-670C-4C45-A321-19F8F0B06855",
+                    "versionEndExcluding": "5.4.127",
+                    "versionStartIncluding": "4.20.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "6AB23D75-98DB-4DF5-801A-7B67A374B39C",
+                    "versionEndExcluding": "5.10.45",
+                    "versionStartIncluding": "5.5.0",
+                    "vulnerable": true
+                  },
+                  {
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "0C3B9465-86FD-4C31-8323-6D4375B62AA4",
+                    "versionEndExcluding": "5.12.12",
+                    "versionStartIncluding": "5.11.0",
+                    "vulnerable": true
+                  }
+                ],
+                "negate": false,
+                "operator": "OR"
+              }
+            ]
+          }
+        ],
         "descriptions": [
           {
             "lang": "en",
             "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nHID: usbhid: fix info leak in hid_submit_ctrl\n\nIn hid_submit_ctrl(), the way of calculating the report length doesn't\ntake into account that report->size can be zero. When running the\nsyzkaller reproducer, a report of size 0 causes hid_submit_ctrl) to\ncalculate transfer_buffer_length as 16384. When this urb is passed to\nthe usb core layer, KMSAN reports an info leak of 16384 bytes.\n\nTo fix this, first modify hid_report_len() to account for the zero\nreport size case by using DIV_ROUND_UP for the division. Then, call it\nfrom hid_submit_ctrl()."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: HID: usbhid: corrige fuga de informaci\u00f3n en hid_submit_ctrl En hid_submit_ctrl(), la forma de calcular la longitud del informe no tiene en cuenta que el tama\u00f1o del informe-&gt;puede ser cero. Cuando se ejecuta el reproductor syzkaller, un informe de tama\u00f1o 0 hace que hid_submit_ctrl) calcule transfer_buffer_length como 16384. Cuando esta urb se pasa a la capa central USB, KMSAN informa una fuga de informaci\u00f3n de 16384 bytes. Para solucionar este problema, primero modifique hid_report_len() para tener en cuenta el caso de tama\u00f1o de informe cero utilizando DIV_ROUND_UP para la divisi\u00f3n. Luego, ll\u00e1malo desde hid_submit_ctrl()."
           }
         ],
         "id": "CVE-2021-46906",
-        "lastModified": "2024-02-26T22:10:40.463",
-        "metrics": {},
+        "lastModified": "2024-04-17T17:28:34.403",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "NONE",
+                "baseScore": 5.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 1.8,
+              "impactScore": 3.6,
+              "source": "nvd@nist.gov",
+              "type": "Primary"
+            }
+          ]
+        },
         "published": "2024-02-26T18:15:07.160",
         "references": [
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/0e280502be1b003c3483ae03fc60dea554fcfa82"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/21883bff0fd854e07429a773ff18f1e9658f50e8"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/41b1e71a2c57366b08dcca1a28b0d45ca69429ce"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/6be388f4a35d2ce5ef7dbf635a8964a5da7f799f"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/7f5a4b24cdbd7372770a02f23e347d7d9a9ac8f1"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/8c064eece9a51856f3f275104520c7e3017fc5c0"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/b1e3596416d74ce95cc0b7b38472329a3818f8a9"
           },
           {
             "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "tags": [
+              "Patch"
+            ],
             "url": "https://git.kernel.org/stable/c/c5d3c142f2d57d40c55e65d5622d319125a45366"
           }
         ],
         "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
-        "vulnStatus": "Awaiting Analysis"
+        "vulnStatus": "Analyzed",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-668"
+              }
+            ],
+            "source": "nvd@nist.gov",
+            "type": "Primary"
+          }
+        ]
       }
     }
   }

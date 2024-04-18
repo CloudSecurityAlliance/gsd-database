@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26894"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()\n\nAfter unregistering the CPU idle device, the memory associated with\nit is not freed, leading to a memory leak:\n\nunreferenced object 0xffff896282f6c000 (size 1024):\n  comm \"swapper/0\", pid 1, jiffies 4294893170\n  hex dump (first 32 bytes):\n    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 8836a742):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0\n    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0\n    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470\n    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0\n    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50\n\nFix this by freeing the CPU idle device after unregistering it.",
       "id": "GSD-2024-26894",
       "modified": "2024-02-20T06:02:29.139260Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,106 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26894",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3d339dcbb56d",
+                          "version_value": "d351bcadab6c"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "3.7"
+                              },
+                              {
+                                "lessThan": "3.7",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.311",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.214",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.153",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +127,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()\n\nAfter unregistering the CPU idle device, the memory associated with\nit is not freed, leading to a memory leak:\n\nunreferenced object 0xffff896282f6c000 (size 1024):\n  comm \"swapper/0\", pid 1, jiffies 4294893170\n  hex dump (first 32 bytes):\n    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 8836a742):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0\n    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0\n    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470\n    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0\n    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50\n\nFix this by freeing the CPU idle device after unregistering it."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/d351bcadab6caa6d8ce7159ff4b77e2da35c09fa",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/d351bcadab6caa6d8ce7159ff4b77e2da35c09fa"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/ea96bf3f80625cddba1391a87613356b1b45716d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/ea96bf3f80625cddba1391a87613356b1b45716d"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c2a30c81bf3cb9033fa9f5305baf7c377075e2e5",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c2a30c81bf3cb9033fa9f5305baf7c377075e2e5"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/1cbaf4c793b0808532f4e7b40bc4be7cec2c78f2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/1cbaf4c793b0808532f4e7b40bc4be7cec2c78f2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/fad9bcd4d754cc689c19dc04d2c44b82c1a5d6c8",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/fad9bcd4d754cc689c19dc04d2c44b82c1a5d6c8"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3d48e5be107429ff5d824e7f2a00d1b610d36fbc",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3d48e5be107429ff5d824e7f2a00d1b610d36fbc"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8d14a4d0afb49a5b8535d414c782bb334860e73e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8d14a4d0afb49a5b8535d414c782bb334860e73e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cd5c2d0b09d5b6d3f0a7bbabe6761a4997e9dee9",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cd5c2d0b09d5b6d3f0a7bbabe6761a4997e9dee9"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e18afcb7b2a12b635ac10081f943fcf84ddacc51",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e18afcb7b2a12b635ac10081f943fcf84ddacc51"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()\n\nAfter unregistering the CPU idle device, the memory associated with\nit is not freed, leading to a memory leak:\n\nunreferenced object 0xffff896282f6c000 (size 1024):\n  comm \"swapper/0\", pid 1, jiffies 4294893170\n  hex dump (first 32 bytes):\n    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 8836a742):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0\n    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0\n    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470\n    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0\n    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50\n\nFix this by freeing the CPU idle device after unregistering it."
+          }
+        ],
+        "id": "CVE-2024-26894",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:10.630",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/1cbaf4c793b0808532f4e7b40bc4be7cec2c78f2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3d48e5be107429ff5d824e7f2a00d1b610d36fbc"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8d14a4d0afb49a5b8535d414c782bb334860e73e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c2a30c81bf3cb9033fa9f5305baf7c377075e2e5"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cd5c2d0b09d5b6d3f0a7bbabe6761a4997e9dee9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/d351bcadab6caa6d8ce7159ff4b77e2da35c09fa"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e18afcb7b2a12b635ac10081f943fcf84ddacc51"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/ea96bf3f80625cddba1391a87613356b1b45716d"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/fad9bcd4d754cc689c19dc04d2c44b82c1a5d6c8"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

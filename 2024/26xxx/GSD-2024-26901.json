@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26901"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndo_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak\n\nsyzbot identified a kernel information leak vulnerability in\ndo_sys_name_to_handle() and issued the following report [1].\n\n[1]\n\"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]\nBUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n instrument_copy_to_user include/linux/instrumented.h:114 [inline]\n _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n copy_to_user include/linux/uaccess.h:191 [inline]\n do_sys_name_to_handle fs/fhandle.c:73 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nUninit was created at:\n slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\n slab_alloc_node mm/slub.c:3478 [inline]\n __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517\n __do_kmalloc_node mm/slab_common.c:1006 [inline]\n __kmalloc+0x121/0x3c0 mm/slab_common.c:1020\n kmalloc include/linux/slab.h:604 [inline]\n do_sys_name_to_handle fs/fhandle.c:39 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nBytes 18-19 of 20 are uninitialized\nMemory access of size 20 starts at ffff888128a46380\nData copied to user address 0000000020000240\"\n\nPer Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to\nsolve the problem.",
       "id": "GSD-2024-26901",
       "modified": "2024-02-20T06:02:29.101830Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,106 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26901",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "990d6c2d7aee",
+                          "version_value": "4bac28f441e3"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "2.6.39"
+                              },
+                              {
+                                "lessThan": "2.6.39",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "4.19.*",
+                                "status": "unaffected",
+                                "version": "4.19.311",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.273",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.214",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.153",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.83",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.23",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.11",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.2",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc1",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +127,127 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndo_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak\n\nsyzbot identified a kernel information leak vulnerability in\ndo_sys_name_to_handle() and issued the following report [1].\n\n[1]\n\"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]\nBUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n instrument_copy_to_user include/linux/instrumented.h:114 [inline]\n _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n copy_to_user include/linux/uaccess.h:191 [inline]\n do_sys_name_to_handle fs/fhandle.c:73 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nUninit was created at:\n slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\n slab_alloc_node mm/slub.c:3478 [inline]\n __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517\n __do_kmalloc_node mm/slab_common.c:1006 [inline]\n __kmalloc+0x121/0x3c0 mm/slab_common.c:1020\n kmalloc include/linux/slab.h:604 [inline]\n do_sys_name_to_handle fs/fhandle.c:39 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nBytes 18-19 of 20 are uninitialized\nMemory access of size 20 starts at ffff888128a46380\nData copied to user address 0000000020000240\"\n\nPer Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to\nsolve the problem."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/4bac28f441e3cc9d3f1a84c8d023228a68d8a7c1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/4bac28f441e3cc9d3f1a84c8d023228a68d8a7c1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/772a7def9868091da3bcb0d6c6ff9f0c03d7fa8b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/772a7def9868091da3bcb0d6c6ff9f0c03d7fa8b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cde76b3af247f615447bcfecf610bb76c3529126",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cde76b3af247f615447bcfecf610bb76c3529126"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/423b6bdf19bbc5e1f7e7461045099917378f7e71",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/423b6bdf19bbc5e1f7e7461045099917378f7e71"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e6450d5e46a737a008b4885aa223486113bf0ad6",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e6450d5e46a737a008b4885aa223486113bf0ad6"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/c1362eae861db28b1608b9dc23e49634fe87b63b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/c1362eae861db28b1608b9dc23e49634fe87b63b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/cba138f1ef37ec6f961baeab62f312dedc7cf730",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/cba138f1ef37ec6f961baeab62f312dedc7cf730"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bf9ec1b24ab4e94345aa1c60811dd329f069c38b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bf9ec1b24ab4e94345aa1c60811dd329f069c38b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/3948abaa4e2be938ccdfc289385a27342fb13d43",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/3948abaa4e2be938ccdfc289385a27342fb13d43"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndo_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak\n\nsyzbot identified a kernel information leak vulnerability in\ndo_sys_name_to_handle() and issued the following report [1].\n\n[1]\n\"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]\nBUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n instrument_copy_to_user include/linux/instrumented.h:114 [inline]\n _copy_to_user+0xbc/0x100 lib/usercopy.c:40\n copy_to_user include/linux/uaccess.h:191 [inline]\n do_sys_name_to_handle fs/fhandle.c:73 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nUninit was created at:\n slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\n slab_alloc_node mm/slub.c:3478 [inline]\n __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517\n __do_kmalloc_node mm/slab_common.c:1006 [inline]\n __kmalloc+0x121/0x3c0 mm/slab_common.c:1020\n kmalloc include/linux/slab.h:604 [inline]\n do_sys_name_to_handle fs/fhandle.c:39 [inline]\n __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]\n __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94\n __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94\n ...\n\nBytes 18-19 of 20 are uninitialized\nMemory access of size 20 starts at ffff888128a46380\nData copied to user address 0000000020000240\"\n\nPer Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to\nsolve the problem."
+          }
+        ],
+        "id": "CVE-2024-26901",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T11:15:10.960",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3948abaa4e2be938ccdfc289385a27342fb13d43"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/423b6bdf19bbc5e1f7e7461045099917378f7e71"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/4bac28f441e3cc9d3f1a84c8d023228a68d8a7c1"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/772a7def9868091da3bcb0d6c6ff9f0c03d7fa8b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bf9ec1b24ab4e94345aa1c60811dd329f069c38b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/c1362eae861db28b1608b9dc23e49634fe87b63b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cba138f1ef37ec6f961baeab62f312dedc7cf730"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/cde76b3af247f615447bcfecf610bb76c3529126"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e6450d5e46a737a008b4885aa223486113bf0ad6"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

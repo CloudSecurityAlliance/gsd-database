@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26833"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix memory leak in dm_sw_fini()\n\nAfter destroying dmub_srv, the memory associated with it is\nnot freed, causing a memory leak:\n\nunreferenced object 0xffff896302b45800 (size 1024):\n  comm \"(udev-worker)\", pid 222, jiffies 4294894636\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 6265fd77):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffffc0ea4a94>] dm_dmub_sw_init+0xb4/0x450 [amdgpu]\n    [<ffffffffc0ea4e55>] dm_sw_init+0x15/0x2b0 [amdgpu]\n    [<ffffffffc0ba8557>] amdgpu_device_init+0x1417/0x24e0 [amdgpu]\n    [<ffffffffc0bab285>] amdgpu_driver_load_kms+0x15/0x190 [amdgpu]\n    [<ffffffffc0ba09c7>] amdgpu_pci_probe+0x187/0x4e0 [amdgpu]\n    [<ffffffff9968fd1e>] local_pci_probe+0x3e/0x90\n    [<ffffffff996918a3>] pci_device_probe+0xc3/0x230\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n\nFix this by freeing dmub_srv after destroying it.",
       "id": "GSD-2024-26833",
       "modified": "2024-02-20T06:02:29.299064Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,88 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26833",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "743b9786b14a",
+                          "version_value": "b49b022f7dfc"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.6"
+                              },
+                              {
+                                "lessThan": "5.6",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.211",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.150",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.80",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.19",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +109,100 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix memory leak in dm_sw_fini()\n\nAfter destroying dmub_srv, the memory associated with it is\nnot freed, causing a memory leak:\n\nunreferenced object 0xffff896302b45800 (size 1024):\n  comm \"(udev-worker)\", pid 222, jiffies 4294894636\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 6265fd77):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffffc0ea4a94>] dm_dmub_sw_init+0xb4/0x450 [amdgpu]\n    [<ffffffffc0ea4e55>] dm_sw_init+0x15/0x2b0 [amdgpu]\n    [<ffffffffc0ba8557>] amdgpu_device_init+0x1417/0x24e0 [amdgpu]\n    [<ffffffffc0bab285>] amdgpu_driver_load_kms+0x15/0x190 [amdgpu]\n    [<ffffffffc0ba09c7>] amdgpu_pci_probe+0x187/0x4e0 [amdgpu]\n    [<ffffffff9968fd1e>] local_pci_probe+0x3e/0x90\n    [<ffffffff996918a3>] pci_device_probe+0xc3/0x230\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n\nFix this by freeing dmub_srv after destroying it."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b49b022f7dfce85eb77d0d987008fde5c01d7857",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b49b022f7dfce85eb77d0d987008fde5c01d7857"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/33f649f1b1cea39ed360e6c12bba4fac83118e6e",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/33f649f1b1cea39ed360e6c12bba4fac83118e6e"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/58168005337eabef345a872be3f87d0215ff3b30",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/58168005337eabef345a872be3f87d0215ff3b30"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/10c6b90e975358c17856a578419dc449887899c2",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/10c6b90e975358c17856a578419dc449887899c2"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/541e79265ea7e339a7c4a462feafe9f8f996e04b",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/541e79265ea7e339a7c4a462feafe9f8f996e04b"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/bae67893578d608e35691dcdfa90c4957debf1d3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/bae67893578d608e35691dcdfa90c4957debf1d3"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix memory leak in dm_sw_fini()\n\nAfter destroying dmub_srv, the memory associated with it is\nnot freed, causing a memory leak:\n\nunreferenced object 0xffff896302b45800 (size 1024):\n  comm \"(udev-worker)\", pid 222, jiffies 4294894636\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 6265fd77):\n    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340\n    [<ffffffffc0ea4a94>] dm_dmub_sw_init+0xb4/0x450 [amdgpu]\n    [<ffffffffc0ea4e55>] dm_sw_init+0x15/0x2b0 [amdgpu]\n    [<ffffffffc0ba8557>] amdgpu_device_init+0x1417/0x24e0 [amdgpu]\n    [<ffffffffc0bab285>] amdgpu_driver_load_kms+0x15/0x190 [amdgpu]\n    [<ffffffffc0ba09c7>] amdgpu_pci_probe+0x187/0x4e0 [amdgpu]\n    [<ffffffff9968fd1e>] local_pci_probe+0x3e/0x90\n    [<ffffffff996918a3>] pci_device_probe+0xc3/0x230\n    [<ffffffff99805872>] really_probe+0xe2/0x480\n    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160\n    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90\n    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0\n    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0\n    [<ffffffff99804822>] bus_add_driver+0x112/0x210\n    [<ffffffff99807245>] driver_register+0x55/0x100\n    [<ffffffff990012d1>] do_one_initcall+0x41/0x300\n\nFix this by freeing dmub_srv after destroying it."
+          }
+        ],
+        "id": "CVE-2024-26833",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T10:15:09.560",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/10c6b90e975358c17856a578419dc449887899c2"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/33f649f1b1cea39ed360e6c12bba4fac83118e6e"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/541e79265ea7e339a7c4a462feafe9f8f996e04b"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/58168005337eabef345a872be3f87d0215ff3b30"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b49b022f7dfce85eb77d0d987008fde5c01d7857"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/bae67893578d608e35691dcdfa90c4957debf1d3"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26832"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: zswap: fix missing folio cleanup in writeback race path\n\nIn zswap_writeback_entry(), after we get a folio from\n__read_swap_cache_async(), we grab the tree lock again to check that the\nswap entry was not invalidated and recycled.  If it was, we delete the\nfolio we just added to the swap cache and exit.\n\nHowever, __read_swap_cache_async() returns the folio locked when it is\nnewly allocated, which is always true for this path, and the folio is\nref'd.  Make sure to unlock and put the folio before returning.\n\nThis was discovered by code inspection, probably because this path handles\na race condition that should not happen often, and the bug would not crash\nthe system, it will only strand the folio indefinitely.",
       "id": "GSD-2024-26832",
       "modified": "2024-02-20T06:02:29.085471Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,81 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26832",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "2cab13f500a6",
+                          "version_value": "14f1992430ef"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "04fc7816089c",
+                          "version_value": "6156277d1b26"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.4"
+                              },
+                              {
+                                "lessThan": "6.4",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.80",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.19",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.7.*",
+                                "status": "unaffected",
+                                "version": "6.7.7",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.8",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +102,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: zswap: fix missing folio cleanup in writeback race path\n\nIn zswap_writeback_entry(), after we get a folio from\n__read_swap_cache_async(), we grab the tree lock again to check that the\nswap entry was not invalidated and recycled.  If it was, we delete the\nfolio we just added to the swap cache and exit.\n\nHowever, __read_swap_cache_async() returns the folio locked when it is\nnewly allocated, which is always true for this path, and the folio is\nref'd.  Make sure to unlock and put the folio before returning.\n\nThis was discovered by code inspection, probably because this path handles\na race condition that should not happen often, and the bug would not crash\nthe system, it will only strand the folio indefinitely."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/14f1992430ef9e647b02aa8ca12c5bcb9a1dffea",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/14f1992430ef9e647b02aa8ca12c5bcb9a1dffea"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/6156277d1b26cb3fdb6fcbf0686ab78268571644",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/6156277d1b26cb3fdb6fcbf0686ab78268571644"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e2891c763aa2cff74dd6b5e978411ccf0cf94abe",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e2891c763aa2cff74dd6b5e978411ccf0cf94abe"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e3b63e966cac0bf78aaa1efede1827a252815a1d",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e3b63e966cac0bf78aaa1efede1827a252815a1d"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: zswap: fix missing folio cleanup in writeback race path\n\nIn zswap_writeback_entry(), after we get a folio from\n__read_swap_cache_async(), we grab the tree lock again to check that the\nswap entry was not invalidated and recycled.  If it was, we delete the\nfolio we just added to the swap cache and exit.\n\nHowever, __read_swap_cache_async() returns the folio locked when it is\nnewly allocated, which is always true for this path, and the folio is\nref'd.  Make sure to unlock and put the folio before returning.\n\nThis was discovered by code inspection, probably because this path handles\na race condition that should not happen often, and the bug would not crash\nthe system, it will only strand the folio indefinitely."
+          }
+        ],
+        "id": "CVE-2024-26832",
+        "lastModified": "2024-04-17T12:48:07.510",
+        "metrics": {},
+        "published": "2024-04-17T10:15:09.507",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/14f1992430ef9e647b02aa8ca12c5bcb9a1dffea"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/6156277d1b26cb3fdb6fcbf0686ab78268571644"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e2891c763aa2cff74dd6b5e978411ccf0cf94abe"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e3b63e966cac0bf78aaa1efede1827a252815a1d"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
