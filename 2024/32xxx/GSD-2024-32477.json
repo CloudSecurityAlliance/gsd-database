@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-32477"
       ],
+      "details": "Deno is a JavaScript, TypeScript, and WebAssembly runtime with secure defaults. By using ANSI escape sequences and a race between `libc::tcflush(0, libc::TCIFLUSH)` and reading standard input, it's possible to manipulate the permission prompt and force it to allow an unsafe action regardless of the user input. Some ANSI escape sequences act as a info request to the master terminal emulator and the terminal emulator sends back the reply in the PTY channel. standard streams also use this channel to send and get data. For example the `\\033[6n` sequence requests the current cursor position. These sequences allow us to append data to the standard input of Deno. This vulnerability allows an attacker to bypass Deno permission policy.  This vulnerability is fixed in 1.42.2.\n",
       "id": "GSD-2024-32477",
       "modified": "2024-04-13T05:02:29.081733Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-32477",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "deno",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.42.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "denoland"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,121 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Deno is a JavaScript, TypeScript, and WebAssembly runtime with secure defaults. By using ANSI escape sequences and a race between `libc::tcflush(0, libc::TCIFLUSH)` and reading standard input, it's possible to manipulate the permission prompt and force it to allow an unsafe action regardless of the user input. Some ANSI escape sequences act as a info request to the master terminal emulator and the terminal emulator sends back the reply in the PTY channel. standard streams also use this channel to send and get data. For example the `\\033[6n` sequence requests the current cursor position. These sequences allow us to append data to the standard input of Deno. This vulnerability allows an attacker to bypass Deno permission policy.  This vulnerability is fixed in 1.42.2.\n"
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "NONE",
+            "baseScore": 7.7,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-78",
+                "lang": "eng",
+                "value": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+              }
+            ]
+          },
+          {
+            "description": [
+              {
+                "cweId": "CWE-362",
+                "lang": "eng",
+                "value": "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/denoland/deno/security/advisories/GHSA-95cj-3hr2-7j5j",
+            "refsource": "MISC",
+            "url": "https://github.com/denoland/deno/security/advisories/GHSA-95cj-3hr2-7j5j"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-95cj-3hr2-7j5j",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Deno is a JavaScript, TypeScript, and WebAssembly runtime with secure defaults. By using ANSI escape sequences and a race between `libc::tcflush(0, libc::TCIFLUSH)` and reading standard input, it's possible to manipulate the permission prompt and force it to allow an unsafe action regardless of the user input. Some ANSI escape sequences act as a info request to the master terminal emulator and the terminal emulator sends back the reply in the PTY channel. standard streams also use this channel to send and get data. For example the `\\033[6n` sequence requests the current cursor position. These sequences allow us to append data to the standard input of Deno. This vulnerability allows an attacker to bypass Deno permission policy.  This vulnerability is fixed in 1.42.2.\n"
+          }
+        ],
+        "id": "CVE-2024-32477",
+        "lastModified": "2024-04-18T20:15:17.927",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "NONE",
+                "baseScore": 7.7,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.5,
+              "impactScore": 5.2,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-18T20:15:17.927",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/denoland/deno/security/advisories/GHSA-95cj-3hr2-7j5j"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-362"
+              },
+              {
+                "lang": "en",
+                "value": "CWE-78"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }

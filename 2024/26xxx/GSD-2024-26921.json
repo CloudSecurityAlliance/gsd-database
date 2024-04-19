@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26921"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\ninet: inet_defrag: prevent sk release while still in use\n\nip_local_out() and other functions can pass skb->sk as function argument.\n\nIf the skb is a fragment and reassembly happens before such function call\nreturns, the sk must not be released.\n\nThis affects skb fragments reassembled via netfilter or similar\nmodules, e.g. openvswitch or ct_act.c, when run as part of tx pipeline.\n\nEric Dumazet made an initial analysis of this bug.  Quoting Eric:\n  Calling ip_defrag() in output path is also implying skb_orphan(),\n  which is buggy because output path relies on sk not disappearing.\n\n  A relevant old patch about the issue was :\n  8282f27449bf (\"inet: frag: Always orphan skbs inside ip_defrag()\")\n\n  [..]\n\n  net/ipv4/ip_output.c depends on skb->sk being set, and probably to an\n  inet socket, not an arbitrary one.\n\n  If we orphan the packet in ipvlan, then downstream things like FQ\n  packet scheduler will not work properly.\n\n  We need to change ip_defrag() to only use skb_orphan() when really\n  needed, ie whenever frag_list is going to be used.\n\nEric suggested to stash sk in fragment queue and made an initial patch.\nHowever there is a problem with this:\n\nIf skb is refragmented again right after, ip_do_fragment() will copy\nhead->sk to the new fragments, and sets up destructor to sock_wfree.\nIOW, we have no choice but to fix up sk_wmem accouting to reflect the\nfully reassembled skb, else wmem will underflow.\n\nThis change moves the orphan down into the core, to last possible moment.\nAs ip_defrag_offset is aliased with sk_buff->sk member, we must move the\noffset into the FRAG_CB, else skb->sk gets clobbered.\n\nThis allows to delay the orphaning long enough to learn if the skb has\nto be queued or if the skb is completing the reasm queue.\n\nIn the former case, things work as before, skb is orphaned.  This is\nsafe because skb gets queued/stolen and won't continue past reasm engine.\n\nIn the latter case, we will steal the skb->sk reference, reattach it to\nthe head skb, and fix up wmem accouting when inet_frag inflates truesize.",
       "id": "GSD-2024-26921",
       "modified": "2024-02-20T06:02:29.215889Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26921",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "7026b1ddb6b8",
+                          "version_value": "7d0567842b78"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "4.1"
+                              },
+                              {
+                                "lessThan": "4.1",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.85",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.26",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc2",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,86 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ninet: inet_defrag: prevent sk release while still in use\n\nip_local_out() and other functions can pass skb->sk as function argument.\n\nIf the skb is a fragment and reassembly happens before such function call\nreturns, the sk must not be released.\n\nThis affects skb fragments reassembled via netfilter or similar\nmodules, e.g. openvswitch or ct_act.c, when run as part of tx pipeline.\n\nEric Dumazet made an initial analysis of this bug.  Quoting Eric:\n  Calling ip_defrag() in output path is also implying skb_orphan(),\n  which is buggy because output path relies on sk not disappearing.\n\n  A relevant old patch about the issue was :\n  8282f27449bf (\"inet: frag: Always orphan skbs inside ip_defrag()\")\n\n  [..]\n\n  net/ipv4/ip_output.c depends on skb->sk being set, and probably to an\n  inet socket, not an arbitrary one.\n\n  If we orphan the packet in ipvlan, then downstream things like FQ\n  packet scheduler will not work properly.\n\n  We need to change ip_defrag() to only use skb_orphan() when really\n  needed, ie whenever frag_list is going to be used.\n\nEric suggested to stash sk in fragment queue and made an initial patch.\nHowever there is a problem with this:\n\nIf skb is refragmented again right after, ip_do_fragment() will copy\nhead->sk to the new fragments, and sets up destructor to sock_wfree.\nIOW, we have no choice but to fix up sk_wmem accouting to reflect the\nfully reassembled skb, else wmem will underflow.\n\nThis change moves the orphan down into the core, to last possible moment.\nAs ip_defrag_offset is aliased with sk_buff->sk member, we must move the\noffset into the FRAG_CB, else skb->sk gets clobbered.\n\nThis allows to delay the orphaning long enough to learn if the skb has\nto be queued or if the skb is completing the reasm queue.\n\nIn the former case, things work as before, skb is orphaned.  This is\nsafe because skb gets queued/stolen and won't continue past reasm engine.\n\nIn the latter case, we will steal the skb->sk reference, reattach it to\nthe head skb, and fix up wmem accouting when inet_frag inflates truesize."
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/7d0567842b78390dd9b60f00f1d8f838d540e325",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/7d0567842b78390dd9b60f00f1d8f838d540e325"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/f4877225313d474659ee53150ccc3d553a978727",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/f4877225313d474659ee53150ccc3d553a978727"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/e09cbe017311508c21e0739e97198a8388b98981",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/e09cbe017311508c21e0739e97198a8388b98981"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/18685451fc4e546fc0e718580d32df3c0e5c8272",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/18685451fc4e546fc0e718580d32df3c0e5c8272"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\ninet: inet_defrag: prevent sk release while still in use\n\nip_local_out() and other functions can pass skb->sk as function argument.\n\nIf the skb is a fragment and reassembly happens before such function call\nreturns, the sk must not be released.\n\nThis affects skb fragments reassembled via netfilter or similar\nmodules, e.g. openvswitch or ct_act.c, when run as part of tx pipeline.\n\nEric Dumazet made an initial analysis of this bug.  Quoting Eric:\n  Calling ip_defrag() in output path is also implying skb_orphan(),\n  which is buggy because output path relies on sk not disappearing.\n\n  A relevant old patch about the issue was :\n  8282f27449bf (\"inet: frag: Always orphan skbs inside ip_defrag()\")\n\n  [..]\n\n  net/ipv4/ip_output.c depends on skb->sk being set, and probably to an\n  inet socket, not an arbitrary one.\n\n  If we orphan the packet in ipvlan, then downstream things like FQ\n  packet scheduler will not work properly.\n\n  We need to change ip_defrag() to only use skb_orphan() when really\n  needed, ie whenever frag_list is going to be used.\n\nEric suggested to stash sk in fragment queue and made an initial patch.\nHowever there is a problem with this:\n\nIf skb is refragmented again right after, ip_do_fragment() will copy\nhead->sk to the new fragments, and sets up destructor to sock_wfree.\nIOW, we have no choice but to fix up sk_wmem accouting to reflect the\nfully reassembled skb, else wmem will underflow.\n\nThis change moves the orphan down into the core, to last possible moment.\nAs ip_defrag_offset is aliased with sk_buff->sk member, we must move the\noffset into the FRAG_CB, else skb->sk gets clobbered.\n\nThis allows to delay the orphaning long enough to learn if the skb has\nto be queued or if the skb is completing the reasm queue.\n\nIn the former case, things work as before, skb is orphaned.  This is\nsafe because skb gets queued/stolen and won't continue past reasm engine.\n\nIn the latter case, we will steal the skb->sk reference, reattach it to\nthe head skb, and fix up wmem accouting when inet_frag inflates truesize."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: inet: inet_defrag: evita la liberaci\u00f3n de sk mientras a\u00fan est\u00e1 en uso ip_local_out() y otras funciones pueden pasar skb-&gt;sk como argumento de funci\u00f3n. Si el skb es un fragmento y el reensamblaje ocurre antes de que regrese dicha llamada a la funci\u00f3n, el sk no debe liberarse. Esto afecta a los fragmentos de skb reensamblados mediante netfilter o m\u00f3dulos similares, por ejemplo, openvswitch o ct_act.c, cuando se ejecutan como parte de la canalizaci\u00f3n tx. Eric Dumazet hizo un an\u00e1lisis inicial de este error. Citando a Eric: Llamar a ip_defrag() en la ruta de salida tambi\u00e9n implica skb_orphan(), lo cual tiene errores porque la ruta de salida depende de que sk no desaparezca. Un parche antiguo relevante sobre el problema era: 8282f27449bf (\"inet: frag: Siempre skbs hu\u00e9rfanos dentro de ip_defrag()\") [..] net/ipv4/ip_output.c depende de que skb-&gt;sk est\u00e9 configurado, y probablemente en un inet socket, no uno arbitrario. Si dejamos el paquete hu\u00e9rfano en ipvlan, las cosas posteriores como el programador de paquetes FQ no funcionar\u00e1n correctamente. Necesitamos cambiar ip_defrag() para usar skb_orphan() solo cuando sea realmente necesario, es decir, siempre que se vaya a usar frag_list. Eric sugiri\u00f3 guardar sk en la cola de fragmentos e hizo un parche inicial. Sin embargo, hay un problema con esto: si skb se vuelve a fragmentar inmediatamente despu\u00e9s, ip_do_fragment() copiar\u00e1 head-&gt;sk a los nuevos fragmentos y configurar\u00e1 el destructor en sock_wfree. OIA, no tenemos m\u00e1s remedio que arreglar la contabilidad de sk_wmem para reflejar el skb completamente reensamblado; de lo contrario, wmem se desbordar\u00e1. Este cambio mueve al hu\u00e9rfano hacia el n\u00facleo, hasta el \u00faltimo momento posible. Como ip_defrag_offset tiene un alias con el miembro sk_buff-&gt;sk, debemos mover el desplazamiento a FRAG_CB; de lo contrario, skb-&gt;sk ser\u00e1 golpeado. Esto permite retrasar el hu\u00e9rfano el tiempo suficiente para saber si el skb debe estar en cola o si el skb est\u00e1 completando la cola de reasm. En el primer caso, las cosas funcionan como antes, skb queda hu\u00e9rfano. Esto es seguro porque skb se pone en cola/se roba y no contin\u00faa m\u00e1s all\u00e1 del motor de reasm. En el \u00faltimo caso, robaremos la referencia skb-&gt;sk, la volveremos a adjuntar al skb principal y arreglaremos la contabilidad de wmem cuando inet_frag infle el tama\u00f1o verdadero."
+          }
+        ],
+        "id": "CVE-2024-26921",
+        "lastModified": "2024-04-18T13:04:28.900",
+        "metrics": {},
+        "published": "2024-04-18T10:15:07.740",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/18685451fc4e546fc0e718580d32df3c0e5c8272"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/7d0567842b78390dd9b60f00f1d8f838d540e325"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e09cbe017311508c21e0739e97198a8388b98981"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/f4877225313d474659ee53150ccc3d553a978727"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }
