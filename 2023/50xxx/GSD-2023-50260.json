@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-50260"
       ],
+      "details": "Wazuh is a free and open source platform used for threat prevention, detection, and response. A wrong validation in the `host_deny` script allows to write any string in the `hosts.deny` file, which can end in an arbitrary command execution on the target system. This vulnerability is part of the active response feature, which can automatically triggers actions in response to alerts. By default, active responses are limited to a set of pre defined executables. This is enforced by only allowing executables stored under `/var/ossec/active-response/bin` to be run as an active response. However, the `/var/ossec/active-response/bin/host_deny` can be exploited. `host_deny` is used to add IP address to the `/etc/hosts.deny` file to block incoming connections on a service level by using TCP wrappers. Attacker can inject arbitrary command into the `/etc/hosts.deny` file and execute arbitrary command by using the spawn directive. The active response can be triggered by writing events either to the local `execd` queue on server or to the `ar` queue which forwards the events to agents. So, it can leads to LPE on server as root and RCE on agent as root. This vulnerability is fixed in 4.7.2.",
       "id": "GSD-2023-50260",
       "modified": "2023-12-13T01:20:31.390017Z",
       "schema_version": "1.4.0"
@@ -22,9 +23,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2023-50260",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "wazuh",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": ">= 4.2.0, < 4.7.2"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "wazuh"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -33,7 +58,108 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Wazuh is a free and open source platform used for threat prevention, detection, and response. A wrong validation in the `host_deny` script allows to write any string in the `hosts.deny` file, which can end in an arbitrary command execution on the target system. This vulnerability is part of the active response feature, which can automatically triggers actions in response to alerts. By default, active responses are limited to a set of pre defined executables. This is enforced by only allowing executables stored under `/var/ossec/active-response/bin` to be run as an active response. However, the `/var/ossec/active-response/bin/host_deny` can be exploited. `host_deny` is used to add IP address to the `/etc/hosts.deny` file to block incoming connections on a service level by using TCP wrappers. Attacker can inject arbitrary command into the `/etc/hosts.deny` file and execute arbitrary command by using the spawn directive. The active response can be triggered by writing events either to the local `execd` queue on server or to the `ar` queue which forwards the events to agents. So, it can leads to LPE on server as root and RCE on agent as root. This vulnerability is fixed in 4.7.2."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "LOW",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-94",
+                "lang": "eng",
+                "value": "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/wazuh/wazuh/security/advisories/GHSA-mjq2-xf8g-68vw",
+            "refsource": "MISC",
+            "url": "https://github.com/wazuh/wazuh/security/advisories/GHSA-mjq2-xf8g-68vw"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-mjq2-xf8g-68vw",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Wazuh is a free and open source platform used for threat prevention, detection, and response. A wrong validation in the `host_deny` script allows to write any string in the `hosts.deny` file, which can end in an arbitrary command execution on the target system. This vulnerability is part of the active response feature, which can automatically triggers actions in response to alerts. By default, active responses are limited to a set of pre defined executables. This is enforced by only allowing executables stored under `/var/ossec/active-response/bin` to be run as an active response. However, the `/var/ossec/active-response/bin/host_deny` can be exploited. `host_deny` is used to add IP address to the `/etc/hosts.deny` file to block incoming connections on a service level by using TCP wrappers. Attacker can inject arbitrary command into the `/etc/hosts.deny` file and execute arbitrary command by using the spawn directive. The active response can be triggered by writing events either to the local `execd` queue on server or to the `ar` queue which forwards the events to agents. So, it can leads to LPE on server as root and RCE on agent as root. This vulnerability is fixed in 4.7.2."
+          }
+        ],
+        "id": "CVE-2023-50260",
+        "lastModified": "2024-04-19T16:19:49.043",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 8.8,
+                "baseSeverity": "HIGH",
+                "confidentialityImpact": "HIGH",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "LOW",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.8,
+              "impactScore": 5.9,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-19T15:15:50.040",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/wazuh/wazuh/security/advisories/GHSA-mjq2-xf8g-68vw"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-94"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }

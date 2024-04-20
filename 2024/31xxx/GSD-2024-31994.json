@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-31994"
       ],
+      "details": "Mealie is a self hosted recipe manager and meal planner. Prior to 1.4.0, an attacker can point the image request to an arbitrarily large file. Mealie will attempt to retrieve this file in whole. If it can be retrieved, it may be stored on the file system in whole (leading to possible disk consumption), however the more likely scenario given resource limitations is that the container will OOM during file retrieval if the target file size is greater than the allocated memory of the container. At best this can be used to force the container to infinitely restart due to OOM (if so configured in `docker-compose.yml), or at worst this can be used to force the Mealie container to crash and remain offline. In the event that the file can be retrieved, the lack of rate limiting on this endpoint also permits an attacker to generate ongoing requests to any target of their choice, potentially contributing to an external-facing DoS attack. This vulnerability is fixed in 1.4.0.",
       "id": "GSD-2024-31994",
       "modified": "2024-04-11T05:03:20.530442Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-31994",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "mealie",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 1.4.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "mealie-recipes"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,135 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Mealie is a self hosted recipe manager and meal planner. Prior to 1.4.0, an attacker can point the image request to an arbitrarily large file. Mealie will attempt to retrieve this file in whole. If it can be retrieved, it may be stored on the file system in whole (leading to possible disk consumption), however the more likely scenario given resource limitations is that the container will OOM during file retrieval if the target file size is greater than the allocated memory of the container. At best this can be used to force the container to infinitely restart due to OOM (if so configured in `docker-compose.yml), or at worst this can be used to force the Mealie container to crash and remain offline. In the event that the file can be retrieved, the lack of rate limiting on this endpoint also permits an attacker to generate ongoing requests to any target of their choice, potentially contributing to an external-facing DoS attack. This vulnerability is fixed in 1.4.0."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "LOCAL",
+            "availabilityImpact": "HIGH",
+            "baseScore": 6.5,
+            "baseSeverity": "MEDIUM",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "NONE",
+            "privilegesRequired": "LOW",
+            "scope": "CHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-400",
+                "lang": "eng",
+                "value": "CWE-400: Uncontrolled Resource Consumption"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://securitylab.github.com/advisories/GHSL-2023-225_GHSL-2023-226_Mealie/",
+            "refsource": "MISC",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-225_GHSL-2023-226_Mealie/"
+          },
+          {
+            "name": "https://github.com/mealie-recipes/mealie/pull/3368",
+            "refsource": "MISC",
+            "url": "https://github.com/mealie-recipes/mealie/pull/3368"
+          },
+          {
+            "name": "https://github.com/mealie-recipes/mealie/commit/2a3463b7466bc297aede50046da9550d919ec56f",
+            "refsource": "MISC",
+            "url": "https://github.com/mealie-recipes/mealie/commit/2a3463b7466bc297aede50046da9550d919ec56f"
+          },
+          {
+            "name": "https://github.com/mealie-recipes/mealie/blob/ee121a12f8db33ecb4db5f8582f7ea9788d019e4/mealie/services/recipe/recipe_data_service.py#L107",
+            "refsource": "MISC",
+            "url": "https://github.com/mealie-recipes/mealie/blob/ee121a12f8db33ecb4db5f8582f7ea9788d019e4/mealie/services/recipe/recipe_data_service.py#L107"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-vhq4-cpq5-3fv8",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Mealie is a self hosted recipe manager and meal planner. Prior to 1.4.0, an attacker can point the image request to an arbitrarily large file. Mealie will attempt to retrieve this file in whole. If it can be retrieved, it may be stored on the file system in whole (leading to possible disk consumption), however the more likely scenario given resource limitations is that the container will OOM during file retrieval if the target file size is greater than the allocated memory of the container. At best this can be used to force the container to infinitely restart due to OOM (if so configured in `docker-compose.yml), or at worst this can be used to force the Mealie container to crash and remain offline. In the event that the file can be retrieved, the lack of rate limiting on this endpoint also permits an attacker to generate ongoing requests to any target of their choice, potentially contributing to an external-facing DoS attack. This vulnerability is fixed in 1.4.0."
+          }
+        ],
+        "id": "CVE-2024-31994",
+        "lastModified": "2024-04-19T22:15:07.747",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "LOCAL",
+                "availabilityImpact": "HIGH",
+                "baseScore": 6.5,
+                "baseSeverity": "MEDIUM",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "NONE",
+                "privilegesRequired": "LOW",
+                "scope": "CHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 2.0,
+              "impactScore": 4.0,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-19T22:15:07.747",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/mealie-recipes/mealie/blob/ee121a12f8db33ecb4db5f8582f7ea9788d019e4/mealie/services/recipe/recipe_data_service.py#L107"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/mealie-recipes/mealie/commit/2a3463b7466bc297aede50046da9550d919ec56f"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/mealie-recipes/mealie/pull/3368"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://securitylab.github.com/advisories/GHSL-2023-225_GHSL-2023-226_Mealie/"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Received",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-400"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }

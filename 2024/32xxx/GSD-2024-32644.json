@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-32644"
       ],
+      "details": "Evmos is a scalable, high-throughput Proof-of-Stake EVM blockchain that is fully compatible and interoperable with Ethereum. Prior to 17.0.0, there is a way to mint arbitrary tokens due to the possibility to have two different states not in sync during the execution of a transaction. The exploit is based on the fact that to sync the Cosmos SDK state and the EVM one, we rely on the `stateDB.Commit()` method. When we call this method, we iterate though all the `dirtyStorage` and, **if and only if** it is different than the `originStorage`, we set the new state. Setting the new state means we update the Cosmos SDK KVStore.  If a contract storage state that is the same before and after a transaction, but is changed during the transaction and can call an external contract after the change, it can be exploited to make the transaction similar to non-atomic. The vulnerability is **critical** since this could lead to drain of funds through creative SC interactions.  The issue has been patched in versions >=V17.0.0.",
       "id": "GSD-2024-32644",
       "modified": "2024-04-17T05:01:56.816835Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,33 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "security-advisories@github.com",
         "ID": "CVE-2024-32644",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "evmos",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "=",
+                          "version_value": "< 17.0.0"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "evmos"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +54,126 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Evmos is a scalable, high-throughput Proof-of-Stake EVM blockchain that is fully compatible and interoperable with Ethereum. Prior to 17.0.0, there is a way to mint arbitrary tokens due to the possibility to have two different states not in sync during the execution of a transaction. The exploit is based on the fact that to sync the Cosmos SDK state and the EVM one, we rely on the `stateDB.Commit()` method. When we call this method, we iterate though all the `dirtyStorage` and, **if and only if** it is different than the `originStorage`, we set the new state. Setting the new state means we update the Cosmos SDK KVStore.  If a contract storage state that is the same before and after a transaction, but is changed during the transaction and can call an external contract after the change, it can be exploited to make the transaction similar to non-atomic. The vulnerability is **critical** since this could lead to drain of funds through creative SC interactions.  The issue has been patched in versions >=V17.0.0."
+          }
+        ]
+      },
+      "impact": {
+        "cvss": [
+          {
+            "attackComplexity": "LOW",
+            "attackVector": "NETWORK",
+            "availabilityImpact": "HIGH",
+            "baseScore": 9.1,
+            "baseSeverity": "CRITICAL",
+            "confidentialityImpact": "NONE",
+            "integrityImpact": "HIGH",
+            "privilegesRequired": "NONE",
+            "scope": "UNCHANGED",
+            "userInteraction": "NONE",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+            "version": "3.1"
+          }
+        ]
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "cweId": "CWE-662",
+                "lang": "eng",
+                "value": "CWE-662: Improper Synchronization"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://github.com/evmos/evmos/security/advisories/GHSA-3fp5-2xwh-fxm6",
+            "refsource": "MISC",
+            "url": "https://github.com/evmos/evmos/security/advisories/GHSA-3fp5-2xwh-fxm6"
+          },
+          {
+            "name": "https://github.com/evmos/evmos/commit/08982b5ee726b97bc50eaf58d1914829648b6a5f",
+            "refsource": "MISC",
+            "url": "https://github.com/evmos/evmos/commit/08982b5ee726b97bc50eaf58d1914829648b6a5f"
+          },
+          {
+            "name": "https://github.com/evmos/evmos/blob/b196a522ba4951890b40992e9f97aa610f8b5f9c/x/evm/statedb/statedb.go#L460-L465",
+            "refsource": "MISC",
+            "url": "https://github.com/evmos/evmos/blob/b196a522ba4951890b40992e9f97aa610f8b5f9c/x/evm/statedb/statedb.go#L460-L465"
+          }
+        ]
+      },
+      "source": {
+        "advisory": "GHSA-3fp5-2xwh-fxm6",
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Evmos is a scalable, high-throughput Proof-of-Stake EVM blockchain that is fully compatible and interoperable with Ethereum. Prior to 17.0.0, there is a way to mint arbitrary tokens due to the possibility to have two different states not in sync during the execution of a transaction. The exploit is based on the fact that to sync the Cosmos SDK state and the EVM one, we rely on the `stateDB.Commit()` method. When we call this method, we iterate though all the `dirtyStorage` and, **if and only if** it is different than the `originStorage`, we set the new state. Setting the new state means we update the Cosmos SDK KVStore.  If a contract storage state that is the same before and after a transaction, but is changed during the transaction and can call an external contract after the change, it can be exploited to make the transaction similar to non-atomic. The vulnerability is **critical** since this could lead to drain of funds through creative SC interactions.  The issue has been patched in versions >=V17.0.0."
+          }
+        ],
+        "id": "CVE-2024-32644",
+        "lastModified": "2024-04-19T16:19:49.043",
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "cvssData": {
+                "attackComplexity": "LOW",
+                "attackVector": "NETWORK",
+                "availabilityImpact": "HIGH",
+                "baseScore": 9.1,
+                "baseSeverity": "CRITICAL",
+                "confidentialityImpact": "NONE",
+                "integrityImpact": "HIGH",
+                "privilegesRequired": "NONE",
+                "scope": "UNCHANGED",
+                "userInteraction": "NONE",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+                "version": "3.1"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.2,
+              "source": "security-advisories@github.com",
+              "type": "Secondary"
+            }
+          ]
+        },
+        "published": "2024-04-19T15:15:50.960",
+        "references": [
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/evmos/evmos/blob/b196a522ba4951890b40992e9f97aa610f8b5f9c/x/evm/statedb/statedb.go#L460-L465"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/evmos/evmos/commit/08982b5ee726b97bc50eaf58d1914829648b6a5f"
+          },
+          {
+            "source": "security-advisories@github.com",
+            "url": "https://github.com/evmos/evmos/security/advisories/GHSA-3fp5-2xwh-fxm6"
+          }
+        ],
+        "sourceIdentifier": "security-advisories@github.com",
+        "vulnStatus": "Awaiting Analysis",
+        "weaknesses": [
+          {
+            "description": [
+              {
+                "lang": "en",
+                "value": "CWE-662"
+              }
+            ],
+            "source": "security-advisories@github.com",
+            "type": "Secondary"
           }
         ]
       }
