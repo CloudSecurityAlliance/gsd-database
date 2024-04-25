@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2024-26925"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: release mutex after nft_gc_seq_end from abort path\n\nThe commit mutex should not be released during the critical section\nbetween nft_gc_seq_begin() and nft_gc_seq_end(), otherwise, async GC\nworker could collect expired objects and get the released commit lock\nwithin the same GC sequence.\n\nnf_tables_module_autoload() temporarily releases the mutex to load\nmodule dependencies, then it goes back to replay the transaction again.\nMove it at the end of the abort phase after nft_gc_seq_end() is called.",
       "id": "GSD-2024-26925",
       "modified": "2024-02-20T06:02:29.154369Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,114 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2024-26925",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "4b6346dc1edf",
+                          "version_value": "61ac7284346c"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "23292bdfda5f",
+                          "version_value": "2cee2ff7f8cc"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "b44a459c6561",
+                          "version_value": "eb769ff4e281"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "5d319f7a8143",
+                          "version_value": "8d3a58af50e4"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "720344340fb9",
+                          "version_value": "8038ee3c3e5b"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "6.5"
+                              },
+                              {
+                                "lessThan": "6.5",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.4.*",
+                                "status": "unaffected",
+                                "version": "5.4.274",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.215",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.155",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.1.*",
+                                "status": "unaffected",
+                                "version": "6.1.86",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.6.*",
+                                "status": "unaffected",
+                                "version": "6.6.26",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "6.8.*",
+                                "status": "unaffected",
+                                "version": "6.8.5",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.9-rc3",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,7 +135,61 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: release mutex after nft_gc_seq_end from abort path\n\nThe commit mutex should not be released during the critical section\nbetween nft_gc_seq_begin() and nft_gc_seq_end(), otherwise, async GC\nworker could collect expired objects and get the released commit lock\nwithin the same GC sequence.\n\nnf_tables_module_autoload() temporarily releases the mutex to load\nmodule dependencies, then it goes back to replay the transaction again.\nMove it at the end of the abort phase after nft_gc_seq_end() is called."
+          }
+        ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/61ac7284346c32f9a8c8ceac56102f7914060428",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/61ac7284346c32f9a8c8ceac56102f7914060428"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/2cee2ff7f8cce12a63a0a23ffe27f08d99541494",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/2cee2ff7f8cce12a63a0a23ffe27f08d99541494"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/eb769ff4e281f751adcaf4f4445cbf30817be139",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/eb769ff4e281f751adcaf4f4445cbf30817be139"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8d3a58af50e46167b6f1db47adadad03c0045dae",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8d3a58af50e46167b6f1db47adadad03c0045dae"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8038ee3c3e5b59bcd78467686db5270c68544e30",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8038ee3c3e5b59bcd78467686db5270c68544e30"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/a34ba4bdeec0c3b629160497594908dc820110f1",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/a34ba4bdeec0c3b629160497594908dc820110f1"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0d459e2ffb541841714839e8228b845458ed3b27",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0d459e2ffb541841714839e8228b845458ed3b27"
           }
         ]
       }
