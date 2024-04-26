@@ -14,6 +14,7 @@
       "aliases": [
         "CVE-2023-6237"
       ],
+      "details": "Issue summary: Checking excessively long invalid RSA public keys may take\na long time.\n\nImpact summary: Applications that use the function EVP_PKEY_public_check()\nto check RSA public keys may experience long delays. Where the key that\nis being checked has been obtained from an untrusted source this may lead\nto a Denial of Service.\n\nWhen function EVP_PKEY_public_check() is called on RSA public keys,\na computation is done to confirm that the RSA modulus, n, is composite.\nFor valid RSA keys, n is a product of two or more large primes and this\ncomputation completes quickly. However, if n is an overly large prime,\nthen this computation would take a long time.\n\nAn application that calls EVP_PKEY_public_check() and supplies an RSA key\nobtained from an untrusted source could be vulnerable to a Denial of Service\nattack.\n\nThe function EVP_PKEY_public_check() is not called from other OpenSSL\nfunctions however it is called from the OpenSSL pkey command line\napplication. For that reason that application is also vulnerable if used\nwith the '-pubin' and '-check' options on untrusted data.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue.",
       "id": "GSD-2023-6237",
       "modified": "2023-12-13T01:20:32.585971Z",
       "schema_version": "1.4.0"
@@ -22,10 +23,55 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "openssl-security@openssl.org",
         "ID": "CVE-2023-6237",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
       },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "OpenSSL",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.0.0",
+                          "version_value": "3.0.13"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.1.0",
+                          "version_value": "3.1.5"
+                        },
+                        {
+                          "version_affected": "<",
+                          "version_name": "3.2.0",
+                          "version_value": "3.2.1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "OpenSSL"
+            }
+          ]
+        }
+      },
+      "credits": [
+        {
+          "lang": "en",
+          "value": "OSS-Fuzz"
+        },
+        {
+          "lang": "en",
+          "value": "Tomas Mraz"
+        }
+      ],
       "data_format": "MITRE",
       "data_type": "CVE",
       "data_version": "4.0",
@@ -33,9 +79,89 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "Issue summary: Checking excessively long invalid RSA public keys may take\na long time.\n\nImpact summary: Applications that use the function EVP_PKEY_public_check()\nto check RSA public keys may experience long delays. Where the key that\nis being checked has been obtained from an untrusted source this may lead\nto a Denial of Service.\n\nWhen function EVP_PKEY_public_check() is called on RSA public keys,\na computation is done to confirm that the RSA modulus, n, is composite.\nFor valid RSA keys, n is a product of two or more large primes and this\ncomputation completes quickly. However, if n is an overly large prime,\nthen this computation would take a long time.\n\nAn application that calls EVP_PKEY_public_check() and supplies an RSA key\nobtained from an untrusted source could be vulnerable to a Denial of Service\nattack.\n\nThe function EVP_PKEY_public_check() is not called from other OpenSSL\nfunctions however it is called from the OpenSSL pkey command line\napplication. For that reason that application is also vulnerable if used\nwith the '-pubin' and '-check' options on untrusted data.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue."
           }
         ]
+      },
+      "generator": {
+        "engine": "Vulnogram 0.1.0-dev"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "Excessive Iteration"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://www.openssl.org/news/secadv/20240115.txt",
+            "refsource": "MISC",
+            "url": "https://www.openssl.org/news/secadv/20240115.txt"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/18c02492138d1eb8b6548cb26e7b625fb2414a2a",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/18c02492138d1eb8b6548cb26e7b625fb2414a2a"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/a830f551557d3d66a84bbb18a5b889c640c36294",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/a830f551557d3d66a84bbb18a5b889c640c36294"
+          },
+          {
+            "name": "https://github.com/openssl/openssl/commit/0b0f7abfb37350794a4b8960fafc292cd5d1b84d",
+            "refsource": "MISC",
+            "url": "https://github.com/openssl/openssl/commit/0b0f7abfb37350794a4b8960fafc292cd5d1b84d"
+          }
+        ]
+      },
+      "source": {
+        "discovery": "UNKNOWN"
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "Issue summary: Checking excessively long invalid RSA public keys may take\na long time.\n\nImpact summary: Applications that use the function EVP_PKEY_public_check()\nto check RSA public keys may experience long delays. Where the key that\nis being checked has been obtained from an untrusted source this may lead\nto a Denial of Service.\n\nWhen function EVP_PKEY_public_check() is called on RSA public keys,\na computation is done to confirm that the RSA modulus, n, is composite.\nFor valid RSA keys, n is a product of two or more large primes and this\ncomputation completes quickly. However, if n is an overly large prime,\nthen this computation would take a long time.\n\nAn application that calls EVP_PKEY_public_check() and supplies an RSA key\nobtained from an untrusted source could be vulnerable to a Denial of Service\nattack.\n\nThe function EVP_PKEY_public_check() is not called from other OpenSSL\nfunctions however it is called from the OpenSSL pkey command line\napplication. For that reason that application is also vulnerable if used\nwith the '-pubin' and '-check' options on untrusted data.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue."
+          },
+          {
+            "lang": "es",
+            "value": "Resumen del problema: la comprobaci\u00f3n de claves p\u00fablicas RSA inv\u00e1lidas excesivamente largas puede llevar mucho tiempo. Resumen de impacto: las aplicaciones que utilizan la funci\u00f3n EVP_PKEY_public_check() para comprobar las claves p\u00fablicas RSA pueden experimentar grandes retrasos. Cuando la clave que se est\u00e1 verificando se obtuvo de una fuente que no es confiable, esto puede dar lugar a una denegaci\u00f3n de servicio. Cuando se llama a la funci\u00f3n EVP_PKEY_public_check() en claves p\u00fablicas RSA, se realiza un c\u00e1lculo para confirmar que el m\u00f3dulo RSA, n, es compuesto. Para claves RSA v\u00e1lidas, n es un producto de dos o m\u00e1s n\u00fameros primos grandes y este c\u00e1lculo se completa r\u00e1pidamente. Sin embargo, si n es un n\u00famero primo demasiado grande, entonces este c\u00e1lculo llevar\u00eda mucho tiempo. Una aplicaci\u00f3n que llama a EVP_PKEY_public_check() y proporciona una clave RSA obtenida de una fuente que no es de confianza podr\u00eda ser vulnerable a un ataque de denegaci\u00f3n de servicio. La funci\u00f3n EVP_PKEY_public_check() no se llama desde otras funciones de OpenSSL, sin embargo, se llama desde la aplicaci\u00f3n de l\u00ednea de comandos pkey de OpenSSL. Por esa raz\u00f3n, esa aplicaci\u00f3n tambi\u00e9n es vulnerable si se usa con las opciones '-pubin' y '-check' en datos que no son de confianza. La implementaci\u00f3n de OpenSSL SSL/TLS no se ve afectada por este problema. Los proveedores FIPS OpenSSL 3.0 y 3.1 se ven afectados por este problema."
+          }
+        ],
+        "id": "CVE-2023-6237",
+        "lastModified": "2024-04-25T13:18:13.537",
+        "metrics": {},
+        "published": "2024-04-25T07:15:45.270",
+        "references": [
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/0b0f7abfb37350794a4b8960fafc292cd5d1b84d"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/18c02492138d1eb8b6548cb26e7b625fb2414a2a"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://github.com/openssl/openssl/commit/a830f551557d3d66a84bbb18a5b889c640c36294"
+          },
+          {
+            "source": "openssl-security@openssl.org",
+            "url": "https://www.openssl.org/news/secadv/20240115.txt"
+          }
+        ],
+        "sourceIdentifier": "openssl-security@openssl.org",
+        "vulnStatus": "Awaiting Analysis"
       }
     }
   }

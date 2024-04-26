@@ -107,6 +107,32 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_set_pipapo: do not free live element\n\nPablo reports a crash with large batches of elements with a\nback-to-back add/remove pattern.  Quoting Pablo:\n\n  add_elem(\"00000000\") timeout 100 ms\n  ...\n  add_elem(\"0000000X\") timeout 100 ms\n  del_elem(\"0000000X\") <---------------- delete one that was just added\n  ...\n  add_elem(\"00005000\") timeout 100 ms\n\n  1) nft_pipapo_remove() removes element 0000000X\n  Then, KASAN shows a splat.\n\nLooking at the remove function there is a chance that we will drop a\nrule that maps to a non-deactivated element.\n\nRemoval happens in two steps, first we do a lookup for key k and return the\nto-be-removed element and mark it as inactive in the next generation.\nThen, in a second step, the element gets removed from the set/map.\n\nThe _remove function does not work correctly if we have more than one\nelement that share the same key.\n\nThis can happen if we insert an element into a set when the set already\nholds an element with same key, but the element mapping to the existing\nkey has timed out or is not active in the next generation.\n\nIn such case its possible that removal will unmap the wrong element.\nIf this happens, we will leak the non-deactivated element, it becomes\nunreachable.\n\nThe element that got deactivated (and will be freed later) will\nremain reachable in the set data structure, this can result in\na crash when such an element is retrieved during lookup (stale\npointer).\n\nAdd a check that the fully matching key does in fact map to the element\nthat we have marked as inactive in the deactivation step.\nIf not, we need to continue searching.\n\nAdd a bug/warn trap at the end of the function as well, the remove\nfunction must not ever be called with an invisible/unreachable/non-existent\nelement.\n\nv2: avoid uneeded temporary variable (Stefano)"
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se ha resuelto la siguiente vulnerabilidad: netfilter: nft_set_pipapo: no liberar elemento activo Pablo informa un bloqueo con grandes lotes de elementos con un patr\u00f3n de agregar/eliminar consecutivos. Citando a Pablo: add_elem(\"00000000\") timeout 100 ms ... add_elem(\"0000000X\") timeout 100 ms del_elem(\"0000000X\") &lt;---------------- elimina uno que se acaba de agregar... add_elem(\"00005000\") tiempo de espera 100 ms 1) nft_pipapo_remove() elimina el elemento 0000000X Luego, KASAN muestra un s\u00edmbolo. Al observar la funci\u00f3n de eliminaci\u00f3n, existe la posibilidad de que eliminemos una regla que se asigne a un elemento no desactivado. La eliminaci\u00f3n se realiza en dos pasos: primero buscamos la clave k, devolvemos el elemento que se va a eliminar y lo marcamos como inactivo en la pr\u00f3xima generaci\u00f3n. Luego, en un segundo paso, el elemento se elimina del conjunto/mapa. La funci\u00f3n _remove no funciona correctamente si tenemos m\u00e1s de un elemento que comparte la misma clave. Esto puede suceder si insertamos un elemento en un conjunto cuando el conjunto ya contiene un elemento con la misma clave, pero la asignaci\u00f3n del elemento a la clave existente ha expirado o no est\u00e1 activa en la pr\u00f3xima generaci\u00f3n. En tal caso, es posible que la eliminaci\u00f3n desasigne el elemento incorrecto. Si esto sucede, filtraremos el elemento no desactivado, se vuelve inalcanzable. El elemento que se desactiv\u00f3 (y se liberar\u00e1 m\u00e1s adelante) permanecer\u00e1 accesible en la estructura de datos establecida, lo que puede provocar un bloqueo cuando dicho elemento se recupere durante la b\u00fasqueda (puntero obsoleto). Agregue una verificaci\u00f3n de que la clave que coincide completamente de hecho se asigna al elemento que hemos marcado como inactivo en el paso de desactivaci\u00f3n. Si no, debemos seguir buscando. Agregue tambi\u00e9n una trampa de error/advertencia al final de la funci\u00f3n; la funci\u00f3n de eliminaci\u00f3n nunca debe llamarse con un elemento invisible/inalcanzable/inexistente. v2: evitar variables temporales innecesarias (Stefano)"
+          }
+        ],
+        "id": "CVE-2024-26924",
+        "lastModified": "2024-04-25T13:18:20.370",
+        "metrics": {},
+        "published": "2024-04-25T06:15:57.407",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/3cfc9ec039af60dbd8965ae085b2c2ccdcfbe1cc"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }

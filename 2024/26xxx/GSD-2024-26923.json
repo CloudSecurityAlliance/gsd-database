@@ -151,6 +151,48 @@
           }
         ]
       }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\naf_unix: Fix garbage collector racing against connect()\n\nGarbage collector does not take into account the risk of embryo getting\nenqueued during the garbage collection. If such embryo has a peer that\ncarries SCM_RIGHTS, two consecutive passes of scan_children() may see a\ndifferent set of children. Leading to an incorrectly elevated inflight\ncount, and then a dangling pointer within the gc_inflight_list.\n\nsockets are AF_UNIX/SOCK_STREAM\nS is an unconnected socket\nL is a listening in-flight socket bound to addr, not in fdtable\nV's fd will be passed via sendmsg(), gets inflight count bumped\n\nconnect(S, addr)\tsendmsg(S, [V]); close(V)\t__unix_gc()\n----------------\t-------------------------\t-----------\n\nNS = unix_create1()\nskb1 = sock_wmalloc(NS)\nL = unix_find_other(addr)\nunix_state_lock(L)\nunix_peer(S) = NS\n\t\t\t// V count=1 inflight=0\n\n \t\t\tNS = unix_peer(S)\n \t\t\tskb2 = sock_alloc()\n\t\t\tskb_queue_tail(NS, skb2[V])\n\n\t\t\t// V became in-flight\n\t\t\t// V count=2 inflight=1\n\n\t\t\tclose(V)\n\n\t\t\t// V count=1 inflight=1\n\t\t\t// GC candidate condition met\n\n\t\t\t\t\t\tfor u in gc_inflight_list:\n\t\t\t\t\t\t  if (total_refs == inflight_refs)\n\t\t\t\t\t\t    add u to gc_candidates\n\n\t\t\t\t\t\t// gc_candidates={L, V}\n\n\t\t\t\t\t\tfor u in gc_candidates:\n\t\t\t\t\t\t  scan_children(u, dec_inflight)\n\n\t\t\t\t\t\t// embryo (skb1) was not\n\t\t\t\t\t\t// reachable from L yet, so V's\n\t\t\t\t\t\t// inflight remains unchanged\n__skb_queue_tail(L, skb1)\nunix_state_unlock(L)\n\t\t\t\t\t\tfor u in gc_candidates:\n\t\t\t\t\t\t  if (u.inflight)\n\t\t\t\t\t\t    scan_children(u, inc_inflight_move_tail)\n\n\t\t\t\t\t\t// V count=1 inflight=2 (!)\n\nIf there is a GC-candidate listening socket, lock/unlock its state. This\nmakes GC wait until the end of any ongoing connect() to that socket. After\nflipping the lock, a possibly SCM-laden embryo is already enqueued. And if\nthere is another embryo coming, it can not possibly carry SCM_RIGHTS. At\nthis point, unix_inflight() can not happen because unix_gc_lock is already\ntaken. Inflight graph remains unaffected."
+          },
+          {
+            "lang": "es",
+            "value": "En el kernel de Linux, se resolvi\u00f3 la siguiente vulnerabilidad: af_unix: corrige la ejecuci\u00f3n del recolector de basura contra connect() El recolector de basura no tiene en cuenta el riesgo de que el embri\u00f3n quede en cola durante la recolecci\u00f3n de basura. Si dicho embri\u00f3n tiene un par que porta SCM_RIGHTS, dos pases consecutivos de scan_children() pueden ver un conjunto diferente de ni\u00f1os. Lo que lleva a un recuento en vuelo elevado incorrectamente y luego a un puntero colgante dentro de gc_inflight_list. los sockets son AF_UNIX/SOCK_STREAM S es un socket no conectado L es un socket de escucha en vuelo vinculado a addr, no en fdtable El fd de V se pasar\u00e1 a trav\u00e9s de sendmsg(), se aumenta el recuento en vuelo connect(S, addr) sendmsg(S, [ V]); cerrar(V) __unix_gc() ---------- ------------------------- -- --------- NS = unix_create1() skb1 = sock_wmalloc(NS) L = unix_find_other(addr) unix_state_lock(L) unix_peer(S) = NS // V count=1 en vuelo=0 NS = unix_peer(S ) skb2 = sock_alloc() skb_queue_tail(NS, skb2[V]) // V se convirti\u00f3 en vuelo // V recuento=2 en vuelo=1 close(V) // V recuento=1 en vuelo=1 // Condici\u00f3n candidata de GC cumplida para u en gc_inflight_list: if (total_refs == inflight_refs) agregue u a gc_candidates // gc_candidates={L, V} para u en gc_candidates: scan_children(u, dec_inflight) // el embri\u00f3n (skb1) a\u00fan no era // accesible desde L , por lo que V's // en vuelo permanece sin cambios __skb_queue_tail(L, skb1) unix_state_unlock(L) para u en gc_candidates: if (u.inflight) scan_children(u, inc_inflight_move_tail) // V count=1 inflight=2 (!) Si hay un socket de escucha candidato a GC, bloquear/desbloquear su estado. Esto hace que GC espere hasta el final de cualquier conexi\u00f3n () en curso a ese socket. Despu\u00e9s de girar la cerradura, un embri\u00f3n posiblemente cargado de SCM ya est\u00e1 en cola. Y si viene otro embri\u00f3n, no es posible que porte SCM_RIGHTS. En este punto, unix_inflight() no puede ocurrir porque unix_gc_lock ya est\u00e1 en uso. El gr\u00e1fico a bordo no se ve afectado."
+          }
+        ],
+        "id": "CVE-2024-26923",
+        "lastModified": "2024-04-25T13:18:20.370",
+        "metrics": {},
+        "published": "2024-04-25T06:15:57.160",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/47d8ac011fe1c9251070e1bd64cb10b48193ec51"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/507cc232ffe53a352847893f8177d276c3b532a9"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b75722be422c276b699200de90527d01c602ea7c"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/dbdf7bec5c920200077d693193f989cb1513f009"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/e76c2678228f6aec74b305ae30c9374cc2f28a51"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Awaiting Analysis"
+      }
     }
   }
 }
