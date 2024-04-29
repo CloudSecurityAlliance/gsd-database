@@ -10,6 +10,7 @@
       "aliases": [
         "CVE-2022-48648"
       ],
+      "details": "In the Linux kernel, the following vulnerability has been resolved:\n\nsfc: fix null pointer dereference in efx_hard_start_xmit\n\nTrying to get the channel from the tx_queue variable here is wrong\nbecause we can only be here if tx_queue is NULL, so we shouldn't\ndereference it. As the above comment in the code says, this is very\nunlikely to happen, but it's wrong anyway so let's fix it.\n\nI hit this issue because of a different bug that caused tx_queue to be\nNULL. If that happens, this is the error message that we get here:\n  BUG: unable to handle kernel NULL pointer dereference at 0000000000000020\n  [...]\n  RIP: 0010:efx_hard_start_xmit+0x153/0x170 [sfc]",
       "id": "GSD-2022-48648",
       "modified": "2024-02-26T06:00:31.486925Z",
       "schema_version": "1.4.0"
@@ -18,9 +19,76 @@
   "namespaces": {
     "cve.org": {
       "CVE_data_meta": {
-        "ASSIGNER": "cve@mitre.org",
+        "ASSIGNER": "cve@kernel.org",
         "ID": "CVE-2022-48648",
-        "STATE": "RESERVED"
+        "STATE": "PUBLIC"
+      },
+      "affects": {
+        "vendor": {
+          "vendor_data": [
+            {
+              "product": {
+                "product_data": [
+                  {
+                    "product_name": "Linux",
+                    "version": {
+                      "version_data": [
+                        {
+                          "version_affected": "<",
+                          "version_name": "12804793b17c",
+                          "version_value": "b3b41d4d95d3"
+                        },
+                        {
+                          "version_value": "not down converted",
+                          "x_cve_json_5_version_data": {
+                            "defaultStatus": "affected",
+                            "versions": [
+                              {
+                                "status": "affected",
+                                "version": "5.10"
+                              },
+                              {
+                                "lessThan": "5.10",
+                                "status": "unaffected",
+                                "version": "0",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.10.*",
+                                "status": "unaffected",
+                                "version": "5.10.146",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.15.*",
+                                "status": "unaffected",
+                                "version": "5.15.71",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "5.19.*",
+                                "status": "unaffected",
+                                "version": "5.19.12",
+                                "versionType": "custom"
+                              },
+                              {
+                                "lessThanOrEqual": "*",
+                                "status": "unaffected",
+                                "version": "6.0",
+                                "versionType": "original_commit_for_fix"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vendor_name": "Linux"
+            }
+          ]
+        }
       },
       "data_format": "MITRE",
       "data_type": "CVE",
@@ -29,9 +97,82 @@
         "description_data": [
           {
             "lang": "eng",
-            "value": "** RESERVED ** This candidate has been reserved by an organization or individual that will use it when announcing a new security problem. When the candidate has been publicized, the details for this candidate will be provided."
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsfc: fix null pointer dereference in efx_hard_start_xmit\n\nTrying to get the channel from the tx_queue variable here is wrong\nbecause we can only be here if tx_queue is NULL, so we shouldn't\ndereference it. As the above comment in the code says, this is very\nunlikely to happen, but it's wrong anyway so let's fix it.\n\nI hit this issue because of a different bug that caused tx_queue to be\nNULL. If that happens, this is the error message that we get here:\n  BUG: unable to handle kernel NULL pointer dereference at 0000000000000020\n  [...]\n  RIP: 0010:efx_hard_start_xmit+0x153/0x170 [sfc]"
           }
         ]
+      },
+      "generator": {
+        "engine": "bippy-d175d3acf727"
+      },
+      "problemtype": {
+        "problemtype_data": [
+          {
+            "description": [
+              {
+                "lang": "eng",
+                "value": "n/a"
+              }
+            ]
+          }
+        ]
+      },
+      "references": {
+        "reference_data": [
+          {
+            "name": "https://git.kernel.org/stable/c/b3b41d4d95d3822b2e459ecbc80d030ea6aec5e7",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b3b41d4d95d3822b2e459ecbc80d030ea6aec5e7"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/8547c7bfc0617e7184e4da65b9b96681fcfe9998",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/8547c7bfc0617e7184e4da65b9b96681fcfe9998"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/b3b952168ee1f220ba729fa100fd9d5aa752eb03",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/b3b952168ee1f220ba729fa100fd9d5aa752eb03"
+          },
+          {
+            "name": "https://git.kernel.org/stable/c/0a242eb2913a4aa3d6fbdb86559f27628e9466f3",
+            "refsource": "MISC",
+            "url": "https://git.kernel.org/stable/c/0a242eb2913a4aa3d6fbdb86559f27628e9466f3"
+          }
+        ]
+      }
+    },
+    "nvd.nist.gov": {
+      "cve": {
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "In the Linux kernel, the following vulnerability has been resolved:\n\nsfc: fix null pointer dereference in efx_hard_start_xmit\n\nTrying to get the channel from the tx_queue variable here is wrong\nbecause we can only be here if tx_queue is NULL, so we shouldn't\ndereference it. As the above comment in the code says, this is very\nunlikely to happen, but it's wrong anyway so let's fix it.\n\nI hit this issue because of a different bug that caused tx_queue to be\nNULL. If that happens, this is the error message that we get here:\n  BUG: unable to handle kernel NULL pointer dereference at 0000000000000020\n  [...]\n  RIP: 0010:efx_hard_start_xmit+0x153/0x170 [sfc]"
+          }
+        ],
+        "id": "CVE-2022-48648",
+        "lastModified": "2024-04-28T13:15:07.290",
+        "metrics": {},
+        "published": "2024-04-28T13:15:07.290",
+        "references": [
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/0a242eb2913a4aa3d6fbdb86559f27628e9466f3"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/8547c7bfc0617e7184e4da65b9b96681fcfe9998"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b3b41d4d95d3822b2e459ecbc80d030ea6aec5e7"
+          },
+          {
+            "source": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+            "url": "https://git.kernel.org/stable/c/b3b952168ee1f220ba729fa100fd9d5aa752eb03"
+          }
+        ],
+        "sourceIdentifier": "416baaa9-dc9f-4396-8d5f-8c081fb06d67",
+        "vulnStatus": "Received"
       }
     }
   }
